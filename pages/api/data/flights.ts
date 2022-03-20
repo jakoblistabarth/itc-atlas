@@ -1,13 +1,14 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
-import type { NextApiRequest, NextApiResponse } from 'next'
+import type { NextApiRequest, NextApiResponse } from "next";
+import getFlights from "./getFlights";
 
 type Data = {
-  data: number[]
-}
+  data: number[];
+};
 
-export default function handler(
+export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse<Data>
 ) {
-  res.status(200).json({ data: [1,2,3,4,5] })
+  res.status(200).json(await getFlights());
 }

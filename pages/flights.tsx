@@ -1,30 +1,86 @@
-import * as d3 from 'd3'
-import type { NextPage } from 'next'
-import Head from 'next/head'
-import { useEffect, useRef } from 'react'
-import styles from '../styles/Home.module.css'
+import * as d3 from "d3";
+import { geoPath } from "d3-geo";
+import { geoBertin1953 } from "d3-geo-projection";
+import type { NextPage } from "next";
+import Head from "next/head";
+import { useEffect, useRef } from "react";
+import * as topojson from "topojson-client";
+import styles from "../styles/Home.module.css";
 
 const Flights: NextPage = () => {
+  useEffect(async () => {
+    const res = await fetch("/api/data/flights");
+    const json = await res.json();
 
-  useEffect( async () => {
-    const res = await fetch("/api/data/flights")
-    const json = await res.json()
+    const worldRes = await fetch("/api/data/countries");
+    const world = await worldRes.json();
+
+    const sphere = { type: "Sphere" };
+    const projection = geoBertin1953();
+    const path = geoPath(projection);
+
     // setData(json.data)
     // setFilteredData(json.data)
     const svgEl = d3.select(svgRef.current);
-    svgEl.append("g")
-      .attr("id", "boxes")
-      .selectAll("circle")
-      .data(json.data)
-      .join("circle")
-        .attr("r", (d) => d * 10)
-        .attr("cx", (d,i) => i * 30 )
-        .attr("cy", 150 )
-        .attr("fill", "none")
-        .attr("stroke-width", 1)
-        .attr("stroke", "blue")
-    console.log(json)
-  }, [])
+
+    // Oceans
+    svgEl
+      .append("g")
+      .append("path")
+      .datum(sphere)
+      .attr("d", path)
+      .style("fill", "#E3E3E3");
+
+    // Graticule
+    svgEl
+      .append("g")
+      .append("path")
+      .datum(d3.geoGraticule10())
+      .attr("class", "graticule")
+      .attr("d", path)
+      .attr("clip-path", "url(#clip)")
+      .style("fill", "none")
+      .style("stroke", "grey")
+      .style("stroke-width", 0.5)
+      .style("stroke-opacity", 0.25)
+      .style("stroke-dasharray", 2);
+
+    // Countries
+    svgEl
+      .append("path")
+      .datum(topojson.feature(world, world.objects.countries))
+      .attr("fill", "white")
+      .style("fill-opacity", 0.9)
+      .attr("d", path);
+
+    // Borders
+    svgEl
+      .append("g")
+      .attr("id", "borders")
+      .append("path")
+      .datum(
+        topojson.feature(world, world.objects.countries, (a, b) => a !== b)
+      )
+      .attr("fill", "none")
+      .attr("stroke", "lightgrey")
+      .attr("stroke-linejoin", "round")
+      .attr("stroke-width", 0.3)
+      .attr("d", path);
+
+    // Flows
+    const routes = svgEl.append("g").attr("id", "routes");
+    const flow = routes.selectAll("path").data(json.odMatrix);
+
+    flow
+      .enter()
+      .append("path")
+      .attr("d", path)
+      .attr("stroke", "black")
+      .attr("fill", "none")
+      .attr("stroke-width", (d) => (10 * d.properties.value) / 100)
+      .attr("value", (d) => d.value)
+      .attr("class", "route");
+  }, []);
 
   // const [selectedCountry, setSelectedCountry] = useState(null)
   // const [filterData, setFilteredData] = useState(null)
@@ -33,8 +89,8 @@ const Flights: NextPage = () => {
   // useEffect(() => {
   //   setFilteredData(data.filter(d => d > selectedCountry))
   // }, [selectedCountry])
-  
-  const svgRef = useRef(null)
+
+  const svgRef = useRef(null);
   return (
     <div className={styles.container}>
       <Head>
@@ -45,14 +101,14 @@ const Flights: NextPage = () => {
 
       <main className={styles.main}>
         <h1>Flights</h1>
-        <svg ref={svgRef} width={300} height={300} />
+        <svg ref={svgRef} width={1020} height={600} />
         {/* <select onChange={(e) => setSelectedCountry(e.target.value)}></select>
         <Navigation>
         <Flowmap thematicData={filteredData} geographicData="" />
         <Flowmap thematicData=" " geographicData="" /> */}
       </main>
     </div>
-  )
-}
+  );
+};
 
-export default Flights
+export default Flights;
