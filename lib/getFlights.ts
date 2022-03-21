@@ -1,6 +1,7 @@
 import xlsx from "xlsx";
 import createODMatrix from "./createODMatrix";
 import getAirports from "./getAirports";
+import countFlightsperAirport from "./countFlightsPerAirport";
 
 export default async function getFlights() {
   const filePath = "./data/UT.01jan-31dec2019-ITConly.xlsx";
@@ -16,14 +17,15 @@ export default async function getFlights() {
     d.airportCodes = d.Route.split("-");
   });
 
-  const airports = await getAirports();
+  const airports = await (await getAirports()).json;
 
   const odMatrix = createODMatrix(flights, airports);
+  const perAirport = countFlightsperAirport(flights, airports);
 
   return {
     originalData: data,
     flights: flights,
     odMatrix: odMatrix,
-    airports: airports,
+    perAirport: perAirport,
   };
 }
