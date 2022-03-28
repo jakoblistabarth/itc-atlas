@@ -1,14 +1,12 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import type { NextApiRequest, NextApiResponse } from "next";
-import getCountries from "../../../lib/getCountries";
-
-type Data = {
-  data: number[];
-};
+import getUnsdCodes from "../../../../lib/getUnsdCodes";
 
 export default async function handler(
   req: NextApiRequest,
-  res: NextApiResponse<Data>
+  res: NextApiResponse
 ) {
-  res.status(200).json(await getCountries("110m"));
+  const { level } = req.query;
+  console.log(level);
+  res.status(200).json(await getUnsdCodes(level));
 }

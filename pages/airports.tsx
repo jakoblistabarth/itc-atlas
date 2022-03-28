@@ -21,7 +21,7 @@ const Airports: NextPage = () => {
       .domain(d3.extent(airports.map((d) => d.properties.value)))
       .range([0, maxRadius]);
 
-    const worldRes = await fetch("/api/data/countries");
+    const worldRes = await fetch("/api/data/geo/countries");
     const world = await worldRes.json();
 
     const projection = geoBertin1953();

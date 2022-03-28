@@ -12,7 +12,7 @@ const Flights: NextPage = () => {
     const res = await fetch("/api/data/flights");
     const json = await res.json();
 
-    const worldRes = await fetch("/api/data/countries");
+    const worldRes = await fetch("/api/data/geo/countries");
     const world = await worldRes.json();
 
     const projection = geoBertin1953();
