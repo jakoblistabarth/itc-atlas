@@ -24,7 +24,6 @@ export default function createBaseMap(map, baseMapData, projection) {
     .datum(d3.geoGraticule10())
     .attr("class", "graticule")
     .attr("d", path)
-    .attr("clip-path", "url(#clip)")
     .style("fill", "none")
     .style("stroke", "grey")
     .style("stroke-width", 0.5)
