@@ -1,0 +1,15 @@
+export default {
+  Rejected: "undone",
+  Awarded: "undone",
+  Finalized: "completed",
+  Completed: "completed",
+  Ongoing: "ongoing",
+  Finished: "completed",
+  "Proposal submitted": "undone",
+  Proposal: "undone",
+  Invitation: "undone",
+  "Awaiting contract": "undone",
+  "Tender submitted": "undone",
+  "LoI submitted": "undone",
+  Approved: "undone",
+};

@@ -1,15 +1,22 @@
 import * as df from "data-forge";
 import getUnsdCodes from "./getUnsdCodes";
+import projectType from "./mappings/project.type";
+import projectStatus from "./mappings/project.status";
 
 export default async function cleanProjects(input: Object[]) {
   const post2019 = new df.DataFrame(input[0]);
   const pre2019 = new df.DataFrame(input[1]);
-  const post2019T = post2019.dropSeries(["dateVOCA"]);
+  const post2019T = post2019.renameSeries({
+    projecttype: "type",
+    Status: "status",
+  });
 
   const pre2019T = pre2019.renameSeries({
     Project_ID: "projectID",
     "Project name": "projectName",
     "Project name in short": "projectShortName",
+    "Project status": "status",
+    "Project type": "type",
     Country: "CountriesRegion",
     "Starting date": "dateStart",
     "Completion date": "dateEnd",
@@ -22,8 +29,10 @@ export default async function cleanProjects(input: Object[]) {
         value === "" ? "project " + index : value,
       dateStart: (value) => (value === "NULL" ? null : value),
       dateEnd: (value) => (value === "NULL" ? null : value),
+      type: (value) => projectType[value] || value,
+      status: (value) => projectStatus[value] || value,
     })
-    .where((row) => new Date(row["dateStart"]) < new Date(row["dateEnd"]));
+    .where((row) => new Date(row["dateStart"]) < new Date(row["dateEnd"])); // TODO: fix projects whith old entries
   const output = merged.toArray();
 
   output.forEach((d) => {
