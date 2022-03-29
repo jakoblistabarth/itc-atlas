@@ -9,6 +9,7 @@ const Projects: NextPage = () => {
   useEffect(async () => {
     const res = await fetch("/api/data/projects");
     const projects = await res.json();
+    let data = projects.filter((d) => d.dateStart && d.dateEnd);
 
     const res2 = await fetch("/api/data/unsdcodes/countries");
     const countries = await res2.json();
@@ -21,31 +22,6 @@ const Projects: NextPage = () => {
     });
 
     data.sort((a, b) => d3.ascending(a.dateStart, b.dateStart));
-
-    console.table(
-      data
-        // .filter((d) => d.countries.length >= 1)
-        // .filter((d) => d.CountriesRegion === "The Netherlands")
-        .map((d) => {
-          return {
-            original: d.CountriesRegion,
-            countriesRegion: d.CountriesRegionArr,
-            countries: d.countries,
-            regions: d.regions,
-            subRegion: d.subRegions,
-            intermediateRegion: d.intermediateRegions,
-          };
-        })
-    );
-
-    // const count = d3
-    //   .rollups(
-    //     data,
-    //     (v) => v.length,
-    //     (d) => d.CountriesRegionMatch
-    //   )
-    //   .sort((a, b) => d3.descending(a[1], b[1]));
-    // console.table(count);
 
     const margin = {
         top: 10,
@@ -74,7 +50,7 @@ const Projects: NextPage = () => {
     const y = d3
       .scalePoint()
       .range([0, height])
-      .domain(data.map((d) => d.projectShortName))
+      .domain(data.map((d) => d.projectID))
       .padding(1);
 
     svgEl
