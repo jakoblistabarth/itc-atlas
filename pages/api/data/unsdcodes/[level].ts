@@ -7,6 +7,5 @@ export default async function handler(
   res: NextApiResponse
 ) {
   const { level } = req.query;
-  console.log(level);
   res.status(200).json(await getUnsdCodes(level));
 }

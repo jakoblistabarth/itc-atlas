@@ -1,6 +1,8 @@
 import * as csv from "csvtojson";
 
-export default async function getUnsdCodes(level?: String) {
+type Level = "countries" | "regions" | "subRegions" | "intermediateRegions";
+
+export default async function getUnsdCodes(level?: Level) {
   const csvFilePath = "./data/UNSD-Methodology.csv";
   // source: https://unstats.un.org/unsd/methodology/m49/overview/
   const countries = await csv().fromFile(csvFilePath);
