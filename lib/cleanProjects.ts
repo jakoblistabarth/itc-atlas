@@ -26,9 +26,37 @@ export default async function cleanProjects(input: Object[]) {
     .where((row) => new Date(row["dateStart"]) < new Date(row["dateEnd"]));
   const output = merged.toArray();
 
-  const areaCodes = await getUnsdCodes();
-
-  console.log(areaCodes.countries[0]);
+  output.forEach((d) => {
+    d.CountriesRegion = d.CountriesRegion.replace(/[\(\)]/g, ",");
+    d.CountriesRegion = d.CountriesRegion.replace("Bangladesch", "Bangladesh");
+    d.CountriesRegion = d.CountriesRegion.replace("Vietnam", "Viet Nam");
+    d.CountriesRegion = d.CountriesRegion.replace("Kazakstan", "Kazakhstan");
+    d.CountriesRegion = d.CountriesRegion.replace(
+      "Palestinian Territories",
+      "State of Palestine"
+    );
+    d.CountriesRegion = d.CountriesRegion.replace(
+      /(Overijssel)|(Twente)/g,
+      "Netherlands"
+    );
+    d.CountriesRegion = d.CountriesRegion.replace(
+      "EMEA",
+      "Europe, Africa, Western Asia"
+    );
+    d.CountriesRegion = d.CountriesRegion.replace("Cape Verde", "Cabo Verde");
+    d.CountriesRegion = d.CountriesRegion.replace(
+      "Benelux",
+      "Belgium, Netherlands, Luxembourg"
+    );
+    d.CountriesRegion = d.CountriesRegion.replace(
+      "The Netherlands",
+      "Netherlands"
+    );
+    d.CountriesRegion = d.CountriesRegion.replace(
+      "USA",
+      "United States of America"
+    );
+  });
 
   output.forEach((d) => {
     d.CountriesRegionArr = d.CountriesRegion.split(/\s?[,/]\s?/gm);
@@ -38,11 +66,12 @@ export default async function cleanProjects(input: Object[]) {
     d.countries = [];
   });
 
+  const areaCodes = await getUnsdCodes();
+
   // Matching
-  // TODO: recognise USA, Kazakstan, Bangladesch, Cabo Verde
-  // TODO: recognise groups: EU, EMEA, BENELUX
+  // TODO: recognise group: EU
   output.forEach((d, row) =>
-    d.CountriesRegionArr.forEach((e, index) => {
+    d.CountriesRegionArr.forEach((e) => {
       if (!e) return;
 
       const regionMatch = areaCodes.regions.find((f) => f.name === e);
@@ -76,6 +105,36 @@ export default async function cleanProjects(input: Object[]) {
       if (!countriesList.includes(code)) output[row].countries.push(code);
     })
   );
+
+  output.forEach((d, row) => {
+    const allCountries = Array.from(d.countries);
+
+    d.regions.forEach((region) => {
+      allCountries.push(
+        ...areaCodes.countries
+          .filter((e) => e["Region Name"] === region)
+          .map((e) => e["ISO-alpha3 Code"])
+      );
+    });
+
+    d.subRegions.forEach((subregion) => {
+      allCountries.push(
+        ...areaCodes.countries
+          .filter((e) => e["Sub-region Name"] === subregion)
+          .map((e) => e["ISO-alpha3 Code"])
+      );
+    });
+
+    d.intermediateRegions.forEach((intermediateRegion) => {
+      allCountries.push(
+        ...areaCodes.countries
+          .filter((e) => e["Intermediate Region Name"] === intermediateRegion)
+          .map((e) => e["ISO-alpha3 Code"])
+      );
+    });
+
+    d.allCountries = Array.from(new Set(allCountries));
+  });
 
   return output;
 }
