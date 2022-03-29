@@ -1,11 +1,11 @@
 import type { NextPage } from "next";
 import Head from "next/head";
-import styles from "../styles/Home.module.css";
+import styles from "../../styles/Home.module.css";
 import { useEffect, useRef } from "react";
 import * as d3 from "d3";
-import isPartOfUnsdGroup from "../lib/isPartOfUnsdGroup";
+import isPartOfUnsdGroup from "../../lib/isPartOfUnsdGroup";
 
-const Projects: NextPage = () => {
+const Timeline: NextPage = () => {
   useEffect(async () => {
     const res = await fetch("/api/data/projects");
     const projects = await res.json();
@@ -114,4 +114,4 @@ const Projects: NextPage = () => {
   );
 };
 
-export default Projects;
+export default Timeline;
