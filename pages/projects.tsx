@@ -3,15 +3,17 @@ import Head from "next/head";
 import styles from "../styles/Home.module.css";
 import { useEffect, useRef } from "react";
 import * as d3 from "d3";
+import isPartOfUnsdGroup from "../lib/isPartOfUnsdGroup";
 
 const Projects: NextPage = () => {
   useEffect(async () => {
     const res = await fetch("/api/data/projects");
     const projects = await res.json();
 
-    const formatTime = d3.timeFormat("%B %d, %Y");
+    const res2 = await fetch("/api/data/unsdcodes/countries");
+    const countries = await res2.json();
 
-    const data = projects.filter((d) => d.dateStart && d.dateEnd);
+    const formatTime = d3.timeFormat("%B %d, %Y");
 
     data.forEach((d) => {
       d.dateStart = new Date(d.dateStart);
@@ -94,11 +96,18 @@ const Projects: NextPage = () => {
       .append("line")
       .attr("x1", (d) => x(d.dateStart))
       .attr("x2", (d) => x(d.dateEnd))
-      .attr("y1", (d) => y(d.projectShortName))
-      .attr("y2", (d) => y(d.projectShortName))
-      .attr("stroke", (d) => (d.dateEnd < new Date() ? "black" : "lightgrey"))
-      .attr("stroke-opacity", 0.8)
-      .attr("stroke-width", "2px")
+      .attr("y1", (d) => y(d.projectID))
+      .attr("y2", (d) => y(d.projectID))
+      .attr("stroke", (d) =>
+        d.countries.some((e) => {
+          return isPartOfUnsdGroup(countries, e, "LDC");
+        })
+          ? "red"
+          : "black"
+      )
+      .attr("stroke-dasharray", (d) => (d.dateEnd < new Date() ? "none" : "1"))
+      .attr("stroke-opacity", 0.5)
+      .attr("stroke-width", (d) => (d.Status === "Rejected" ? "10px" : "2px"))
       .append("svg:title")
       .text(
         (d) =>
