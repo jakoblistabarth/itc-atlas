@@ -8,6 +8,7 @@ export default async function getFlights() {
   const file = xlsx.readFile(filePath);
   const data = xlsx.utils.sheet_to_json(file.Sheets[file.SheetNames[0]], {
     raw: false,
+    defval: null,
   });
 
   const flights = data

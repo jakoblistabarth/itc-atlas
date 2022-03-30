@@ -1,0 +1,19 @@
+.summaryTable {
+}
+
+.summaryTable table {
+  text-align: left;
+  border-collapse: collapse;
+}
+
+.summaryTable thead tr {
+  border-bottom: 1px solid grey;
+}
+
+.summaryTable tr {
+  border-bottom: 1px solid lightgray;
+}
+
+.summaryTable td {
+  padding: 0.5em 2em 0.5em 0;
+}
