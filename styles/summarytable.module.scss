@@ -1,3 +1,12 @@
+.summaryTableContainer {
+  display: grid;
+  grid-template-columns: 100px auto;
+  column-gap: 10px;
+}
+
+.summaryTableCard {
+}
+
 .summaryTable {
   thead {
     tr {
@@ -25,7 +34,7 @@
   }
 
   td.label {
-    max-width: 100px;
+    max-width: 80px;
   }
 
   .scrollable {

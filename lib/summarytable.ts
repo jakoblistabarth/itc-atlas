@@ -8,17 +8,17 @@ export type DataType = "continuous" | "date" | "ordinal" | "array";
 export default function getColumns(data: object[]) {
   const sample = data[0];
   const cols = Object.keys(sample);
-  const col_data = cols.map((d) => {
+  const columnsData = cols.map((d) => {
     return {
       label: d === "" ? "unlabeled" : d,
       type: getType(data, d),
       stats: getColumnStats(data, d),
     };
   });
-  const n_columns = col_data.length;
+  const n_columns = columnsData.length;
   const n_rows = data.length;
   return {
-    col_data,
+    columnsData,
     n_columns,
     n_rows,
   };
@@ -57,7 +57,7 @@ function getType(data: object[], column: string): DataType {
 function getColumnStats(data: object[], column: string) {
   const type = getType(data, column);
   const pctFormat = d3.format(".1%");
-  const floatFormat = d3.format(".3");
+  const floatFormat = d3.format(".4");
 
   const missing =
     data.filter((d) => d[column] === null || d[column] === "").length /
@@ -69,7 +69,7 @@ function getColumnStats(data: object[], column: string) {
     return {
       missing: pctFormat(missing),
       mean: floatFormat(mean),
-      median: floatFormat(mean),
+      median: floatFormat(median),
       sd: floatFormat(sd),
     };
   } else {

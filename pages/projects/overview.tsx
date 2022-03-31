@@ -1,7 +1,7 @@
 import Head from "next/head";
 import Link from "next/link";
 import Layout from "../../components/layout";
-import SummaryTable from "../../components/summarytable";
+import SummaryTable from "../../components/summaryTable";
 import getProjects from "../../lib/getProjects";
 import Project from "../../pages/api/data/projects"; //TODO: How to use type here
 

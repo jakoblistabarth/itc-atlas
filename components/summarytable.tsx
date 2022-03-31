@@ -8,6 +8,7 @@ import {
 import { BiBracket } from "react-icons/bi";
 import getColumns, { DataType, colorMap } from "../lib/summarytable";
 import { nanoid } from "nanoid";
+import SummaryTableCard from "./summaryTableCard";
 
 function getIcon(type: DataType) {
   switch (type) {
@@ -39,40 +40,43 @@ export default function SummaryTable({ data }) {
   const columns = getColumns(mydata);
 
   return (
-    <div className={styles.summaryTable}>
-      <table>
-        <thead>
-          <tr>
-            <th></th>
-            <th>Column</th>
-            <th>Snapshot</th>
-            <th>Missing</th>
-            <th>Mean</th>
-            <th>Median</th>
-            <th>SD</th>
-          </tr>
-        </thead>
-        <tbody>
-          {columns.col_data.map((d) => (
-            <tr key={nanoid()}>
-              <td
-                className={styles.icon}
-                style={{ borderColor: colorMap.get(d.type).color }}
-              >
-                {getIcon(d.type)}
-              </td>
-              <td className={styles.label}>
-                <div className={styles.scrollable}>{d.label}</div>
-              </td>
-              <td>{d.type}</td>
-              <td>{d.stats?.missing}</td>
-              <td>{d.stats?.mean || <MdClose color="lightgrey" />}</td>
-              <td>{d.stats?.median || <MdClose color="lightgrey" />}</td>
-              <td>{d.stats?.sd || <MdClose color="lightgrey" />}</td>
+    <div className={styles.summaryTableContainer}>
+      <SummaryTableCard data={columns} />
+      <div className={styles.summaryTable}>
+        <table>
+          <thead>
+            <tr>
+              <th></th>
+              <th>Column</th>
+              <th>Snapshot</th>
+              <th>Missing</th>
+              <th>Mean</th>
+              <th>Median</th>
+              <th>SD</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {columns.columnsData.map((d) => (
+              <tr key={nanoid()}>
+                <td
+                  className={styles.icon}
+                  style={{ borderColor: colorMap.get(d.type).color }}
+                >
+                  {getIcon(d.type)}
+                </td>
+                <td className={styles.label}>
+                  <div className={styles.scrollable}>{d.label}</div>
+                </td>
+                <td>{d.type}</td>
+                <td>{d.stats?.missing}</td>
+                <td>{d.stats?.mean || <MdClose color="lightgrey" />}</td>
+                <td>{d.stats?.median || <MdClose color="lightgrey" />}</td>
+                <td>{d.stats?.sd || <MdClose color="lightgrey" />}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
     </div>
   );
 }

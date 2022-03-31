@@ -1,7 +1,7 @@
 import Head from "next/head";
 import Link from "next/link";
 import Layout from "../../components/layout";
-import SummaryTable from "../../components/summarytable";
+import SummaryTable from "../../components/summaryTable";
 import getFlights from "../../lib/getFlights";
 import getTestData from "../../lib/getTestData";
 
