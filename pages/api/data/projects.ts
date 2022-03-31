@@ -1,6 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import getProjects from "../../../lib/getProjects";
 
+// QUESTION how to type such data entities?
 export type Project = {
   project_id: string;
   projectName: string;
