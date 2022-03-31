@@ -19,3 +19,10 @@ h2,
 h3 {
   font-family: "Fraunces";
 }
+
+table {
+  margin: 2em 0;
+  text-align: left;
+  border-collapse: collapse;
+  font-size: smaller;
+}
