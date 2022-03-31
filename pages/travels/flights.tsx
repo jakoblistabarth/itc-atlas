@@ -4,8 +4,8 @@ import { geoBertin1953 } from "d3-geo-projection";
 import type { NextPage } from "next";
 import Head from "next/head";
 import { useEffect, useRef } from "react";
-import styles from "../styles/Home.module.css";
-import createBaseMap from "../lib/createBaseMap";
+import styles from "../../styles/Home.module.css";
+import createBaseMap from "../../lib/createBaseMap";
 
 const Flights: NextPage = () => {
   useEffect(async () => {

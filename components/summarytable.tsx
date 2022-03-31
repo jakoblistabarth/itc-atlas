@@ -1,4 +1,4 @@
-import styles from "./summarytable.module.scss";
+import styles from "../styles/summarytable.module.scss";
 import {
   MdCalendarToday,
   MdListAlt,
