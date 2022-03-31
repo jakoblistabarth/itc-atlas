@@ -9,9 +9,6 @@ export default function countFlightsPerAirport(flights, airports) {
     (d) => d
   );
 
-  console.log(count.get("DAR"));
-  console.log(airports[0]);
-
   const features = airports.map((d) => {
     const value = count.get(d.iata_code);
     return {

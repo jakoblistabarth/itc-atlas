@@ -5,9 +5,10 @@ import countFlightsperAirport from "./countFlightsPerAirport";
 
 export default async function getFlights() {
   const filePath = "./data/UT.01jan-31dec2019-ITConly.xlsx";
-  const file = xlsx.readFile(filePath);
+  const file = xlsx.readFile(filePath, {
+    cellDates: true,
+  });
   const data = xlsx.utils.sheet_to_json(file.Sheets[file.SheetNames[0]], {
-    raw: false,
     defval: null,
   });
 
