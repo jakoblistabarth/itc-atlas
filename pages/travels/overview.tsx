@@ -20,9 +20,22 @@ const Overview: FC<OverviewProps> = ({ data, test }) => (
     </Head>
     <h1>Flight Overview</h1>
     <p>🤫 for debugging only</p>
-    <Snapshot data={test.map((d) => d.name)} />
-    <Snapshot data={test.map((d) => d.favNo)} />
-    <Snapshot data={test.map((d) => d.dateOfBirth)} />
+    <Snapshot
+      column={test.map((d) => d.name)}
+      columnName="name"
+      type="ordinal"
+    />
+    <Snapshot
+      column={test.map((d) => d.favNo)}
+      columnName="favNo"
+      type="continuous"
+      detailed="true"
+    />
+    <Snapshot
+      column={test.map((d) => d.dateOfBirth)}
+      columnName="dateofBirth"
+      type="date"
+    />
     <SummaryTable data={test} />
     <p>This table gives an overview on the complete dataset.</p>
     <SummaryTable data={data} />

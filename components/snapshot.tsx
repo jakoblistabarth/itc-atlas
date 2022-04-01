@@ -1,15 +1,29 @@
-import { colorMap, getType } from "../lib/summarytable";
+import { colorMap, ColumnType } from "../lib/summarytable";
 
-//TODO: use columns again, to get name as well?
-// TODO: dont determine type inside component
-const Snapshot = ({ data }) => {
-  const type = getType(data);
-
+const Snapshot: propTypes = ({
+  column,
+  columnName,
+  type,
+  detailed = false,
+}) => {
   return (
     <div>
-      <span style={{ color: colorMap.get(type).color }}>{type}</span>
+      <div style={{ color: colorMap.get(type).color }}>{type}</div>
+      {detailed && (
+        <small>
+          {columnName}, {column.length} Elements
+        </small>
+      )}
     </div>
   );
+};
+
+// TODO: fix typing
+type propTypes = {
+  column: [];
+  columnName: string;
+  type: ColumnType;
+  detailed: boolean;
 };
 
 export default Snapshot;

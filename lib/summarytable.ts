@@ -3,7 +3,7 @@ import * as _ from "lodash";
 // TODO:  split this file up in smaller chunks
 
 // TODO: move to types folder
-export type DataType = "continuous" | "date" | "ordinal" | "array";
+export type ColumnType = "continuous" | "date" | "ordinal" | "array";
 
 export const pctFormat = d3.format(".1%");
 export const floatFormat = d3.format(".4");
@@ -46,7 +46,7 @@ export const colorMap = new Map(
   })
 );
 
-export function getType(data: object[]): DataType {
+export function getType(data: object[]): ColumnType {
   for (const value of data) {
     if (value == null) continue;
     if (typeof value === "number") return "continuous";

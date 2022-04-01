@@ -7,7 +7,7 @@ import {
 } from "react-icons/md";
 import { BiBracket } from "react-icons/bi";
 import getColumns, {
-  DataType,
+  ColumnType,
   colorMap,
   pctFormat,
   floatFormat,
@@ -16,7 +16,7 @@ import { nanoid } from "nanoid";
 import SummaryTableCard from "./summaryTableCard";
 import Snapshot from "./snapshot";
 
-function getIcon(type: DataType) {
+function getIcon(type: ColumnType) {
   switch (type) {
     case "ordinal":
       return <MdFormatListBulleted />;
@@ -62,7 +62,11 @@ export default function SummaryTable({ data }) {
                   <div className={styles.scrollable}>{d.label}</div>
                 </td>
                 <td>
-                  <Snapshot data={data.map((x) => x[d.label])} />
+                  <Snapshot
+                    column={data.map((x) => x[d.label])}
+                    columnName={d.label}
+                    type={d.type}
+                  />
                 </td>
                 <td className={d.stats?.missing > 0.5 ? styles.alert : null}>
                   {pctFormat(d.stats?.missing)}
