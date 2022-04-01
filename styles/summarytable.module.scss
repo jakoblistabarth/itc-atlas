@@ -31,10 +31,19 @@
     padding-left: 0.75em;
     padding-right: 0.5em;
     border-left: 3px solid black;
+
+    svg {
+      display: flex;
+    }
   }
 
   td.label {
     max-width: 80px;
+  }
+
+  td.alert {
+    font-weight: bold;
+    color: red;
   }
 
   .scrollable {

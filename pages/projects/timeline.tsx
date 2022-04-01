@@ -4,11 +4,12 @@ import styles from "../../styles/Home.module.css";
 import { useEffect, useRef } from "react";
 import * as d3 from "d3";
 import isPartOfUnsdGroup from "../../lib/isPartOfUnsdGroup";
+import { Project } from "../api/data/projects";
 
 const Timeline: NextPage = () => {
   useEffect(async () => {
     const res = await fetch("/api/data/projects");
-    const projects = await res.json();
+    const projects: Project[] = await res.json();
     let data = projects.filter((d) => d.dateStart && d.dateEnd);
 
     const res2 = await fetch("/api/data/unsdcodes/countries");
@@ -83,7 +84,7 @@ const Timeline: NextPage = () => {
       )
       .attr("stroke-dasharray", (d) => (d.dateEnd < new Date() ? "none" : "1"))
       .attr("stroke-opacity", 0.5)
-      .attr("stroke-width", (d) => (d.Status === "Rejected" ? "10px" : "2px"))
+      .attr("stroke-width", (d) => (d.status === "Rejected" ? "10px" : "2px"))
       .append("svg:title")
       .text(
         (d) =>

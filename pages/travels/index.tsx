@@ -21,6 +21,14 @@ const Travels: NextPage = () => {
         </p>
 
         <div className={styles.grid}>
+          <Link href="/travels/overview">
+            <a className={styles.card}>
+              <h2>
+                Overview <MdOutlineArrowRightAlt />
+              </h2>
+            </a>
+          </Link>
+
           <Link href="/travels/airports">
             <a className={styles.card}>
               <h2>

@@ -1,9 +1,12 @@
 import * as d3 from "d3";
-import { median } from "d3";
 import * as _ from "lodash";
-import { mean } from "lodash";
+// TODO:  split this file up in smaller chunks
 
+// TODO: move to types folder
 export type DataType = "continuous" | "date" | "ordinal" | "array";
+
+export const pctFormat = d3.format(".1%");
+export const floatFormat = d3.format(".4");
 
 export default function getColumns(data: object[]) {
   const sample = data[0];
@@ -11,8 +14,9 @@ export default function getColumns(data: object[]) {
   const columnsData = cols.map((d) => {
     return {
       label: d === "" ? "unlabeled" : d,
-      type: getType(data, d),
+      type: getType(data.map((row) => row[d])),
       stats: getColumnStats(data, d),
+      data: data.map((record) => record.d),
     };
   });
   const n_columns = columnsData.length;
@@ -26,10 +30,11 @@ export default function getColumns(data: object[]) {
 
 export const colorMap = new Map(
   [
-    ["ordinal", "rgba(80, 100, 170, 1)"],
-    ["continuous", "rgba(240, 150, 45, 1)"],
-    ["date", "rgba(225,90,90, 1)"],
-    ["array", "rgb(200, 200, 200)"],
+    ["continuous", "rgba(255,230, 0, 1)"],
+    ["ordinal", "rgba(255, 100, 100, 1)"],
+    ["date", "rgba(200,0,55, 1)"],
+    ["array", "rgba(130, 220, 255, 1)"],
+    ["object", "rgba(40, 170, 225, 1)"],
   ].map((d) => {
     const baseColor = d3.color(d[1]);
     const colorCopy = _.clone(baseColor);
@@ -41,13 +46,12 @@ export const colorMap = new Map(
   })
 );
 
-function getType(data: object[], column: string): DataType {
-  for (const d of data) {
-    const value = d[column];
+export function getType(data: object[]): DataType {
+  for (const value of data) {
     if (value == null) continue;
     if (typeof value === "number") return "continuous";
-    if (value instanceof Date) return "date";
     if (Array.isArray(value)) return "array";
+    if (typeof value === "string" && Date.parse(value)) return "date";
     return "ordinal";
   }
   // if all are null, return ordinal
@@ -56,8 +60,6 @@ function getType(data: object[], column: string): DataType {
 
 function getColumnStats(data: object[], column: string) {
   const type = getType(data, column);
-  const pctFormat = d3.format(".1%");
-  const floatFormat = d3.format(".4");
 
   const missing =
     data.filter((d) => d[column] === null || d[column] === "").length /
@@ -67,14 +69,14 @@ function getColumnStats(data: object[], column: string) {
     const median = d3.median(data.map((d) => d[column]));
     const sd = d3.deviation(data.map((d) => d[column]));
     return {
-      missing: pctFormat(missing),
-      mean: floatFormat(mean),
-      median: floatFormat(median),
-      sd: floatFormat(sd),
+      missing: missing,
+      mean: mean,
+      median: median,
+      sd: sd,
     };
   } else {
     return {
-      missing: pctFormat(missing),
+      missing: missing,
       mean: null,
       median: null,
       sd: null,

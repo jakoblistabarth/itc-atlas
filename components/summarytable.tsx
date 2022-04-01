@@ -1,19 +1,25 @@
 import styles from "../styles/summarytable.module.scss";
 import {
   MdCalendarToday,
-  MdListAlt,
+  MdFormatListBulleted,
   MdOutlineCalculate,
   MdClose,
 } from "react-icons/md";
 import { BiBracket } from "react-icons/bi";
-import getColumns, { DataType, colorMap } from "../lib/summarytable";
+import getColumns, {
+  DataType,
+  colorMap,
+  pctFormat,
+  floatFormat,
+} from "../lib/summarytable";
 import { nanoid } from "nanoid";
 import SummaryTableCard from "./summaryTableCard";
+import Snapshot from "./snapshot";
 
 function getIcon(type: DataType) {
   switch (type) {
     case "ordinal":
-      return <MdListAlt />;
+      return <MdFormatListBulleted />;
 
     case "date":
       return <MdCalendarToday />;
@@ -24,20 +30,8 @@ function getIcon(type: DataType) {
   }
 }
 
-const dateTimeReviver = function (key, value) {
-  if (typeof value === "string") {
-    const a = Date.parse(value);
-    if (a) {
-      return new Date(a);
-    }
-  }
-  return value;
-};
-
 export default function SummaryTable({ data }) {
-  //QUESTION: needs to be called data? how to come up with more clever variable names
-  const mydata = JSON.parse(data, dateTimeReviver);
-  const columns = getColumns(mydata);
+  const columns = getColumns(data);
 
   return (
     <div className={styles.summaryTableContainer}>
@@ -67,11 +61,23 @@ export default function SummaryTable({ data }) {
                 <td className={styles.label}>
                   <div className={styles.scrollable}>{d.label}</div>
                 </td>
-                <td>{d.type}</td>
-                <td>{d.stats?.missing}</td>
-                <td>{d.stats?.mean || <MdClose color="lightgrey" />}</td>
-                <td>{d.stats?.median || <MdClose color="lightgrey" />}</td>
-                <td>{d.stats?.sd || <MdClose color="lightgrey" />}</td>
+                <td>
+                  <Snapshot data={data.map((x) => x[d.label])} />
+                </td>
+                <td className={d.stats?.missing > 0.5 ? styles.alert : null}>
+                  {pctFormat(d.stats?.missing)}
+                </td>
+                <td>
+                  {floatFormat(d.stats?.mean) || <MdClose color="lightgrey" />}
+                </td>
+                <td>
+                  {floatFormat(d.stats?.median) || (
+                    <MdClose color="lightgrey" />
+                  )}
+                </td>
+                <td>
+                  {floatFormat(d.stats?.sd) || <MdClose color="lightgrey" />}
+                </td>
               </tr>
             ))}
           </tbody>

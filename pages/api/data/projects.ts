@@ -1,14 +1,17 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import getProjects from "../../../lib/getProjects";
 
-// QUESTION how to type such data entities?
+// TODO return only values which are typed here
+// TODO> move to types folder
 export type Project = {
-  project_id: string;
+  projectID: string | undefined; //TODO: make others also undefined
   projectName: string;
   projectShortName: string;
   countries: string[];
   type: string;
   status: string;
+  dateStart: string;
+  dateEnd: string;
 };
 
 export default async function handler(
