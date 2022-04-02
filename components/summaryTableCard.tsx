@@ -1,10 +1,15 @@
 import styles from "../styles/summarytable.module.scss";
-import { useEffect, useRef } from "react";
+import { FC, useEffect, useRef } from "react";
 import * as d3 from "d3";
 import { colorMap } from "../lib/summarytable";
-import Heading from "./heading";
+import Heading, { Headings } from "./heading";
+import { TableDescription } from "../types/Table";
 
-export default function SummaryTableCard({ data }) {
+type SummaryTableCardProps = {
+  tableDescription: TableDescription;
+};
+
+const SummaryTableCard: FC<SummaryTableCardProps> = ({ tableDescription }) => {
   const ref = useRef();
 
   useEffect(() => {
@@ -14,29 +19,31 @@ export default function SummaryTableCard({ data }) {
       .append("g")
       .attr("id", "header")
       .selectAll("rect")
-      .data(data.columnsData);
+      .data(tableDescription.columns);
 
     const tbody = svgElement
       .append("g")
       .attr("id", "body")
       .selectAll("rect")
-      .data(data.columnsData);
+      .data(tableDescription.columns);
 
     theader
       .enter()
       .append("rect")
       .attr("x", (d, i) => i * 2 + i * 1)
-      .attr("fill", (d) => colorMap.get(d.type)?.color)
+      .attr("fill", (d) => colorMap.get(d.type).baseColor)
       .attr("width", 2)
-      .attr("height", 100);
+      .attr("height", 50);
   });
 
-  //QUESTION: how to use h6 style for h3 from globals scss
   return (
     <div className={styles.summaryTableCard}>
-      {/* <Heading>Overview</Heading> */}
-      <h3>Overview</h3>
+      <Heading Tag={Headings.H3} className={Headings.H4}>
+        Overview
+      </Heading>
       <svg ref={ref} />
     </div>
   );
-}
+};
+
+export default SummaryTableCard;

@@ -6,24 +6,41 @@ import { useEffect, useRef } from "react";
 import styles from "../../styles/Home.module.css";
 import createBaseMap from "../../lib/createBaseMap";
 import Layout from "../../components/layout";
+import { server } from "../../config";
+import { TopoJSON } from "topojson-specification";
+import { FeatureCollection } from "geojson";
+import Heading, { Headings } from "../../components/heading";
 
-const Airports: NextPage = () => {
-  useEffect(async () => {
-    const flights = await fetch("/api/data/flights");
-    const flightsJSON = await flights.json();
+export async function getStaticProps() {
+  const res = await fetch(`${server}/api/data/flights`);
+  const list = await res.json();
+  const airports = list.perAirport;
+  const worldRes = await fetch(`${server}/api/data/geo/countries`);
+  const world = await worldRes.json();
+  return {
+    props: {
+      airports,
+      world,
+    },
+  };
+}
 
+const Airports: NextPage<{
+  airports: FeatureCollection;
+  world: TopoJSON;
+}> = ({ airports, world }) => {
+  useEffect(() => {
     const maxRadius = 50;
-    const airports = flightsJSON.perAirport.features
+    const airportsGeo = airports.features
       .filter((d) => d.properties.iata_code != "AMS")
-      .sort((a, b) => d3.descending(a.value, b.value));
+      .sort((a, b) => {
+        return d3.descending(a.properties.value, b.properties.value);
+      });
 
     const scale = d3
       .scaleSqrt()
-      .domain(d3.extent(airports.map((d) => d.properties.value)))
+      .domain(d3.extent(airportsGeo.map((feature) => feature.properties.value)))
       .range([0, maxRadius]);
-
-    const worldRes = await fetch("/api/data/geo/countries");
-    const world = await worldRes.json();
 
     const projection = geoBertin1953();
 
@@ -33,7 +50,7 @@ const Airports: NextPage = () => {
 
     // Airports
     const airportGroup = svgEl.append("g").attr("id", "airports");
-    const airport = airportGroup.selectAll("circle").data(airports);
+    const airport = airportGroup.selectAll("circle").data(airportsGeo);
 
     airport
       .enter()
@@ -58,7 +75,7 @@ const Airports: NextPage = () => {
         </Head>
 
         <main className={styles.main}>
-          <h1>Airports</h1>
+          <Heading Tag={Headings.H1}>Airports</Heading>
           <svg ref={svgRef} width={1020} height={600} />
         </main>
       </div>

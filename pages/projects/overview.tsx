@@ -1,13 +1,15 @@
 import Head from "next/head";
 import Link from "next/link";
+import PropTypes from "prop-types";
+import { FC, PropsWithChildren } from "react";
 import Layout from "../../components/layout";
 import SummaryTable from "../../components/summaryTable";
-import getProjects from "../../lib/getProjects";
-import Project from "../../pages/api/data/projects"; //TODO: How to use type here
+import { server } from "../../config";
+import { Project } from "../../types/Project"; //TODO: How to use type here
 
 export async function getStaticProps() {
-  const data = await getProjects();
-  const projects = JSON.stringify(data);
+  const res = await fetch(`${server}/api/data/projects`);
+  const projects = await res.json();
   return {
     props: {
       projects,
@@ -15,7 +17,11 @@ export async function getStaticProps() {
   };
 }
 
-export default function Overview({ projects }) {
+type OverviewProps = React.PropsWithChildren<{
+  projects: Project[];
+}>;
+
+const Overview: FC<OverviewProps> = ({ projects }) => {
   return (
     <Layout>
       <Head>
@@ -27,7 +33,13 @@ export default function Overview({ projects }) {
           <a>Back to home</a>
         </Link>
       </p>
-      <SummaryTable data={projects} />
+      <SummaryTable table={projects} />
     </Layout>
   );
-}
+};
+
+Overview.propTypes = {
+  projects: PropTypes.array.isRequired,
+};
+
+export default Overview;

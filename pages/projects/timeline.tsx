@@ -4,13 +4,13 @@ import styles from "../../styles/Home.module.css";
 import { useEffect, useRef } from "react";
 import * as d3 from "d3";
 import isPartOfUnsdGroup from "../../lib/isPartOfUnsdGroup";
-import { Project } from "../api/data/projects";
+import { Table } from "../../types/Table";
 
 const Timeline: NextPage = () => {
   useEffect(async () => {
     const res = await fetch("/api/data/projects");
-    const projects: Project[] = await res.json();
-    let data = projects.filter((d) => d.dateStart && d.dateEnd);
+    const projects: Table[] = await res.json();
+    let data = projects.filter((row) => row.dateStart && row.dateEnd);
 
     const res2 = await fetch("/api/data/unsdcodes/countries");
     const countries = await res2.json();

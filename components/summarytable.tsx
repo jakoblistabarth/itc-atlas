@@ -1,22 +1,22 @@
-import styles from "../styles/summarytable.module.scss";
+import { nanoid } from "nanoid";
+import PropTypes from "prop-types";
+import { FC } from "react";
+import { BiBracket } from "react-icons/bi";
 import {
   MdCalendarToday,
+  MdClose,
   MdFormatListBulleted,
   MdOutlineCalculate,
-  MdClose,
 } from "react-icons/md";
-import { BiBracket } from "react-icons/bi";
-import getColumns, {
-  ColumnType,
-  colorMap,
-  pctFormat,
-  floatFormat,
-} from "../lib/summarytable";
-import { nanoid } from "nanoid";
-import SummaryTableCard from "./summaryTableCard";
+import { floatFormat, pctFormat } from "../lib/formaters";
+import getTableDescription, { colorMap } from "../lib/summarytable";
+import styles from "../styles/summarytable.module.scss";
+import { ColumnType } from "../types/Column";
+import { Table } from "../types/Table";
 import Snapshot from "./snapshot";
+import SummaryTableCard from "./summaryTableCard";
 
-function getIcon(type: ColumnType) {
+function getColumnIcon(type: ColumnType) {
   switch (type) {
     case "ordinal":
       return <MdFormatListBulleted />;
@@ -30,12 +30,17 @@ function getIcon(type: ColumnType) {
   }
 }
 
-export default function SummaryTable({ data }) {
-  const columns = getColumns(data);
+type SummaryTableProps = {
+  table: Table;
+};
+
+const SummaryTable: FC<SummaryTableProps> = ({ table }) => {
+  // console.log(table);
+  const tableDescription = getTableDescription(table);
 
   return (
     <div className={styles.summaryTableContainer}>
-      <SummaryTableCard data={columns} />
+      <SummaryTableCard tableDescription={tableDescription} />
       <div className={styles.summaryTable}>
         <table>
           <thead>
@@ -50,43 +55,69 @@ export default function SummaryTable({ data }) {
             </tr>
           </thead>
           <tbody>
-            {columns.columnsData.map((d) => (
-              <tr key={nanoid()}>
-                <td
-                  className={styles.icon}
-                  style={{ borderColor: colorMap.get(d.type).color }}
-                >
-                  {getIcon(d.type)}
-                </td>
-                <td className={styles.label}>
-                  <div className={styles.scrollable}>{d.label}</div>
-                </td>
-                <td>
-                  <Snapshot
-                    column={data.map((x) => x[d.label])}
-                    columnName={d.label}
-                    type={d.type}
-                  />
-                </td>
-                <td className={d.stats?.missing > 0.5 ? styles.alert : null}>
-                  {pctFormat(d.stats?.missing)}
-                </td>
-                <td>
-                  {floatFormat(d.stats?.mean) || <MdClose color="lightgrey" />}
-                </td>
-                <td>
-                  {floatFormat(d.stats?.median) || (
-                    <MdClose color="lightgrey" />
-                  )}
-                </td>
-                <td>
-                  {floatFormat(d.stats?.sd) || <MdClose color="lightgrey" />}
-                </td>
-              </tr>
-            ))}
+            {tableDescription.columns.map((column) => {
+              const color = colorMap.get(column.type);
+              {
+                if (!color) return;
+              }
+              return (
+                <tr key={nanoid()}>
+                  <td
+                    className={styles.icon}
+                    style={{ borderColor: color.baseColor }}
+                  >
+                    {getColumnIcon(column.type)}
+                  </td>
+                  <td className={styles.label}>
+                    <div className={styles.scrollable}>{column.label}</div>
+                  </td>
+                  <td>
+                    <Snapshot
+                      column={column.data}
+                      columnName={column.label}
+                      type={column.type}
+                    />
+                  </td>
+                  <td
+                    className={
+                      column.stats?.missing > 0.5 ? styles.alert : undefined
+                    }
+                  >
+                    {pctFormat(column.stats.missing)}
+                  </td>
+                  <td>
+                    {typeof column.stats.mean === "number" ? (
+                      floatFormat(column.stats.mean)
+                    ) : (
+                      <MdClose color="lightgrey" />
+                    )}
+                  </td>
+                  <td>
+                    {typeof column.stats.median === "number" ? (
+                      floatFormat(column.stats.median)
+                    ) : (
+                      <MdClose color="lightgrey" />
+                    )}
+                  </td>
+                  <td>
+                    {typeof column.stats.sd === "number" ? (
+                      floatFormat(column.stats.sd)
+                    ) : (
+                      <MdClose color="lightgrey" />
+                    )}
+                  </td>
+                </tr>
+              );
+            })}
           </tbody>
         </table>
       </div>
     </div>
   );
-}
+};
+
+SummaryTable.propTypes = {
+  table: PropTypes.arrayOf(PropTypes.shape({}).isRequired).isRequired,
+};
+
+export default SummaryTable;

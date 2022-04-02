@@ -5,5 +5,5 @@ export default async function cleanContacts(input: Object[]) {
 
   console.log(contacts.getColumnNames());
 
-  return contacts;
+  return contacts.toArray();
 }

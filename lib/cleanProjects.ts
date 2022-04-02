@@ -1,7 +1,6 @@
 import * as df from "data-forge";
 import getUnsdCodes from "./getUnsdCodes";
-import projectType from "./mappings/project.type";
-import projectStatus from "./mappings/project.status";
+import { ProjectType, ProjectStatus } from "../types/Project";
 
 export default async function cleanProjects(input: Object[]) {
   const post2019 = new df.DataFrame(input[0]);
@@ -29,8 +28,8 @@ export default async function cleanProjects(input: Object[]) {
         value === "" ? "project " + index : value,
       dateStart: (value) => (value === "NULL" ? null : value),
       dateEnd: (value) => (value === "NULL" ? null : value),
-      type: (value) => projectType[value] || value,
-      status: (value) => projectStatus[value] || value,
+      type: (value) => ProjectType[value] || value,
+      status: (value) => ProjectStatus[value] || value,
     })
     .where((row) => new Date(row["dateStart"]) < new Date(row["dateEnd"])); // TODO: fix projects whith old entries
   const output = merged.toArray();

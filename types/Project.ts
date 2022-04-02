@@ -1,0 +1,31 @@
+import { Table, Row } from "./Table";
+
+// export interface ProjectTable extends Table {
+//   Array<Project>
+// }
+
+export interface Project extends Row {
+  projectID: string | null;
+  projectName: string | null;
+  projectShortName: string | null;
+  countries: string[];
+  type: ProjectStatus | null;
+  status: ProjectStatus | null;
+  dateStart: string | null;
+  dateEnd: string | null;
+}
+
+export enum ProjectStatus {
+  Undone = "undone",
+  Completed = "completed",
+  Ongoing = "ongoing",
+}
+
+export enum ProjectType {
+  Consulting = "Consulting",
+  ContractEducation = "Contract Education",
+  ContractResearch = "Contract Research",
+  EducationAndTraining = "Education and Training",
+  Other = "Other",
+  Research = "Research",
+}

@@ -2,6 +2,7 @@ import type { NextApiRequest, NextApiResponse } from "next";
 import getContacts from "../../../lib/getContacts";
 
 type Data = {
+  // TODO: define properly
   data: number[];
 };
 

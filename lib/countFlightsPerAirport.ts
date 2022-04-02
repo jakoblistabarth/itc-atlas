@@ -9,17 +9,19 @@ export default function countFlightsPerAirport(flights, airports) {
     (d) => d
   );
 
-  const features = airports.map((d) => {
-    const value = count.get(d.iata_code);
-    return {
-      type: "Feature",
-      geometry: {
-        type: "Point",
-        coordinates: [d.long, d.lat],
-      },
-      properties: { ...d, value: value },
-    };
-  });
+  const features = airports
+    .map((d) => {
+      const value = count.get(d.iata_code);
+      return {
+        type: "Feature",
+        geometry: {
+          type: "Point",
+          coordinates: [d.long, d.lat],
+        },
+        properties: { ...d, value: value },
+      };
+    })
+    .filter((d) => d.properties.value);
 
   return {
     type: "FeatureCollection",

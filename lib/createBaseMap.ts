@@ -43,13 +43,7 @@ export default function createBaseMap(map, baseMapData, projection) {
     .append("g")
     .attr("id", "borders")
     .append("path")
-    .datum(
-      topojson.feature(
-        baseMapData,
-        baseMapData.objects.countries,
-        (a, b) => a !== b
-      )
-    )
+    .datum(topojson.feature(baseMapData, baseMapData.objects.countries))
     .attr("fill", "none")
     .attr("stroke", "lightgrey")
     .attr("stroke-linejoin", "round")

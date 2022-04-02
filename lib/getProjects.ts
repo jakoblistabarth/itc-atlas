@@ -1,5 +1,5 @@
 import xlsx from "xlsx";
-import { Project } from "../pages/api/data/projects";
+import { Project } from "../types/Project";
 import cleanProjects from "./cleanProjects";
 
 export default async function getProjects(): Promise<Project[]> {
@@ -11,6 +11,7 @@ export default async function getProjects(): Promise<Project[]> {
 
   const projects = await cleanProjects([projectsPre2019, projectsPost2019]);
 
+  // TODO type remaining columns?
   return projects.map(
     ({
       projectID,

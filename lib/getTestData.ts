@@ -1,4 +1,6 @@
-export default async function getTestData() {
+import { Table } from "../types/Table";
+
+export default async function getTestData(): Promise<Table> {
   return [
     {
       name: "John",
