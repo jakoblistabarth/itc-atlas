@@ -1,15 +1,16 @@
 import { ColumnType } from "./Column";
+import { Flight } from "./Flight";
 import { Project } from "./Project";
 
-export type Entity = string | number | Date | Object | string[] | null;
+export type Datum = string | number | Date | Object | string[] | null;
 
 export type Row = {
-  [key: string]: Entity;
+  [key: string]: Datum;
 };
 
-export type Table = Array<Row | Project>; // Question: Better extending Table to explicitly type for ProjectTable?
+export type Table<T = Row> = Array<T>;
 
-export type Column = Array<Entity>;
+export type Column = Array<Datum>;
 
 export type ColumnStats = {
   missing: number;
@@ -28,3 +29,7 @@ export type TableDescription = {
   nColumns: number;
   nRows: number;
 };
+
+export type ProjectTable = Table<Project>; // Project[] // Array<Project>
+export type FlightsTable = Table<Flight>;
+export type SimpleTable = Table;

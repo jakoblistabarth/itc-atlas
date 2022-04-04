@@ -25,7 +25,10 @@ export default function getTableDescription(table: Table): TableDescription {
   };
 }
 
-export const colorMap = new Map(
+export const colorMap: Map<
+  ColumnType,
+  { baseColor: string; brighter: string }
+> = new Map(
   [
     [ColumnType.Contiuous, "rgba(255,230, 0, 1)"],
     [ColumnType.Ordinal, "rgba(255, 100, 100, 1)"],

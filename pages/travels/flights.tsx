@@ -4,29 +4,31 @@ import { geoBertin1953 } from "d3-geo-projection";
 import type { NextPage } from "next";
 import Head from "next/head";
 import { useEffect, useRef } from "react";
+import BaseMap from "../../components/map/BaseMap";
 import styles from "../../styles/Home.module.css";
-import createBaseMap from "../../lib/createBaseMap";
+import { Topology } from "topojson-specification";
+import getFlights from "../../lib/getFlights";
+import getCountries from "../../lib/getCountries";
 
-const Flights: NextPage = () => {
+type Props = {
+  flights: {};
+  world: Topology;
+};
+
+const Flights: NextPage<Props> = ({ flights, world }) => {
+  const projection = geoBertin1953();
+  const path = geoPath(projection);
+
+  const svgRef = useRef(null);
+
   useEffect(async () => {
-    const res = await fetch("/api/data/flights");
-    const json = await res.json();
-
-    const worldRes = await fetch("/api/data/geo/countries");
-    const world = await worldRes.json();
-
-    const projection = geoBertin1953();
-    const path = geoPath(projection);
-
     // setData(json.data)
     // setFilteredData(json.data)
     const svgEl = d3.select(svgRef.current);
 
-    createBaseMap(svgEl, world, projection);
-
     // Flows
     const routes = svgEl.append("g").attr("id", "routes");
-    const flow = routes.selectAll("path").data(json.odMatrix);
+    const flow = routes.selectAll("path").data(flights.odMatrix);
 
     flow
       .enter()
@@ -47,7 +49,6 @@ const Flights: NextPage = () => {
   //   setFilteredData(data.filter(d => d > selectedCountry))
   // }, [selectedCountry])
 
-  const svgRef = useRef(null);
   return (
     <div className={styles.container}>
       <Head>
@@ -57,7 +58,10 @@ const Flights: NextPage = () => {
 
       <main className={styles.main}>
         <h1>Flights</h1>
-        <svg ref={svgRef} width={1020} height={600} />
+        <svg ref={svgRef} width={1020} height={600}>
+          <BaseMap baseMapData={world} projection={projection} />
+        </svg>
+
         {/* <select onChange={(e) => setSelectedCountry(e.target.value)}></select>
         <Navigation>
         <Flowmap thematicData={filteredData} geographicData="" />
@@ -66,5 +70,16 @@ const Flights: NextPage = () => {
     </div>
   );
 };
+
+export async function getStaticProps() {
+  const flights = await getFlights();
+  const world = await getCountries();
+  return {
+    props: {
+      flights,
+      world,
+    },
+  };
+}
 
 export default Flights;

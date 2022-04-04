@@ -1,22 +1,20 @@
-import { GetServerSideProps } from "next";
+import { GetStaticProps, NextPage } from "next";
 import Head from "next/head";
 import Link from "next/link";
-import { FC } from "react";
 import Layout from "../../components/layout";
-import styles from "../../styles/layout.module.css";
 import Snapshot from "../../components/snapshot";
 import SummaryTable from "../../components/summaryTable";
 import getFlights from "../../lib/getFlights";
 import getTestData from "../../lib/getTestData";
 import { ColumnType } from "../../types/Column";
-import { Table } from "../../types/Table";
+import { FlightsTable } from "../../types/Table";
 
 type OverviewProps = {
-  flights: Table;
+  flights: FlightsTable;
   test: Awaited<ReturnType<typeof getTestData>>;
 };
 
-const Overview: FC<OverviewProps> = ({ flights, test }) => {
+const Overview: NextPage<OverviewProps> = ({ flights, test }) => {
   return (
     <Layout>
       <Head>
@@ -54,9 +52,7 @@ const Overview: FC<OverviewProps> = ({ flights, test }) => {
 
 export default Overview;
 
-export const getServerSideProps: GetServerSideProps<
-  OverviewProps
-> = async () => {
+export const getStaticProps: GetStaticProps<OverviewProps> = async () => {
   const flights = await getFlights();
   const test = await getTestData();
   return {

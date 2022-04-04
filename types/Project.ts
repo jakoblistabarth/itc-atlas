@@ -4,16 +4,16 @@ import { Table, Row } from "./Table";
 //   Array<Project>
 // }
 
-export interface Project extends Row {
+export type Project = {
   projectID: string | null;
   projectName: string | null;
   projectShortName: string | null;
   countries: string[];
-  type: ProjectStatus | null;
+  type: ProjectType | null;
   status: ProjectStatus | null;
   dateStart: string | null;
   dateEnd: string | null;
-}
+};
 
 export enum ProjectStatus {
   Undone = "undone",

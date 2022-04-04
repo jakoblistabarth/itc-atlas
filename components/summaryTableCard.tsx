@@ -10,7 +10,7 @@ type SummaryTableCardProps = {
 };
 
 const SummaryTableCard: FC<SummaryTableCardProps> = ({ tableDescription }) => {
-  const ref = useRef();
+  const ref = useRef<SVGSVGElement>(null);
 
   useEffect(() => {
     const svgElement = d3.select(ref.current);

@@ -3,12 +3,11 @@ import Link from "next/link";
 import { FC } from "react";
 import Layout from "../../components/layout";
 import SummaryTable from "../../components/summaryTable";
-import { server } from "../../config";
-import { Project } from "../../types/Project"; //TODO: How to use type here
+import getProjects from "../../lib/getProjects";
+import { Project } from "../../types/Project";
 
 export async function getStaticProps() {
-  const res = await fetch(`${server}/api/data/projects`);
-  const projects = await res.json();
+  const projects = await getProjects();
   return {
     props: {
       projects,

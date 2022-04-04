@@ -7,7 +7,7 @@ export default function isPartOfUnsdGroup(
   iso3Code: string,
   group: UnGroupings
 ) {
-  //   const areaCodes = await getUnsdCodes("countries");
+  // const areaCodes = await getUnsdCodes("countries");
   const country = areaCodes.find(
     (area) => area["ISO-alpha3 Code"] === iso3Code
   );

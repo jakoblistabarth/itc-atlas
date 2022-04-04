@@ -2,6 +2,7 @@ import xlsx from "xlsx";
 import createODMatrix from "./createODMatrix";
 import getAirports from "./getAirports";
 import countFlightsperAirport from "./countFlightsPerAirport";
+import { FlightsTable } from "../types/Table";
 
 export default async function getFlights() {
   const filePath = "./data/UT.01jan-31dec2019-ITConly.xlsx";
@@ -23,7 +24,7 @@ export default async function getFlights() {
   const perAirport = countFlightsperAirport(flights, airports);
 
   return {
-    originalData: data,
+    allTravels: data,
     flights: flights,
     odMatrix: odMatrix,
     perAirport: perAirport,

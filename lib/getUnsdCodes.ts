@@ -1,6 +1,11 @@
 import * as csv from "csvtojson";
 
-type Level = "countries" | "regions" | "subRegions" | "intermediateRegions";
+export enum UnLevel {
+  Countries = "countries",
+  Regions = "regions",
+  SubRegions = "subRegions",
+  IntermediateRegions = "intermediateRegions",
+}
 
 export default async function getUnsdCodes(level?: Level) {
   const csvFilePath = "./data/UNSD-Methodology.csv";
@@ -46,13 +51,13 @@ export default async function getUnsdCodes(level?: Level) {
     });
 
   switch (level) {
-    case "countries":
+    case UnLevel.Countries:
       return countries;
-    case "regions":
+    case UnLevel.Regions:
       return regions;
-    case "subRegions":
+    case UnLevel.SubRegions:
       return subRegions;
-    case "intermediateRegions":
+    case UnLevel.IntermediateRegions:
       return intermediateRegions;
     default:
       return {

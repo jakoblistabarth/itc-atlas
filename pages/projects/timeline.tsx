@@ -1,62 +1,73 @@
+import * as d3 from "d3";
 import type { NextPage } from "next";
 import Head from "next/head";
-import styles from "../../styles/Home.module.css";
 import { useEffect, useRef } from "react";
-import * as d3 from "d3";
+import { DateFormat } from "../../lib/formaters";
+import getCountries from "../../lib/getCountries";
+import getProjects from "../../lib/getProjects";
+import getUnsdCodes, { UnLevel } from "../../lib/getUnsdCodes";
 import isPartOfUnsdGroup from "../../lib/isPartOfUnsdGroup";
-import { Table } from "../../types/Table";
+import styles from "../../styles/Home.module.css";
+import { Project, ProjectStatus } from "../../types/Project";
+import { UnGroupings } from "../../types/UnGroupings";
 
-const Timeline: NextPage = () => {
+type TimelineProps = {
+  projects: Project[];
+  countries: any[]; //TODO create type for codes
+};
+
+const Timeline: NextPage<TimelineProps> = ({ projects, countries }) => {
+  // QUESTION: such filtering in static props or here?
+  const projectsSelection = projects.filter(
+    (
+      row
+    ): row is Omit<Project, "dateStart" | "dateEnd" | "projectID"> & {
+      dateStart: string;
+      dateEnd: string;
+      projectID: string;
+    } => typeof row.dateStart !== "string" && typeof row.dateEnd !== "string"
+  );
+
+  projectsSelection.sort((a, b) =>
+    d3.ascending(new Date(a.dateStart), new Date(b.dateStart))
+  );
+
+  const margin = {
+      top: 10,
+      right: 30,
+      bottom: 80,
+      left: 250,
+    },
+    width = 1080 - margin.left - margin.right,
+    height = 2000 - margin.top - margin.bottom;
+
+  const x = d3
+    .scaleTime()
+    .range([0, width])
+    .domain([
+      // TODO: specify fallbacks
+      d3.min(projectsSelection.map((d) => new Date(d.dateStart))) ??
+        new Date("1950"),
+      d3.max(projectsSelection.map((d) => new Date(d.dateEnd))) ?? new Date(),
+    ]);
+
+  const y = d3
+    .scalePoint()
+    .range([0, height])
+    .domain(projectsSelection.map((d) => d.projectID))
+    .padding(1);
+
   useEffect(async () => {
-    const res = await fetch("/api/data/projects");
-    const projects: Table[] = await res.json();
-    let data = projects.filter((row) => row.dateStart && row.dateEnd);
-
-    const res2 = await fetch("/api/data/unsdcodes/countries");
-    const countries = await res2.json();
-
-    const formatTime = d3.timeFormat("%B %d, %Y");
-
-    data.forEach((d) => {
-      d.dateStart = new Date(d.dateStart);
-      d.dateEnd = new Date(d.dateEnd);
-    });
-
-    data.sort((a, b) => d3.ascending(a.dateStart, b.dateStart));
-
-    const margin = {
-        top: 10,
-        right: 30,
-        bottom: 80,
-        left: 250,
-      },
-      width = 1080 - margin.left - margin.right,
-      height = 2000 - margin.top - margin.bottom;
-
     const svgEl = d3
       .select(svgRef.current)
       .attr("width", width + margin.left + margin.right)
       .attr("height", height + margin.top + margin.bottom)
       .append("g")
-      .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
-
-    const x = d3
-      .scaleTime()
-      .range([0, width])
-      .domain([
-        d3.min(data.map((d) => d.dateStart)),
-        d3.max(data.map((d) => d.dateEnd)),
-      ]);
-
-    const y = d3
-      .scalePoint()
-      .range([0, height])
-      .domain(data.map((d) => d.projectID))
-      .padding(1);
+      .attr("transform", `translate(${margin.left}, ${margin.top})`);
 
     svgEl
       .append("g")
-      .attr("transform", "translate(0," + height + ")")
+      .attr("transform", `translate(0,${height})`)
       .call(d3.axisBottom(x))
       .selectAll("text")
       .style("text-anchor", "center");
@@ -68,31 +79,35 @@ const Timeline: NextPage = () => {
       .append("g")
       .attr("id", "lines")
       .selectAll("line")
-      .data(data)
+      .data(projectsSelection)
       .enter()
       .append("line")
-      .attr("x1", (d) => x(d.dateStart))
-      .attr("x2", (d) => x(d.dateEnd))
-      .attr("y1", (d) => y(d.projectID))
-      .attr("y2", (d) => y(d.projectID))
+      .attr("x1", (d) => x(new Date(d.dateStart)))
+      .attr("x2", (d) => x(new Date(d.dateEnd)))
+      .attr("y1", (d) => y(d.projectID) ?? null)
+      .attr("y2", (d) => y(d.projectID) ?? null)
       .attr("stroke", (d) =>
         d.countries.some((e) => {
-          return isPartOfUnsdGroup(countries, e, "LDC");
+          return isPartOfUnsdGroup(countries, e, UnGroupings.LDC);
         })
           ? "red"
           : "black"
       )
-      .attr("stroke-dasharray", (d) => (d.dateEnd < new Date() ? "none" : "1"))
+      .attr("stroke-dasharray", (d) =>
+        new Date(d.dateEnd) < new Date() ? "none" : "1"
+      )
       .attr("stroke-opacity", 0.5)
-      .attr("stroke-width", (d) => (d.status === "Rejected" ? "10px" : "2px"))
+      .attr("stroke-width", (d) =>
+        d.status === ProjectStatus.Undone ? "1px" : "2px"
+      )
       .append("svg:title")
       .text(
         (d) =>
           d.projectShortName +
           " (" +
-          formatTime(d.dateStart) +
+          DateFormat(new Date(d.dateStart)) +
           "-" +
-          formatTime(d.dateEnd) +
+          DateFormat(new Date(d.dateEnd)) +
           ")"
       );
   });
@@ -113,6 +128,18 @@ const Timeline: NextPage = () => {
       </main>
     </div>
   );
+};
+
+export const getStaticProps = async () => {
+  const projects = await getProjects();
+  const countries = await getUnsdCodes(UnLevel.Countries);
+
+  return {
+    props: {
+      projects,
+      countries,
+    },
+  };
 };
 
 export default Timeline;

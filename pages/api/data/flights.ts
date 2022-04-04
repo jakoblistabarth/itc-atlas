@@ -1,9 +1,14 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import type { NextApiRequest, NextApiResponse } from "next";
 import getFlights from "../../../lib/getFlights";
+import { Flight } from "../../../types/Flight";
+import { FeatureCollection } from "geojson";
 
 type Data = {
-  data: number[];
+  originalData: Array<object>;
+  data: Flight[];
+  odMatrix: Array<object>;
+  perAirport: FeatureCollection;
 };
 
 export default async function handler(
