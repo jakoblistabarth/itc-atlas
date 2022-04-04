@@ -1,7 +1,6 @@
 import Head from "next/head";
 import Link from "next/link";
-import PropTypes from "prop-types";
-import { FC, PropsWithChildren } from "react";
+import { FC } from "react";
 import Layout from "../../components/layout";
 import SummaryTable from "../../components/summaryTable";
 import { server } from "../../config";
@@ -36,10 +35,6 @@ const Overview: FC<OverviewProps> = ({ projects }) => {
       <SummaryTable table={projects} />
     </Layout>
   );
-};
-
-Overview.propTypes = {
-  projects: PropTypes.array.isRequired,
 };
 
 export default Overview;

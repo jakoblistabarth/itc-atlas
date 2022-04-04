@@ -1,6 +1,5 @@
 import { colorMap } from "../lib/summarytable";
 import { ColumnType } from "../types/Column";
-import PropTypes from "prop-types";
 import { FC } from "react";
 
 type SnapshotProps = {
@@ -29,23 +28,6 @@ const Snapshot: FC<SnapshotProps> = ({
       )}
     </>
   );
-};
-
-Snapshot.propTypes = {
-  column: PropTypes.array.isRequired,
-  columnName: PropTypes.string,
-  type: PropTypes.oneOf<ColumnType>([
-    ColumnType.Array,
-    ColumnType.Contiuous,
-    ColumnType.Date,
-    ColumnType.Object,
-    ColumnType.Ordinal,
-  ]).isRequired, //TODO: use type ColumnType
-  detailed: PropTypes.bool,
-};
-
-Snapshot.defaultProps = {
-  detailed: false,
 };
 
 export default Snapshot;

@@ -1,5 +1,4 @@
 import React, { FC } from "react";
-import PropTypes from "prop-types";
 import styles from "../styles/heading.module.scss";
 
 export enum Headings {

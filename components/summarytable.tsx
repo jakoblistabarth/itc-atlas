@@ -1,5 +1,4 @@
 import { nanoid } from "nanoid";
-import PropTypes from "prop-types";
 import { FC } from "react";
 import { BiBracket } from "react-icons/bi";
 import {
@@ -114,10 +113,6 @@ const SummaryTable: FC<SummaryTableProps> = ({ table }) => {
       </div>
     </div>
   );
-};
-
-SummaryTable.propTypes = {
-  table: PropTypes.arrayOf(PropTypes.shape({}).isRequired).isRequired,
 };
 
 export default SummaryTable;
