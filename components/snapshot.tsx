@@ -11,7 +11,7 @@ type Props = {
   detailed?: boolean;
 };
 
-const SnapshotWrapper: FC<Props> = ({ column, columnName, type, detailed }) => {
+const Snapshot: FC<Props> = ({ column, columnName, type, detailed }) => {
   const color = colorMap.get(type);
   function renderSnapshot(type: ColumnType) {
     switch (type) {
@@ -29,15 +29,15 @@ const SnapshotWrapper: FC<Props> = ({ column, columnName, type, detailed }) => {
   return !type || !color ? (
     <div>Snapshot creation failed!</div>
   ) : (
-    <>
+    <div>
       {renderSnapshot(type)}
       {detailed && (
         <small>
-          {columnName}, {column.length} Elements
+          {columnName}, {column.length} Rows
         </small>
       )}
-    </>
+    </div>
   );
 };
 
-export default SnapshotWrapper;
+export default Snapshot;

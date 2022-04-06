@@ -7,6 +7,7 @@ import BackToHome from "../../components/backToHome";
 import { FlightsTable } from "../../types/Table";
 import getFlights from "../../lib/getFlights";
 import SummaryTable from "../../components/summaryTable";
+import Footer from "../../components/footer";
 
 type Props = {
   flights: FlightsTable;
@@ -53,7 +54,7 @@ const Travels: NextPage<Props> = ({ flights }) => {
         </p>
       </main>
 
-      <footer className={styles.footer}>March 2022</footer>
+      <Footer />
     </>
   );
 };
