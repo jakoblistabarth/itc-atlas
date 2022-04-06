@@ -7,13 +7,21 @@ import { Column } from "../types/Table";
 
 type Props = {
   column: any[];
+  type: ColumnType;
 };
 
-const SnapshotOrdinal: FC<Props> = ({ column }) => {
+const SnapshotBar: FC<Props> = ({ column, type }) => {
   const ref = useRef<HTMLDivElement>(null);
 
   const width = 200;
   const height = 30;
+  const margin = {
+    horizontal: 1,
+    vertical: 1,
+  };
+
+  const innerHeight = height - margin.vertical * 2;
+  const innerWidth = width - margin.horizontal * 2;
 
   function createStack(column: Column) {
     const ColumnNoNA = column.filter(
@@ -47,14 +55,14 @@ const SnapshotOrdinal: FC<Props> = ({ column }) => {
       d3.min(stack.map((d) => d.start)),
       d3.max(stack.map((d) => d.end)),
     ])
-    .range([0, width]);
+    .range([0, innerWidth]);
 
   const color = d3
     .scaleLinear()
     .domain(d3.extent(stack.map((d) => d.start)))
     .range([
-      colorMap.get(ColumnType.Ordinal)?.baseColor ?? "black",
-      colorMap.get(ColumnType.Ordinal)?.brighter ?? "lightgrey",
+      colorMap.get(type)?.baseColor ?? "black",
+      colorMap.get(type)?.brighter ?? "lightgrey",
     ]);
 
   useEffect(() => {
@@ -64,6 +72,10 @@ const SnapshotOrdinal: FC<Props> = ({ column }) => {
       .append("svg")
       .attr("width", width)
       .attr("height", height);
+
+    const inner = svgElement
+      .append("g")
+      .attr("transform", `translate(${margin.horizontal},${margin.vertical})`);
 
     const tooltip = svgContainer
       .append("div")
@@ -92,14 +104,14 @@ const SnapshotOrdinal: FC<Props> = ({ column }) => {
       d3.select(event.target).style("stroke", "none").style("opacity", 1);
     };
 
-    svgElement
+    inner
       .selectAll("rect")
       .data(stack)
       .join("rect")
       .attr("x", (d) => x(d.start))
       .attr("y", 0)
       .attr("width", (d) => Math.abs(x(d.start) - x(d.end)))
-      .attr("height", height)
+      .attr("height", innerHeight)
       .attr("fill", (d) => color(d.start))
       .on("mouseover", mouseover)
       .on("mousemove", mousemove)
@@ -109,4 +121,4 @@ const SnapshotOrdinal: FC<Props> = ({ column }) => {
   return <div ref={ref} />;
 };
 
-export default SnapshotOrdinal;
+export default SnapshotBar;

@@ -22,25 +22,6 @@ const Overview: NextPage<OverviewProps> = ({ flights, test }) => {
         <title>Flight Overview</title>
       </Head>
       <h1>Flight Overview</h1>
-      <p>🤫 for debugging only</p>
-      <SnapshotWrapper
-        column={test.map((d) => d.name)}
-        columnName="name"
-        type={ColumnType.Ordinal}
-      />
-      <SnapshotWrapper
-        column={test.map((d) => d.favNo)}
-        columnName="favNo"
-        type={ColumnType.Contiuous}
-        detailed={true}
-      />
-      <SnapshotWrapper
-        column={test.map((d) => d.dateOfBirth)}
-        columnName="dateofBirth"
-        type={ColumnType.Date}
-      />
-      <SummaryTable table={test} />
-      <p>This table gives an overview on the complete dataset.</p>
       <SummaryTable table={flights} />
       <p>
         <Link href="/">

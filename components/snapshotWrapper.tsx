@@ -1,8 +1,8 @@
 import { colorMap } from "../lib/summarytable";
 import { ColumnType } from "../types/Column";
 import { FC } from "react";
-import SnapshotOrdinal from "./snapshotOrdinal";
-import SnapshotContinuous from "./snapshotContinuous";
+import SnapshotBar from "./snapshotBar";
+import SnapshotHistogram from "./snapshotHistogram";
 
 type Props = {
   column: any[];
@@ -16,9 +16,14 @@ const SnapshotWrapper: FC<Props> = ({ column, columnName, type, detailed }) => {
   function renderSnapshot(type: ColumnType) {
     switch (type) {
       case ColumnType.Ordinal:
-        return <SnapshotOrdinal column={column} />;
+        return <SnapshotBar type={type} column={column} />;
+      case ColumnType.Array:
+        const flattenedArray = column.filter((d) => d).map((d) => d.join(", "));
+        return <SnapshotBar type={type} column={flattenedArray} />;
       case ColumnType.Contiuous:
-        return <SnapshotContinuous column={column} />;
+        return <SnapshotHistogram type={type} column={column} />;
+      case ColumnType.Date:
+        return <SnapshotHistogram type={type} column={column} />;
     }
   }
   return !type || !color ? (

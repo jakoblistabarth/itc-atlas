@@ -30,7 +30,7 @@ export const colorMap: Map<
   { baseColor: string; brighter: string }
 > = new Map(
   [
-    [ColumnType.Contiuous, "rgba(255,230, 0, 1)"],
+    [ColumnType.Contiuous, "rgb(255, 170, 25)"],
     [ColumnType.Ordinal, "rgba(255, 100, 100, 1)"],
     [ColumnType.Date, "rgba(200,0,55, 1)"],
     [ColumnType.Array, "rgba(130, 220, 255, 1)"],

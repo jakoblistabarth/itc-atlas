@@ -8,7 +8,7 @@ export default async function getTestData(): Promise<Table> {
       height: null,
       dateOfBirth: new Date("1990-03-15").toISOString(),
       favNo: null,
-      pinArray: [10, 20, 30],
+      pinArray: [10, 20, 10],
     },
     {
       name: "John",
@@ -38,7 +38,7 @@ export default async function getTestData(): Promise<Table> {
       name: "Amely",
       nickname: "",
       height: null,
-      dateOfBirth: new Date("1993-10-10").toISOString(),
+      dateOfBirth: new Date("2000-10-10").toISOString(),
       favNo: 2,
       pinArray: [10, 20, 30],
     },

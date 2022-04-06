@@ -2,34 +2,44 @@ import { FC, useEffect, useRef } from "react";
 import * as d3 from "d3";
 import { colorMap } from "../lib/summarytable";
 import { ColumnType } from "../types/Column";
+import { DateFormat, floatFormat } from "../lib/formaters";
+import { Datum } from "../types/Table";
+import { Bin } from "d3";
 
 type Props = {
-  column: number[];
+  column: Datum[];
+  type: ColumnType;
 };
 
-const SnapshotContinuous: FC<Props> = ({ column }) => {
+const SnapshotHistogram: FC<Props> = ({ column, type }) => {
   const ref = useRef<HTMLDivElement>(null);
 
   const width = 200;
   const height = 30;
   const margin = {
-    top: 0,
+    top: 1,
     side: 15,
     bottom: 15,
   };
 
   const columnNoNA = column.filter(
-    (d) => d !== undefined && d !== null && d !== "" && d != "null"
+    (d) => d !== undefined && d !== null && d !== ""
   );
+  const cleanedColumn =
+    type === ColumnType.Date ? columnNoNA.map((d) => new Date(d)) : columnNoNA;
+
+  const typeFormat = type === ColumnType.Date ? DateFormat : floatFormat;
 
   const histogram = d3.bin();
-  const bins = histogram(columnNoNA);
+  const bins = histogram(cleanedColumn);
 
   const yDomain = [
     d3.min(bins.map((d) => d.length)),
     d3.max(bins.map((d) => d.length)),
   ];
   const xDomain = [bins[0].x0, bins[bins.length - 1].x1];
+
+  const ticks = type === ColumnType.Contiuous ? xDomain : "";
 
   const x = d3
     .scaleLinear()
@@ -39,8 +49,8 @@ const SnapshotContinuous: FC<Props> = ({ column }) => {
   const y = d3.scaleLinear().range([height - margin.bottom, 0]);
   y.domain(yDomain);
 
-  const mean = d3.mean(columnNoNA);
-  const median = d3.median(columnNoNA);
+  const mean = d3.mean(cleanedColumn);
+  const median = d3.median(cleanedColumn);
 
   useEffect(() => {
     const svgContainer = d3.select(ref.current).style("position", "relative");
@@ -64,19 +74,23 @@ const SnapshotContinuous: FC<Props> = ({ column }) => {
       .style("box-shadow", "0 0 5px rgba(0,0,0,.5")
       .style("font-size", "x-small");
 
-    const mouseover = (event) => {
+    const mouseover = (event: MouseEvent) => {
       tooltip.style("display", "inline");
       d3.select(event.target).style("stroke", "black");
     };
-    const mousemove = (event, d) => {
+    const mousemove = (event: MouseEvent, d: Bin<Datum, number>) => {
       const tooltipHeight = tooltip.node()?.offsetHeight ?? 0;
       const tooltipWidth = tooltip.node()?.offsetWidth ?? 0;
       tooltip
         .style("left", -tooltipWidth / 2 + d3.pointer(event)[0] + "px")
         .style("top", d3.pointer(event)[1] - tooltipHeight - 5 + "px")
-        .html(`<strong>${d.x0}-${d.x1}</strong><br>${d.length} rows`);
+        .html(
+          `<strong>${typeFormat(d.x0)}-${typeFormat(
+            d.x1
+          )}</strong><br>${floatFormat(d.length)} rows`
+        );
     };
-    const mouseleave = (event) => {
+    const mouseleave = (event: MouseEvent) => {
       tooltip.style("display", "none");
       d3.select(event.target).style("stroke", "none").style("opacity", 1);
     };
@@ -91,7 +105,7 @@ const SnapshotContinuous: FC<Props> = ({ column }) => {
       .attr("y", (d) => y(d.length))
       .attr("width", (d) => Math.max(0, x(d.x1) - x(d.x0) - 1))
       .attr("height", (d) => y(0) - y(d.length))
-      .attr("fill", colorMap.get(ColumnType.Contiuous)?.baseColor ?? "black")
+      .attr("fill", colorMap.get(type)?.baseColor ?? "black")
       .attr("stroke", "white")
       .attr("stroke-width", "1px")
       .on("mouseover", mouseover)
@@ -101,7 +115,7 @@ const SnapshotContinuous: FC<Props> = ({ column }) => {
     inner
       .append("g")
       .attr("transform", `translate(0,${height - margin.bottom})`)
-      .call(d3.axisBottom(x).tickValues(xDomain))
+      .call(d3.axisBottom(x).tickValues(ticks)) // TODO: fix ticks for type Date
       .attr("font-size", 7);
 
     const indicators = inner.append("g").attr("opacity", 0.3);
@@ -128,4 +142,4 @@ const SnapshotContinuous: FC<Props> = ({ column }) => {
   return <div ref={ref} />;
 };
 
-export default SnapshotContinuous;
+export default SnapshotHistogram;
