@@ -2,6 +2,7 @@ import { colorMap } from "../lib/summarytable";
 import { ColumnType } from "../types/Column";
 import { FC } from "react";
 import SnapshotOrdinal from "./snapshotOrdinal";
+import SnapshotContinuous from "./snapshotContinuous";
 
 type Props = {
   column: any[];
@@ -16,6 +17,8 @@ const SnapshotWrapper: FC<Props> = ({ column, columnName, type, detailed }) => {
     switch (type) {
       case ColumnType.Ordinal:
         return <SnapshotOrdinal column={column} />;
+      case ColumnType.Contiuous:
+        return <SnapshotContinuous column={column} />;
     }
   }
   return !type || !color ? (
