@@ -1,6 +1,7 @@
 import { GetStaticProps, NextPage } from "next";
 import Head from "next/head";
 import Link from "next/link";
+import BackToHome from "../../components/backToHome";
 import Layout from "../../components/layout";
 import SnapshotWrapper from "../../components/snapshotWrapper";
 import SummaryTable from "../../components/summaryTable";
@@ -43,7 +44,7 @@ const Overview: NextPage<OverviewProps> = ({ flights, test }) => {
       <SummaryTable table={flights} />
       <p>
         <Link href="/">
-          <a>Back to home</a>
+          <BackToHome />
         </Link>
       </p>
     </Layout>

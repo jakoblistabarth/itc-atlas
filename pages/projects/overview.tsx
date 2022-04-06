@@ -1,6 +1,7 @@
 import Head from "next/head";
 import Link from "next/link";
 import { FC } from "react";
+import BackToHome from "../../components/backToHome";
 import Layout from "../../components/layout";
 import SummaryTable from "../../components/summaryTable";
 import getProjects from "../../lib/getProjects";
@@ -28,7 +29,7 @@ const Overview: FC<OverviewProps> = ({ projects }) => {
       <h1>Project Overview</h1>
       <p>
         <Link href="/">
-          <a>Back to home</a>
+          <BackToHome />
         </Link>
       </p>
       <SummaryTable table={projects} />

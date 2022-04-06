@@ -3,6 +3,7 @@ import Head from "next/head";
 import styles from "../../styles/Home.module.css";
 import { MdOutlineArrowRightAlt } from "react-icons/md";
 import Link from "next/link";
+import BackToHome from "../../components/backToHome";
 
 const Travels: NextPage = () => {
   return (
@@ -47,7 +48,7 @@ const Travels: NextPage = () => {
         </div>
         <p>
           <Link href="/">
-            <a>Back to home</a>
+            <BackToHome />
           </Link>
         </p>
       </main>
