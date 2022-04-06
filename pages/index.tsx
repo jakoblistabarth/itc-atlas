@@ -1,12 +1,13 @@
 import type { NextPage } from "next";
 import Head from "next/head";
-import styles from "../styles/Home.module.css";
+import styles from "../styles/home.module.css";
 import { MdOutlineArrowRightAlt } from "react-icons/md";
 import Link from "next/link";
+import Footer from "../components/footer";
 
 const Home: NextPage = () => {
   return (
-    <div className={styles.container}>
+    <>
       <Head>
         <title>ITC Atlas</title>
         <meta name="description" content="ITC Atlas" />
@@ -48,8 +49,8 @@ const Home: NextPage = () => {
         </div>
       </main>
 
-      <footer className={styles.footer}>March 2022</footer>
-    </div>
+      <Footer />
+    </>
   );
 };
 

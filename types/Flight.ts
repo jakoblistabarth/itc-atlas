@@ -1,1 +1,3 @@
-export type Flight = object;
+import { Row } from "./Table";
+
+export type Flight = Row;

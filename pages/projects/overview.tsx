@@ -2,7 +2,6 @@ import Head from "next/head";
 import Link from "next/link";
 import { FC } from "react";
 import BackToHome from "../../components/backToHome";
-import Layout from "../../components/layout";
 import SummaryTable from "../../components/summaryTable";
 import getProjects from "../../lib/getProjects";
 import { Project } from "../../types/Project";
@@ -22,7 +21,7 @@ type OverviewProps = React.PropsWithChildren<{
 
 const Overview: FC<OverviewProps> = ({ projects }) => {
   return (
-    <Layout>
+    <>
       <Head>
         <title>Project Overview</title>
       </Head>
@@ -33,7 +32,7 @@ const Overview: FC<OverviewProps> = ({ projects }) => {
         </Link>
       </p>
       <SummaryTable table={projects} />
-    </Layout>
+    </>
   );
 };
 
