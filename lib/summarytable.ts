@@ -38,7 +38,7 @@ export const colorMap: Map<
   ].map((d) => {
     const baseColor = d3.color(d[1]);
     const colorCopy = _.clone(baseColor);
-    colorCopy.opacity = 0.6;
+    colorCopy.opacity = 0.15;
     return [
       d[0],
       { baseColor: baseColor.formatRgb(), brighter: colorCopy.formatRgb() },

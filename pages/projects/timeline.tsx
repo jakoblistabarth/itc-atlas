@@ -5,11 +5,11 @@ import { useEffect, useRef } from "react";
 import { DateFormat } from "../../lib/formaters";
 import getCountries from "../../lib/getCountries";
 import getProjects from "../../lib/getProjects";
-import getUnsdCodes, { UnLevel } from "../../lib/getUnsdCodes";
+import getUnsdCodes from "../../lib/getUnsdCodes";
 import isPartOfUnsdGroup from "../../lib/isPartOfUnsdGroup";
 import styles from "../../styles/Home.module.css";
 import { Project, ProjectStatus } from "../../types/Project";
-import { UnGroupings } from "../../types/UnGroupings";
+import { UnGroupings, UnLevel } from "../../types/UnsdCodes";
 
 type TimelineProps = {
   projects: Project[];

@@ -4,6 +4,7 @@ import * as d3 from "d3";
 import { colorMap } from "../lib/summarytable";
 import Heading, { Headings } from "./heading";
 import { TableDescription } from "../types/Table";
+import { ColumnType } from "../types/Column";
 
 type SummaryTableCardProps = {
   tableDescription: TableDescription;
@@ -31,7 +32,7 @@ const SummaryTableCard: FC<SummaryTableCardProps> = ({ tableDescription }) => {
       .enter()
       .append("rect")
       .attr("x", (d, i) => i * 2 + i * 1)
-      .attr("fill", (d) => colorMap.get(d.type).baseColor)
+      .attr("fill", (d) => colorMap.get(d.type)?.baseColor ?? "grey")
       .attr("width", 2)
       .attr("height", 50);
   });

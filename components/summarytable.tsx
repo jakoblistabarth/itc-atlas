@@ -12,7 +12,7 @@ import getTableDescription, { colorMap } from "../lib/summarytable";
 import styles from "../styles/summarytable.module.scss";
 import { ColumnType } from "../types/Column";
 import { Table } from "../types/Table";
-import Snapshot from "./snapshot";
+import SnapshotWrapper from "./snapshotWrapper";
 import SummaryTableCard from "./summaryTableCard";
 
 function getColumnIcon(type: ColumnType) {
@@ -71,7 +71,7 @@ const SummaryTable: FC<SummaryTableProps> = ({ table }) => {
                     <div className={styles.scrollable}>{column.label}</div>
                   </td>
                   <td>
-                    <Snapshot
+                    <SnapshotWrapper
                       column={column.data}
                       columnName={column.label}
                       type={column.type}

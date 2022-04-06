@@ -28,8 +28,8 @@ export default async function cleanProjects(input: Object[]) {
         value === "" ? "project " + index : value,
       dateStart: (value) => (value === "NULL" ? null : value),
       dateEnd: (value) => (value === "NULL" ? null : value),
-      type: (value) => ProjectType[value] || value,
-      status: (value) => ProjectStatus[value] || value,
+      type: (value: ProjectType) => ProjectType[value] || value,
+      status: (value: ProjectStatus) => ProjectStatus[value] || value,
     })
     .where((row) => new Date(row["dateStart"]) < new Date(row["dateEnd"])); // TODO: fix projects whith old entries
   const output = merged.toArray();

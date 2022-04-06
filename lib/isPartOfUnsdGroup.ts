@@ -1,5 +1,4 @@
-import { UnGroupings } from "../types/UnGroupings";
-import getUnsdCodes from "./getUnsdCodes";
+import { UnGroupings } from "../types/UnsdCodes";
 
 // TODO: refactor to avoid parsing in codes
 export default function isPartOfUnsdGroup(

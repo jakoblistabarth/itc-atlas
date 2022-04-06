@@ -2,7 +2,7 @@ import { GetStaticProps, NextPage } from "next";
 import Head from "next/head";
 import Link from "next/link";
 import Layout from "../../components/layout";
-import Snapshot from "../../components/snapshot";
+import SnapshotWrapper from "../../components/snapshotWrapper";
 import SummaryTable from "../../components/summaryTable";
 import getFlights from "../../lib/getFlights";
 import getTestData from "../../lib/getTestData";
@@ -22,18 +22,18 @@ const Overview: NextPage<OverviewProps> = ({ flights, test }) => {
       </Head>
       <h1>Flight Overview</h1>
       <p>🤫 for debugging only</p>
-      <Snapshot
+      <SnapshotWrapper
         column={test.map((d) => d.name)}
         columnName="name"
         type={ColumnType.Ordinal}
       />
-      <Snapshot
+      <SnapshotWrapper
         column={test.map((d) => d.favNo)}
         columnName="favNo"
         type={ColumnType.Contiuous}
         detailed={true}
       />
-      <Snapshot
+      <SnapshotWrapper
         column={test.map((d) => d.dateOfBirth)}
         columnName="dateofBirth"
         type={ColumnType.Date}

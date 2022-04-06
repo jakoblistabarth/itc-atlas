@@ -1,26 +1,28 @@
 import { colorMap } from "../lib/summarytable";
 import { ColumnType } from "../types/Column";
 import { FC } from "react";
+import SnapshotOrdinal from "./snapshotOrdinal";
 
-type SnapshotProps = {
+type Props = {
   column: any[];
   columnName?: string;
   type: ColumnType;
   detailed?: boolean;
 };
 
-const Snapshot: FC<SnapshotProps> = ({
-  column,
-  columnName,
-  type,
-  detailed,
-}) => {
+const SnapshotWrapper: FC<Props> = ({ column, columnName, type, detailed }) => {
   const color = colorMap.get(type);
+  function renderSnapshot(type: ColumnType) {
+    switch (type) {
+      case ColumnType.Ordinal:
+        return <SnapshotOrdinal column={column} />;
+    }
+  }
   return !type || !color ? (
     <div>Snapshot creation failed!</div>
   ) : (
     <>
-      <div style={{ color: color.baseColor }}>{type}</div>
+      {renderSnapshot(type)}
       {detailed && (
         <small>
           {columnName}, {column.length} Elements
@@ -30,4 +32,4 @@ const Snapshot: FC<SnapshotProps> = ({
   );
 };
 
-export default Snapshot;
+export default SnapshotWrapper;

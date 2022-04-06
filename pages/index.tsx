@@ -36,6 +36,15 @@ const Home: NextPage = () => {
               <p>Mapping ITC's activity throughout the decades.</p>
             </a>
           </Link>
+
+          <Link href="/phds">
+            <a className={styles.card}>
+              <h2>
+                PhDs <MdOutlineArrowRightAlt />
+              </h2>
+              <p>Mapping ITC's PhDs.</p>
+            </a>
+          </Link>
         </div>
       </main>
 
