@@ -66,7 +66,7 @@ const SnapshotBar: FC<Props> = ({ column, type }) => {
     ]);
 
   useEffect(() => {
-    const svgContainer = d3.select(ref.current).style("position", "relative");
+    const svgContainer = d3.select(ref.current);
 
     const svgElement = svgContainer
       .append("svg")
@@ -77,7 +77,8 @@ const SnapshotBar: FC<Props> = ({ column, type }) => {
       .append("g")
       .attr("transform", `translate(${margin.horizontal},${margin.vertical})`);
 
-    const tooltip = svgContainer
+    const tooltip = d3
+      .select("body")
       .append("div")
       .attr("id", "tooltip")
       .style("position", "absolute")
@@ -95,8 +96,19 @@ const SnapshotBar: FC<Props> = ({ column, type }) => {
       const tooltipHeight = tooltip.node()?.offsetHeight ?? 0;
       const tooltipWidth = tooltip.node()?.offsetWidth ?? 0;
       tooltip
-        .style("left", -tooltipWidth / 2 + d3.pointer(event)[0] + "px")
-        .style("top", d3.pointer(event)[1] - tooltipHeight - 5 + "px")
+        .style(
+          "left",
+          -tooltipWidth / 2 +
+            d3.pointer(event, d3.select("body").node())[0] +
+            "px"
+        )
+        .style(
+          "top",
+          d3.pointer(event, d3.select("body").node())[1] -
+            tooltipHeight -
+            5 +
+            "px"
+        )
         .html(`<strong>${d.value}</strong><br>${pctFormat(d.cnt)}`);
     };
     const mouseleave = (event) => {

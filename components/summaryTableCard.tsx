@@ -4,7 +4,7 @@ import * as d3 from "d3";
 import { colorMap } from "../lib/summarytable";
 import Heading, { Headings } from "./heading";
 import { TableDescription } from "../types/Table";
-import { ColumnType } from "../types/Column";
+import { floatFormat } from "../lib/formaters";
 
 type SummaryTableCardProps = {
   tableDescription: TableDescription;
@@ -13,16 +13,50 @@ type SummaryTableCardProps = {
 const SummaryTableCard: FC<SummaryTableCardProps> = ({ tableDescription }) => {
   const ref = useRef<SVGSVGElement>(null);
 
+  const dimension = {
+    margin: {
+      top: 15,
+      left: 15,
+    },
+  };
+
   useEffect(() => {
     const svgElement = d3.select(ref.current);
 
-    const theader = svgElement
+    const miniTable = svgElement
+      .append("g")
+      .attr(
+        "transform",
+        `translate(${dimension.margin.left},${dimension.margin.top})`
+      );
+
+    const fontsize = 9;
+
+    svgElement
+      .append("text")
+      .attr("x", 0)
+      .attr("y", dimension.margin.top + fontsize / 2)
+      .attr(
+        "transform",
+        `rotate(90,${fontsize / 2},${dimension.margin.top + fontsize / 2})`
+      )
+      .attr("font-size", fontsize)
+      .text(floatFormat(tableDescription.nRows) + " ⭢");
+
+    svgElement
+      .append("text")
+      .attr("x", dimension.margin.left)
+      .attr("y", fontsize)
+      .attr("font-size", fontsize)
+      .text(floatFormat(tableDescription.nColumns) + " ⭢");
+
+    const theader = miniTable
       .append("g")
       .attr("id", "header")
       .selectAll("rect")
       .data(tableDescription.columns);
 
-    const tbody = svgElement
+    const tbody = miniTable
       .append("g")
       .attr("id", "body")
       .selectAll("rect")

@@ -6,7 +6,7 @@ export default async function getTestData(): Promise<Table> {
       name: "Ana",
       nickname: "A",
       height: null,
-      dateOfBirth: new Date("1990-03-15").toISOString(),
+      dateOfBirth: new Date("1950-03-15").toISOString(),
       favNo: null,
       pinArray: [10, 20, 10],
     },

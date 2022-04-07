@@ -34,7 +34,6 @@ type SummaryTableProps = {
 };
 
 const SummaryTable: FC<SummaryTableProps> = ({ table }) => {
-  // console.log(table);
   const tableDescription = getTableDescription(table);
 
   return (

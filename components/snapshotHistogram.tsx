@@ -2,7 +2,7 @@ import { FC, useEffect, useRef } from "react";
 import * as d3 from "d3";
 import { colorMap } from "../lib/summarytable";
 import { ColumnType } from "../types/Column";
-import { DateFormat, floatFormat } from "../lib/formaters";
+import { dateLongFormat, dateShortFormat, floatFormat } from "../lib/formaters";
 import { Datum } from "../types/Table";
 import { Bin } from "d3";
 
@@ -14,12 +14,15 @@ type Props = {
 const SnapshotHistogram: FC<Props> = ({ column, type }) => {
   const ref = useRef<HTMLDivElement>(null);
 
-  const width = 200;
-  const height = 30;
-  const margin = {
-    top: 1,
-    side: 15,
-    bottom: 15,
+  const dimension = {
+    width: 200,
+    height: 30,
+    barInset: 0.25,
+    margin: {
+      top: 1,
+      side: 5,
+      bottom: 11,
+    },
   };
 
   const columnNoNA = column.filter(
@@ -28,43 +31,53 @@ const SnapshotHistogram: FC<Props> = ({ column, type }) => {
   const cleanedColumn =
     type === ColumnType.Date ? columnNoNA.map((d) => new Date(d)) : columnNoNA;
 
-  const typeFormat = type === ColumnType.Date ? DateFormat : floatFormat;
+  const typeFormat = type === ColumnType.Date ? dateLongFormat : floatFormat;
+  // const min = d3.min(columnNoNA);
+  // const max = d3.max(columnNoNA);
 
-  const histogram = d3.bin();
+  function thresholdTime(n) {
+    return (columnNoNA, min, max) => {
+      return d3.scaleTime().domain([min, max]).ticks(n);
+    };
+  }
+
+  const histogram =
+    // type === ColumnType.Contiuous
+    true ? d3.bin() : d3.bin().thresholds(thresholdTime(10));
   const bins = histogram(cleanedColumn);
+
+  const xDomain = [bins[0].x0, bins[bins.length - 1].x1];
 
   const yDomain = [
     d3.min(bins.map((d) => d.length)),
     d3.max(bins.map((d) => d.length)),
   ];
-  const xDomain = [bins[0].x0, bins[bins.length - 1].x1];
-
-  const ticks = type === ColumnType.Contiuous ? xDomain : "";
 
   const x = d3
     .scaleLinear()
     .domain(xDomain)
-    .range([0, width - 2 * margin.side]);
+    .range([dimension.margin.side, dimension.width - dimension.margin.side]);
 
-  const y = d3.scaleLinear().range([height - margin.bottom, 0]);
-  y.domain(yDomain);
+  const y = d3
+    .scaleLinear()
+    .domain(yDomain)
+    .range([dimension.height - dimension.margin.bottom, dimension.margin.top]);
 
-  const mean = d3.mean(cleanedColumn);
-  const median = d3.median(cleanedColumn);
+  const stats = [
+    { name: "mean", label: "x̅", value: d3.mean(cleanedColumn) },
+    { name: "median", label: "M", value: d3.median(cleanedColumn) },
+  ];
 
   useEffect(() => {
-    const svgContainer = d3.select(ref.current).style("position", "relative");
+    const svgContainer = d3.select(ref.current);
 
     const svgElement = svgContainer
       .append("svg")
-      .attr("width", width)
-      .attr("height", height);
+      .attr("width", dimension.width)
+      .attr("height", dimension.height);
 
-    const inner = svgElement
-      .append("g")
-      .attr("transform", `translate(${margin.side},${margin.top})`);
-
-    const tooltip = svgContainer
+    const tooltip = d3
+      .select("body")
       .append("div")
       .attr("id", "tooltip")
       .style("position", "absolute")
@@ -76,14 +89,25 @@ const SnapshotHistogram: FC<Props> = ({ column, type }) => {
 
     const mouseover = (event: MouseEvent) => {
       tooltip.style("display", "inline");
-      d3.select(event.target).style("stroke", "black");
+      d3.select(event.target).attr("stroke", "black");
     };
     const mousemove = (event: MouseEvent, d: Bin<Datum, number>) => {
       const tooltipHeight = tooltip.node()?.offsetHeight ?? 0;
       const tooltipWidth = tooltip.node()?.offsetWidth ?? 0;
       tooltip
-        .style("left", -tooltipWidth / 2 + d3.pointer(event)[0] + "px")
-        .style("top", d3.pointer(event)[1] - tooltipHeight - 5 + "px")
+        .style(
+          "left",
+          -tooltipWidth / 2 +
+            d3.pointer(event, d3.select("body").node())[0] +
+            "px"
+        )
+        .style(
+          "top",
+          d3.pointer(event, d3.select("body").node())[1] -
+            tooltipHeight -
+            5 +
+            "px"
+        )
         .html(
           `<strong>${typeFormat(d.x0)}-${typeFormat(
             d.x1
@@ -92,51 +116,82 @@ const SnapshotHistogram: FC<Props> = ({ column, type }) => {
     };
     const mouseleave = (event: MouseEvent) => {
       tooltip.style("display", "none");
-      d3.select(event.target).style("stroke", "none").style("opacity", 1);
+      d3.select(event.target).attr("stroke", "none").style("opacity", 1);
     };
 
     // append the bar rectangles to the svg element
-    inner
+    svgElement
       .selectAll("rect")
       .data(bins)
       .enter()
       .append("rect")
-      .attr("x", (d) => x(d.x0) + 1)
+      .attr("x", (d) => x(d.x0) + dimension.barInset)
       .attr("y", (d) => y(d.length))
-      .attr("width", (d) => Math.max(0, x(d.x1) - x(d.x0) - 1))
+      .attr(
+        "width",
+        (d) => Math.max(0, x(d.x1) - x(d.x0)) - dimension.barInset * 2
+      )
       .attr("height", (d) => y(0) - y(d.length))
       .attr("fill", colorMap.get(type)?.baseColor ?? "black")
-      .attr("stroke", "white")
-      .attr("stroke-width", "1px")
+      .attr("stroke", "transparent")
+      .attr("stroke-width", "1px");
+
+    svgElement
+      .append("g")
+      .attr("id", "overlay")
+      .selectAll("rect")
+      .data(bins)
+      .enter()
+      .append("rect")
+      .attr("x", (d) => x(d.x0) + dimension.barInset)
+      .attr("y", dimension.margin.top)
+      .attr(
+        "width",
+        (d) => Math.max(0, x(d.x1) - x(d.x0)) - dimension.barInset * 2
+      )
+      .attr(
+        "height",
+        dimension.height - dimension.margin.bottom - dimension.margin.top
+      )
+      .attr("fill-opacity", "0")
       .on("mouseover", mouseover)
       .on("mousemove", mousemove)
       .on("mouseleave", mouseleave);
 
-    inner
+    const xAxis = svgElement
       .append("g")
-      .attr("transform", `translate(0,${height - margin.bottom})`)
-      .call(d3.axisBottom(x).tickValues(ticks)) // TODO: fix ticks for type Date
+      .attr(
+        "transform",
+        `translate(0,${dimension.height - dimension.margin.bottom})`
+      )
+      .call(
+        d3
+          .axisBottom(x)
+          .tickValues(xDomain)
+          .tickFormat(
+            type === ColumnType.Contiuous ? floatFormat : dateShortFormat
+          )
+          .tickSize(2)
+      )
       .attr("font-size", 7);
 
-    const indicators = inner.append("g").attr("opacity", 0.3);
-    indicators
-      .append("line")
-      .attr("x1", x(mean))
-      .attr("x2", x(mean))
-      .attr("y1", height - margin.bottom)
-      .attr("y2", 0)
-      .attr("stroke", "black")
-      .attr("stroke-width", "2px");
+    xAxis.selectAll("text").attr("text-anchor", (d, i) => {
+      return i % 2 ? "end" : "start";
+    });
 
-    indicators
-      .append("line")
-      .attr("x1", x(median))
-      .attr("x2", x(median))
-      .attr("y1", height - margin.bottom)
+    const indicators = svgElement
+      .append("g")
+      .attr("opacity", 0.3)
+      .selectAll("line")
+      .data(stats)
+      .join("line")
+      .attr("x1", (d) => x(d.value))
+      .attr("x2", (d) => x(d.value))
+      .attr("y1", dimension.height - dimension.margin.bottom)
       .attr("y2", 0)
       .attr("stroke", "black")
-      .attr("stroke-width", "1px")
-      .attr("stroke-dasharray", "1");
+      .attr("stroke-width", (d, i) => `${i % 2 ? 2 : 1}px`)
+      .attr("stroke-dasharray", (d, i) => `${i % 2 ? 0 : 1}`);
   });
 
   return <div ref={ref} />;

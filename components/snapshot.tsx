@@ -29,14 +29,14 @@ const Snapshot: FC<Props> = ({ column, columnName, type, detailed }) => {
   return !type || !color ? (
     <div>Snapshot creation failed!</div>
   ) : (
-    <div>
+    <>
       {renderSnapshot(type)}
       {detailed && (
         <small>
           {columnName}, {column.length} Rows
         </small>
       )}
-    </div>
+    </>
   );
 };
 

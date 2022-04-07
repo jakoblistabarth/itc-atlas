@@ -2,7 +2,7 @@ import * as d3 from "d3";
 import type { NextPage } from "next";
 import Head from "next/head";
 import { useEffect, useRef } from "react";
-import { DateFormat } from "../../lib/formaters";
+import { dateLongFormat } from "../../lib/formaters";
 import getCountries from "../../lib/getCountries";
 import getProjects from "../../lib/getProjects";
 import getUnsdCodes from "../../lib/getUnsdCodes";
@@ -105,9 +105,9 @@ const Timeline: NextPage<TimelineProps> = ({ projects, countries }) => {
         (d) =>
           d.projectShortName +
           " (" +
-          DateFormat(new Date(d.dateStart)) +
+          dateLongFormat(new Date(d.dateStart)) +
           "-" +
-          DateFormat(new Date(d.dateEnd)) +
+          dateLongFormat(new Date(d.dateEnd)) +
           ")"
       );
   });
