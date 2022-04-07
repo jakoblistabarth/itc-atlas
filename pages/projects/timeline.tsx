@@ -25,7 +25,7 @@ const Timeline: NextPage<TimelineProps> = ({ projects, countries }) => {
       dateStart: string;
       dateEnd: string;
       projectID: string;
-    } => typeof row.dateStart !== "string" && typeof row.dateEnd !== "string"
+    } => typeof row.dateStart === "string" && typeof row.dateEnd === "string"
   );
 
   projectsSelection.sort((a, b) =>
@@ -57,7 +57,7 @@ const Timeline: NextPage<TimelineProps> = ({ projects, countries }) => {
     .domain(projectsSelection.map((d) => d.projectID))
     .padding(1);
 
-  useEffect(async () => {
+  useEffect(() => {
     const svgEl = d3
       .select(svgRef.current)
       .attr("width", width + margin.left + margin.right)

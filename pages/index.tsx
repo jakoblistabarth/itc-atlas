@@ -15,7 +15,7 @@ const Home: NextPage = () => {
       </Head>
 
       <main className={styles.main}>
-        <h1 className={styles.title}>Welcome to the World of ITC</h1>
+        <h1 className={styles.title}>Capcity Building of ITC</h1>
 
         <p className={styles.description}>A prototype of ITC's hybrid atlas</p>
 
@@ -44,6 +44,14 @@ const Home: NextPage = () => {
                 PhDs <MdOutlineArrowRightAlt />
               </h2>
               <p>Mapping ITC's PhDs.</p>
+            </a>
+          </Link>
+          <Link href="/staff">
+            <a className={styles.card}>
+              <h2>
+                Staff <MdOutlineArrowRightAlt />
+              </h2>
+              <p>Mapping ITC's staff members.</p>
             </a>
           </Link>
         </div>

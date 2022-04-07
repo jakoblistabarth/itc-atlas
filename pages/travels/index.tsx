@@ -48,9 +48,7 @@ const Travels: NextPage<Props> = ({ flights }) => {
         </div>
         <SummaryTable table={flights} />
         <p>
-          <Link href="/">
-            <BackToHome />
-          </Link>
+          <BackToHome />
         </p>
       </main>
 
