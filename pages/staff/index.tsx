@@ -8,12 +8,14 @@ import getStaff from "../../lib/getStaff";
 import Heading, { Headings } from "../../components/heading";
 import getTestData from "../../lib/getTestData";
 import { Staff } from "../../types/Staff";
+import DataFrame from "../../lib/DataFrame";
 
 type Props = React.PropsWithChildren<{
   staff: Staff[];
 }>;
 
 const Staff: NextPage<Props> = ({ staff }) => {
+  const staffDf = new DataFrame(staff);
   return (
     <>
       <Head>
@@ -28,13 +30,8 @@ const Staff: NextPage<Props> = ({ staff }) => {
         <p>
           <BackToHome />
         </p>
-        {/* <Snapshot
-          column={staff.map((row) => row.dateOfBirth)}
-          type={ColumnType.Date}
-          columnName="Date of Birth"
-          detailed={true}
-        /> */}
-        <SummaryTable table={staff} />
+
+        <SummaryTable data={staffDf} />
       </main>
 
       <Footer />

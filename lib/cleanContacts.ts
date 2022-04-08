@@ -6,7 +6,5 @@ export default async function cleanContacts(
 ): Promise<Contact[]> {
   const contacts = new df.DataFrame(input);
 
-  console.log(contacts.getColumnNames());
-
   return contacts.toArray();
 }

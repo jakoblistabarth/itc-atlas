@@ -1,29 +1,8 @@
 import * as d3 from "d3";
 import * as _ from "lodash";
 import { ColumnType } from "../types/Column";
-import { Column, TableDescription, Table } from "../types/Table";
+import { Column, DataFrame, TableData, Data } from "../types/DataFrame";
 // TODO:  split this file up in smaller chunks
-
-export default function getTableDescription(table: Table): TableDescription {
-  const sample = table[0];
-  const cols = Object.keys(sample);
-  const columns = cols.map((columnName) => {
-    const column = table.map((row) => row[columnName]);
-    return {
-      label: columnName === "" ? "unlabeled" : columnName,
-      type: getType(column),
-      stats: getColumnStats(column),
-      data: column,
-    };
-  });
-  const nColumns = columns.length;
-  const nRows = table.length;
-  return {
-    columns,
-    nColumns,
-    nRows,
-  };
-}
 
 export const colorMap: Map<
   ColumnType,
@@ -58,7 +37,7 @@ export function getType(column: Column): ColumnType {
   return ColumnType.Ordinal;
 }
 
-function getColumnStats(column: Column) {
+export function getColumnStats(column: Column) {
   const type = getType(column);
 
   const missing =

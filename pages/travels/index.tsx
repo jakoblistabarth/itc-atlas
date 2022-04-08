@@ -1,19 +1,21 @@
-import type { NextPage } from "next";
+import type { GetStaticProps, NextPage } from "next";
 import Head from "next/head";
 import styles from "../../styles/home.module.css";
 import { MdOutlineArrowRightAlt } from "react-icons/md";
 import Link from "next/link";
 import BackToHome from "../../components/backToHome";
-import { FlightsTable } from "../../types/Table";
 import getFlights from "../../lib/getFlights";
 import SummaryTable from "../../components/summaryTable";
 import Footer from "../../components/footer";
+import DataFrame from "../../lib/DataFrame";
+import { Flight } from "../../types/Flight";
 
 type Props = {
-  flights: FlightsTable;
+  flights: Flight[];
 };
 
 const Travels: NextPage<Props> = ({ flights }) => {
+  const flightsDf = new DataFrame(flights);
   return (
     <>
       <Head>
@@ -46,7 +48,7 @@ const Travels: NextPage<Props> = ({ flights }) => {
             </a>
           </Link>
         </div>
-        <SummaryTable table={flights} />
+        <SummaryTable data={flightsDf} />
         <p>
           <BackToHome />
         </p>

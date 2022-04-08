@@ -7,13 +7,13 @@ import {
   MdFormatListBulleted,
   MdOutlineCalculate,
 } from "react-icons/md";
+import DataFrame from "../lib/DataFrame";
 import { floatFormat, pctFormat } from "../lib/formaters";
-import getTableDescription, { colorMap } from "../lib/summarytable";
+import { colorMap } from "../lib/summarytable";
 import styles from "../styles/summarytable.module.scss";
 import { ColumnType } from "../types/Column";
-import { Table } from "../types/Table";
-import Snapshot from "./snapshot";
 import SummaryTableCard from "./summaryTableCard";
+import Snapshot from "./snapshot";
 
 function getColumnIcon(type: ColumnType) {
   switch (type) {
@@ -30,15 +30,13 @@ function getColumnIcon(type: ColumnType) {
 }
 
 type SummaryTableProps = {
-  table: Table;
+  data: DataFrame;
 };
 
-const SummaryTable: FC<SummaryTableProps> = ({ table }) => {
-  const tableDescription = getTableDescription(table);
-
+const SummaryTable: FC<SummaryTableProps> = ({ data: df }) => {
   return (
     <div className={styles.summaryTableContainer}>
-      <SummaryTableCard tableDescription={tableDescription} />
+      <SummaryTableCard tableDescription={df.getDescription()} />
       <div className={styles.summaryTable}>
         <table>
           <thead>
@@ -53,7 +51,7 @@ const SummaryTable: FC<SummaryTableProps> = ({ table }) => {
             </tr>
           </thead>
           <tbody>
-            {tableDescription.columns.map((column) => {
+            {df.getColumns().map((column) => {
               const color = colorMap.get(column.type);
               {
                 if (!color) return;
@@ -71,7 +69,7 @@ const SummaryTable: FC<SummaryTableProps> = ({ table }) => {
                   </td>
                   <td>
                     <Snapshot
-                      column={column.data}
+                      column={column}
                       columnName={column.label}
                       type={column.type}
                     />

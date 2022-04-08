@@ -2,11 +2,12 @@ import type { GetStaticProps, NextPage } from "next";
 import Head from "next/head";
 import Footer from "../../components/footer";
 import Heading, { Headings } from "../../components/heading";
-import Snapshot from "../../components/snapshot";
-import getPhdCandidates from "../../lib/getPhdCandidates";
-import getTestData from "../../lib/getTestData";
-import styles from "../../styles/home.module.css";
+import SummaryTable from "../../components/summaryTable";
 import { ColumnType } from "../../types/Column";
+import Snapshot from "../../components/snapshot";
+import DataFrame from "../../lib/DataFrame";
+import getPhdCandidates from "../../lib/getPhdCandidates";
+import styles from "../../styles/home.module.css";
 import { PhdCandidate } from "../../types/PhdCandidate";
 
 type Props = {
@@ -14,6 +15,13 @@ type Props = {
 };
 
 const PhdDepartments: NextPage<Props> = ({ phdCandidates }) => {
+  const df = new DataFrame(phdCandidates);
+  const filtered = df;
+  // .mutate("sponsor2", (row) => (row["sponsor"] ? row["sponsor"] + "2" : null))
+  // .dropColumn("sponsor")
+  // .renameColumn({ studentID: "id" });
+  // .renameColumn({ department1: "dep1", department2: "dep2" });
+
   return (
     <>
       <Head>
@@ -43,6 +51,7 @@ const PhdDepartments: NextPage<Props> = ({ phdCandidates }) => {
           detailed={true}
           columnName="Department1"
         />
+        <SummaryTable data={filtered} />
       </main>
 
       <Footer />
@@ -52,11 +61,9 @@ const PhdDepartments: NextPage<Props> = ({ phdCandidates }) => {
 
 export const getStaticProps: GetStaticProps<Props> = async () => {
   const phdCandidates = await getPhdCandidates();
-  const test = await getTestData();
   return {
     props: {
       phdCandidates,
-      test,
     },
   };
 };

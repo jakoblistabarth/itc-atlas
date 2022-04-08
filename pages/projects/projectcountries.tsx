@@ -54,7 +54,7 @@ const ProjectCountries: NextPage<SiteProps> = ({ projects, world }) => {
   const projection = geoBertin1953();
   const path = geoPath().projection(projection);
 
-  useEffect(async () => {
+  useEffect(() => {
     const svgEl = d3
       .select(svgRef.current)
       .attr("width", width + margin.left + margin.right)
@@ -109,17 +109,18 @@ const ProjectCountries: NextPage<SiteProps> = ({ projects, world }) => {
 
 export const getStaticProps: GetStaticProps<SiteProps> = async () => {
   const projects = await getProjects();
-  const projectionSelection = projects.filter(
+
+  const projectSelection = projects.filter(
     (
       row
     ): row is Omit<Project, "dateStart" | "dateEnd" | "projectID"> & {
       dateStart: string;
       dateEnd: string;
       projectID: string;
-    } => typeof row.dateStart !== "string" && typeof row.dateEnd !== "string"
+    } => typeof row.dateStart === "string" && typeof row.dateEnd === "string"
   );
 
-  projectionSelection.sort((a, b) =>
+  projectSelection.sort((a, b) =>
     d3.ascending(new Date(a.dateStart), new Date(b.dateStart))
   );
 
@@ -127,7 +128,7 @@ export const getStaticProps: GetStaticProps<SiteProps> = async () => {
 
   return {
     props: {
-      projects: projectionSelection,
+      projects: projectSelection,
       world,
     },
   };

@@ -1,29 +1,36 @@
-export function cleanPhdCandiates(phdCandidates: unknown[]) {
-  phdCandidates.forEach((d) => (d.ITCStudentNo = d.ITCStudentNo + ""));
-  phdCandidates.forEach(
-    (d) => (d.PhDStart = d.PhDStart ? d.PhDStart.toISOString() : null)
-  );
-  phdCandidates.forEach(
-    (d) => (d.PhDEnd = d.PhDEnd ? d.PhDEnd.toISOString() : null)
-  );
+import { Data } from "../types/DataFrame";
+import DataFrame from "./DataFrame";
 
-  return phdCandidates.map(
-    ({
-      ITCStudentNo,
-      Country,
-      Department,
-      DepartmentSecond,
-      Sponsor,
-      PhDStart,
-      PhDEnd,
-    }) => ({
-      studentID: ITCStudentNo,
-      country: Country,
-      department1: Department,
-      department2: DepartmentSecond,
-      sponsor: Sponsor,
-      startDate: PhDStart,
-      endDate: PhDEnd,
-    })
-  );
+export function cleanPhdCandiates(phdCandidates: Data) {
+  const output = new DataFrame(phdCandidates)
+    .mutate("studentID", (row) => row.ITCStudentNo + "")
+    .mutate("startDate", (row) =>
+      row.PhDStart ? row.PhDStart.toISOString() : null
+    )
+    .mutate("endDate", (row) => (row.PhDEnd ? row.PhDEnd.toISOString() : null))
+    .dropColumn("PhDStart")
+    .dropColumn("PhDEnd")
+    // TODO: implement renameColumn to accept an Object with multiple name pairs
+    // .renameColumn({
+    //   Country: "country",
+    //   Department: "department1",
+    //   DepartmentSecond: "department2",
+    //   Sponsor: "sponsor",
+    // })
+    .renameColumn({ Country: "country" })
+    .renameColumn({ Department: "department1" })
+    .renameColumn({ DepartmentSecond: "department2" })
+    .renameColumn({ Sponsor: "sponsor" })
+    .select([
+      "studentID",
+      "country",
+      "startDate",
+      "endDate",
+      "department1",
+      "department2",
+      "sponsor",
+    ])
+    .toArray();
+
+  return output;
 }

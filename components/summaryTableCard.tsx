@@ -3,7 +3,7 @@ import { FC, useEffect, useRef } from "react";
 import * as d3 from "d3";
 import { colorMap } from "../lib/summarytable";
 import Heading, { Headings } from "./heading";
-import { TableDescription } from "../types/Table";
+import { TableDescription } from "../types/DataFrame";
 import { floatFormat } from "../lib/formaters";
 
 type SummaryTableCardProps = {

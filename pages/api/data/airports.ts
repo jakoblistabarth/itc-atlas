@@ -1,10 +1,10 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import getAirports from "../../../lib/getAirports";
-import { Table } from "../../../types/Table";
+import { DataFrame } from "../../../types/DataFrame";
 import { GeoJSON } from "geojson";
 
 type Data = {
-  json: Table;
+  json: DataFrame;
   geoJSON: GeoJSON;
 };
 

@@ -6,9 +6,8 @@ import BackToHome from "../../components/backToHome";
 import Footer from "../../components/footer";
 import Heading, { Headings } from "../../components/heading";
 import SummaryTable from "../../components/summaryTable";
-import { monthFormat } from "../../lib/formaters";
+import DataFrame from "../../lib/DataFrame";
 import getPhdCandidates from "../../lib/getPhdCandidates";
-import getTestData from "../../lib/getTestData";
 import styles from "../../styles/home.module.css";
 import { PhdCandidate } from "../../types/PhdCandidate";
 
@@ -17,6 +16,7 @@ type Props = {
 };
 
 const PhdOverview: NextPage<Props> = ({ phdCandidates }) => {
+  const phdCandidatesDf = new DataFrame(phdCandidates);
   return (
     <>
       <Head>
@@ -44,7 +44,7 @@ const PhdOverview: NextPage<Props> = ({ phdCandidates }) => {
         <p>
           <BackToHome />
         </p>
-        <SummaryTable table={phdCandidates} />
+        <SummaryTable data={phdCandidatesDf} />
       </main>
 
       <Footer />

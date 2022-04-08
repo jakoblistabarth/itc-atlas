@@ -1,4 +1,4 @@
-import { Table, Row } from "./Table";
+import { DataFrame, Row } from "./DataFrame";
 
 // export interface ProjectTable extends Table {
 //   Array<Project>

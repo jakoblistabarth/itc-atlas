@@ -11,24 +11,24 @@ import getFlights from "../../lib/getFlights";
 import getCountries from "../../lib/getCountries";
 
 type Props = {
-  flights: {};
+  odMatrix: [];
   world: Topology;
 };
 
-const Flights: NextPage<Props> = ({ flights, world }) => {
+const Flights: NextPage<Props> = ({ odMatrix, world }) => {
   const projection = geoBertin1953();
   const path = geoPath(projection);
 
   const svgRef = useRef(null);
 
-  useEffect(async () => {
+  useEffect(() => {
     // setData(json.data)
     // setFilteredData(json.data)
     const svgEl = d3.select(svgRef.current);
 
     // Flows
     const routes = svgEl.append("g").attr("id", "routes");
-    const flow = routes.selectAll("path").data(flights.odMatrix);
+    const flow = routes.selectAll("path").data(odMatrix);
 
     flow
       .enter()
@@ -45,7 +45,6 @@ const Flights: NextPage<Props> = ({ flights, world }) => {
   // const [filterData, setFilteredData] = useState(null)
   // const [data, setData] = useState(null)
 
-  // useEffect(() => {
   //   setFilteredData(data.filter(d => d > selectedCountry))
   // }, [selectedCountry])
 
@@ -76,7 +75,7 @@ export async function getStaticProps() {
   const world = await getCountries();
   return {
     props: {
-      flights,
+      odMatrix: flights.odMatrix,
       world,
     },
   };

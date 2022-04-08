@@ -1,3 +1,3 @@
-import { Row } from "./Table";
+import { Row } from "./DataFrame";
 
 export type Flight = Row;

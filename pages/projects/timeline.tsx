@@ -3,7 +3,6 @@ import type { NextPage } from "next";
 import Head from "next/head";
 import { useEffect, useRef } from "react";
 import { dateLongFormat } from "../../lib/formaters";
-import getCountries from "../../lib/getCountries";
 import getProjects from "../../lib/getProjects";
 import getUnsdCodes from "../../lib/getUnsdCodes";
 import isPartOfUnsdGroup from "../../lib/isPartOfUnsdGroup";

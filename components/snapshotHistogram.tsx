@@ -3,7 +3,7 @@ import * as d3 from "d3";
 import { colorMap } from "../lib/summarytable";
 import { ColumnType } from "../types/Column";
 import { dateLongFormat, dateShortFormat, floatFormat } from "../lib/formaters";
-import { Datum } from "../types/Table";
+import { Datum } from "../types/DataFrame";
 import { Bin } from "d3";
 
 type Props = {
@@ -35,7 +35,7 @@ const SnapshotHistogram: FC<Props> = ({ column, type }) => {
   // const min = d3.min(columnNoNA);
   // const max = d3.max(columnNoNA);
 
-  function thresholdTime(n) {
+  function thresholdTime(n: number) {
     return (columnNoNA, min, max) => {
       return d3.scaleTime().domain([min, max]).ticks(n);
     };
@@ -94,19 +94,15 @@ const SnapshotHistogram: FC<Props> = ({ column, type }) => {
     const mousemove = (event: MouseEvent, d: Bin<Datum, number>) => {
       const tooltipHeight = tooltip.node()?.offsetHeight ?? 0;
       const tooltipWidth = tooltip.node()?.offsetWidth ?? 0;
+      const bodyNode = d3.select("body").node();
       tooltip
         .style(
           "left",
-          -tooltipWidth / 2 +
-            d3.pointer(event, d3.select("body").node())[0] +
-            "px"
+          -tooltipWidth / 2 + d3.pointer(event, bodyNode)[0] + "px"
         )
         .style(
           "top",
-          d3.pointer(event, d3.select("body").node())[1] -
-            tooltipHeight -
-            5 +
-            "px"
+          d3.pointer(event, bodyNode)[1] - tooltipHeight - 10 + "px"
         )
         .html(
           `<strong>${typeFormat(d.x0)}-${typeFormat(

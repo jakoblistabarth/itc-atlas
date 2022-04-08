@@ -8,12 +8,14 @@ import SummaryTable from "../../components/summaryTable";
 import { Project } from "../../types/Project";
 import getProjects from "../../lib/getProjects";
 import Footer from "../../components/footer";
+import DataFrame from "../../lib/DataFrame";
 
 type Props = React.PropsWithChildren<{
   projects: Project[];
 }>;
 
 const Travels: NextPage<Props> = ({ projects }) => {
+  const projectsDf = new DataFrame(projects);
   return (
     <>
       <Head>
@@ -50,7 +52,7 @@ const Travels: NextPage<Props> = ({ projects }) => {
           <BackToHome />
         </p>
 
-        <SummaryTable table={projects} />
+        <SummaryTable data={projectsDf} />
       </main>
 
       <Footer />

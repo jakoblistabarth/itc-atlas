@@ -1,5 +1,5 @@
 import { Staff } from "../types/Staff";
-import { Row } from "../types/Table";
+import { Row } from "../types/DataFrame";
 
 const cleanStaff = (staff: Row[]): Staff[] => {
   staff.forEach((row) => {

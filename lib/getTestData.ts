@@ -1,45 +1,60 @@
-import { Table } from "../types/Table";
+import { Row } from "../types/DataFrame";
 
-export default async function getTestData(): Promise<Table> {
+export type TestRow = {
+  name: string;
+  nickname?: string;
+  gender: "m" | "f" | "d" | null;
+  height: number | null;
+  dateOfBirth: string | null;
+  luckyNumber: number | null;
+  pinArray: number[] | null;
+};
+
+export default function getTestData(): TestRow[] {
   return [
     {
       name: "Ana",
       nickname: "A",
+      gender: "f",
       height: null,
       dateOfBirth: new Date("1950-03-15").toISOString(),
-      favNo: null,
+      luckyNumber: 10000000,
       pinArray: [10, 20, 10],
     },
     {
       name: "John",
       nickname: "Joe",
+      gender: "m",
       height: 130,
       dateOfBirth: new Date("1990-03-10").toISOString(),
-      favNo: 2,
+      luckyNumber: 2,
       pinArray: null,
     },
     {
       name: "John",
       nickname: "Joe",
+      gender: "m",
       height: 170,
       dateOfBirth: "",
-      favNo: 12,
+      luckyNumber: 12,
       pinArray: null,
     },
     {
       name: "Jonas",
       nickname: "Joe",
+      gender: "m",
       height: null,
       dateOfBirth: new Date("1992-02-12").toISOString(),
-      favNo: null,
+      luckyNumber: null,
       pinArray: [10, 20, 30],
     },
     {
       name: "Amely",
       nickname: "",
+      gender: "d",
       height: null,
       dateOfBirth: new Date("2000-10-10").toISOString(),
-      favNo: 2,
+      luckyNumber: 2,
       pinArray: [10, 20, 30],
     },
   ];

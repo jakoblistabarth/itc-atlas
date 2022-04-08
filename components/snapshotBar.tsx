@@ -3,7 +3,7 @@ import * as d3 from "d3";
 import { colorMap } from "../lib/summarytable";
 import { ColumnType } from "../types/Column";
 import { pctFormat } from "../lib/formaters";
-import { Column } from "../types/Table";
+import { Column } from "../types/DataFrame";
 
 type Props = {
   column: any[];
@@ -88,8 +88,16 @@ const SnapshotBar: FC<Props> = ({ column, type }) => {
       .style("box-shadow", "0 0 5px rgba(0,0,0,.5")
       .style("font-size", "x-small");
 
+    // This happens within useTooltip: const tooltip = d3.select("#tooltip")
+
+    // const { mouseover, mousemove, mouseleave } = useTooltip({
+    //   onShow: (event) =>  d3.select(event.target).style("stroke", "black"),
+    //   onHide: (event) => d3.select(event.target).style("stroke", "none").style("opacity", 1),
+    //   component: (d) => <><strong>{d.value}</strong><br />{pctFormat(d.cnt)}</>
+    // })
+
     const mouseover = (event) => {
-      tooltip.style("display", "inline");
+      tooltip.style("display", "inline"); // onShow()
       d3.select(event.target).style("stroke", "black");
     };
     const mousemove = (event, d) => {
@@ -112,7 +120,7 @@ const SnapshotBar: FC<Props> = ({ column, type }) => {
         .html(`<strong>${d.value}</strong><br>${pctFormat(d.cnt)}`);
     };
     const mouseleave = (event) => {
-      tooltip.style("display", "none");
+      tooltip.style("display", "none"); // onHide();
       d3.select(event.target).style("stroke", "none").style("opacity", 1);
     };
 
