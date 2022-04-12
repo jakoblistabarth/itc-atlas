@@ -13,6 +13,7 @@ import FlowLayer from "../../components/map/FlowLayer";
 import PointLayer from "../../components/map/PointLayer";
 import * as d3 from "d3";
 import { Flows } from "../../types/Flows";
+import Heading, { Headings } from "../../components/heading";
 
 type Props = {
   odMatrix: Flows;
@@ -28,7 +29,7 @@ const Flights: NextPage<Props> = ({ odMatrix, world }) => {
     scaleWidth: d3
       .scaleLinear()
       .domain(d3.extent(odMatrix.features.map((flow) => flow.properties.value)))
-      .range([1, 25]),
+      .range([1, 15]),
   };
 
   const points = odMatrix.features.reduce((points: [], flow) => {
@@ -63,12 +64,12 @@ const Flights: NextPage<Props> = ({ odMatrix, world }) => {
       </Head>
 
       <main className={styles.main}>
-        <h1>Flights</h1>
+        <Heading Tag={Headings.H1}>ITC's Travel Activity</Heading>
         <svg ref={svgRef} width={1020} height={600}>
           <defs>
             <ArrowHead id="arrowHead" color={flowConfig.color} />
           </defs>
-          <BaseLayer projection={projection} data={world} />
+          <BaseLayer data={world} projection={projection} />
           <PointLayer
             projection={projection}
             data={points}

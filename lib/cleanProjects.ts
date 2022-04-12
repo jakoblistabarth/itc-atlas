@@ -1,76 +1,49 @@
-import * as df from "data-forge";
+import DataFrame from "./DataFrame";
 import getUnsdCodes from "./getUnsdCodes";
 import { ProjectType, ProjectStatus } from "../types/Project";
+import mappedCountries from "./mappings/country.name";
 
-export default async function cleanProjects(input: Object[]) {
-  const post2019 = new df.DataFrame(input[0]);
-  const pre2019 = new df.DataFrame(input[1]);
-  const post2019T = post2019.renameSeries({
-    projecttype: "type",
-    Status: "status",
-  });
+export default async function cleanProjects(input: any[]) {
+  const post2019 = new DataFrame(input[0])
+    .renameColumn({ projecttype: "type" })
+    .renameColumn({ Status: "status" })
+    .renameColumn({ CountriesRegion: "countriesRegion" });
+  const pre2019 = new DataFrame(input[1])
+    .renameColumn({ Project_ID: "projectID" })
+    .renameColumn({ "Project name": "projectName" })
+    .renameColumn({ "Project name in short": "projectShortName" })
+    .renameColumn({ "Project status": "status" })
+    .renameColumn({ "Project type": "type" })
+    .renameColumn({ Country: "countriesRegion" })
+    .renameColumn({ "Starting date": "dateStart" })
+    .renameColumn({ "Completion date": "dateEnd" });
 
-  const pre2019T = pre2019.renameSeries({
-    Project_ID: "projectID",
-    "Project name": "projectName",
-    "Project name in short": "projectShortName",
-    "Project status": "status",
-    "Project type": "type",
-    Country: "CountriesRegion",
-    "Starting date": "dateStart",
-    "Completion date": "dateEnd",
-  });
-
-  const merged = pre2019T
-    .merge(post2019T)
-    .transformSeries({
-      projectShortName: (value, index) =>
-        value === "" ? "project " + index : value,
-      dateStart: (value) =>
-        value === "NULL" || !value ? null : value.toISOString(),
-      dateEnd: (value) =>
-        value === "NULL" || !value ? null : value.toISOString(),
-      type: (value: ProjectType) => ProjectType[value] || value,
-      status: (value: ProjectStatus) => ProjectStatus[value] || value,
-    })
-    .where((row) => new Date(row["dateStart"]) < new Date(row["dateEnd"])); // TODO: fix projects whith old entries
+  const merged = pre2019
+    .merge(post2019)
+    .mutate("projectShortName", (row) =>
+      row.projectShortName === ""
+        ? row.projectName.substr(0, 2)
+        : row.projectShortName
+    )
+    .mutate("dateStart", (row) =>
+      !row.dateStart || row.dateStart === "NULL"
+        ? null
+        : row.dateStart.toISOString()
+    )
+    .mutate("dateEnd", (row) =>
+      !row.dateEnd || row.dateEnd === "NULL" ? null : row.dateEnd.toISOString()
+    )
+    .mutate("type", (row) => ProjectType[row.type] || row.type)
+    .mutate("status", (row) => ProjectStatus[row.status] || row.status)
+    .mutate("countriesRegion", (row) => mapCountries(row.countriesRegion))
+    .where((row) => new Date(row.dateStart) < new Date(row.dateEnd)); // TODO: fix projects whith old entries
 
   const output = merged.toArray();
 
-  output.forEach((d) => {
-    d.CountriesRegion = d.CountriesRegion.replace(/[\(\)]/g, ",");
-    d.CountriesRegion = d.CountriesRegion.replace("Bangladesch", "Bangladesh");
-    d.CountriesRegion = d.CountriesRegion.replace("Vietnam", "Viet Nam");
-    d.CountriesRegion = d.CountriesRegion.replace("Kazakstan", "Kazakhstan");
-    d.CountriesRegion = d.CountriesRegion.replace(
-      "Palestinian Territories",
-      "State of Palestine"
-    );
-    d.CountriesRegion = d.CountriesRegion.replace(
-      /(Overijssel)|(Twente)/g,
-      "Netherlands"
-    );
-    d.CountriesRegion = d.CountriesRegion.replace(
-      "EMEA",
-      "Europe, Africa, Western Asia"
-    );
-    d.CountriesRegion = d.CountriesRegion.replace("Cape Verde", "Cabo Verde");
-    d.CountriesRegion = d.CountriesRegion.replace(
-      "Benelux",
-      "Belgium, Netherlands, Luxembourg"
-    );
-    d.CountriesRegion = d.CountriesRegion.replace(
-      "The Netherlands",
-      "Netherlands"
-    );
-    d.CountriesRegion = d.CountriesRegion.replace(
-      "USA",
-      "United States of America"
-    );
-  });
+  console.log(output.filter((row) => !row.countriesRegion).length);
 
   output.forEach((d) => {
-    d.CountriesRegionArr = d.CountriesRegion.split(/\s?[,/]\s?/gm);
+    d.countriesRegionArr = d.countriesRegion.split(/\s?[,/]\s?/gm);
     d.regions = [];
     d.subRegions = [];
     d.intermediateRegions = [];
@@ -82,18 +55,16 @@ export default async function cleanProjects(input: Object[]) {
   // Matching
   // TODO: recognise group: EU
   output.forEach((d, row) =>
-    d.CountriesRegionArr.forEach((e) => {
+    d.countriesRegionArr.forEach((e) => {
       if (!e) return;
 
       const regionMatch = areaCodes.regions.find((f) => f.name === e);
       if (regionMatch) {
-        // output[row].CountriesRegionArr.splice(index, 1);
         return output[row].regions.push(regionMatch.name);
       }
 
       const subRegionMatch = areaCodes.subRegions.find((f) => f.name === e);
       if (subRegionMatch) {
-        // output[row].CountriesRegionArr.splice(index, 1);
         return output[row].subRegions.push(subRegionMatch.name);
       }
 
@@ -101,7 +72,6 @@ export default async function cleanProjects(input: Object[]) {
         (f) => f.name.toUpperCase() === e.toUpperCase()
       );
       if (intermediateRegionMatch) {
-        // output[row].CountriesRegionArr.splice(index, 1);
         return output[row].intermediateRegions.push(
           intermediateRegionMatch.name
         );
@@ -148,4 +118,13 @@ export default async function cleanProjects(input: Object[]) {
   });
 
   return output;
+}
+
+function mapCountries(countryString: string): string {
+  if (!countryString) return "";
+  let string = countryString.replace(/[\(\)]/g, ",");
+  Object.entries(mappedCountries).forEach(([key, value]) => {
+    string.replace(key, value);
+  });
+  return string;
 }

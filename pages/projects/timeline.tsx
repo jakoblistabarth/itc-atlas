@@ -2,6 +2,7 @@ import * as d3 from "d3";
 import type { NextPage } from "next";
 import Head from "next/head";
 import { useEffect, useRef } from "react";
+import Heading, { Headings } from "../../components/heading";
 import { dateLongFormat } from "../../lib/formaters";
 import getProjects from "../../lib/getProjects";
 import getUnsdCodes from "../../lib/getUnsdCodes";
@@ -121,7 +122,7 @@ const Timeline: NextPage<TimelineProps> = ({ projects, countries }) => {
       </Head>
 
       <main className={styles.main}>
-        <h1>Projects</h1>
+        <Heading Tag={Headings.H1}>Projects</Heading>
         <p>681 projects</p>
         <svg ref={svgRef} width={1080} height={2000} />
       </main>

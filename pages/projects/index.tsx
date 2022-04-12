@@ -9,6 +9,7 @@ import { Project } from "../../types/Project";
 import getProjects from "../../lib/getProjects";
 import Footer from "../../components/footer";
 import DataFrame from "../../lib/DataFrame";
+import Heading, { Headings } from "../../components/heading";
 
 type Props = React.PropsWithChildren<{
   projects: Project[];
@@ -25,7 +26,7 @@ const Travels: NextPage<Props> = ({ projects }) => {
       </Head>
 
       <main className={styles.main}>
-        <h1 className={styles.title}>Projects</h1>
+        <Heading Tag={Headings.H1}>Projects</Heading>
 
         <p className={styles.description}>
           Insights into ITC's projects around the globe.

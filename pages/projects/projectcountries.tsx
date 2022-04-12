@@ -100,7 +100,7 @@ const ProjectCountries: NextPage<SiteProps> = ({ projects, world }) => {
       <main className={styles.main}>
         <Heading Tag={Headings.H1}>Projects per Country</Heading>
         <svg ref={svgRef} width={1020} height={2000}>
-          <BaseLayer baseMapData={world} projection={projection} />
+          <BaseLayer data={world} projection={projection} />
         </svg>
       </main>
     </>

@@ -9,6 +9,7 @@ import SummaryTable from "../../components/summaryTable";
 import Footer from "../../components/footer";
 import DataFrame from "../../lib/DataFrame";
 import { Flight } from "../../types/Flight";
+import Heading, { Headings } from "../../components/heading";
 
 type Props = {
   flights: Flight[];
@@ -25,7 +26,7 @@ const Travels: NextPage<Props> = ({ flights }) => {
       </Head>
 
       <main className={styles.main}>
-        <h1 className={styles.title}>Travels</h1>
+        <Heading Tag={Headings.H1}>Travels</Heading>
 
         <p className={styles.description}>
           Insights into ITC's travels around the globe.

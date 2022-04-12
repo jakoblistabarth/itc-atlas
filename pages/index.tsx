@@ -4,6 +4,7 @@ import styles from "../styles/home.module.css";
 import { MdOutlineArrowRightAlt } from "react-icons/md";
 import Link from "next/link";
 import Footer from "../components/footer";
+import Heading, { Headings } from "../components/heading";
 
 const Home: NextPage = () => {
   return (
@@ -15,7 +16,7 @@ const Home: NextPage = () => {
       </Head>
 
       <main className={styles.main}>
-        <h1 className={styles.title}>Capacity Building of ITC</h1>
+        <Heading Tag={Headings.H1}>Capacity Building of ITC</Heading>
 
         <p className={styles.description}>A prototype of ITC's hybrid atlas</p>
 

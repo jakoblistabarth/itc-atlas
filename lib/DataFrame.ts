@@ -69,15 +69,17 @@ class DataFrame {
     return df.mutate(newName, (row: Row) => row[oldName]).dropColumn(oldName);
   }
 
+  // TODO: implement .between()
   /**
    * Gets a specific column of the table.
    * @param rowIndices
    * @returns Returns an Array of {@link Row}s.
    */
-  getRows(rowIndices: number[]): Row[] {
+  between(rowIndices: number[]): Row[] {
     return this.data.filter((row: Row) => row);
   }
 
+  // TODO: what happens if the new column already exists?
   /**
    * Adds a new column to the Dataframe.
    * @param columnName A string defining the name of the new Column.
@@ -94,16 +96,24 @@ class DataFrame {
     return df;
   }
 
+  merge(dataframe: DataFrame) {
+    // TODO: implement warning if columnnames are not the same?
+    return new DataFrame([...this.toArray(), ...dataframe.toArray()]);
+  }
+
+  where(filterFunction: (t: any) => boolean) {
+    const df = _.cloneDeep(this);
+    const newData = this.data.filter((row: Row) => filterFunction(row));
+    return new DataFrame(newData);
+  }
+
   /**
    * Create a new column and only keep this column in the Dataframe.
    * @param columnName The name of the new Column
    * @param transformFunction A function to creating the new column, using the row as callback.
    * @returns Returns a {@link DataFrame} with the just created column.
    */
-  transmute(
-    columnName: string,
-    transformFunction: (t: any) => Datum
-  ): DataFrame {
+  transmute(columnName: string, transformFunction: (t: any) => Datum) {
     const newRow = this.data.map(
       (row: Row) => (row[columnName] = transformFunction(row))
     );

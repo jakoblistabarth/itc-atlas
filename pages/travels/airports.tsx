@@ -74,7 +74,7 @@ const Airports: NextPage<{
         <main className={styles.main}>
           <Heading Tag={Headings.H1}>Airports</Heading>
           <svg ref={svgRef} width={1020} height={600}>
-            <BaseLayer baseMapData={world} projection={projection} />
+            <BaseLayer data={world} projection={projection} />
           </svg>
         </main>
       </>
