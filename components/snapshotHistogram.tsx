@@ -48,10 +48,7 @@ const SnapshotHistogram: FC<Props> = ({ column, type }) => {
 
   const xDomain = [bins[0].x0, bins[bins.length - 1].x1];
 
-  const yDomain = [
-    d3.min(bins.map((d) => d.length)),
-    d3.max(bins.map((d) => d.length)),
-  ];
+  const yDomain = [1, d3.max(bins.map((d) => d.length))];
 
   const x = d3
     .scaleLinear()
