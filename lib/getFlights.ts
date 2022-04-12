@@ -2,7 +2,6 @@ import xlsx from "xlsx";
 import createODMatrix from "./createODMatrix";
 import getAirports from "./getAirports";
 import countFlightsperAirport from "./countFlightsPerAirport";
-import { FlightsTable } from "../types/DataFrame";
 
 export default async function getFlights() {
   const filePath = "./data/UT.01jan-31dec2019-ITConly.xlsx";

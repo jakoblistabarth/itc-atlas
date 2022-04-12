@@ -1,45 +1,29 @@
-import * as d3 from "d3";
-import { geoPath } from "d3-geo";
 import { geoBertin1953 } from "d3-geo-projection";
 import type { NextPage } from "next";
 import Head from "next/head";
 import { useEffect, useRef } from "react";
 import BaseMap from "../../components/map/BaseMap";
 import styles from "../../styles/home.module.css";
-import { Topology } from "topojson-specification";
 import getFlights from "../../lib/getFlights";
 import getCountries from "../../lib/getCountries";
+import { FeatureCollection, LineString } from "geoJSON";
+import { Topology } from "topojson-specification";
+import ArrowHead from "../../components/map/ArrowHead";
+import FlowLayer from "../../components/map/FlowLayer";
 
 type Props = {
-  odMatrix: [];
+  odMatrix: FeatureCollection<LineString>;
   world: Topology;
 };
 
 const Flights: NextPage<Props> = ({ odMatrix, world }) => {
   const projection = geoBertin1953();
-  const path = geoPath(projection);
-
   const svgRef = useRef(null);
 
   useEffect(() => {
     // setData(json.data)
     // setFilteredData(json.data)
-    const svgEl = d3.select(svgRef.current);
-
-    // Flows
-    const routes = svgEl.append("g").attr("id", "routes");
-    const flow = routes.selectAll("path").data(odMatrix);
-
-    flow
-      .enter()
-      .append("path")
-      .attr("d", path)
-      .attr("stroke", "black")
-      .attr("fill", "none")
-      .attr("stroke-width", (d) => (10 * d.properties.value) / 100)
-      .attr("value", (d) => d.value)
-      .attr("class", "route");
-  }, []);
+  });
 
   // const [selectedCountry, setSelectedCountry] = useState(null)
   // const [filterData, setFilteredData] = useState(null)
@@ -58,7 +42,11 @@ const Flights: NextPage<Props> = ({ odMatrix, world }) => {
       <main className={styles.main}>
         <h1>Flights</h1>
         <svg ref={svgRef} width={1020} height={600}>
+          <defs>
+            <ArrowHead id="arrowHead" color="red" />
+          </defs>
           <BaseMap baseMapData={world} projection={projection} />
+          <FlowLayer projection={projection} flowData={odMatrix} />
         </svg>
 
         {/* <select onChange={(e) => setSelectedCountry(e.target.value)}></select>

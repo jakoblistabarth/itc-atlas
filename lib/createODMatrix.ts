@@ -1,6 +1,7 @@
 import * as d3 from "d3";
+import { Flight } from "../types/Flight";
 
-export default function createODMatrix(flights, airports) {
+export default function createODMatrix(flights: Flight[], airports) {
   const od = flights.reduce((acc: [], d) => {
     const codes = d.airportCodes;
     const origins = codes.slice(0, -1);
