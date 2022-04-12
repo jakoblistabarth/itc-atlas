@@ -3,8 +3,8 @@ import * as d3 from "d3";
 import { geoPath, GeoSphere } from "d3-geo";
 import * as topojson from "topojson-client";
 
-const BaseMap: FC<{ baseMapData: any; projection: any }> = ({
-  baseMapData,
+const BaseLayer: FC<{ data: any; projection: any }> = ({
+  data,
   projection,
 }) => {
   const path = geoPath(projection);
@@ -12,10 +12,10 @@ const BaseMap: FC<{ baseMapData: any; projection: any }> = ({
   const ref = useRef<SVGGElement>(null);
 
   useEffect(() => {
-    const baseMap = d3.select(ref.current);
+    const baseLayerGroup = d3.select(ref.current);
 
     // Oceans
-    baseMap
+    baseLayerGroup
       .append("g")
       .append("path")
       .attr("id", "oceans")
@@ -24,7 +24,7 @@ const BaseMap: FC<{ baseMapData: any; projection: any }> = ({
       .style("fill", "#E3E3E3");
 
     // Graticule
-    baseMap
+    baseLayerGroup
       .append("g")
       .append("path")
       .datum(d3.geoGraticule10())
@@ -36,20 +36,20 @@ const BaseMap: FC<{ baseMapData: any; projection: any }> = ({
       .style("stroke-opacity", 0.25);
 
     // Countries
-    baseMap
+    baseLayerGroup
       .append("path")
       .attr("id", "countries")
-      .datum(topojson.feature(baseMapData, baseMapData.objects.countries))
+      .datum(topojson.feature(data, data.objects.countries))
       .attr("fill", "white")
       .style("fill-opacity", 0.9)
       .attr("d", path);
 
     // Borders
-    baseMap
+    baseLayerGroup
       .append("g")
       .attr("id", "borders")
       .append("path")
-      .datum(topojson.feature(baseMapData, baseMapData.objects.countries))
+      .datum(topojson.feature(data, data.objects.countries))
       .attr("fill", "none")
       .attr("stroke", "lightgrey")
       .attr("stroke-linejoin", "round")
@@ -60,4 +60,4 @@ const BaseMap: FC<{ baseMapData: any; projection: any }> = ({
   return <g id="base-map" ref={ref} />;
 };
 
-export default BaseMap;
+export default BaseLayer;

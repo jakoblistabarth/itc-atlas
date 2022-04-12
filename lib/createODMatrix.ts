@@ -1,7 +1,8 @@
 import * as d3 from "d3";
 import { Flight } from "../types/Flight";
+import { Flows } from "../types/Flows";
 
-export default function createODMatrix(flights: Flight[], airports) {
+export default function createODMatrix(flights: Flight[], airports): Flows {
   const od = flights.reduce((acc: [], d) => {
     const codes = d.airportCodes;
     const origins = codes.slice(0, -1);
@@ -15,7 +16,7 @@ export default function createODMatrix(flights: Flight[], airports) {
     return acc.flat();
   }, []);
 
-  const odGeoJSON = d3
+  const features = d3
     .rollups(
       od,
       (v) => v.length,
@@ -35,16 +36,22 @@ export default function createODMatrix(flights: Flight[], airports) {
       const dAirport = airports.find((d) => d.iata_code == destination);
       if (!oAirport || !dAirport) return;
       return {
-        type: "LineString",
-        coordinates: [
-          [oAirport.long, oAirport.lat],
-          [dAirport.long, dAirport.lat],
-        ],
+        type: "Feature",
         properties: properties,
+        geometry: {
+          type: "LineString",
+          coordinates: [
+            [oAirport.long, oAirport.lat],
+            [dAirport.long, dAirport.lat],
+          ],
+        },
       };
     })
     .filter((d) => d);
 
-  return odGeoJSON;
+  return {
+    type: "FeatureCollection",
+    features,
+  };
   //   if (showAMS) ? odGeoJSON : odGeoJSON.filter(d => d.properties.o !== "AMS" && d.properties.d !== "AMS");
 }

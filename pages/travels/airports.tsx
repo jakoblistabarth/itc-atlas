@@ -9,7 +9,7 @@ import { FeatureCollection } from "geojson";
 import Heading, { Headings } from "../../components/heading";
 import getCountries from "../../lib/getCountries";
 import getFlights from "../../lib/getFlights";
-import BaseMap from "../../components/map/BaseMap";
+import BaseLayer from "../../components/map/BaseLayer";
 
 export async function getStaticProps() {
   const flights = await getFlights();
@@ -74,7 +74,7 @@ const Airports: NextPage<{
         <main className={styles.main}>
           <Heading Tag={Headings.H1}>Airports</Heading>
           <svg ref={svgRef} width={1020} height={600}>
-            <BaseMap baseMapData={world} projection={projection} />
+            <BaseLayer baseMapData={world} projection={projection} />
           </svg>
         </main>
       </>

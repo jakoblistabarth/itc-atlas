@@ -9,10 +9,10 @@ import { geoPath } from "d3-geo";
 import { Project } from "../../types/Project";
 import getCountries from "../../lib/getCountries";
 import getProjects from "../../lib/getProjects";
-import BaseMap from "../../components/map/BaseMap";
+import BaseLayer from "../../components/map/BaseLayer";
 import Heading, { Headings } from "../../components/heading";
 
-type SiteProps = {
+type Props = {
   projects: Project[];
   world: Awaited<ReturnType<typeof getCountries>>;
 };
@@ -100,14 +100,14 @@ const ProjectCountries: NextPage<SiteProps> = ({ projects, world }) => {
       <main className={styles.main}>
         <Heading Tag={Headings.H1}>Projects per Country</Heading>
         <svg ref={svgRef} width={1020} height={2000}>
-          <BaseMap baseMapData={world} projection={projection} />
+          <BaseLayer baseMapData={world} projection={projection} />
         </svg>
       </main>
     </>
   );
 };
 
-export const getStaticProps: GetStaticProps<SiteProps> = async () => {
+export const getStaticProps: GetStaticProps<Props> = async () => {
   const projects = await getProjects();
 
   const projectSelection = projects.filter(

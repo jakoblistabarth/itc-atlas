@@ -10,7 +10,7 @@ const ArrowHead: FC<{ id: string; color: string }> = ({ id, color }) => {
       refY="4"
       orient="auto"
     >
-      <path d="M 3 2 L 5 4 L 3 6" stroke-width="1" stroke={color} fill="none" />
+      <path d="M 3 2 L 5 4 L 3 6" strokeWidth="1" stroke={color} fill="none" />
     </marker>
   );
 };

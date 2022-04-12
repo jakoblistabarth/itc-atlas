@@ -2,23 +2,46 @@ import { geoBertin1953 } from "d3-geo-projection";
 import type { NextPage } from "next";
 import Head from "next/head";
 import { useEffect, useRef } from "react";
-import BaseMap from "../../components/map/BaseMap";
+import BaseLayer from "../../components/map/BaseLayer";
 import styles from "../../styles/home.module.css";
 import getFlights from "../../lib/getFlights";
 import getCountries from "../../lib/getCountries";
-import { FeatureCollection, LineString } from "geoJSON";
 import { Topology } from "topojson-specification";
 import ArrowHead from "../../components/map/ArrowHead";
+import FlowLegend from "../../components/map/FlowLegend";
 import FlowLayer from "../../components/map/FlowLayer";
+import PointLayer from "../../components/map/PointLayer";
+import * as d3 from "d3";
+import { Flows } from "../../types/Flows";
 
 type Props = {
-  odMatrix: FeatureCollection<LineString>;
+  odMatrix: Flows;
   world: Topology;
 };
 
 const Flights: NextPage<Props> = ({ odMatrix, world }) => {
   const projection = geoBertin1953();
   const svgRef = useRef(null);
+
+  const flowConfig = {
+    color: "red",
+    scaleWidth: d3
+      .scaleLinear()
+      .domain(d3.extent(odMatrix.features.map((flow) => flow.properties.value)))
+      .range([1, 25]),
+  };
+
+  const points = odMatrix.features.reduce((points: [], flow) => {
+    flow.geometry.coordinates.forEach((location, index) => {
+      const name = index === 0 ? flow.properties?.o : flow.properties?.d;
+      if (!points.map((p) => p.name).includes(name))
+        points.push({
+          name,
+          coordinates: location,
+        });
+    });
+    return points;
+  }, []);
 
   useEffect(() => {
     // setData(json.data)
@@ -43,10 +66,26 @@ const Flights: NextPage<Props> = ({ odMatrix, world }) => {
         <h1>Flights</h1>
         <svg ref={svgRef} width={1020} height={600}>
           <defs>
-            <ArrowHead id="arrowHead" color="red" />
+            <ArrowHead id="arrowHead" color={flowConfig.color} />
           </defs>
-          <BaseMap baseMapData={world} projection={projection} />
-          <FlowLayer projection={projection} flowData={odMatrix} />
+          <BaseLayer projection={projection} data={world} />
+          <PointLayer
+            projection={projection}
+            data={points}
+            radius={1}
+            color={"grey"}
+          />
+          <FlowLayer
+            projection={projection}
+            data={odMatrix}
+            scaleWidth={flowConfig.scaleWidth}
+          />
+          <FlowLegend
+            data={odMatrix.features.map((flow) => flow.properties?.value)}
+            scaleWidth={flowConfig.scaleWidth}
+            title="No. of Flights in 2019"
+            unitLabel="Flights"
+          />
         </svg>
 
         {/* <select onChange={(e) => setSelectedCountry(e.target.value)}></select>
