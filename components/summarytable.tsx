@@ -7,9 +7,9 @@ import {
   MdFormatListBulleted,
   MdOutlineCalculate,
 } from "react-icons/md";
-import DataFrame from "../lib/DataFrame";
-import { floatFormat, pctFormat } from "../lib/formaters";
-import { colorMap } from "../lib/summarytable";
+import DataFrame from "../lib/DataFrame/DataFrame";
+import { fFloat, fPercentage } from "../lib/utilities/formaters";
+import { colorMap } from "../lib/summarytable/colorMap";
 import styles from "../styles/summarytable.module.scss";
 import { ColumnType } from "../types/Column";
 import SummaryTableCard from "./summaryTableCard";
@@ -36,7 +36,7 @@ type SummaryTableProps = {
 const SummaryTable: FC<SummaryTableProps> = ({ data: df }) => {
   return (
     <div className={styles.summaryTableContainer}>
-      <SummaryTableCard tableDescription={df.getDescription()} />
+      <SummaryTableCard description={df.getDescription()} />
       <div className={styles.summaryTable}>
         <table>
           <thead>
@@ -79,25 +79,25 @@ const SummaryTable: FC<SummaryTableProps> = ({ data: df }) => {
                       column.stats?.missing > 0.5 ? styles.alert : undefined
                     }
                   >
-                    {pctFormat(column.stats.missing)}
+                    {fPercentage(column.stats.missing)}
                   </td>
                   <td>
                     {typeof column.stats.mean === "number" ? (
-                      floatFormat(column.stats.mean)
+                      fFloat(column.stats.mean)
                     ) : (
                       <MdClose color="lightgrey" />
                     )}
                   </td>
                   <td>
                     {typeof column.stats.median === "number" ? (
-                      floatFormat(column.stats.median)
+                      fFloat(column.stats.median)
                     ) : (
                       <MdClose color="lightgrey" />
                     )}
                   </td>
                   <td>
                     {typeof column.stats.sd === "number" ? (
-                      floatFormat(column.stats.sd)
+                      fFloat(column.stats.sd)
                     ) : (
                       <MdClose color="lightgrey" />
                     )}

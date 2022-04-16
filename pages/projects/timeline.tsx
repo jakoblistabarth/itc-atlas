@@ -3,9 +3,9 @@ import type { NextPage } from "next";
 import Head from "next/head";
 import { useEffect, useRef } from "react";
 import Heading, { Headings } from "../../components/heading";
-import { dateLongFormat } from "../../lib/formaters";
-import getProjects from "../../lib/getProjects";
-import getUnsdCodes from "../../lib/getUnsdCodes";
+import { fDateLong } from "../../lib/utilities/formaters";
+import getProjects from "../../lib/data/getProjects";
+import getUnsdCodes from "../../lib/data/getUnsdCodes";
 import isPartOfUnsdGroup from "../../lib/isPartOfUnsdGroup";
 import styles from "../../styles/home.module.css";
 import { Project, ProjectStatus } from "../../types/Project";
@@ -105,9 +105,9 @@ const Timeline: NextPage<TimelineProps> = ({ projects, countries }) => {
         (d) =>
           d.projectShortName +
           " (" +
-          dateLongFormat(new Date(d.dateStart)) +
+          fDateLong(new Date(d.dateStart)) +
           "-" +
-          dateLongFormat(new Date(d.dateEnd)) +
+          fDateLong(new Date(d.dateEnd)) +
           ")"
       );
   });

@@ -1,8 +1,8 @@
 import { FC, useEffect, useRef } from "react";
 import * as d3 from "d3";
-import { colorMap } from "../lib/summarytable";
+import { colorMap } from "../lib/summarytable/colorMap";
 import { ColumnType } from "../types/Column";
-import { dateLongFormat, dateShortFormat, floatFormat } from "../lib/formaters";
+import { fDateLong, fDateShort, fFloat } from "../lib/utilities/formaters";
 import { Datum } from "../types/DataFrame";
 import { Bin } from "d3";
 
@@ -31,7 +31,7 @@ const SnapshotHistogram: FC<Props> = ({ column, type }) => {
   const cleanedColumn =
     type === ColumnType.Date ? columnNoNA.map((d) => new Date(d)) : columnNoNA;
 
-  const typeFormat = type === ColumnType.Date ? dateLongFormat : floatFormat;
+  const typeFormat = type === ColumnType.Date ? fDateLong : fFloat;
   // const min = d3.min(columnNoNA);
   // const max = d3.max(columnNoNA);
 
@@ -102,9 +102,9 @@ const SnapshotHistogram: FC<Props> = ({ column, type }) => {
           d3.pointer(event, bodyNode)[1] - tooltipHeight - 10 + "px"
         )
         .html(
-          `<strong>${typeFormat(d.x0)}-${typeFormat(
-            d.x1
-          )}</strong><br>${floatFormat(d.length)} rows`
+          `<strong>${typeFormat(d.x0)}-${typeFormat(d.x1)}</strong><br>${fFloat(
+            d.length
+          )} rows`
         );
     };
     const mouseleave = (event: MouseEvent) => {
@@ -161,9 +161,7 @@ const SnapshotHistogram: FC<Props> = ({ column, type }) => {
         d3
           .axisBottom(x)
           .tickValues(xDomain)
-          .tickFormat(
-            type === ColumnType.Contiuous ? floatFormat : dateShortFormat
-          )
+          .tickFormat(type === ColumnType.Contiuous ? fFloat : fDateShort)
           .tickSize(2)
       )
       .attr("font-size", 7);

@@ -1,6 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import { Staff } from "../../../types/Staff";
-import getStaff from "../../../lib/getStaff";
+import getStaff from "../../../lib/data/getStaff";
 
 export default async function handler(
   req: NextApiRequest,

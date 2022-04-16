@@ -1,5 +1,5 @@
-import DataFrame from "../lib/DataFrame";
-import { Contact } from "../types/Contact";
+import DataFrame from "../DataFrame/DataFrame";
+import { Contact } from "../../types/Contact";
 
 export default async function cleanContacts(
   input: unknown[]

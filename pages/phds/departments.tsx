@@ -3,16 +3,16 @@ import { geoBertin1953 } from "d3-geo-projection";
 import type { GetStaticProps, NextPage } from "next";
 import Head from "next/head";
 import * as topojson from "topojson-client";
-import { Topology } from "topojson-specification";
+import type { Topology } from "topojson-specification";
 import Footer from "../../components/footer";
 import Heading, { Headings } from "../../components/heading";
 import BaseLayer from "../../components/map/BaseLayer";
 import PointLayer from "../../components/map/PointLayer";
-import getCountries from "../../lib/getCountries";
-import getPhdCandidates from "../../lib/getPhdCandidates";
+import getCountries from "../../lib/data/getCountries";
+import getPhdCandidates from "../../lib/data/getPhdCandidates";
 import styles from "../../styles/home.module.css";
-import { PhdCandidate } from "../../types/PhdCandidate";
-import { FeatureCollection, Point } from "geojson";
+import type { PhdCandidate } from "../../types/PhdCandidate";
+import type { FeatureCollection, Point, Feature, MultiPolygon } from "geojson";
 
 type Props = {
   phdCandidates: PhdCandidate[];
@@ -31,7 +31,7 @@ const PhdDepartments: NextPage<Props> = ({ phdCandidates, world }) => {
     features: topojson
       .feature(world, world.objects.countries)
       .features.map((feature: Feature<MultiPolygon>) => {
-        const departments = count.get(feature.properties.iso3code);
+        const departments = count.get(feature.properties?.iso3code);
         const departmentCount = departments
           ? Array.from(departments?.entries()).map(([key, value]) => {
               return {

@@ -6,8 +6,8 @@ import BackToHome from "../../components/backToHome";
 import Footer from "../../components/footer";
 import Heading, { Headings } from "../../components/heading";
 import SummaryTable from "../../components/summaryTable";
-import DataFrame from "../../lib/DataFrame";
-import getPhdCandidates from "../../lib/getPhdCandidates";
+import DataFrame from "../../lib/DataFrame/DataFrame";
+import getPhdCandidates from "../../lib/data/getPhdCandidates";
 import styles from "../../styles/home.module.css";
 import { PhdCandidate } from "../../types/PhdCandidate";
 

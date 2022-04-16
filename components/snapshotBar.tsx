@@ -1,8 +1,8 @@
 import { FC, useEffect, useRef } from "react";
 import * as d3 from "d3";
-import { colorMap } from "../lib/summarytable";
+import { colorMap } from "../lib/summarytable/colorMap";
 import { ColumnType } from "../types/Column";
-import { pctFormat } from "../lib/formaters";
+import { fPercentage } from "../lib/utilities/formaters";
 import { Column } from "../types/DataFrame";
 
 type Props = {
@@ -117,7 +117,7 @@ const SnapshotBar: FC<Props> = ({ column, type }) => {
             5 +
             "px"
         )
-        .html(`<strong>${d.value}</strong><br>${pctFormat(d.cnt)}`);
+        .html(`<strong>${d.value}</strong><br>${fPercentage(d.cnt)}`);
     };
     const mouseleave = (event) => {
       tooltip.style("display", "none"); // onHide();

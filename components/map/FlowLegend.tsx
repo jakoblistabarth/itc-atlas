@@ -1,7 +1,7 @@
 import { FC, useRef, useEffect } from "react";
 import * as d3 from "d3";
 import { ScaleLinear } from "d3";
-import { intFormat } from "../../lib/formaters";
+import { fInt } from "../../lib/utilities/formaters";
 
 const FlowLegend: FC<{
   data: number[];
@@ -46,9 +46,7 @@ const FlowLegend: FC<{
 
     entry
       .append("text")
-      .text((d) =>
-        typeof d === "number" ? intFormat(d) + " " + unitLabel : null
-      )
+      .text((d) => (typeof d === "number" ? fInt(d) + " " + unitLabel : null))
       .attr("x", 100)
       .attr("font-size", 10)
       .attr("y", 10 / 4);

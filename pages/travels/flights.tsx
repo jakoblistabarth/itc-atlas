@@ -12,8 +12,8 @@ import FlowLegend from "../../components/map/FlowLegend";
 import PointLabel from "../../components/map/PointLabel";
 import PointLayer from "../../components/map/PointLayer";
 import getFlowPoints from "../../lib/cartographic/getFlowPoints";
-import getCountries from "../../lib/getCountries";
-import getFlights from "../../lib/getFlights";
+import getCountries from "../../lib/data/getCountries";
+import getFlights from "../../lib/data/getFlights";
 import styles from "../../styles/home.module.css";
 import type { Flows } from "../../types/Flows";
 

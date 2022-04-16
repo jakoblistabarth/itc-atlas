@@ -1,5 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from "next";
-import getPhdCandidates from "../../../lib/getPhdCandidates";
+import getPhdCandidates from "../../../lib/data/getPhdCandidates";
 import { PhdCandidate } from "../../../types/PhdCandidate";
 
 export default async function handler(

@@ -6,9 +6,9 @@ import Link from "next/link";
 import BackToHome from "../../components/backToHome";
 import SummaryTable from "../../components/summaryTable";
 import { Project } from "../../types/Project";
-import getProjects from "../../lib/getProjects";
+import getProjects from "../../lib/data/getProjects";
 import Footer from "../../components/footer";
-import DataFrame from "../../lib/DataFrame";
+import DataFrame from "../../lib/DataFrame/DataFrame";
 import Heading, { Headings } from "../../components/heading";
 
 type Props = React.PropsWithChildren<{

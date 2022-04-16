@@ -4,11 +4,11 @@ import styles from "../../styles/home.module.css";
 import BackToHome from "../../components/backToHome";
 import SummaryTable from "../../components/summaryTable";
 import Footer from "../../components/footer";
-import getStaff from "../../lib/getStaff";
+import getStaff from "../../lib/data/getStaff";
 import Heading, { Headings } from "../../components/heading";
-import getTestData from "../../lib/getTestData";
+import getTestData from "../../lib/DataFrame/getTestData";
 import { Staff } from "../../types/Staff";
-import DataFrame from "../../lib/DataFrame";
+import DataFrame from "../../lib/DataFrame/DataFrame";
 
 type Props = React.PropsWithChildren<{
   staff: Staff[];

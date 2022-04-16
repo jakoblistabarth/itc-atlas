@@ -1,5 +1,5 @@
 import xlsx from "xlsx";
-import createODMatrix from "./createODMatrix";
+import getODMatrix from "./getODMatrix";
 import getAirports from "./getAirports";
 import countFlightsperAirport from "./countFlightsPerAirport";
 
@@ -22,8 +22,8 @@ export default async function getFlights() {
   );
   const airports = await (await getAirports()).json;
 
-  const odMatrix = await createODMatrix(flights);
-  const odMatrixMJ = await createODMatrix(flightsMJ);
+  const odMatrix = await getODMatrix(flights);
+  const odMatrixMJ = await getODMatrix(flightsMJ);
   const perAirport = countFlightsperAirport(flights, airports);
 
   return {

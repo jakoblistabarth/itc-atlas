@@ -4,10 +4,10 @@ import styles from "../../styles/home.module.css";
 import { MdOutlineArrowRightAlt } from "react-icons/md";
 import Link from "next/link";
 import BackToHome from "../../components/backToHome";
-import getFlights from "../../lib/getFlights";
+import getFlights from "../../lib/data/getFlights";
 import SummaryTable from "../../components/summaryTable";
 import Footer from "../../components/footer";
-import DataFrame from "../../lib/DataFrame";
+import DataFrame from "../../lib/DataFrame/DataFrame";
 import { Flight } from "../../types/Flight";
 import Heading, { Headings } from "../../components/heading";
 

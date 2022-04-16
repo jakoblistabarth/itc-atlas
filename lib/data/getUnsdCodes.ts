@@ -1,5 +1,5 @@
 import * as csv from "csvtojson";
-import { UnLevel } from "../types/UnsdCodes";
+import { UnLevel } from "../../types/UnsdCodes";
 
 export default async function getUnsdCodes(level: string) {
   const csvFilePath = "./data/UNSD-Methodology.csv";

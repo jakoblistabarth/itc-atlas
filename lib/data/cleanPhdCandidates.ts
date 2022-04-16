@@ -1,8 +1,8 @@
 import Fuse from "fuse.js";
-import { Data } from "../types/DataFrame";
-import DataFrame from "./DataFrame";
+import { Data } from "../../types/DataFrame";
+import DataFrame from "../DataFrame/DataFrame";
 import getUnsdCodes from "./getUnsdCodes";
-import { mapCountries } from "./mappings/country.name";
+import { mapCountries } from "../mappings/country.name";
 
 export async function cleanPhdCandiates(phdCandidates: Data) {
   const unsdCodes = await getUnsdCodes("countries");
@@ -37,7 +37,6 @@ export async function cleanPhdCandiates(phdCandidates: Data) {
     //   DepartmentSecond: "department2",
     //   Sponsor: "sponsor",
     // })
-    .renameColumn({ Country: "country" })
     .renameColumn({ Department: "department1" })
     .renameColumn({ DepartmentSecond: "department2" })
     .renameColumn({ Sponsor: "sponsor" })

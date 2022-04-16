@@ -1,5 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from "next";
-import getContacts from "../../../lib/getContacts";
+import getContacts from "../../../lib/data/getContacts";
 import { Contact } from "../../../types/Contact";
 
 export default async function handler(

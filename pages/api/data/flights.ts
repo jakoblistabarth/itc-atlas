@@ -1,6 +1,6 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import type { NextApiRequest, NextApiResponse } from "next";
-import getFlights from "../../../lib/getFlights";
+import getFlights from "../../../lib/data/getFlights";
 import { Flight } from "../../../types/Flight";
 import { FeatureCollection } from "geojson";
 

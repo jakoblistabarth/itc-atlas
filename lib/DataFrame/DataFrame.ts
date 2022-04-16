@@ -1,6 +1,6 @@
 import * as _ from "lodash";
-import { Column, Description, Data, Row, Datum } from "../types/DataFrame";
-import { getType, getColumnStats } from "./summarytable";
+import { Column, Description, Data, Row, Datum } from "../../types/DataFrame";
+import { getType, getColumnStats } from "../summarytable/summarytable";
 
 class DataFrame {
   private _data: Data;

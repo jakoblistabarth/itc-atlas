@@ -3,7 +3,7 @@ import { Flight } from "../types/Flight";
 import { Flows } from "../types/Flows";
 import getAirports from "./getAirports";
 
-async function createODMatrix(flights: Flight[]): Promise<Flows> {
+async function getODMatrix(flights: Flight[]): Promise<Flows> {
   const airports = await (await getAirports()).json;
 
   const od = flights.reduce((acc: [], d) => {
@@ -59,4 +59,4 @@ async function createODMatrix(flights: Flight[]): Promise<Flows> {
   //   if (showAMS) ? odGeoJSON : odGeoJSON.filter(d => d.properties.o !== "AMS" && d.properties.d !== "AMS");
 }
 
-export default createODMatrix;
+export default getODMatrix;

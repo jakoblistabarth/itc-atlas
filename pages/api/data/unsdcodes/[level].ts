@@ -1,6 +1,6 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import type { NextApiRequest, NextApiResponse } from "next";
-import getUnsdCodes from "../../../../lib/getUnsdCodes";
+import getUnsdCodes from "../../../../lib/data/getUnsdCodes";
 import { UnLevel } from "../../../../types/UnsdCodes";
 
 export default async function handler(

@@ -1,4 +1,4 @@
-import { colorMap } from "../lib/summarytable";
+import { colorMap } from "../lib/summarytable/colorMap";
 import { ColumnType } from "../types/Column";
 import { FC } from "react";
 import SnapshotBar from "./snapshotBar";
