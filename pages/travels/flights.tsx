@@ -1,53 +1,74 @@
+import * as d3 from "d3";
 import { geoBertin1953 } from "d3-geo-projection";
+import { Feature, FeatureCollection, Point } from "geojson";
 import type { NextPage } from "next";
 import Head from "next/head";
-import { useEffect, useRef } from "react";
-import BaseLayer from "../../components/map/BaseLayer";
-import styles from "../../styles/home.module.css";
-import getFlights from "../../lib/getFlights";
-import getCountries from "../../lib/getCountries";
-import { Topology } from "topojson-specification";
-import ArrowHead from "../../components/map/ArrowHead";
-import FlowLegend from "../../components/map/FlowLegend";
-import FlowLayer from "../../components/map/FlowLayer";
-import PointLayer from "../../components/map/PointLayer";
-import * as d3 from "d3";
-import { Flows } from "../../types/Flows";
+import type { Topology } from "topojson-specification";
 import Heading, { Headings } from "../../components/heading";
+import ArrowHead from "../../components/map/ArrowHead";
+import BaseLayer from "../../components/map/BaseLayer";
+import FlowLayer from "../../components/map/FlowLayer";
+import FlowLegend from "../../components/map/FlowLegend";
+import PointLabel from "../../components/map/PointLabel";
+import PointLayer from "../../components/map/PointLayer";
+import getFlowPoints from "../../lib/cartographic/getFlowPoints";
+import getCountries from "../../lib/getCountries";
+import getFlights from "../../lib/getFlights";
+import styles from "../../styles/home.module.css";
+import type { Flows } from "../../types/Flows";
 
 type Props = {
   odMatrix: Flows;
   world: Topology;
 };
 
-const Flights: NextPage<Props> = ({ odMatrix, world }) => {
+const Flights: NextPage<Props> = ({ odMatrix, odMatrixMJ, world }) => {
   const projection = geoBertin1953();
-  const svgRef = useRef(null);
 
   const flowConfig = {
-    color: "red",
+    style: {
+      fill: {
+        color: "red",
+        opacity: 0.1,
+      },
+    },
     scaleWidth: d3
       .scaleLinear()
       .domain(d3.extent(odMatrix.features.map((flow) => flow.properties.value)))
       .range([1, 15]),
   };
 
-  const points = odMatrix.features.reduce((points: [], flow) => {
-    flow.geometry.coordinates.forEach((location, index) => {
-      const name = index === 0 ? flow.properties?.o : flow.properties?.d;
-      if (!points.map((p) => p.name).includes(name))
-        points.push({
-          name,
-          coordinates: location,
-        });
-    });
-    return points;
-  }, []);
+  const flowConfigMJ = {
+    style: {
+      fill: {
+        color: "red",
+      },
+    },
+    scaleWidth: d3
+      .scaleLinear()
+      .domain(
+        d3.extent(odMatrixMJ.features.map((flow) => flow.properties.value))
+      )
+      .range([2, 4]),
+  };
 
-  useEffect(() => {
-    // setData(json.data)
-    // setFilteredData(json.data)
-  });
+  const symbolStyle = {
+    fill: {
+      color: "grey",
+      opacity: 1,
+    },
+    stroke: {
+      width: 0,
+    },
+  };
+
+  const airports = getODPoints(odMatrix);
+  const airportsMJ = getODPoints(odMatrixMJ);
+
+  // useEffect(() => {
+  // setData(json.data)
+  // setFilteredData(json.data)
+  // });
 
   // const [selectedCountry, setSelectedCountry] = useState(null)
   // const [filterData, setFilteredData] = useState(null)
@@ -65,25 +86,82 @@ const Flights: NextPage<Props> = ({ odMatrix, world }) => {
 
       <main className={styles.main}>
         <Heading Tag={Headings.H1}>ITC's Travel Activity</Heading>
-        <svg ref={svgRef} width={1020} height={600}>
+        <svg width={1020} height={600}>
           <defs>
-            <ArrowHead id="arrowHead" color={flowConfig.color} />
+            <ArrowHead id="arrowHead" color={flowConfig.style?.fill?.color} />
           </defs>
           <BaseLayer data={world} projection={projection} />
           <PointLayer
             projection={projection}
-            data={points}
+            data={airports}
             radius={1}
-            color={"grey"}
+            style={symbolStyle}
           />
           <FlowLayer
             projection={projection}
             data={odMatrix}
             scaleWidth={flowConfig.scaleWidth}
+            style={flowConfig.style}
           />
+
+          {odMatrix.features.slice(0, 5).map((d) => {
+            console.log(getFlowPoints(d));
+            return (
+              <PointLabel xy={getFlowPoints(d, projection)[1]}>
+                <text>
+                  <tspan fontWeight="bold">{d.properties?.od}</tspan>(
+                  {d.properties?.value})
+                </text>
+              </PointLabel>
+            );
+          })}
           <FlowLegend
             data={odMatrix.features.map((flow) => flow.properties?.value)}
             scaleWidth={flowConfig.scaleWidth}
+            title="No. of Flights in 2019"
+            unitLabel="Flights"
+          />
+        </svg>
+
+        <Heading Tag={Headings.H1}>
+          ITC's Travel Activity Menno-Jan Kraak
+        </Heading>
+        <svg width={1020} height={600}>
+          <defs>
+            <ArrowHead id="arrowHead" color={flowConfig.style?.fill?.color} />
+          </defs>
+          <BaseLayer data={world} projection={projection} />
+          <PointLayer
+            projection={projection}
+            data={airportsMJ}
+            radius={1}
+            style={symbolStyle}
+          />
+          <FlowLayer
+            projection={projection}
+            data={odMatrixMJ}
+            scaleWidth={flowConfigMJ.scaleWidth}
+            style={flowConfigMJ.style}
+          />
+          {airportsMJ.features.map((d) => (
+            <PointLabel xy={projection(d.geometry.coordinates)}>
+              <text>
+                <tspan fontWeight="bold">{d.properties?.name}</tspan>(
+                {d.properties?.value})
+              </text>
+            </PointLabel>
+          ))}
+          {odMatrixMJ.features.slice(5, 7).map((d) => (
+            <PointLabel xy={getFlowPoints(d, projection)[1]}>
+              <text>
+                <tspan fontWeight="bold">{d.properties?.od}</tspan>(
+                {d.properties?.value})
+              </text>
+            </PointLabel>
+          ))}
+          <FlowLegend
+            data={odMatrixMJ.features.map((flow) => flow.properties?.value)}
+            scaleWidth={flowConfigMJ.scaleWidth}
             title="No. of Flights in 2019"
             unitLabel="Flights"
           />
@@ -104,8 +182,38 @@ export async function getStaticProps() {
   return {
     props: {
       odMatrix: flights.odMatrix,
+      odMatrixMJ: flights.odMatrixMJ,
       world,
     },
+  };
+}
+
+function getODPoints(odMatrix: Flows): FeatureCollection<Point> {
+  const features = odMatrix.features.reduce(
+    (points: Feature<Point>[], flow) => {
+      flow.geometry.coordinates.forEach((coordinates, index) => {
+        const name = index === 0 ? flow.properties?.o : flow.properties?.d;
+        if (!points.map((p) => p.properties?.name).includes(name))
+          points.push({
+            type: "Feature",
+            properties: {
+              name,
+              value: flow.properties?.value,
+            },
+            geometry: {
+              type: "Point",
+              coordinates: coordinates,
+            },
+          });
+      });
+      return points;
+    },
+    []
+  );
+
+  return {
+    type: "FeatureCollection",
+    features,
   };
 }
 

@@ -6,7 +6,7 @@ import { pctFormat } from "../lib/formaters";
 import { Column } from "../types/DataFrame";
 
 type Props = {
-  column: any[];
+  column: Column;
   type: ColumnType;
 };
 
@@ -52,8 +52,8 @@ const SnapshotBar: FC<Props> = ({ column, type }) => {
   const x = d3
     .scaleLinear()
     .domain([
-      d3.min(stack.map((d) => d.start)),
-      d3.max(stack.map((d) => d.end)),
+      d3.min(stack.map((d) => d.start)) ?? 0,
+      d3.max(stack.map((d) => d.end)) ?? 100,
     ])
     .range([0, innerWidth]);
 

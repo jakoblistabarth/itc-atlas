@@ -1,8 +1,11 @@
 import * as d3 from "d3";
 import { Flight } from "../types/Flight";
 import { Flows } from "../types/Flows";
+import getAirports from "./getAirports";
 
-export default function createODMatrix(flights: Flight[], airports): Flows {
+async function createODMatrix(flights: Flight[]): Promise<Flows> {
+  const airports = await (await getAirports()).json;
+
   const od = flights.reduce((acc: [], d) => {
     const codes = d.airportCodes;
     const origins = codes.slice(0, -1);
@@ -55,3 +58,5 @@ export default function createODMatrix(flights: Flight[], airports): Flows {
   };
   //   if (showAMS) ? odGeoJSON : odGeoJSON.filter(d => d.properties.o !== "AMS" && d.properties.d !== "AMS");
 }
+
+export default createODMatrix;

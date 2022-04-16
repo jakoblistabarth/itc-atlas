@@ -13,6 +13,6 @@ export default async function getContacts() {
   cleanContacts(data);
 
   return {
-    data: data[0],
+    data: data,
   };
 }

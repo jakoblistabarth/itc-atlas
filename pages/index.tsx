@@ -55,6 +55,14 @@ const Home: NextPage = () => {
               <p>Mapping ITC's staff members.</p>
             </a>
           </Link>
+          <Link href="/applicants">
+            <a className={styles.card}>
+              <h2>
+                Applicants <MdOutlineArrowRightAlt />
+              </h2>
+              <p>ITC's applicants.</p>
+            </a>
+          </Link>
         </div>
       </main>
 

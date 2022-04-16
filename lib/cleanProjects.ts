@@ -1,7 +1,7 @@
 import DataFrame from "./DataFrame";
 import getUnsdCodes from "./getUnsdCodes";
 import { ProjectType, ProjectStatus } from "../types/Project";
-import mappedCountries from "./mappings/country.name";
+import { mapCountries } from "./mappings/country.name";
 
 export default async function cleanProjects(input: any[]) {
   const post2019 = new DataFrame(input[0])
@@ -118,13 +118,4 @@ export default async function cleanProjects(input: any[]) {
   });
 
   return output;
-}
-
-function mapCountries(countryString: string): string {
-  if (!countryString) return "";
-  let string = countryString.replace(/[\(\)]/g, ",");
-  Object.entries(mappedCountries).forEach(([key, value]) => {
-    string.replace(key, value);
-  });
-  return string;
 }

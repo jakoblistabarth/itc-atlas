@@ -1,26 +1,78 @@
+import * as d3 from "d3";
+import { geoBertin1953 } from "d3-geo-projection";
 import type { GetStaticProps, NextPage } from "next";
 import Head from "next/head";
+import * as topojson from "topojson-client";
+import { Topology } from "topojson-specification";
 import Footer from "../../components/footer";
 import Heading, { Headings } from "../../components/heading";
-import SummaryTable from "../../components/summaryTable";
-import { ColumnType } from "../../types/Column";
-import Snapshot from "../../components/snapshot";
-import DataFrame from "../../lib/DataFrame";
+import BaseLayer from "../../components/map/BaseLayer";
+import PointLayer from "../../components/map/PointLayer";
+import getCountries from "../../lib/getCountries";
 import getPhdCandidates from "../../lib/getPhdCandidates";
 import styles from "../../styles/home.module.css";
 import { PhdCandidate } from "../../types/PhdCandidate";
+import { FeatureCollection, Point } from "geojson";
 
 type Props = {
   phdCandidates: PhdCandidate[];
+  world: Topology;
 };
 
-const PhdDepartments: NextPage<Props> = ({ phdCandidates }) => {
-  const df = new DataFrame(phdCandidates);
-  const filtered = df;
-  // .mutate("sponsor2", (row) => (row["sponsor"] ? row["sponsor"] + "2" : null))
-  // .dropColumn("sponsor")
-  // .renameColumn({ studentID: "id" });
-  // .renameColumn({ department1: "dep1", department2: "dep2" });
+const PhdDepartments: NextPage<Props> = ({ phdCandidates, world }) => {
+  const count = d3.group(
+    phdCandidates,
+    (d) => d.country,
+    (d) => d.department1
+  );
+
+  const points: FeatureCollection<Point> = {
+    type: "FeatureCollection",
+    features: topojson
+      .feature(world, world.objects.countries)
+      .features.map((feature: Feature<MultiPolygon>) => {
+        const departments = count.get(feature.properties.iso3code);
+        const departmentCount = departments
+          ? Array.from(departments?.entries()).map(([key, value]) => {
+              return {
+                [key]: value.length,
+              };
+            })
+          : null;
+        console.log(departmentCount);
+        const totalCount = departments
+          ? Array.from(departments.values()).reduce(
+              (sum, d) => sum + d.length,
+              0
+            )
+          : null;
+        return {
+          type: "Feature",
+          properties: {
+            phdCount: totalCount,
+            departments: departments,
+            ...feature.properties,
+          },
+          geometry: {
+            coordinates: [
+              d3.geoCentroid(feature)[0],
+              d3.geoCentroid(feature)[1],
+            ],
+          },
+        };
+      })
+      .filter((feature) => feature.properties.phdCount),
+  };
+
+  const extent = d3.extent(
+    Array.from(count.values()).map((d) =>
+      Array.from(d.values()).reduce((sum, d) => sum + d.length, 0)
+    )
+  );
+
+  const scale = d3.scaleSqrt().domain(extent).range([1, 100]);
+
+  const projection = geoBertin1953();
 
   return (
     <>
@@ -32,38 +84,28 @@ const PhdDepartments: NextPage<Props> = ({ phdCandidates }) => {
 
       <main className={styles.main}>
         <Heading Tag={Headings.H1}>ITC's PhD candidates</Heading>
-
-        <Snapshot
-          column={phdCandidates.map((d) => d.endDate)}
-          type={ColumnType.Date}
-          detailed={true}
-          columnName="endDate"
-        />
-        <Snapshot
-          column={phdCandidates.map((d) => d.startDate)}
-          type={ColumnType.Date}
-          detailed={true}
-          columnName="startDate"
-        />
-        <Snapshot
-          column={phdCandidates.map((d) => d.department1)}
-          type={ColumnType.Ordinal}
-          detailed={true}
-          columnName="Department1"
-        />
-        <SummaryTable data={filtered} />
+        <svg width={1020} height={600}>
+          <BaseLayer data={world} projection={projection} />
+          <PointLayer
+            data={points}
+            projection={projection}
+            scale={scale}
+            value="phdCount"
+          />
+        </svg>
       </main>
-
       <Footer />
     </>
   );
 };
 
-export const getStaticProps: GetStaticProps<Props> = async () => {
+export const getStaticProps: Awaited<GetStaticProps<Props>> = async () => {
   const phdCandidates = await getPhdCandidates();
+  const world = await getCountries();
   return {
     props: {
       phdCandidates,
+      world,
     },
   };
 };

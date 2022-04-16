@@ -17,15 +17,20 @@ export default async function getFlights() {
     d.airportCodes = d.Route.split("-");
   });
 
+  const flightsMJ = flights.filter((row) =>
+    row["Passenger Name"].match("KRAAK")
+  );
   const airports = await (await getAirports()).json;
 
-  const odMatrix = createODMatrix(flights, airports);
+  const odMatrix = await createODMatrix(flights);
+  const odMatrixMJ = await createODMatrix(flightsMJ);
   const perAirport = countFlightsperAirport(flights, airports);
 
   return {
     allTravels: data,
     flights: flights,
     odMatrix: odMatrix,
+    odMatrixMJ: odMatrixMJ,
     perAirport: perAirport,
   };
 }

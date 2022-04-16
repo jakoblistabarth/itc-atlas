@@ -2,11 +2,15 @@ import { FC, useRef, useEffect } from "react";
 import * as d3 from "d3";
 import { geoPath, GeoSphere } from "d3-geo";
 import * as topojson from "topojson-client";
+import type { Topology } from "topojson-specification";
 
-const BaseLayer: FC<{ data: any; projection: any }> = ({
-  data,
-  projection,
-}) => {
+type Props = {
+  data?: Topology;
+  object?: string; // TODO: to be Implemented
+  projection?: any;
+};
+
+const BaseLayer: FC<Props> = ({ data, projection }) => {
   const path = geoPath(projection);
   const sphere: GeoSphere = { type: "Sphere" }; // Question: okay to do so?
   const ref = useRef<SVGGElement>(null);

@@ -1,6 +1,6 @@
 # ITC Atlas
 
-This atlas on ITC an its global activities is a [Next.js](https://nextjs.org/) project.
+This atlas on ITC and its global activities is a [Next.js](https://nextjs.org/) project.
 
 ## Getting Started
 

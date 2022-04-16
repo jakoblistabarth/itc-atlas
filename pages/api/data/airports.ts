@@ -1,7 +1,7 @@
+import type { GeoJSON } from "geojson";
 import type { NextApiRequest, NextApiResponse } from "next";
 import getAirports from "../../../lib/getAirports";
-import { DataFrame } from "../../../types/DataFrame";
-import { GeoJSON } from "geojson";
+import type { DataFrame } from "../../../types/DataFrame";
 
 type Data = {
   json: DataFrame;

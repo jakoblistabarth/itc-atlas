@@ -2,22 +2,24 @@ import { FC, useRef, useEffect } from "react";
 import * as d3 from "d3";
 import { ScaleLinear } from "d3";
 import { intFormat } from "../../lib/formaters";
-import { Column } from "../../types/DataFrame";
 
 const FlowLegend: FC<{
-  data: Column;
+  data: number[];
   scaleWidth: ScaleLinear<number, number>;
   title: string;
   unitLabel: string;
 }> = ({ data, scaleWidth, title, unitLabel }) => {
   const ref = useRef<SVGGElement>(null);
 
+  const min = d3.min(data);
+  const max = d3.max(data);
+  if (!min || !max) return <g />;
+  const entries = [min, max / 2, max];
+
   const line = d3
     .line()
     .x((d) => d[0])
     .y((d) => d[1]);
-
-  const entries = [d3.min(data), d3.max(data) / 2, d3.max(data)];
 
   useEffect(() => {
     const svgEl = d3.select(ref.current);
@@ -44,7 +46,9 @@ const FlowLegend: FC<{
 
     entry
       .append("text")
-      .text((d) => intFormat(d) + " " + unitLabel)
+      .text((d) =>
+        typeof d === "number" ? intFormat(d) + " " + unitLabel : null
+      )
       .attr("x", 100)
       .attr("font-size", 10)
       .attr("y", 10 / 4);

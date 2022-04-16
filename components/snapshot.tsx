@@ -3,9 +3,10 @@ import { ColumnType } from "../types/Column";
 import { FC } from "react";
 import SnapshotBar from "./snapshotBar";
 import SnapshotHistogram from "./snapshotHistogram";
+import { Column } from "../types/DataFrame";
 
 type Props = {
-  column: any[];
+  column: Column;
   columnName?: string;
   type: ColumnType;
   detailed?: boolean;
