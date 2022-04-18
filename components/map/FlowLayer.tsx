@@ -1,12 +1,12 @@
 import { FC, useRef, useEffect } from "react";
 import * as d3 from "d3";
 import { GeoProjection, ScaleLinear } from "d3";
-import { Flows } from "../../types/Flows";
+import type { FeatureCollection, LineString } from "geojson";
 import getFlowPoints from "../../lib/cartographic/getFlowPoints";
 import type { SymbolAppearance } from "../../types/SymbolAppearance";
 
 const FlowLayer: FC<{
-  data: Flows;
+  data: FeatureCollection<LineString>;
   projection: GeoProjection;
   scaleWidth: ScaleLinear<number, number>;
   style?: SymbolAppearance;

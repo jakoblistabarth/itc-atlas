@@ -1,9 +1,21 @@
 import * as d3 from "d3";
-import { Flight } from "../types/Flight";
-import { Flows } from "../types/Flows";
+import type { Flight } from "../../types/Flight";
+import type { ODMatrix } from "../../types/ODMatrix";
+import type { Feature, FeatureCollection, LineString, Point } from "geojson";
 import getAirports from "./getAirports";
 
-async function getODMatrix(flights: Flight[]): Promise<Flows> {
+async function getODMatrix(flights: Flight[]): Promise<ODMatrix> {
+  const flows = await getODFlows(flights);
+  const points = getODPoints(flows);
+  return {
+    flows,
+    points,
+  };
+}
+
+async function getODFlows(
+  flights: Flight[]
+): Promise<FeatureCollection<LineString>> {
   const airports = await (await getAirports()).json;
 
   const od = flights.reduce((acc: [], d) => {
@@ -19,7 +31,7 @@ async function getODMatrix(flights: Flight[]): Promise<Flows> {
     return acc.flat();
   }, []);
 
-  const features = d3
+  const features: Feature<LineString>[] = d3
     .rollups(
       od,
       (v) => v.length,
@@ -54,9 +66,36 @@ async function getODMatrix(flights: Flight[]): Promise<Flows> {
 
   return {
     type: "FeatureCollection",
+    features: features,
+  };
+}
+
+function getODPoints(
+  flows: FeatureCollection<LineString>
+): FeatureCollection<Point> {
+  const features = flows.features.reduce((points: Feature<Point>[], flow) => {
+    flow.geometry.coordinates.forEach((coordinates, index) => {
+      const name = index === 0 ? flow.properties?.o : flow.properties?.d;
+      if (!points.map((p) => p.properties?.name).includes(name))
+        points.push({
+          type: "Feature",
+          properties: {
+            name,
+            value: flow.properties?.value,
+          },
+          geometry: {
+            type: "Point",
+            coordinates: coordinates,
+          },
+        });
+    });
+    return points;
+  }, []);
+
+  return {
+    type: "FeatureCollection",
     features,
   };
-  //   if (showAMS) ? odGeoJSON : odGeoJSON.filter(d => d.properties.o !== "AMS" && d.properties.d !== "AMS");
 }
 
 export default getODMatrix;

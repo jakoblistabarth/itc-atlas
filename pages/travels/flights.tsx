@@ -1,6 +1,6 @@
 import * as d3 from "d3";
 import { geoBertin1953 } from "d3-geo-projection";
-import { Feature, FeatureCollection, Point } from "geojson";
+import { nanoid } from "nanoid";
 import type { NextPage } from "next";
 import Head from "next/head";
 import type { Topology } from "topojson-specification";
@@ -15,10 +15,10 @@ import getFlowPoints from "../../lib/cartographic/getFlowPoints";
 import getCountries from "../../lib/data/getCountries";
 import getFlights from "../../lib/data/getFlights";
 import styles from "../../styles/home.module.css";
-import type { Flows } from "../../types/Flows";
+import type { ODMatrix } from "../../types/ODMatrix";
 
 type Props = {
-  odMatrix: Flows;
+  odMatrix: ODMatrix;
   world: Topology;
 };
 
@@ -34,7 +34,9 @@ const Flights: NextPage<Props> = ({ odMatrix, odMatrixMJ, world }) => {
     },
     scaleWidth: d3
       .scaleLinear()
-      .domain(d3.extent(odMatrix.features.map((flow) => flow.properties.value)))
+      .domain(
+        d3.extent(odMatrix.flows.features.map((flow) => flow.properties.value))
+      )
       .range([1, 15]),
   };
 
@@ -47,7 +49,9 @@ const Flights: NextPage<Props> = ({ odMatrix, odMatrixMJ, world }) => {
     scaleWidth: d3
       .scaleLinear()
       .domain(
-        d3.extent(odMatrixMJ.features.map((flow) => flow.properties.value))
+        d3.extent(
+          odMatrixMJ.flows.features.map((flow) => flow.properties.value)
+        )
       )
       .range([2, 4]),
   };
@@ -61,9 +65,6 @@ const Flights: NextPage<Props> = ({ odMatrix, odMatrixMJ, world }) => {
       width: 0,
     },
   };
-
-  const airports = getODPoints(odMatrix);
-  const airportsMJ = getODPoints(odMatrixMJ);
 
   // useEffect(() => {
   // setData(json.data)
@@ -86,6 +87,7 @@ const Flights: NextPage<Props> = ({ odMatrix, odMatrixMJ, world }) => {
 
       <main className={styles.main}>
         <Heading Tag={Headings.H1}>ITC's Travel Activity</Heading>
+
         <svg width={1020} height={600}>
           <defs>
             <ArrowHead id="arrowHead" color={flowConfig.style?.fill?.color} />
@@ -93,21 +95,20 @@ const Flights: NextPage<Props> = ({ odMatrix, odMatrixMJ, world }) => {
           <BaseLayer data={world} projection={projection} />
           <PointLayer
             projection={projection}
-            data={airports}
+            data={odMatrix.points}
             radius={1}
             style={symbolStyle}
           />
           <FlowLayer
             projection={projection}
-            data={odMatrix}
+            data={odMatrix.flows}
             scaleWidth={flowConfig.scaleWidth}
             style={flowConfig.style}
           />
 
-          {odMatrix.features.slice(0, 5).map((d) => {
-            console.log(getFlowPoints(d));
+          {odMatrix.flows.features.slice(0, 5).map((d) => {
             return (
-              <PointLabel xy={getFlowPoints(d, projection)[1]}>
+              <PointLabel key={nanoid()} xy={getFlowPoints(d, projection)[1]}>
                 <text>
                   <tspan fontWeight="bold">{d.properties?.od}</tspan>(
                   {d.properties?.value})
@@ -116,7 +117,7 @@ const Flights: NextPage<Props> = ({ odMatrix, odMatrixMJ, world }) => {
             );
           })}
           <FlowLegend
-            data={odMatrix.features.map((flow) => flow.properties?.value)}
+            data={odMatrix.flows.features.map((flow) => flow.properties?.value)}
             scaleWidth={flowConfig.scaleWidth}
             title="No. of Flights in 2019"
             unitLabel="Flights"
@@ -133,26 +134,26 @@ const Flights: NextPage<Props> = ({ odMatrix, odMatrixMJ, world }) => {
           <BaseLayer data={world} projection={projection} />
           <PointLayer
             projection={projection}
-            data={airportsMJ}
+            data={odMatrixMJ.points}
             radius={1}
             style={symbolStyle}
           />
           <FlowLayer
             projection={projection}
-            data={odMatrixMJ}
+            data={odMatrixMJ.flows}
             scaleWidth={flowConfigMJ.scaleWidth}
             style={flowConfigMJ.style}
           />
-          {airportsMJ.features.map((d) => (
-            <PointLabel xy={projection(d.geometry.coordinates)}>
+          {odMatrixMJ.points.features.map((d) => (
+            <PointLabel key={nanoid()} xy={projection(d.geometry.coordinates)}>
               <text>
                 <tspan fontWeight="bold">{d.properties?.name}</tspan>(
                 {d.properties?.value})
               </text>
             </PointLabel>
           ))}
-          {odMatrixMJ.features.slice(5, 7).map((d) => (
-            <PointLabel xy={getFlowPoints(d, projection)[1]}>
+          {odMatrixMJ.flows.features.slice(5, 7).map((d) => (
+            <PointLabel key={nanoid()} xy={getFlowPoints(d, projection)[1]}>
               <text>
                 <tspan fontWeight="bold">{d.properties?.od}</tspan>(
                 {d.properties?.value})
@@ -160,7 +161,9 @@ const Flights: NextPage<Props> = ({ odMatrix, odMatrixMJ, world }) => {
             </PointLabel>
           ))}
           <FlowLegend
-            data={odMatrixMJ.features.map((flow) => flow.properties?.value)}
+            data={odMatrixMJ.flows.features.map(
+              (flow) => flow.properties?.value
+            )}
             scaleWidth={flowConfigMJ.scaleWidth}
             title="No. of Flights in 2019"
             unitLabel="Flights"
@@ -185,35 +188,6 @@ export async function getStaticProps() {
       odMatrixMJ: flights.odMatrixMJ,
       world,
     },
-  };
-}
-
-function getODPoints(odMatrix: Flows): FeatureCollection<Point> {
-  const features = odMatrix.features.reduce(
-    (points: Feature<Point>[], flow) => {
-      flow.geometry.coordinates.forEach((coordinates, index) => {
-        const name = index === 0 ? flow.properties?.o : flow.properties?.d;
-        if (!points.map((p) => p.properties?.name).includes(name))
-          points.push({
-            type: "Feature",
-            properties: {
-              name,
-              value: flow.properties?.value,
-            },
-            geometry: {
-              type: "Point",
-              coordinates: coordinates,
-            },
-          });
-      });
-      return points;
-    },
-    []
-  );
-
-  return {
-    type: "FeatureCollection",
-    features,
   };
 }
 
