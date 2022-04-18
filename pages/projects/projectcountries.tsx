@@ -9,8 +9,8 @@ import getCountries from "../../lib/data/getCountries";
 import getProjects from "../../lib/data/getProjects";
 import BaseLayer from "../../components/map/BaseLayer";
 import Heading, { Headings } from "../../components/heading";
-import PointLayer from "../../components/map/PointLayer";
 import { FeatureCollection, Feature, Point, MultiPolygon } from "geojson";
+import PointSymbol from "../../components/map/PointSymbol";
 
 type Props = {
   projects: Project[];
@@ -85,13 +85,14 @@ const ProjectCountries: NextPage<Props> = ({ projects, world }) => {
         <Heading Tag={Headings.H1}>Projects per Country</Heading>
         <svg width={1020} height={600}>
           <BaseLayer data={world} projection={projection} />
-          <PointLayer
-            data={points}
-            projection={projection}
-            scale={scale}
-            style={style}
-            value="projectCount"
-          />
+          {points.features.map((feature) => (
+            <PointSymbol
+              xy={projection(feature.geometry.coordinates)}
+              datum={feature}
+              radius={scale(feature.properties?.projectCount)}
+              style={style}
+            />
+          ))}
         </svg>
       </main>
     </>

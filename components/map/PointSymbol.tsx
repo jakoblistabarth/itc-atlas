@@ -1,37 +1,26 @@
-import { FC, useRef, useEffect } from "react";
-import * as d3 from "d3";
-import { FeatureCollection, Point } from "geojson";
+import { FC } from "react";
+import { Feature, Point, Position } from "geojson";
 import { SymbolAppearance } from "../../types/SymbolAppearance";
 
 const PointSymbol: FC<{
-  data: FeatureCollection<Point>;
-  projection: any;
+  datum: Feature<Point>;
+  xy: Position;
   style?: SymbolAppearance;
   radius?: number;
-}> = ({ data, projection, style, radius = 2 }) => {
-  const ref = useRef<SVGGElement>(null);
-
-  useEffect(() => {
-    const svgEl = d3.select(ref.current);
-
-    const symbols = svgEl.append("g").attr("id", "symbols");
-    const symbol = symbols.selectAll("circle").data(data);
-
-    symbol
-      .enter()
-      .append("circle")
-      .attr("cx", (d) => projection(d.geometry.coordinates)[0])
-      .attr("cy", (d) => projection(d.geometry.coordinates)[1])
-      .attr("r", (d) => radius)
-      .attr("fill", style?.fill?.color ?? "black")
-      .attr("fill-opacity", style?.fill?.opacity ?? 0.2)
-      .attr("stroke", style?.stroke?.color ?? style?.fill?.color ?? "black")
-      .attr("stroke-opacity", style?.stroke?.opacity ?? 0.8)
-      .attr("stroke-width", style?.stroke?.width ?? 1)
-      .attr("stroke-linejoin", style?.stroke?.linejoin ?? "round");
-  });
-
-  return <g id="point-Layer" ref={ref} />;
+}> = ({ datum, xy, style, radius = 2 }) => {
+  return (
+    <circle
+      cx={xy[0]}
+      cy={xy[1]}
+      r={radius}
+      fill={style?.fill?.color ?? "black"}
+      fillOpacity={style?.fill?.opacity ?? 0.2}
+      stroke={style?.stroke?.color ?? style?.fill?.color ?? "black"}
+      strokeOpacity={style?.stroke?.opacity ?? 0.8}
+      strokeWidth={style?.stroke?.width ?? 1}
+      strokeLinejoin={style?.stroke?.linejoin ?? "round"}
+    />
+  );
 };
 
 export default PointSymbol;

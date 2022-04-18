@@ -10,7 +10,6 @@ import BaseLayer from "../../components/map/BaseLayer";
 import FlowLayer from "../../components/map/FlowLayer";
 import FlowLegend from "../../components/map/FlowLegend";
 import PointLabel from "../../components/map/PointLabel";
-import PointLayer from "../../components/map/PointLayer";
 import getFlowPoints from "../../lib/cartographic/getFlowPoints";
 import getCountries from "../../lib/data/getCountries";
 import getFlights from "../../lib/data/getFlights";
@@ -27,9 +26,9 @@ const Flights: NextPage<Props> = ({ odMatrix, odMatrixMJ, world }) => {
 
   const flowConfig = {
     style: {
+      opacity: 0.2,
       fill: {
         color: "red",
-        opacity: 0.1,
       },
     },
     scaleWidth: d3
@@ -42,6 +41,7 @@ const Flights: NextPage<Props> = ({ odMatrix, odMatrixMJ, world }) => {
 
   const flowConfigMJ = {
     style: {
+      opacity: 0.3,
       fill: {
         color: "red",
       },
@@ -56,7 +56,7 @@ const Flights: NextPage<Props> = ({ odMatrix, odMatrixMJ, world }) => {
       .range([2, 4]),
   };
 
-  const symbolStyle = {
+  const pointStyle = {
     fill: {
       color: "grey",
       opacity: 1,
@@ -93,29 +93,22 @@ const Flights: NextPage<Props> = ({ odMatrix, odMatrixMJ, world }) => {
             <ArrowHead id="arrowHead" color={flowConfig.style?.fill?.color} />
           </defs>
           <BaseLayer data={world} projection={projection} />
-          <PointLayer
-            projection={projection}
-            data={odMatrix.points}
-            radius={1}
-            style={symbolStyle}
-          />
           <FlowLayer
             projection={projection}
-            data={odMatrix.flows}
+            data={odMatrix}
             scaleWidth={flowConfig.scaleWidth}
-            style={flowConfig.style}
+            flowStyle={flowConfig.style}
+            pointStyle={pointStyle}
           />
 
-          {odMatrix.flows.features.slice(0, 5).map((d) => {
-            return (
-              <PointLabel key={nanoid()} xy={getFlowPoints(d, projection)[1]}>
-                <text>
-                  <tspan fontWeight="bold">{d.properties?.od}</tspan>(
-                  {d.properties?.value})
-                </text>
-              </PointLabel>
-            );
-          })}
+          {odMatrix.flows.features.slice(0, 5).map((d) => (
+            <PointLabel key={nanoid()} xy={getFlowPoints(d, projection)[1]}>
+              <text>
+                <tspan fontWeight="bold">{d.properties?.od}</tspan>(
+                {d.properties?.value})
+              </text>
+            </PointLabel>
+          ))}
           <FlowLegend
             data={odMatrix.flows.features.map((flow) => flow.properties?.value)}
             scaleWidth={flowConfig.scaleWidth}
@@ -132,17 +125,12 @@ const Flights: NextPage<Props> = ({ odMatrix, odMatrixMJ, world }) => {
             <ArrowHead id="arrowHead" color={flowConfig.style?.fill?.color} />
           </defs>
           <BaseLayer data={world} projection={projection} />
-          <PointLayer
-            projection={projection}
-            data={odMatrixMJ.points}
-            radius={1}
-            style={symbolStyle}
-          />
           <FlowLayer
             projection={projection}
-            data={odMatrixMJ.flows}
+            data={odMatrixMJ}
             scaleWidth={flowConfigMJ.scaleWidth}
-            style={flowConfigMJ.style}
+            flowStyle={flowConfigMJ.style}
+            pointStyle={pointStyle}
           />
           {odMatrixMJ.points.features.map((d) => (
             <PointLabel key={nanoid()} xy={projection(d.geometry.coordinates)}>

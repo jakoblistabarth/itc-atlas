@@ -9,8 +9,8 @@ import Heading, { Headings } from "../../components/heading";
 import getCountries from "../../lib/data/getCountries";
 import getFlights from "../../lib/data/getFlights";
 import BaseLayer from "../../components/map/BaseLayer";
-import PointLayer from "../../components/map/PointLayer";
 import PointLabel from "../../components/map/PointLabel";
+import PointSymbol from "../../components/map/PointSymbol";
 
 export async function getStaticProps() {
   const flights = await getFlights();
@@ -32,7 +32,9 @@ const Airports: NextPage<{
 
   const airportsGeo: FeatureCollection<Point> = {
     type: "FeatureCollection",
-    features: airports.features.filter((d) => d.properties?.iata_code != "AMS"),
+    features: airports.features
+      .filter((d) => d.properties?.iata_code != "AMS")
+      .sort((a, b) => d3.descending(a.properties?.value, b.properties?.value)),
   };
 
   const style = {
@@ -65,28 +67,22 @@ const Airports: NextPage<{
         <Heading Tag={Headings.H1}>Airports</Heading>
         <svg width={1020} height={600}>
           <BaseLayer data={world} projection={projection} />
-          <PointLayer
-            data={airportsGeo}
-            value={"value"}
-            scale={symbolConfig.scale}
-            style={style}
-            projection={projection}
-          />
-          {airportsGeo.features
-            .sort((a, b) =>
-              d3.descending(a.properties?.value, b.properties?.value)
-            )
-            .slice(0, 5)
-            .map((d) => (
-              <PointLabel xy={projection(d.geometry.coordinates)}>
-                <text>
-                  <tspan fontWeight={"bold"}>
-                    {d.properties?.["iata_code"]}
-                  </tspan>
-                  ({d.properties?.value})
-                </text>{" "}
-              </PointLabel>
-            ))}
+          {airportsGeo.features.map((airport) => (
+            <PointSymbol
+              style={style}
+              datum={airport}
+              xy={projection(airport.geometry.coordinates)}
+              radius={symbolConfig.scale(airport.properties?.value)}
+            />
+          ))}
+          {airportsGeo.features.slice(0, 5).map((d) => (
+            <PointLabel xy={projection(d.geometry.coordinates)}>
+              <text>
+                <tspan fontWeight={"bold"}>{d.properties?.["iata_code"]}</tspan>
+                ({d.properties?.value})
+              </text>{" "}
+            </PointLabel>
+          ))}
         </svg>
       </main>
     </>
