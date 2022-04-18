@@ -4,7 +4,7 @@ import { ScaleLinear, ScalePower } from "d3";
 import { FeatureCollection, Point } from "geojson";
 import { SymbolAppearance } from "../../types/SymbolAppearance";
 import PointSymbol from "./PointSymbol";
-import ScaledPie from "./scaledPie";
+import type ScaledPie from "./ScaledPie";
 
 export enum SymbolType {
   Point = "Point",

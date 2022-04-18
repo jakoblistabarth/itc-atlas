@@ -1,5 +1,7 @@
 import * as d3 from "d3";
 import { geoBertin1953 } from "d3-geo-projection";
+import type { Feature, FeatureCollection, MultiPolygon, Point } from "geojson";
+import { nanoid } from "nanoid";
 import type { GetStaticProps, NextPage } from "next";
 import Head from "next/head";
 import * as topojson from "topojson-client";
@@ -7,12 +9,12 @@ import type { Topology } from "topojson-specification";
 import Footer from "../../components/footer";
 import Heading, { Headings } from "../../components/heading";
 import BaseLayer from "../../components/map/BaseLayer";
-import PointLayer from "../../components/map/PointLayer";
+import ScaledPie from "../../components/map/ScaledPie";
 import getCountries from "../../lib/data/getCountries";
 import getPhdCandidates from "../../lib/data/getPhdCandidates";
+import { departmentColors } from "../../lib/mappings/departments";
 import styles from "../../styles/home.module.css";
 import type { PhdCandidate } from "../../types/PhdCandidate";
-import type { FeatureCollection, Point, Feature, MultiPolygon } from "geojson";
 
 type Props = {
   phdCandidates: PhdCandidate[];
@@ -35,11 +37,11 @@ const PhdDepartments: NextPage<Props> = ({ phdCandidates, world }) => {
         const departmentCount = departments
           ? Array.from(departments?.entries()).map(([key, value]) => {
               return {
-                [key]: value.length,
+                name: key,
+                departmentPhdCount: value.length,
               };
             })
           : null;
-        console.log(departmentCount);
         const totalCount = departments
           ? Array.from(departments.values()).reduce(
               (sum, d) => sum + d.length,
@@ -49,8 +51,8 @@ const PhdDepartments: NextPage<Props> = ({ phdCandidates, world }) => {
         return {
           type: "Feature",
           properties: {
-            phdCount: totalCount,
-            departments: departments,
+            totalPhdCount: totalCount,
+            departments: departmentCount,
             ...feature.properties,
           },
           geometry: {
@@ -61,7 +63,7 @@ const PhdDepartments: NextPage<Props> = ({ phdCandidates, world }) => {
           },
         };
       })
-      .filter((feature) => feature.properties.phdCount),
+      .filter((feature) => feature.properties.totalPhdCount),
   };
 
   const extent = d3.extent(
@@ -86,12 +88,22 @@ const PhdDepartments: NextPage<Props> = ({ phdCandidates, world }) => {
         <Heading Tag={Headings.H1}>ITC's PhD candidates</Heading>
         <svg width={1020} height={600}>
           <BaseLayer data={world} projection={projection} />
-          <PointLayer
-            data={points}
-            projection={projection}
-            scale={scale}
-            value="phdCount"
-          />
+          <g id="symbols">
+            {points.features.map((point) => {
+              if (!point.properties?.departments) return;
+              return (
+                <ScaledPie
+                  key={nanoid()}
+                  xy={projection(point.geometry.coordinates)}
+                  scale={scale}
+                  // colorScheme={Object.values(departmentColors)}
+                  pieSize={point.properties?.totalPhdCount}
+                  pieProperty={point.properties?.departments}
+                  pieValue={"departmentPhdCount"}
+                />
+              );
+            })}
+          </g>
         </svg>
       </main>
       <Footer />
