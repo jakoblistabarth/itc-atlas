@@ -70,11 +70,15 @@ class DataFrame {
    * @param names An object with the old name of the column as key and the new name as value.
    * @returns A new {@link DataFrame} with the renamed column
    */
-  renameColumn(names: { [newColumnName: string]: string }): DataFrame {
+  renameColumn(names: { [oldColumnName: string]: string }): DataFrame {
     let df = _.cloneDeep(this);
     const oldName = Object.keys(names)[0];
     const newName = Object.values(names)[0];
-    return df.mutate(newName, (row: Row) => row[oldName]).dropColumn(oldName);
+    return df
+      .mutate(newName, (row: Row) => {
+        return row[oldName] ?? null;
+      })
+      .dropColumn(oldName);
   }
 
   // TODO: implement .between()

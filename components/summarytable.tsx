@@ -52,6 +52,7 @@ const SummaryTable: FC<SummaryTableProps> = ({ data: df }) => {
           </thead>
           <tbody>
             {df.getColumns().map((column) => {
+              // TODO: fix hydration error: calendar icon in first and last row??
               const color = colorMap.get(column.type);
               {
                 if (!color) return;
