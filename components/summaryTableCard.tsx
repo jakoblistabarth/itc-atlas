@@ -11,72 +11,59 @@ type SummaryTableCardProps = {
 };
 
 const SummaryTableCard: FC<SummaryTableCardProps> = ({ description }) => {
-  const ref = useRef<SVGSVGElement>(null);
-
+  const fontSize = 9;
   const dimension = {
+    width: 100,
+    height: 50,
     margin: {
       top: 15,
       left: 15,
     },
   };
 
-  useEffect(() => {
-    const svgElement = d3.select(ref.current);
-
-    const miniTable = svgElement
-      .append("g")
-      .attr(
-        "transform",
-        `translate(${dimension.margin.left},${dimension.margin.top})`
-      );
-
-    const fontsize = 9;
-
-    svgElement
-      .append("text")
-      .attr("x", 0)
-      .attr("y", dimension.margin.top + fontsize / 2)
-      .attr(
-        "transform",
-        `rotate(90,${fontsize / 2},${dimension.margin.top + fontsize / 2})`
-      )
-      .attr("font-size", fontsize)
-      .text(fFloat(description.nRows) + " ⭢");
-
-    svgElement
-      .append("text")
-      .attr("x", dimension.margin.left)
-      .attr("y", fontsize)
-      .attr("font-size", fontsize)
-      .text(fFloat(description.nColumns) + " ⭢");
-
-    const theader = miniTable
-      .append("g")
-      .attr("id", "header")
-      .selectAll("rect")
-      .data(description.columns);
-
-    const tbody = miniTable
-      .append("g")
-      .attr("id", "body")
-      .selectAll("rect")
-      .data(description.columns);
-
-    theader
-      .enter()
-      .append("rect")
-      .attr("x", (d, i) => i * 2 + i * 1)
-      .attr("fill", (d) => colorMap.get(d.type)?.baseColor ?? "grey")
-      .attr("width", 2)
-      .attr("height", 50);
-  });
+  const scale = d3
+    .scaleBand()
+    .domain(description.columns.map((column) => column.label))
+    .rangeRound([0, dimension.width - dimension.margin.left])
+    .paddingInner(0.1)
+    .paddingOuter(0)
+    .align(0)
+    .round(true);
 
   return (
     <div className={styles.summaryTableCard}>
       <Heading Tag={Headings.H3} className={Headings.H4}>
         Overview
       </Heading>
-      <svg ref={ref} />
+      <svg>
+        <g className="labels" fontSize={fontSize}>
+          <text x={dimension.margin.left} y={fontSize}>
+            {fFloat(description.nColumns) + " ⭢"}
+          </text>
+          <text
+            y={dimension.margin.top + fontSize / 2}
+            transform={`rotate(90,${fontSize / 2},${
+              dimension.margin.top + fontSize / 2
+            })`}
+          >
+            {fFloat(description.nRows) + " ⭢"}
+          </text>
+        </g>
+        <g
+          className="miniTable"
+          transform={`translate(${dimension.margin.left},${dimension.margin.top})`}
+        >
+          {description.columns.map((column) => (
+            <rect
+              y={0}
+              x={scale(column.label)}
+              fill={colorMap.get(column.type)?.baseColor ?? "grey"}
+              width={scale.bandwidth()}
+              height={dimension.height}
+            />
+          ))}
+        </g>
+      </svg>
     </div>
   );
 };
