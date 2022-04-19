@@ -3,6 +3,7 @@ import { Data } from "../../types/DataFrame";
 import DataFrame from "../DataFrame/DataFrame";
 import getUnsdCodes from "./getUnsdCodes";
 import { mapCountries } from "../mappings/country.name";
+import { departmentMap } from "../mappings/departments";
 
 export async function cleanPhdCandiates(phdCandidates: Data) {
   const unsdCodes = await getUnsdCodes("countries");
@@ -28,8 +29,18 @@ export async function cleanPhdCandiates(phdCandidates: Data) {
       if (!result) return null;
       return result.item["ISO-alpha3 Code"];
     })
-    .dropColumn("PhDStart")
-    .dropColumn("PhDEnd")
+    .mutate(
+      "department1",
+      (row) => departmentMap[row.Department] ?? row.Department
+    )
+    .mutate(
+      "department2",
+      (row) => departmentMap[row.DepartmentSecond] ?? row.DepartmentSecond
+    )
+    .mutate("graduated", (row) => {
+      if (row.Graduated === null) return null;
+      return row.Graduated === 0 ? false : true;
+    })
     // TODO: implement renameColumn to accept an Object with multiple name pairs
     // .renameColumn({
     //   Country: "country",
@@ -37,8 +48,6 @@ export async function cleanPhdCandiates(phdCandidates: Data) {
     //   DepartmentSecond: "department2",
     //   Sponsor: "sponsor",
     // })
-    .renameColumn({ Department: "department1" })
-    .renameColumn({ DepartmentSecond: "department2" })
     .renameColumn({ Sponsor: "sponsor" })
     .select([
       "studentID",
@@ -48,8 +57,8 @@ export async function cleanPhdCandiates(phdCandidates: Data) {
       "department1",
       "department2",
       "sponsor",
-    ])
-    .toArray();
+      "graduated",
+    ]);
 
-  return output;
+  return output.toArray();
 }

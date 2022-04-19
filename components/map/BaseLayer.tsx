@@ -3,6 +3,7 @@ import * as d3 from "d3";
 import { geoPath, GeoSphere } from "d3-geo";
 import * as topojson from "topojson-client";
 import type { Topology } from "topojson-specification";
+import { color } from "../../lib/cartographic/colors";
 
 type Props = {
   data?: Topology;
@@ -25,7 +26,7 @@ const BaseLayer: FC<Props> = ({ data, projection }) => {
       .attr("id", "oceans")
       .datum(sphere)
       .attr("d", path)
-      .style("fill", "#E3E3E3");
+      .style("fill", color.background);
 
     // Graticule
     baseLayerGroup
@@ -55,7 +56,7 @@ const BaseLayer: FC<Props> = ({ data, projection }) => {
       .append("path")
       .datum(topojson.feature(data, data.objects.countries))
       .attr("fill", "none")
-      .attr("stroke", "lightgrey")
+      .attr("stroke", color.background)
       .attr("stroke-linejoin", "round")
       .attr("stroke-width", 0.3)
       .attr("d", path);

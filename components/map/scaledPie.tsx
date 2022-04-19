@@ -48,9 +48,9 @@ const ScaledPie: FC<{
       .append("path")
       .attr("d", arcGenerator)
       .attr("fill", (d) => color(d.data?.name))
-      .attr("fill-opacity", style?.fill?.opacity ?? 0.8)
+      .attr("fill-opacity", style?.fill?.opacity ?? 1)
       .attr("stroke", style?.stroke?.color ?? style?.fill?.color ?? "black")
-      .attr("stroke-opacity", style?.stroke?.opacity ?? 0.8)
+      .attr("stroke-opacity", style?.stroke?.opacity ?? 1)
       .attr("stroke-width", style?.stroke?.width ?? 0)
       .attr("stroke-linejoin", style?.stroke?.linejoin ?? "round");
   });

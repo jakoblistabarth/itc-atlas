@@ -18,6 +18,14 @@ class DataFrame {
   }
 
   /**
+   * Get all column names of the Dataframe.
+   * @returns Returns an Array of strings.
+   */
+  getColumnNames(): string[] {
+    return Object.keys(this.data[0]);
+  }
+
+  /**
    * Get all Columns of the Dataframe.
    * @returns Returns an Array of {@link Column}s.
    */

@@ -9,12 +9,15 @@ import type { Topology } from "topojson-specification";
 import Footer from "../../components/footer";
 import Heading, { Headings } from "../../components/heading";
 import BaseLayer from "../../components/map/BaseLayer";
+import NominalLegend from "../../components/map/NominalLegend";
 import ScaledPie from "../../components/map/ScaledPie";
+import { color } from "../../lib/cartographic/colors";
 import getCountries from "../../lib/data/getCountries";
 import getPhdCandidates from "../../lib/data/getPhdCandidates";
 import { departmentColors } from "../../lib/mappings/departments";
 import styles from "../../styles/home.module.css";
 import type { PhdCandidate } from "../../types/PhdCandidate";
+import { SymbolAppearance } from "../../types/SymbolAppearance";
 
 type Props = {
   phdCandidates: PhdCandidate[];
@@ -63,8 +66,25 @@ const PhdDepartments: NextPage<Props> = ({ phdCandidates, world }) => {
           },
         };
       })
-      .filter((feature) => feature.properties.totalPhdCount),
+      .filter((feature) => feature.properties.totalPhdCount)
+      .sort((a, b) =>
+        d3.descending(a.properties.totalPhdCount, b.properties.totalPhdCount)
+      ),
   };
+
+  const legendEntries = points.features
+    .reduce((acc, point) => {
+      point.properties?.departments.forEach((department) => {
+        if (!acc.includes(department.name)) acc.push(department.name);
+      });
+      return acc;
+    }, [])
+    .map((department) => {
+      return {
+        label: department,
+        color: departmentColors[department],
+      };
+    });
 
   const extent = d3.extent(
     Array.from(count.values()).map((d) =>
@@ -75,6 +95,13 @@ const PhdDepartments: NextPage<Props> = ({ phdCandidates, world }) => {
   const scale = d3.scaleSqrt().domain(extent).range([1, 100]);
 
   const projection = geoBertin1953();
+
+  const pieStyle: SymbolAppearance = {
+    stroke: {
+      color: color.background,
+      width: 1,
+    },
+  };
 
   return (
     <>
@@ -96,13 +123,26 @@ const PhdDepartments: NextPage<Props> = ({ phdCandidates, world }) => {
                   key={nanoid()}
                   xy={projection(point.geometry.coordinates)}
                   scale={scale}
-                  // colorScheme={Object.values(departmentColors)}
+                  colorScheme={Object.values(departmentColors)}
                   pieSize={point.properties?.totalPhdCount}
                   pieProperty={point.properties?.departments}
                   pieValue={"departmentPhdCount"}
+                  style={pieStyle}
                 />
               );
             })}
+          </g>
+          <NominalLegend entries={legendEntries} />
+          <g fontSize={10} transform="translate(0,10)">
+            <text fontSize={12}>5 Countries with most PhD candidates</text>
+            {points.features.slice(0, 5).map((feature, index) => (
+              <g transform={`translate(0, ${20 + index * 15})`}>
+                <text>
+                  {feature.properties?.name}
+                  <tspan> ({feature.properties?.totalPhdCount})</tspan>
+                </text>
+              </g>
+            ))}
           </g>
         </svg>
       </main>
