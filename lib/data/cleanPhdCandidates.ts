@@ -2,7 +2,7 @@ import Fuse from "fuse.js";
 import { Data } from "../../types/DataFrame";
 import DataFrame from "../DataFrame/DataFrame";
 import getUnsdCodes from "./getUnsdCodes";
-import { mapCountries } from "../mappings/country.name";
+import { mapCountries } from "../mappings/country.name.EN";
 import { departmentMap } from "../mappings/departments";
 
 export async function cleanPhdCandiates(phdCandidates: Data) {
@@ -13,7 +13,6 @@ export async function cleanPhdCandiates(phdCandidates: Data) {
     distance: 50,
     keys: ["Country or Area"],
   };
-
   const fuse = new Fuse(unsdCodes, options);
 
   const output = new DataFrame(phdCandidates)

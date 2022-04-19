@@ -1,6 +1,6 @@
 type TypeMapping = { [key: string]: string };
 
-const mappedCountries: TypeMapping = {
+const countryMapEN: TypeMapping = {
   Bangladesch: "Bangladesh",
   "Cape Verde": "Cabo Verde",
   EMEA: "Europe, Africa, Western Asia",
@@ -18,12 +18,12 @@ const mappedCountries: TypeMapping = {
   Vietnam: "Viet Nam",
 };
 
-export default mappedCountries;
+export default countryMapEN;
 
 export function mapCountries(countryString: string): string {
   if (!countryString) return "";
   let string = countryString.replace(/[\(\)]/g, ",");
-  Object.entries(mappedCountries).forEach(([key, value]) => {
+  Object.entries(countryMapEN).forEach(([key, value]) => {
     string = string.replace(key, value);
   });
   return string;

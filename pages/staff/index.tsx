@@ -6,7 +6,6 @@ import SummaryTable from "../../components/summaryTable";
 import Footer from "../../components/footer";
 import getStaff from "../../lib/data/getStaff";
 import Heading, { Headings } from "../../components/heading";
-import getTestData from "../../lib/DataFrame/getTestData";
 import { Staff } from "../../types/Staff";
 import DataFrame from "../../lib/DataFrame/DataFrame";
 
@@ -41,11 +40,9 @@ const Staff: NextPage<Props> = ({ staff }) => {
 
 export async function getStaticProps() {
   const staff = await getStaff();
-  const test = await getTestData();
   return {
     props: {
       staff,
-      test,
     },
   };
 }

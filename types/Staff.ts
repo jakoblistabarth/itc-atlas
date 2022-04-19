@@ -5,4 +5,8 @@ export type Staff = {
   employmentUnitEnd: string | null;
   gender: string | null;
   nationality: string | null;
+  organisation: string | null;
+  department: string | null;
+  type: string | null;
+  description: string | null;
 };

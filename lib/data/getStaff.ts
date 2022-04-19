@@ -10,23 +10,5 @@ export default async function getStaff() {
     defval: null,
   });
 
-  const staff = cleanStaff(data);
-
-  return staff.map(
-    ({
-      ["Geboortedatum"]: dateOfBirth,
-      ["Einddatum Aanstelling"]: employmentEnd,
-      ["Begin Datum Aanstelling"]: employmentStart,
-      ["Datum Einde dienstverband Eenheid"]: employmentUnitEnd,
-      ["Geslacht"]: gender,
-      ["Nationaliteit"]: nationality,
-    }) => ({
-      dateOfBirth,
-      employmentEnd,
-      employmentStart,
-      employmentUnitEnd,
-      gender,
-      nationality,
-    })
-  );
+  return await cleanStaff(data);
 }
