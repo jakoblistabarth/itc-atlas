@@ -3,7 +3,7 @@ export type SymbolAppearance = {
     color?: string;
     width?: number;
     opacity?: number;
-    linejoin?: string;
+    linejoin?: "round" | "bevel" | "miter" | "round";
   };
   fill?: {
     color?: string;

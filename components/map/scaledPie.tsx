@@ -1,15 +1,20 @@
-import { FC, useRef, useEffect } from "react";
 import * as d3 from "d3";
-import { Position } from "geojson";
-import { SymbolAppearance } from "../../types/SymbolAppearance";
-import { color, ScaleLinear, ScaleOrdinal, ScalePower } from "d3";
+import type { ScaleLinear, ScalePower, PieArcDatum } from "d3";
+import type { Position } from "geojson";
+import type { FC } from "react";
+import type { SymbolAppearance } from "../../types/SymbolAppearance";
+import { nanoid } from "nanoid";
+
+type pieData = {
+  value: number;
+  label: string;
+};
 
 const ScaledPie: FC<{
   xy: Position;
   scale: ScaleLinear<number, number> | ScalePower<number, number>;
   pieSize: number;
-  pieProperty: any[];
-  pieValue: string;
+  data: pieData[];
   colorScheme?: string[];
   style?: SymbolAppearance;
 }> = ({
@@ -17,45 +22,40 @@ const ScaledPie: FC<{
   style,
   scale,
   pieSize,
-  pieProperty,
-  pieValue,
+  data,
   colorScheme = d3.schemeCategory10,
 }) => {
   const angleGenerator = d3
-    .pie()
-    .value((d) => d[pieValue])
+    .pie<{ label: string; value: number }>()
+    .value((d) => d.value)
     .padAngle(0.05);
 
   const arcGenerator = d3
-    .arc()
+    .arc<PieArcDatum<{ label: string }>>()
+    .cornerRadius(2)
     .innerRadius(scale(pieSize) / 2) // TODO: set 0 if smaller than threshold value
     .outerRadius(scale(pieSize));
 
-  const pieData = angleGenerator(pieProperty);
+  const pieData = angleGenerator(data);
 
   const color = d3.scaleOrdinal(colorScheme);
 
-  const ref = useRef<SVGGElement>(null);
-
-  useEffect(() => {
-    const scaledPie = d3.select(ref.current);
-
-    scaledPie
-      .attr("transform", `translate(${xy[0]},${xy[1]})`)
-      .selectAll("path")
-      .data(pieData)
-      .enter()
-      .append("path")
-      .attr("d", arcGenerator)
-      .attr("fill", (d) => color(d.data?.name))
-      .attr("fill-opacity", style?.fill?.opacity ?? 1)
-      .attr("stroke", style?.stroke?.color ?? style?.fill?.color ?? "black")
-      .attr("stroke-opacity", style?.stroke?.opacity ?? 1)
-      .attr("stroke-width", style?.stroke?.width ?? 0)
-      .attr("stroke-linejoin", style?.stroke?.linejoin ?? "round");
-  });
-
-  return <g className="scaled-pie" ref={ref} />;
+  return (
+    <g className="scaled-pie" transform={`translate(${xy[0]},${xy[1]})`}>
+      {pieData.map((sector) => (
+        <path
+          key={nanoid()}
+          d={arcGenerator(sector) ?? undefined}
+          fill={color(sector.data.label)}
+          fillOpacity={style?.fill?.opacity ?? 1}
+          stroke={style?.stroke?.color ?? style?.fill?.color ?? "black"}
+          strokeOpacity={style?.stroke?.opacity ?? 1}
+          strokeWidth={style?.stroke?.width ?? 0}
+          strokeLinejoin={style?.stroke?.linejoin ?? "round"}
+        />
+      ))}
+    </g>
+  );
 };
 
 export default ScaledPie;

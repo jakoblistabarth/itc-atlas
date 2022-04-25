@@ -40,8 +40,8 @@ const PhdDepartments: NextPage<Props> = ({ phdCandidates, world }) => {
         const departmentCount = departments
           ? Array.from(departments?.entries()).map(([key, value]) => {
               return {
-                name: key,
-                departmentPhdCount: value.length,
+                label: key,
+                value: value.length,
               };
             })
           : null;
@@ -75,7 +75,7 @@ const PhdDepartments: NextPage<Props> = ({ phdCandidates, world }) => {
   const legendEntries = points.features
     .reduce((acc, point) => {
       point.properties?.departments.forEach((department) => {
-        if (!acc.includes(department.name)) acc.push(department.name);
+        if (!acc.includes(department.label)) acc.push(department.label);
       });
       return acc;
     }, [])
@@ -125,8 +125,7 @@ const PhdDepartments: NextPage<Props> = ({ phdCandidates, world }) => {
                   scale={scale}
                   colorScheme={Object.values(departmentColors)}
                   pieSize={point.properties?.totalPhdCount}
-                  pieProperty={point.properties?.departments}
-                  pieValue={"departmentPhdCount"}
+                  data={point.properties?.departments}
                   style={pieStyle}
                 />
               );
@@ -136,7 +135,7 @@ const PhdDepartments: NextPage<Props> = ({ phdCandidates, world }) => {
           <g fontSize={10} transform="translate(0,10)">
             <text fontSize={12}>5 Countries with most PhD candidates</text>
             {points.features.slice(0, 5).map((feature, index) => (
-              <g transform={`translate(0, ${20 + index * 15})`}>
+              <g transform={`translate(0, ${20 + index * 15})`} key={nanoid()}>
                 <text>
                   {feature.properties?.name}
                   <tspan> ({feature.properties?.totalPhdCount})</tspan>

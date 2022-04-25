@@ -3,11 +3,10 @@ import { Feature, Point, Position } from "geojson";
 import { SymbolAppearance } from "../../types/SymbolAppearance";
 
 const PointSymbol: FC<{
-  datum: Feature<Point>;
   xy: Position;
   style?: SymbolAppearance;
   radius?: number;
-}> = ({ datum, xy, style, radius = 2 }) => {
+}> = ({ xy, style, radius = 2 }) => {
   return (
     <circle
       cx={xy[0]}
