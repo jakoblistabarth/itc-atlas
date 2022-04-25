@@ -16,7 +16,9 @@ const Home: NextPage = () => {
       </Head>
 
       <main className={styles.main}>
-        <Heading Tag={Headings.H1}>Capacity Building of ITC</Heading>
+        <Heading Tag={Headings.H1}>
+          Capacity <em>Building</em> of ITC
+        </Heading>
 
         <p className={styles.description}>A prototype of ITC's hybrid atlas</p>
 
