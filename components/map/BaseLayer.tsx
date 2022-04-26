@@ -1,12 +1,12 @@
-import { FC, useRef, useEffect } from "react";
 import * as d3 from "d3";
 import { geoPath, GeoSphere } from "d3-geo";
+import { FC } from "react";
 import * as topojson from "topojson-client";
 import type { Topology } from "topojson-specification";
 import { color } from "../../lib/cartographic/colors";
 
 type Props = {
-  data?: Topology;
+  data: Topology;
   object?: string; // TODO: to be Implemented
   projection?: any;
 };
@@ -14,55 +14,47 @@ type Props = {
 const BaseLayer: FC<Props> = ({ data, projection }) => {
   const path = geoPath(projection);
   const sphere: GeoSphere = { type: "Sphere" }; // Question: okay to do so?
-  const ref = useRef<SVGGElement>(null);
+  const graticule = d3.geoGraticule10();
+  const borders = topojson.mesh(
+    data,
+    data.objects.countries,
+    (a, b) => a !== b
+  );
 
-  useEffect(() => {
-    const baseLayerGroup = d3.select(ref.current);
+  return (
+    <g className="base-map">
+      <g className="oceans">
+        <path d={path(sphere)} fill={color.background} />
+      </g>
 
-    // Oceans
-    baseLayerGroup
-      .append("g")
-      .append("path")
-      .attr("id", "oceans")
-      .datum(sphere)
-      .attr("d", path)
-      .style("fill", color.background);
+      <g className="graticule">
+        <path
+          d={path(graticule)}
+          fill="none"
+          stroke={color.graticule}
+          strokeWidth={0.5}
+          strokeOpacity={0.25}
+        />
+      </g>
 
-    // Graticule
-    baseLayerGroup
-      .append("g")
-      .append("path")
-      .datum(d3.geoGraticule10())
-      .attr("class", "graticule")
-      .attr("d", path)
-      .style("fill", "none")
-      .style("stroke", "grey")
-      .style("stroke-width", 0.5)
-      .style("stroke-opacity", 0.25);
+      <g className="countries">
+        <path
+          d={path(topojson.merge(data, data.objects.countries.geometries))}
+          fill="white"
+        />
+      </g>
 
-    // Countries
-    baseLayerGroup
-      .append("path")
-      .attr("id", "countries")
-      .datum(topojson.feature(data, data.objects.countries))
-      .attr("fill", "white")
-      .style("fill-opacity", 0.9)
-      .attr("d", path);
-
-    // Borders
-    baseLayerGroup
-      .append("g")
-      .attr("id", "borders")
-      .append("path")
-      .datum(topojson.feature(data, data.objects.countries))
-      .attr("fill", "none")
-      .attr("stroke", color.background)
-      .attr("stroke-linejoin", "round")
-      .attr("stroke-width", 0.3)
-      .attr("d", path);
-  }, []);
-
-  return <g id="base-map" ref={ref} />;
+      <g className="borders">
+        <path
+          d={path(borders)}
+          fill="none"
+          stroke={color.background}
+          strokeLinejoin="round"
+          strokeWidth={1}
+        />
+      </g>
+    </g>
+  );
 };
 
 export default BaseLayer;
