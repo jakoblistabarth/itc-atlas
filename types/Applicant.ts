@@ -1,0 +1,27 @@
+export type Applicant = {
+  start: string;
+  description: string;
+  specialization: string;
+  gender: string;
+  nationality: string;
+  countryOrigin: string;
+  level: string;
+  prog: string;
+  dept: string;
+  progDept: string;
+  specialAwardMention: string;
+  finalResult: string;
+  SponsorCategory: string;
+  Sponsor: string;
+  CourseNo: string;
+  diploma: string;
+  dateOfBirth: string;
+  startDate: string;
+  endDate: string;
+  certificateDate: string;
+  yearCertExamDipl: string;
+  finalScore: string;
+  applicantStatus: string;
+  thesisTitle: string;
+  ITCCode: string;
+};

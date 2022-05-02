@@ -1,7 +1,7 @@
 import xlsx from "xlsx";
-import cleanContacts from "./cleanContacts";
+import cleanApplicants from "./cleanApplicants";
 
-export default async function getContacts() {
+export default async function getApplicants() {
   const filePath = "./data/STUDENTSALUMNIv3 (20220304).xlsx";
   const file = xlsx.readFile(filePath, {
     cellDates: true,
@@ -10,9 +10,7 @@ export default async function getContacts() {
     defval: null,
   });
 
-  cleanContacts(data);
+  const ApplicantsClean = await cleanApplicants(data);
 
-  return {
-    data: data,
-  };
+  return ApplicantsClean;
 }
