@@ -5,7 +5,7 @@ import type { FC } from "react";
 import type { SymbolAppearance } from "../../types/SymbolAppearance";
 import { nanoid } from "nanoid";
 
-type pieData = {
+export type pieDatum = {
   value: number;
   label: string;
 };
@@ -14,7 +14,7 @@ const ScaledPie: FC<{
   xy: Position;
   scale: ScaleLinear<number, number> | ScalePower<number, number>;
   pieSize: number;
-  data: pieData[];
+  data: pieDatum[];
   colorScheme?: string[];
   style?: SymbolAppearance;
 }> = ({

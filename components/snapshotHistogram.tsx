@@ -3,7 +3,7 @@ import * as d3 from "d3";
 import { colorMap } from "../lib/summarytable/colorMap";
 import { ColumnType } from "../types/Column";
 import { fDateLong, fDateShort, fFloat } from "../lib/utilities/formaters";
-import { Datum } from "../types/DataFrame";
+import type { Column, Datum } from "../types/DataFrame";
 import { Bin } from "d3";
 
 type Props = {
@@ -32,11 +32,10 @@ const SnapshotHistogram: FC<Props> = ({ column, type }) => {
     type === ColumnType.Date ? columnNoNA.map((d) => new Date(d)) : columnNoNA;
 
   const typeFormat = type === ColumnType.Date ? fDateLong : fFloat;
-  // const min = d3.min(columnNoNA);
-  // const max = d3.max(columnNoNA);
 
+  // How does this actually work? TODO: type after figuring it out
   function thresholdTime(n: number) {
-    return (columnNoNA, min, max) => {
+    return (column: Column, min: number, max: number) => {
       return d3.scaleTime().domain([min, max]).ticks(n);
     };
   }

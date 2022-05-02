@@ -21,8 +21,14 @@ type Props = {
   world: Topology;
 };
 
-const Flights: NextPage<Props> = ({ odMatrix, odMatrixMJ, world }) => {
+const Flights: NextPage<Props> = ({ odMatrix, world }) => {
   const projection = geoBertin1953();
+
+  const flightsPerRoute = odMatrix.flows.features.map(
+    (flow) => flow.properties?.value
+  );
+  const min = d3.min(flightsPerRoute);
+  const max = d3.max(flightsPerRoute);
 
   const flowConfig = {
     style: {
@@ -31,29 +37,7 @@ const Flights: NextPage<Props> = ({ odMatrix, odMatrixMJ, world }) => {
         color: "red",
       },
     },
-    scaleWidth: d3
-      .scaleLinear()
-      .domain(
-        d3.extent(odMatrix.flows.features.map((flow) => flow.properties.value))
-      )
-      .range([1, 15]),
-  };
-
-  const flowConfigMJ = {
-    style: {
-      opacity: 0.3,
-      fill: {
-        color: "red",
-      },
-    },
-    scaleWidth: d3
-      .scaleLinear()
-      .domain(
-        d3.extent(
-          odMatrixMJ.flows.features.map((flow) => flow.properties.value)
-        )
-      )
-      .range([2, 4]),
+    scaleWidth: d3.scaleLinear().domain([min, max]).range([1, 15]),
   };
 
   const pointStyle = {
@@ -101,58 +85,23 @@ const Flights: NextPage<Props> = ({ odMatrix, odMatrixMJ, world }) => {
             pointStyle={pointStyle}
           />
 
-          {odMatrix.flows.features.slice(0, 5).map((d) => (
-            <PointLabel key={nanoid()} xy={getFlowPoints(d, projection)[1]}>
-              <text>
-                <tspan fontWeight="bold">{d.properties?.od}</tspan>(
-                {d.properties?.value})
-              </text>
-            </PointLabel>
-          ))}
+          {odMatrix.flows.features.slice(0, 5).map((d) => {
+            const flowPoints = getFlowPoints(d, projection);
+            const labelPosition = flowPoints?.[1];
+            return (
+              labelPosition && (
+                <PointLabel key={nanoid()} xy={labelPosition}>
+                  <text>
+                    <tspan fontWeight="bold">{d.properties?.od}</tspan>(
+                    {d.properties?.value})
+                  </text>
+                </PointLabel>
+              )
+            );
+          })}
           <FlowLegend
             data={odMatrix.flows.features.map((flow) => flow.properties?.value)}
             scaleWidth={flowConfig.scaleWidth}
-            title="No. of Flights in 2019"
-            unitLabel="Flights"
-          />
-        </svg>
-
-        <Heading Tag={Headings.H1}>
-          ITC's Travel Activity Menno-Jan Kraak
-        </Heading>
-        <svg width={1020} height={600}>
-          <defs>
-            <ArrowHead id="arrowHead" color={flowConfig.style?.fill?.color} />
-          </defs>
-          <BaseLayer data={world} projection={projection} />
-          <FlowLayer
-            projection={projection}
-            data={odMatrixMJ}
-            scaleWidth={flowConfigMJ.scaleWidth}
-            flowStyle={flowConfigMJ.style}
-            pointStyle={pointStyle}
-          />
-          {odMatrixMJ.points.features.map((d) => (
-            <PointLabel key={nanoid()} xy={projection(d.geometry.coordinates)}>
-              <text>
-                <tspan fontWeight="bold">{d.properties?.name}</tspan>(
-                {d.properties?.value})
-              </text>
-            </PointLabel>
-          ))}
-          {odMatrixMJ.flows.features.slice(5, 7).map((d) => (
-            <PointLabel key={nanoid()} xy={getFlowPoints(d, projection)[1]}>
-              <text>
-                <tspan fontWeight="bold">{d.properties?.od}</tspan>(
-                {d.properties?.value})
-              </text>
-            </PointLabel>
-          ))}
-          <FlowLegend
-            data={odMatrixMJ.flows.features.map(
-              (flow) => flow.properties?.value
-            )}
-            scaleWidth={flowConfigMJ.scaleWidth}
             title="No. of Flights in 2019"
             unitLabel="Flights"
           />
@@ -173,7 +122,6 @@ export async function getStaticProps() {
   return {
     props: {
       odMatrix: flights.odMatrix,
-      odMatrixMJ: flights.odMatrixMJ,
       world,
     },
   };

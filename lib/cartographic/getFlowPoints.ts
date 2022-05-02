@@ -9,8 +9,8 @@ const getFlowPoints = (
 ) => {
   const o = flow.geometry.coordinates[0];
   const d = flow.geometry.coordinates[1];
-  const a = projection ? projection(o) : o;
-  const b = projection ? projection(d) : d;
+  const a = projection ? projection([o[0], o[1]]) : o;
+  const b = projection ? projection([d[0], d[1]]) : d;
   if (!a || !b) return;
   const v = new Vector2D(b[0] - a[0], b[1] - a[1]);
   const midPoint = new Vector2D(a[0], a[1]).plus(v.times(0.5));

@@ -22,7 +22,7 @@ const ProjectCountries: NextPage<Props> = ({ projects, world }) => {
 
   const count = d3
     .rollups(
-      projects.reduce((acc: [], proj) => {
+      projects.reduce((acc: string[], proj) => {
         acc.push(...proj.countries); // or proj.allCountries
         return acc;
       }, []),
@@ -35,9 +35,13 @@ const ProjectCountries: NextPage<Props> = ({ projects, world }) => {
   const minRadius = 1;
   const maxRadius = 30;
 
+  const projectCount = Array.from(projectsCountry.values());
+  const minRange = d3.min(projectCount) ?? 0; // TODO: meaningful fallback values
+  const maxRange = d3.max(projectCount) ?? 10;
+
   const scale = d3
     .scaleSqrt()
-    .domain(d3.extent(Array.from(projectsCountry.values())))
+    .domain([minRange, maxRange])
     .range([minRadius, maxRadius]);
 
   const style = {
@@ -55,7 +59,7 @@ const ProjectCountries: NextPage<Props> = ({ projects, world }) => {
     features: topojson
       .feature(world, world.objects.countries)
       .features.map((feature: Feature<MultiPolygon>) => {
-        const value = projectsCountry.get(feature.properties.iso3code);
+        const value = projectsCountry.get(feature.properties?.iso3code);
         return {
           type: "Feature",
           properties: {
@@ -70,7 +74,7 @@ const ProjectCountries: NextPage<Props> = ({ projects, world }) => {
           },
         };
       })
-      .filter((feature) => feature.properties.projectCount),
+      .filter((feature: Feature) => feature.properties?.projectCount),
   };
 
   return (
@@ -88,7 +92,6 @@ const ProjectCountries: NextPage<Props> = ({ projects, world }) => {
           {points.features.map((feature) => (
             <PointSymbol
               xy={projection(feature.geometry.coordinates)}
-              datum={feature}
               radius={scale(feature.properties?.projectCount)}
               style={style}
             />

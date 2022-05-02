@@ -1,4 +1,5 @@
-import * as csv from "csvtojson";
+import csv from "csvtojson";
+import type { Feature, FeatureCollection } from "geojson";
 
 export default async function getAirports() {
   const csvFilePath = "./data/airports.csv";
@@ -6,7 +7,7 @@ export default async function getAirports() {
     checkType: true,
   }).fromFile(csvFilePath);
 
-  const features = airports.map((d) => {
+  const features: Feature[] = airports.map((d) => {
     return {
       type: "Feature",
       geometry: {
@@ -17,7 +18,7 @@ export default async function getAirports() {
     };
   });
 
-  const geoJSON = {
+  const geoJSON: FeatureCollection = {
     type: "FeatureCollection",
     features: features,
   };

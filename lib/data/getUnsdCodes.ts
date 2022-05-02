@@ -1,18 +1,23 @@
-import * as csv from "csvtojson";
-import { UnLevel } from "../../types/UnsdCodes";
+import csv from "csvtojson";
+import { AreaCode, UnLevel } from "../../types/UnsdCodes";
 
-export default async function getUnsdCodes(level: string) {
+export default async function getUnsdCodes(level: UnLevel) {
   const csvFilePath = "./data/UNSD-Methodology.csv";
   // source: https://unstats.un.org/unsd/methodology/m49/overview/
-  const countries = await csv().fromFile(csvFilePath);
+  const countries: AreaCode[] = await csv().fromFile(csvFilePath);
+
+  const countryCodes = countries.map((d) => ({
+    code: d["Region Code"],
+    name: d["Region Name"],
+  }));
 
   const regions = Array.from(new Set(countries.map((d) => d["Region Code"])))
     .filter((d) => d)
     .map((d) => {
-      const name = countries.find((e) => e["Region Code"] === d)["Region Name"];
+      const country = countries.find((e) => e["Region Code"] === d);
       return {
         code: d,
-        name: name,
+        name: country ? country["Region Name"] : null,
       };
     });
 
@@ -21,12 +26,10 @@ export default async function getUnsdCodes(level: string) {
   )
     .filter((d) => d)
     .map((d) => {
-      const name = countries.find((e) => e["Sub-region Code"] === d)[
-        "Sub-region Name"
-      ];
+      const subRegion = countries.find((e) => e["Sub-region Code"] === d);
       return {
         code: d,
-        name: name,
+        name: subRegion ? subRegion["Sub-region Name"] : null,
       };
     });
 
@@ -35,18 +38,20 @@ export default async function getUnsdCodes(level: string) {
   )
     .filter((d) => d)
     .map((d) => {
-      const name = countries.find((e) => e["Intermediate Region Code"] === d)[
-        "Intermediate Region Name"
-      ];
+      const intermediateRegion = countries.find(
+        (e) => e["Intermediate Region Code"] === d
+      );
       return {
         code: d,
-        name: name,
+        name: intermediateRegion
+          ? intermediateRegion["Intermediate Region Name"]
+          : null,
       };
     });
 
   switch (level) {
     case UnLevel.Countries:
-      return countries;
+      return countryCodes;
     case UnLevel.Regions:
       return regions;
     case UnLevel.SubRegions:
@@ -54,11 +59,6 @@ export default async function getUnsdCodes(level: string) {
     case UnLevel.IntermediateRegions:
       return intermediateRegions;
     default:
-      return {
-        countries,
-        regions,
-        subRegions,
-        intermediateRegions,
-      };
+      return countryCodes;
   }
 }

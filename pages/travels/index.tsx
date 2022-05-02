@@ -8,7 +8,7 @@ import getFlights from "../../lib/data/getFlights";
 import SummaryTable from "../../components/summaryTable";
 import Footer from "../../components/footer";
 import DataFrame from "../../lib/DataFrame/DataFrame";
-import { Flight } from "../../types/Flight";
+import { Flight } from "../../types/Travels";
 import Heading, { Headings } from "../../components/heading";
 
 type Props = {

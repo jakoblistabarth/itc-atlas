@@ -3,7 +3,7 @@ import { ColumnType } from "../types/Column";
 import { FC } from "react";
 import SnapshotBar from "./snapshotBar";
 import SnapshotHistogram from "./snapshotHistogram";
-import { Column } from "../types/DataFrame";
+import type { Column, Datum } from "../types/DataFrame";
 
 type Props = {
   column: Column;
@@ -19,7 +19,9 @@ const Snapshot: FC<Props> = ({ column, columnName, type, detailed }) => {
       case ColumnType.Ordinal:
         return <SnapshotBar type={type} column={column} />;
       case ColumnType.Array:
-        const flattenedArray = column.filter((d) => d).map((d) => d.join(", "));
+        const flattenedArray = column
+          .filter((d) => d)
+          .map((d) => d?.join(", "));
         return <SnapshotBar type={type} column={flattenedArray} />;
       case ColumnType.Contiuous:
         return <SnapshotHistogram type={type} column={column} />;

@@ -1,5 +1,5 @@
 import { ColumnType } from "./Column";
-import { Flight } from "./Flight";
+import { Flight } from "./Travels";
 import { Project } from "./Project";
 
 export type DataFrame<T = Row> = {

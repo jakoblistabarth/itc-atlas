@@ -1,12 +1,12 @@
 import Fuse from "fuse.js";
-import { Data } from "../../types/DataFrame";
+import type { Data } from "../../types/DataFrame";
 import DataFrame from "../DataFrame/DataFrame";
-import getUnsdCodes from "./getUnsdCodes";
 import { mapCountries } from "../mappings/country.name.EN";
 import { departmentMap } from "../mappings/departments";
+import getUnsdCountries from "./getUnsdCountries";
 
 export async function cleanPhdCandiates(phdCandidates: Data) {
-  const unsdCodes = await getUnsdCodes("countries");
+  const unsdCodes = await getUnsdCountries();
 
   const options = {
     includeScore: true,
@@ -59,5 +59,5 @@ export async function cleanPhdCandiates(phdCandidates: Data) {
       "graduated",
     ]);
 
-  return output.toArray();
+  return output.toArray(); // TODO: type error due to generic toArray Function
 }

@@ -12,13 +12,16 @@ export const colorMap: Map<
     [ColumnType.Date, "rgba(200,0,55, 1)"],
     [ColumnType.Array, "rgba(130, 220, 255, 1)"],
     [ColumnType.Object, "rgba(40, 170, 225, 1)"],
-  ].map((d) => {
-    const baseColor = d3.color(d[1]);
+  ].map((type) => {
+    const baseColor = d3.color(type[1]);
     const colorCopy = _.clone(baseColor);
     if (colorCopy) colorCopy.opacity = 0.15;
     return [
-      d[0],
-      { baseColor: baseColor?.formatRgb(), brighter: colorCopy?.formatRgb() },
+      type[0] as ColumnType,
+      {
+        baseColor: baseColor?.formatRgb() ?? "rgb(100,100,100,)",
+        brighter: colorCopy?.formatRgb() ?? "rgb(200,200,200,)",
+      },
     ];
   })
 );

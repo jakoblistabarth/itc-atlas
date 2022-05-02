@@ -1,8 +1,8 @@
-import { UnGroupings } from "../types/UnsdCodes";
+import { AreaCode, UnGroupings } from "../types/UnsdCodes";
 
 // TODO: refactor to avoid parsing in codes
 export default function isPartOfUnsdGroup(
-  areaCodes,
+  areaCodes: AreaCode[],
   iso3Code: string,
   group: UnGroupings
 ) {

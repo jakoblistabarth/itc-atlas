@@ -15,20 +15,15 @@ export default async function getFlights() {
 
   const flights = cleanTravelData2019(data);
 
-  const flightsMJ = flights.filter((row) =>
-    row["Passenger Name"].match("KRAAK")
-  );
   const airports = await (await getAirports()).json;
 
   const odMatrix = await getODMatrix(flights);
-  const odMatrixMJ = await getODMatrix(flightsMJ);
   const perAirport = countFlightsperAirport(flights, airports);
 
   return {
     allTravels: data,
     flights: flights,
     odMatrix: odMatrix,
-    odMatrixMJ: odMatrixMJ,
     perAirport: perAirport,
   };
 }

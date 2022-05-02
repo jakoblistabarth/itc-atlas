@@ -43,7 +43,7 @@ class Vector2D {
     return this.dx * vector.dy - this.dy * vector.dx;
   }
 
-  toPoint(): number[] {
+  toPoint(): [number, number] {
     return [this.dx, this.dy];
   }
 }

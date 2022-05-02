@@ -2,6 +2,8 @@ import DataFrame from "../DataFrame/DataFrame";
 import getUnsdCodes from "./getUnsdCodes";
 import { ProjectType, ProjectStatus } from "../../types/Project";
 import { mapCountries } from "../mappings/country.name.EN";
+import { UnLevel } from "../../types/UnsdCodes";
+import getUnsdCountries from "./getUnsdCountries";
 
 export default async function cleanProjects(input: any[]) {
   const post2019 = new DataFrame(input[0])
@@ -40,8 +42,6 @@ export default async function cleanProjects(input: any[]) {
 
   const output = merged.toArray();
 
-  console.log(output.filter((row) => !row.countriesRegion).length);
-
   output.forEach((d) => {
     d.countriesRegionArr = d.countriesRegion.split(/\s?[,/]\s?/gm);
     d.regions = [];
@@ -50,26 +50,31 @@ export default async function cleanProjects(input: any[]) {
     d.countries = [];
   });
 
-  const areaCodes = await getUnsdCodes();
+  const countries = await getUnsdCountries();
+  const regionCodes = await getUnsdCodes(UnLevel.Regions);
+  const subRegionCodes = await getUnsdCodes(UnLevel.SubRegions);
+  const intermediateRegionCodes = await getUnsdCodes(
+    UnLevel.IntermediateRegions
+  );
 
   // Matching
   // TODO: recognise group: EU
   output.forEach((d, row) =>
-    d.countriesRegionArr.forEach((e) => {
+    d.countriesRegionArr?.forEach((e) => {
       if (!e) return;
 
-      const regionMatch = areaCodes.regions.find((f) => f.name === e);
+      const regionMatch = regionCodes.find((f) => f.name === e);
       if (regionMatch) {
         return output[row].regions.push(regionMatch.name);
       }
 
-      const subRegionMatch = areaCodes.subRegions.find((f) => f.name === e);
+      const subRegionMatch = subRegionCodes.find((f) => f.name === e);
       if (subRegionMatch) {
         return output[row].subRegions.push(subRegionMatch.name);
       }
 
-      const intermediateRegionMatch = areaCodes.intermediateRegions.find(
-        (f) => f.name.toUpperCase() === e.toUpperCase()
+      const intermediateRegionMatch = intermediateRegionCodes.find(
+        (f) => f.name?.toUpperCase() === e.toUpperCase()
       );
       if (intermediateRegionMatch) {
         return output[row].intermediateRegions.push(
@@ -77,7 +82,7 @@ export default async function cleanProjects(input: any[]) {
         );
       }
 
-      const countryMatch = areaCodes.countries.find((f) =>
+      const countryMatch = countries.find((f) =>
         f["Country or Area"].toUpperCase().match(e.toUpperCase())
       );
       if (!countryMatch) return;
@@ -92,7 +97,7 @@ export default async function cleanProjects(input: any[]) {
 
     d.regions.forEach((region) => {
       allCountries.push(
-        ...areaCodes.countries
+        ...countries
           .filter((e) => e["Region Name"] === region)
           .map((e) => e["ISO-alpha3 Code"])
       );
@@ -100,7 +105,7 @@ export default async function cleanProjects(input: any[]) {
 
     d.subRegions.forEach((subregion) => {
       allCountries.push(
-        ...areaCodes.countries
+        ...countries
           .filter((e) => e["Sub-region Name"] === subregion)
           .map((e) => e["ISO-alpha3 Code"])
       );
@@ -108,7 +113,7 @@ export default async function cleanProjects(input: any[]) {
 
     d.intermediateRegions.forEach((intermediateRegion) => {
       allCountries.push(
-        ...areaCodes.countries
+        ...countries
           .filter((e) => e["Intermediate Region Name"] === intermediateRegion)
           .map((e) => e["ISO-alpha3 Code"])
       );

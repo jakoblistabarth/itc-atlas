@@ -8,7 +8,9 @@ type Props = React.PropsWithChildren<{
     x: number;
     y: number;
   };
-  style?: textAppearance;
+  style?: textAppearance & {
+    fontSize: number;
+  };
 }>;
 
 const PointLabel: FC<Props> = ({

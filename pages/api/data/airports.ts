@@ -1,16 +1,16 @@
 import type { GeoJSON } from "geojson";
 import type { NextApiRequest, NextApiResponse } from "next";
 import getAirports from "../../../lib/data/getAirports";
-import type { DataFrame } from "../../../types/DataFrame";
+import type { Data } from "../../../types/DataFrame";
 
-type Data = {
-  json: DataFrame;
+type airportData = {
+  json: Data;
   geoJSON: GeoJSON;
 };
 
 export default async function handler(
   req: NextApiRequest,
-  res: NextApiResponse<Data>
+  res: NextApiResponse<airportData>
 ) {
   res.status(200).json(await getAirports());
 }

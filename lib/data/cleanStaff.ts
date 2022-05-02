@@ -1,11 +1,11 @@
 import { Staff } from "../../types/Staff";
 import DataFrame from "../DataFrame/DataFrame";
-import getUnsdCodes from "./getUnsdCodes";
 import Fuse from "fuse.js";
 import { countryMapNE } from "../mappings/country.name.NL";
+import getUnsdCountries from "./getUnsdCountries";
 
 const cleanStaff = async (staff: any): Promise<Staff[]> => {
-  const unsdCodes = await getUnsdCodes("countries");
+  const unsdCodes = await getUnsdCountries();
   const options = {
     includeScore: true,
     distance: 50,

@@ -3,7 +3,7 @@ import { geoBertin1953 } from "d3-geo-projection";
 import type { NextPage } from "next";
 import Head from "next/head";
 import styles from "../../styles/home.module.css";
-import { TopoJSON } from "topojson-specification";
+import type { Topology } from "topojson-specification";
 import { FeatureCollection, Point } from "geojson";
 import Heading, { Headings } from "../../components/heading";
 import getCountries from "../../lib/data/getCountries";
@@ -26,7 +26,7 @@ export async function getStaticProps() {
 
 const Airports: NextPage<{
   airports: FeatureCollection<Point>;
-  world: TopoJSON;
+  world: Topology;
 }> = ({ airports, world }) => {
   const projection = geoBertin1953();
 
@@ -70,7 +70,6 @@ const Airports: NextPage<{
           {airportsGeo.features.map((airport) => (
             <PointSymbol
               style={style}
-              datum={airport}
               xy={projection(airport.geometry.coordinates)}
               radius={symbolConfig.scale(airport.properties?.value)}
             />

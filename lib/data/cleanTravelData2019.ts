@@ -1,6 +1,6 @@
 import DataFrame from "../DataFrame/DataFrame";
 
-const cleanTravelData2019 = (data) => {
+const cleanTravelData2019 = (data: any) => {
   const df = new DataFrame(data)
     .where((row) => row["Sales Type"] !== "Train" && row.Route)
     .dropColumn("Hotel location")

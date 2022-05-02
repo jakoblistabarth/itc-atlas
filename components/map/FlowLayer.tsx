@@ -14,14 +14,17 @@ const FlowLayer: FC<{
 }> = ({ data, projection, scaleWidth, flowStyle, pointStyle }) => {
   return (
     <g id="flow-Layer">
-      {data.points.features.map((feature) => (
-        <PointSymbol
-          xy={projection(feature.geometry.coordinates)}
-          datum={feature}
-          radius={1}
-          style={pointStyle}
-        />
-      ))}
+      {data.points.features.map((feature) => {
+        const position = projection([
+          feature.geometry.coordinates[0],
+          feature.geometry.coordinates[1],
+        ]);
+        return (
+          position && (
+            <PointSymbol xy={position} radius={1} style={pointStyle} />
+          )
+        );
+      })}
       {data.flows.features.map((feature) => (
         <Flow
           projection={projection}

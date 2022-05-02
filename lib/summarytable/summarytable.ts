@@ -1,7 +1,7 @@
 import * as d3 from "d3";
 import * as _ from "lodash";
 import { ColumnType } from "../../types/Column";
-import { Column } from "../../types/DataFrame";
+import type { Column } from "../../types/DataFrame";
 
 export function getType(column: Column): ColumnType {
   for (const value of column) {
@@ -22,10 +22,15 @@ export function getColumnStats(column: Column) {
     column.filter((d) => d === null || d === "").length / column.length;
   const isContinuous = type === ColumnType.Contiuous;
   const mean = isContinuous
-    ? column.reduce((acc: number, d: number) => acc + d, 0) / column.length
+    ? (column.reduce((acc: number, d: number) => (acc += d), 0) as number) /
+      column.length
     : undefined;
-  const median = isContinuous ? d3.median(column.map((d) => d)) : undefined;
-  const sd = isContinuous ? d3.deviation(column.map((d) => d)) : undefined;
+  const median = isContinuous
+    ? d3.median(column.map((d) => d as number))
+    : undefined;
+  const sd = isContinuous
+    ? d3.deviation(column.map((d) => d as number))
+    : undefined;
   return {
     missing: missing,
     mean: mean,

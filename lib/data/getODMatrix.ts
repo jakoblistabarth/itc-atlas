@@ -1,8 +1,15 @@
 import * as d3 from "d3";
-import type { Flight } from "../../types/Flight";
+import type { Flight } from "../../types/Travels";
 import type { ODMatrix } from "../../types/ODMatrix";
 import type { Feature, FeatureCollection, LineString, Point } from "geojson";
 import getAirports from "./getAirports";
+
+type od = {
+  origin: string;
+  destination: string;
+  od: string;
+  props: any;
+};
 
 async function getODMatrix(flights: Flight[]): Promise<ODMatrix> {
   const flows = await getODFlows(flights);
@@ -18,7 +25,7 @@ async function getODFlows(
 ): Promise<FeatureCollection<LineString>> {
   const airports = await (await getAirports()).json;
 
-  const od = flights.reduce((acc: [], d) => {
+  const od = flights.reduce((acc: od[], d) => {
     const codes = d.airportCodes;
     const origins = codes.slice(0, -1);
     const routes = origins.map((code, index) => ({
@@ -50,7 +57,7 @@ async function getODFlows(
       const oAirport = airports.find((d) => d.iata_code == origin);
       const dAirport = airports.find((d) => d.iata_code == destination);
       if (!oAirport || !dAirport) return;
-      return {
+      const feature: Feature<LineString> = {
         type: "Feature",
         properties: properties,
         geometry: {
@@ -61,6 +68,7 @@ async function getODFlows(
           ],
         },
       };
+      return feature;
     })
     .filter((d) => d);
 

@@ -3,17 +3,17 @@ import type { NextPage } from "next";
 import Head from "next/head";
 import { useEffect, useRef } from "react";
 import Heading, { Headings } from "../../components/heading";
-import { fDateLong } from "../../lib/utilities/formaters";
 import getProjects from "../../lib/data/getProjects";
-import getUnsdCodes from "../../lib/data/getUnsdCodes";
+import getUnsdCountries from "../../lib/data/getUnsdCountries";
 import isPartOfUnsdGroup from "../../lib/isPartOfUnsdGroup";
+import { fDateLong } from "../../lib/utilities/formaters";
 import styles from "../../styles/home.module.css";
 import { Project, ProjectStatus } from "../../types/Project";
-import { UnGroupings, UnLevel } from "../../types/UnsdCodes";
+import { AreaCode, UnGroupings } from "../../types/UnsdCodes";
 
 type TimelineProps = {
   projects: Project[];
-  countries: any[]; //TODO create type for codes
+  countries: AreaCode[];
 };
 
 const Timeline: NextPage<TimelineProps> = ({ projects, countries }) => {
@@ -132,7 +132,7 @@ const Timeline: NextPage<TimelineProps> = ({ projects, countries }) => {
 
 export const getStaticProps = async () => {
   const projects = await getProjects();
-  const countries = await getUnsdCodes(UnLevel.Countries);
+  const countries = await getUnsdCountries();
 
   return {
     props: {

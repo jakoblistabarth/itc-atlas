@@ -8,6 +8,8 @@ import getStaff from "../../lib/data/getStaff";
 import Heading, { Headings } from "../../components/heading";
 import { Staff } from "../../types/Staff";
 import DataFrame from "../../lib/DataFrame/DataFrame";
+import { MdOutlineArrowRightAlt } from "react-icons/md";
+import Link from "next/link";
 
 type Props = React.PropsWithChildren<{
   staff: Staff[];
@@ -29,6 +31,16 @@ const Staff: NextPage<Props> = ({ staff }) => {
         <p>
           <BackToHome />
         </p>
+
+        <div className={styles.grid}>
+          <Link href="/staff/origin">
+            <a className={styles.card}>
+              <h2>
+                Origin <MdOutlineArrowRightAlt />
+              </h2>
+            </a>
+          </Link>
+        </div>
 
         <SummaryTable data={staffDf} />
       </main>

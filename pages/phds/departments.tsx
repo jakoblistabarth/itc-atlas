@@ -10,11 +10,11 @@ import Footer from "../../components/footer";
 import Heading, { Headings } from "../../components/heading";
 import BaseLayer from "../../components/map/BaseLayer";
 import NominalLegend from "../../components/map/NominalLegend";
-import ScaledPie from "../../components/map/ScaledPie";
+import ScaledPie, { pieDatum } from "../../components/map/ScaledPie";
 import { color } from "../../lib/cartographic/colors";
 import getCountries from "../../lib/data/getCountries";
 import getPhdCandidates from "../../lib/data/getPhdCandidates";
-import { departmentColors } from "../../lib/mappings/departments";
+import { Department, departmentColors } from "../../lib/mappings/departments";
 import styles from "../../styles/home.module.css";
 import type { PhdCandidate } from "../../types/PhdCandidate";
 import { SymbolAppearance } from "../../types/SymbolAppearance";
@@ -31,11 +31,15 @@ const PhdDepartments: NextPage<Props> = ({ phdCandidates, world }) => {
     (d) => d.department1
   );
 
+  const featureCollection: FeatureCollection<MultiPolygon> = topojson.feature(
+    world,
+    world.objects.countries
+  );
+
   const points: FeatureCollection<Point> = {
     type: "FeatureCollection",
-    features: topojson
-      .feature(world, world.objects.countries)
-      .features.map((feature: Feature<MultiPolygon>) => {
+    features: featureCollection.features
+      .map((feature: Feature<MultiPolygon>) => {
         const departments = count.get(feature.properties?.iso3code);
         const departmentCount = departments
           ? Array.from(departments?.entries()).map(([key, value]) => {
@@ -51,7 +55,7 @@ const PhdDepartments: NextPage<Props> = ({ phdCandidates, world }) => {
               0
             )
           : null;
-        return {
+        const pointFeature: Feature<Point> = {
           type: "Feature",
           properties: {
             totalPhdCount: totalCount,
@@ -59,23 +63,26 @@ const PhdDepartments: NextPage<Props> = ({ phdCandidates, world }) => {
             ...feature.properties,
           },
           geometry: {
+            type: "Point",
             coordinates: [
               d3.geoCentroid(feature)[0],
               d3.geoCentroid(feature)[1],
             ],
           },
         };
+        return pointFeature;
       })
-      .filter((feature) => feature.properties.totalPhdCount)
-      .sort((a, b) =>
-        d3.descending(a.properties.totalPhdCount, b.properties.totalPhdCount)
+      .filter((feature: Feature) => feature.properties?.totalPhdCount)
+      .sort((a: Feature, b: Feature) =>
+        d3.descending(a.properties?.totalPhdCount, b.properties?.totalPhdCount)
       ),
   };
 
   const legendEntries = points.features
-    .reduce((acc, point) => {
-      point.properties?.departments.forEach((department) => {
-        if (!acc.includes(department.label)) acc.push(department.label);
+    .reduce((acc: Department[], point) => {
+      point.properties?.departments.forEach((department: pieDatum) => {
+        if (!acc.includes(department.label as Department))
+          acc.push(department.label as Department);
       });
       return acc;
     }, [])
@@ -86,13 +93,16 @@ const PhdDepartments: NextPage<Props> = ({ phdCandidates, world }) => {
       };
     });
 
-  const extent = d3.extent(
-    Array.from(count.values()).map((d) =>
-      Array.from(d.values()).reduce((sum, d) => sum + d.length, 0)
-    )
+  const phdCount = Array.from(count.values()).map((d) =>
+    Array.from(d.values()).reduce((sum, d) => sum + d.length, 0)
   );
+  const min = d3.min(phdCount);
+  const max = d3.max(phdCount);
 
-  const scale = d3.scaleSqrt().domain(extent).range([1, 100]);
+  const scale = d3
+    .scaleSqrt()
+    .domain([min ?? 0, max ?? 10])
+    .range([1, 100]);
 
   const projection = geoBertin1953();
 

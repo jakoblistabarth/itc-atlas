@@ -7,6 +7,7 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  const { level } = req.query ?? UnLevel.Countries;
+  const { q } = req.query ?? UnLevel.Countries;
+  const level = typeof q === "string" ? q : q[0];
   res.status(200).json(await getUnsdCodes(level));
 }
