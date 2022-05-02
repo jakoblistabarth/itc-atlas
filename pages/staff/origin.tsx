@@ -10,6 +10,7 @@ import Footer from "../../components/footer";
 import Heading, { Headings } from "../../components/heading";
 import BaseLayer from "../../components/map/BaseLayer";
 import PointSymbol from "../../components/map/PointSymbol";
+import ProportionalSymbolLegend from "../../components/map/ProportionalSymbolLegend";
 import getMapHeight from "../../lib/cartographic/getMapHeight";
 import getCountries from "../../lib/data/getCountries";
 import getStaff from "../../lib/data/getStaff";

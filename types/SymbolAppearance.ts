@@ -15,6 +15,7 @@ export type SymbolAppearance = {
     stroke?: string;
   };
   opacity?: number;
+  markerEnd?: string;
 };
 
 export type textAppearance = {

@@ -11,6 +11,8 @@ import BaseLayer from "../../components/map/BaseLayer";
 import Heading, { Headings } from "../../components/heading";
 import { FeatureCollection, Feature, Point, MultiPolygon } from "geojson";
 import PointSymbol from "../../components/map/PointSymbol";
+import ProportionalSymbolLegend from "../../components/map/ProportionalSymbolLegend";
+import getMapHeight from "../../lib/cartographic/getMapHeight";
 
 type Props = {
   projects: Project[];
@@ -18,7 +20,13 @@ type Props = {
 };
 
 const ProjectCountries: NextPage<Props> = ({ projects, world }) => {
+  const dimension = {
+    width: 1280,
+    height: 0,
+  };
+
   const projection = geoBertin1953();
+  dimension.height = getMapHeight(dimension.width, projection);
 
   const count = d3
     .rollups(
@@ -87,7 +95,7 @@ const ProjectCountries: NextPage<Props> = ({ projects, world }) => {
 
       <main className={styles.main}>
         <Heading Tag={Headings.H1}>Projects per Country</Heading>
-        <svg width={1020} height={600}>
+        <svg width={dimension.width} height={dimension.height}>
           <BaseLayer data={world} projection={projection} />
           {points.features.map((feature) => (
             <PointSymbol
@@ -96,6 +104,15 @@ const ProjectCountries: NextPage<Props> = ({ projects, world }) => {
               style={style}
             />
           ))}
+          <ProportionalSymbolLegend
+            data={points.features.map(
+              (feature) => feature.properties?.projectCount ?? 0
+            )}
+            scaleRadius={scale}
+            title={"Projects per Country"}
+            unitLabel={"project"}
+            style={style}
+          />
         </svg>
       </main>
     </>

@@ -33,9 +33,10 @@ const Flights: NextPage<Props> = ({ odMatrix, world }) => {
   const flowConfig = {
     style: {
       opacity: 0.2,
-      fill: {
+      stroke: {
         color: "red",
       },
+      markerEnd: "arrowHead",
     },
     scaleWidth: d3.scaleLinear().domain([min, max]).range([1, 15]),
   };
@@ -74,7 +75,10 @@ const Flights: NextPage<Props> = ({ odMatrix, world }) => {
 
         <svg width={1020} height={600}>
           <defs>
-            <ArrowHead id="arrowHead" color={flowConfig.style?.fill?.color} />
+            <ArrowHead
+              id={flowConfig.style.markerEnd}
+              color={flowConfig.style?.stroke?.color}
+            />
           </defs>
           <BaseLayer data={world} projection={projection} />
           <FlowLayer
@@ -104,6 +108,7 @@ const Flights: NextPage<Props> = ({ odMatrix, world }) => {
             scaleWidth={flowConfig.scaleWidth}
             title="No. of Flights in 2019"
             unitLabel="Flights"
+            style={flowConfig.style}
           />
         </svg>
 

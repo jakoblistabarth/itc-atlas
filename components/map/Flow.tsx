@@ -22,7 +22,7 @@ const Flow: FC<{
 
   return typeof linePath === "string" ? (
     <path
-      markerEnd="url(#arrowHead)"
+      markerEnd={`url(#${style?.markerEnd})`}
       opacity={style?.opacity ?? 0.8}
       d={linePath}
       fill="none"
