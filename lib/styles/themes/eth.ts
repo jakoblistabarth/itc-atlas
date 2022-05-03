@@ -7,12 +7,19 @@ const red = "#d51d09";
 const anthrazit = "#444";
 
 const eth: MapTheme = {
+  hasGraticuleLables: true,
+  hasOutline: true,
   background: {
     fill: petrol,
   },
   graticule: {
     stroke: anthrazit,
     strokeWidth: 0.5,
+  },
+  graticuleLabel: {
+    fontFamily: "Fraunces",
+    fontWeight: "bold",
+    fontStyle: "italic",
   },
   base: {
     fill: yellow,

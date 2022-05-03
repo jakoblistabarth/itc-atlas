@@ -1,5 +1,5 @@
 import * as d3 from "d3";
-import { geoBertin1953 } from "d3-geo-projection";
+import { geoBertin1953, geoInterruptedMollweide } from "d3-geo-projection";
 import type { Feature, FeatureCollection, MultiPolygon, Point } from "geojson";
 import { nanoid } from "nanoid";
 import type { GetStaticProps, NextPage } from "next";
@@ -32,7 +32,8 @@ const PhdDepartments: NextPage<Props> = ({ phdCandidates, world }) => {
   };
 
   const theme = themes.muted;
-  const projection = geoBertin1953();
+  // const projection = geoBertin1953();
+  const projection = geoInterruptedMollweide();
   dimension.height = getMapHeight(dimension.width, projection);
 
   const count = d3.group(

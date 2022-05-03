@@ -4,6 +4,7 @@ import { ODMatrix } from "../../types/ODMatrix";
 import type { Appearance } from "../../types/Appearance";
 import Flow from "./Flow";
 import PointSymbol from "./PointSymbol";
+import ArrowHead from "../defs/marker/ArrowHead";
 
 const FlowLayer: FC<{
   data: ODMatrix;
@@ -14,6 +15,9 @@ const FlowLayer: FC<{
 }> = ({ data, projection, scaleWidth, flowStyle, pointStyle }) => {
   return (
     <g id="flow-Layer">
+      <defs>
+        <ArrowHead color={flowStyle?.stroke} />
+      </defs>
       {data.points.features.map((feature) => {
         const position = projection([
           feature.geometry.coordinates[0],

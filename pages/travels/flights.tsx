@@ -5,7 +5,6 @@ import type { NextPage } from "next";
 import Head from "next/head";
 import type { Topology } from "topojson-specification";
 import Heading, { Headings } from "../../components/heading";
-import ArrowHead from "../../components/defs/marker/ArrowHead";
 import BaseLayer from "../../components/map/BaseLayer";
 import FlowLayer from "../../components/map/FlowLayer";
 import FlowLegend from "../../components/map/FlowLegend";
@@ -18,6 +17,7 @@ import type { ODMatrix } from "../../types/ODMatrix";
 import { Appearance } from "../../types/Appearance";
 import themes from "../../lib/styles/themes";
 import getMapHeight from "../../lib/cartographic/getMapHeight";
+import { MapOptions } from "../../types/MapOptions";
 
 type Props = {
   odMatrix: ODMatrix;
@@ -25,11 +25,11 @@ type Props = {
 };
 
 const Flights: NextPage<Props> = ({ odMatrix, world }) => {
-  const mapOptions = {
+  const mapOptions: MapOptions = {
     projection: geoBertin1953(),
     width: 1280,
     height: 0,
-    theme: themes.muted,
+    theme: themes.eth,
   };
 
   mapOptions.height = getMapHeight(mapOptions.width, mapOptions.projection);
@@ -76,10 +76,11 @@ const Flights: NextPage<Props> = ({ odMatrix, world }) => {
         <Heading Tag={Headings.H1}>ITC's Travel Activity</Heading>
 
         <svg width={mapOptions.width} height={mapOptions.height}>
-          <defs>
-            <ArrowHead color={flowStyle?.stroke} />
-          </defs>
-          <BaseLayer data={world} projection={mapOptions.projection} />
+          <BaseLayer
+            data={world}
+            theme={mapOptions.theme}
+            projection={mapOptions.projection}
+          />
           <FlowLayer
             projection={mapOptions.projection}
             data={odMatrix}

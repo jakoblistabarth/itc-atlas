@@ -14,6 +14,8 @@ export type Appearance = {
 export type TextAppearance = {
   fontFamily?: string;
   fontSize?: number;
+  fontWeight?: "normal" | "bold" | "bolder" | "lighter" | number;
+  fontStyle?: "normal" | "italic";
   fill?: string;
   stroke?: string;
   strokeWidth?: number;

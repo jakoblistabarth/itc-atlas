@@ -5,6 +5,7 @@ const darkgrey = "#c5c5c5";
 const red = "#f00";
 
 const muted: MapTheme = {
+  hasOutline: true,
   background: { fill: lightgrey },
   graticule: { stroke: darkgrey, strokeWidth: 0.5 },
   base: {
