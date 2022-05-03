@@ -11,13 +11,14 @@ import Heading, { Headings } from "../../components/heading";
 import BaseLayer from "../../components/map/BaseLayer";
 import NominalLegend from "../../components/map/NominalLegend";
 import ScaledPie, { pieDatum } from "../../components/map/ScaledPie";
-import { color } from "../../lib/cartographic/colors";
+import themes from "../../lib/styles/themes";
 import getCountries from "../../lib/data/getCountries";
 import getPhdCandidates from "../../lib/data/getPhdCandidates";
 import { Department, departmentColors } from "../../lib/mappings/departments";
 import styles from "../../styles/home.module.css";
 import type { PhdCandidate } from "../../types/PhdCandidate";
-import { SymbolAppearance } from "../../types/SymbolAppearance";
+import getMapHeight from "../../lib/cartographic/getMapHeight";
+import LegendTitle from "../../components/map/LegendTitle";
 
 type Props = {
   phdCandidates: PhdCandidate[];
@@ -25,6 +26,15 @@ type Props = {
 };
 
 const PhdDepartments: NextPage<Props> = ({ phdCandidates, world }) => {
+  const dimension = {
+    width: 1280,
+    height: 0,
+  };
+
+  const theme = themes.muted;
+  const projection = geoBertin1953();
+  dimension.height = getMapHeight(dimension.width, projection);
+
   const count = d3.group(
     phdCandidates,
     (d) => d.country,
@@ -104,15 +114,6 @@ const PhdDepartments: NextPage<Props> = ({ phdCandidates, world }) => {
     .domain([min ?? 0, max ?? 10])
     .range([1, 100]);
 
-  const projection = geoBertin1953();
-
-  const pieStyle: SymbolAppearance = {
-    stroke: {
-      color: color.background,
-      width: 1,
-    },
-  };
-
   return (
     <>
       <Head>
@@ -123,7 +124,7 @@ const PhdDepartments: NextPage<Props> = ({ phdCandidates, world }) => {
 
       <main className={styles.main}>
         <Heading Tag={Headings.H1}>ITC's PhD candidates</Heading>
-        <svg width={1020} height={600}>
+        <svg width={dimension.width} height={dimension.height}>
           <BaseLayer data={world} projection={projection} />
           <g id="symbols">
             {points.features.map((point) => {
@@ -136,16 +137,20 @@ const PhdDepartments: NextPage<Props> = ({ phdCandidates, world }) => {
                   colorScheme={Object.values(departmentColors)}
                   pieSize={point.properties?.totalPhdCount}
                   data={point.properties?.departments}
-                  style={pieStyle}
+                  style={theme.symbol}
                 />
               );
             })}
           </g>
-          <NominalLegend entries={legendEntries} />
-          <g fontSize={10} transform="translate(0,10)">
-            <text fontSize={12}>5 Countries with most PhD candidates</text>
+          <NominalLegend title={"ITC's departments"} entries={legendEntries} />
+          <g transform={`translate(${dimension.width - 170},0)`}>
+            <LegendTitle>Top 5 PhD countries</LegendTitle>
             {points.features.slice(0, 5).map((feature, index) => (
-              <g transform={`translate(0, ${20 + index * 15})`} key={nanoid()}>
+              <g
+                fontSize={10}
+                transform={`translate(0, ${40 + index * 15})`}
+                key={nanoid()}
+              >
                 <text>
                   {feature.properties?.name}
                   <tspan> ({feature.properties?.totalPhdCount})</tspan>

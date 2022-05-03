@@ -1,7 +1,7 @@
 import { GeoProjection, ScaleLinear } from "d3";
 import { FC } from "react";
 import { ODMatrix } from "../../types/ODMatrix";
-import type { SymbolAppearance } from "../../types/SymbolAppearance";
+import type { Appearance } from "../../types/Appearance";
 import Flow from "./Flow";
 import PointSymbol from "./PointSymbol";
 
@@ -9,8 +9,8 @@ const FlowLayer: FC<{
   data: ODMatrix;
   projection: GeoProjection;
   scaleWidth: ScaleLinear<number, number>;
-  flowStyle?: SymbolAppearance;
-  pointStyle?: SymbolAppearance;
+  flowStyle?: Appearance;
+  pointStyle?: Appearance;
 }> = ({ data, projection, scaleWidth, flowStyle, pointStyle }) => {
   return (
     <g id="flow-Layer">

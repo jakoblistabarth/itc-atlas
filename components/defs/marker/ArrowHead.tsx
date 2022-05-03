@@ -1,9 +1,9 @@
 import { FC } from "react";
 
-const ArrowHead: FC<{ id: string; color: string }> = ({ id, color }) => {
+const ArrowHead: FC<{ color?: string }> = ({ color }) => {
   return (
     <marker
-      id={id}
+      id="ArrowHead"
       markerWidth="8"
       markerHeight="8"
       refX="5"

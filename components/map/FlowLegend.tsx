@@ -1,16 +1,19 @@
-import { FC, useRef, useEffect } from "react";
+import { FC } from "react";
 import * as d3 from "d3";
 import { ScaleLinear } from "d3";
 import { fInt } from "../../lib/utilities/formaters";
-import { SymbolAppearance } from "../../types/SymbolAppearance";
+import { Appearance } from "../../types/Appearance";
+import LegendTitle from "./LegendTitle";
 
 const FlowLegend: FC<{
+  x?: number;
+  y?: number;
   data: number[];
   scaleWidth: ScaleLinear<number, number>;
   title: string;
   unitLabel: string;
-  style: SymbolAppearance;
-}> = ({ data, scaleWidth, title, unitLabel, style }) => {
+  style: Appearance;
+}> = ({ data, scaleWidth, title, unitLabel, style, x = 0, y = 0 }) => {
   const min = d3.min(data);
   const max = d3.max(data);
   if (!min || !max) return <g />;
@@ -28,23 +31,21 @@ const FlowLegend: FC<{
   if (!linePath) return <></>;
 
   return (
-    <g id="legend" transform="translate(0, 450)">
-      <text fontFamily="Fraunces" fontWeight="bold">
-        {title}
-      </text>
-      <g id="entries" transform="translate(0, 20)">
+    <g id="legend" transform={`translate(${x}, ${y})`}>
+      <LegendTitle>{title}</LegendTitle>
+      <g id="entries" transform="translate(0, 40)">
         {entries.map((entry, index) => {
-          const fontSize = style.text?.size ?? 10;
+          const fontSize = style.text?.fontSize ?? 10;
 
           return (
             <g transform={`translate(10, ${index * 30})`}>
               <path
                 d={linePath}
-                stroke={style.stroke?.color ?? "black"}
-                fill={style.fill?.color ?? "none"}
+                stroke={style.stroke ?? "black"}
+                fill={style.fill ?? "none"}
                 opacity={style.opacity ?? "1"}
                 strokeWidth={scaleWidth(entry)}
-                marker-end={"url(#arrowHead)"}
+                marker-end={`url(#${style.markerEnd})`}
               />
               <text x={100} y={fontSize / 2} fontSize={fontSize}>
                 {fInt(entry) + " " + unitLabel ?? null}

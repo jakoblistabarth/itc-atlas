@@ -11,6 +11,7 @@ import getFlights from "../../lib/data/getFlights";
 import BaseLayer from "../../components/map/BaseLayer";
 import PointLabel from "../../components/map/PointLabel";
 import PointSymbol from "../../components/map/PointSymbol";
+import themes from "../../lib/styles/themes";
 
 export async function getStaticProps() {
   const flights = await getFlights();
@@ -37,23 +38,12 @@ const Airports: NextPage<{
       .sort((a, b) => d3.descending(a.properties?.value, b.properties?.value)),
   };
 
-  const style = {
-    fill: {
-      color: "red",
-      opacity: 0.3,
-    },
-  };
-
-  const symbolConfig = {
-    scale: d3
-      .scaleSqrt()
-      .domain(
-        d3.extent(
-          airportsGeo.features.map((feature) => feature.properties?.value)
-        )
-      )
-      .range([0, 30]),
-  };
+  const flightCount = airportsGeo.features.map(
+    (feature) => feature.properties?.value
+  );
+  const minRange = d3.min(flightCount);
+  const maxRange = d3.max(flightCount);
+  const scale = d3.scaleSqrt().domain([minRange, maxRange]).range([0, 30]);
 
   return (
     <>
@@ -69,9 +59,9 @@ const Airports: NextPage<{
           <BaseLayer data={world} projection={projection} />
           {airportsGeo.features.map((airport) => (
             <PointSymbol
-              style={style}
+              style={themes.muted.symbol}
               xy={projection(airport.geometry.coordinates)}
-              radius={symbolConfig.scale(airport.properties?.value)}
+              radius={scale(airport.properties?.value)}
             />
           ))}
           {airportsGeo.features.slice(0, 5).map((d) => (

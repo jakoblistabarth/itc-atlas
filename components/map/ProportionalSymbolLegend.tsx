@@ -1,17 +1,19 @@
-import { FC, useRef, useEffect } from "react";
+import { FC } from "react";
 import * as d3 from "d3";
-import { ScaleLinear } from "d3";
+import { ScalePower } from "d3";
 import { fInt } from "../../lib/utilities/formaters";
-import { SymbolAppearance } from "../../types/SymbolAppearance";
+import { Appearance } from "../../types/Appearance";
+import LegendTitle from "./LegendTitle";
+import { nanoid } from "nanoid";
 
 const ProportionalSymbolLegend: FC<{
   x?: number;
   y?: number;
   data: number[];
-  scaleRadius: ScaleLinear<number, number>;
+  scaleRadius: ScalePower<number, number>;
   title: string;
   unitLabel: string;
-  style: SymbolAppearance;
+  style?: Appearance;
 }> = ({ x = 0, y = 0, data, scaleRadius, title, unitLabel, style }) => {
   const min = d3.min(data);
   const max = d3.max(data);
@@ -20,7 +22,7 @@ const ProportionalSymbolLegend: FC<{
   if (!min || !max || !median || !mean) return <g />;
   const entries = [min, median, Math.ceil(mean), max];
 
-  const labelOffset = style.text?.size ?? 10;
+  const labelOffset = style?.text?.fontSize ?? 10;
 
   const line = d3
     .line()
@@ -29,11 +31,8 @@ const ProportionalSymbolLegend: FC<{
 
   return (
     <g id="legend" transform={`translate(${x}, ${y})`}>
-      <text y={16} fontFamily="Fraunces" fontWeight="bold">
-        {title}
-      </text>
+      <LegendTitle>{title}</LegendTitle>
       <g id="legendEntries" transform="translate(1, 70)">
-        {console.log(entries)}
         {entries.map((entry) => {
           const maxRadius = scaleRadius(max);
           const entryRadius = scaleRadius(entry);
@@ -45,18 +44,18 @@ const ProportionalSymbolLegend: FC<{
           ]);
           if (!linePath) return <></>;
           return (
-            <g>
+            <g key={nanoid()}>
               <circle
                 cx={maxRadius}
                 cy={maxRadius - entryRadius}
                 r={entryRadius}
-                fill={style.fill?.color ?? "none"}
-                fillOpacity={style.fill?.opacity}
-                stroke={style.stroke?.color ?? "black"}
-                strokeWidth="1"
+                fill={style?.fill ?? "none"}
+                fillOpacity={style?.fillOpacity}
+                stroke={style?.stroke ?? "black"}
+                strokeWidth={style?.strokeWidth ?? "1"}
               />
               <path
-                stroke={style.stroke?.color ?? "black"}
+                stroke={style?.stroke ?? "black"}
                 strokeWidth={0.5}
                 d={linePath}
               />

@@ -84,7 +84,7 @@ const StaffOrigin: NextPage<Props> = ({ staff, world }) => {
       </Head>
 
       <main className={styles.main}>
-        <Heading Tag={Headings.H1}>ITC's PhD candidates</Heading>
+        <Heading Tag={Headings.H1}>ITC's staff origin</Heading>
         <svg width={dimension.width} height={dimension.height}>
           <BaseLayer data={world} projection={projection} />
           <g id="symbols">
@@ -96,6 +96,14 @@ const StaffOrigin: NextPage<Props> = ({ staff, world }) => {
               />
             ))}
           </g>
+          <ProportionalSymbolLegend
+            data={points.features.map(
+              (feature) => feature.properties?.staffCount
+            )}
+            scaleRadius={scale}
+            title={"Staff members per Country"}
+            unitLabel={"Staff member"}
+          />
         </svg>
       </main>
       <Footer />

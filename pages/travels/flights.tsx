@@ -5,7 +5,7 @@ import type { NextPage } from "next";
 import Head from "next/head";
 import type { Topology } from "topojson-specification";
 import Heading, { Headings } from "../../components/heading";
-import ArrowHead from "../../components/map/ArrowHead";
+import ArrowHead from "../../components/defs/marker/ArrowHead";
 import BaseLayer from "../../components/map/BaseLayer";
 import FlowLayer from "../../components/map/FlowLayer";
 import FlowLegend from "../../components/map/FlowLegend";
@@ -15,6 +15,9 @@ import getCountries from "../../lib/data/getCountries";
 import getFlights from "../../lib/data/getFlights";
 import styles from "../../styles/home.module.css";
 import type { ODMatrix } from "../../types/ODMatrix";
+import { Appearance } from "../../types/Appearance";
+import themes from "../../lib/styles/themes";
+import getMapHeight from "../../lib/cartographic/getMapHeight";
 
 type Props = {
   odMatrix: ODMatrix;
@@ -22,7 +25,14 @@ type Props = {
 };
 
 const Flights: NextPage<Props> = ({ odMatrix, world }) => {
-  const projection = geoBertin1953();
+  const mapOptions = {
+    projection: geoBertin1953(),
+    width: 1280,
+    height: 0,
+    theme: themes.muted,
+  };
+
+  mapOptions.height = getMapHeight(mapOptions.width, mapOptions.projection);
 
   const flightsPerRoute = odMatrix.flows.features.map(
     (flow) => flow.properties?.value
@@ -30,25 +40,17 @@ const Flights: NextPage<Props> = ({ odMatrix, world }) => {
   const min = d3.min(flightsPerRoute);
   const max = d3.max(flightsPerRoute);
 
-  const flowConfig = {
-    style: {
-      opacity: 0.2,
-      stroke: {
-        color: "red",
-      },
-      markerEnd: "arrowHead",
-    },
-    scaleWidth: d3.scaleLinear().domain([min, max]).range([1, 15]),
+  const flowStyle: Appearance = {
+    opacity: 0.2,
+    stroke: "red",
+    markerEnd: "ArrowHead",
   };
+  const scaleWidth = d3.scaleLinear().domain([min, max]).range([1, 15]);
 
-  const pointStyle = {
-    fill: {
-      color: "grey",
-      opacity: 1,
-    },
-    stroke: {
-      width: 0,
-    },
+  const pointStyle: Appearance = {
+    fill: "grey",
+    fillOpacity: 1,
+    strokeWidth: 0,
   };
 
   // useEffect(() => {
@@ -73,24 +75,21 @@ const Flights: NextPage<Props> = ({ odMatrix, world }) => {
       <main className={styles.main}>
         <Heading Tag={Headings.H1}>ITC's Travel Activity</Heading>
 
-        <svg width={1020} height={600}>
+        <svg width={mapOptions.width} height={mapOptions.height}>
           <defs>
-            <ArrowHead
-              id={flowConfig.style.markerEnd}
-              color={flowConfig.style?.stroke?.color}
-            />
+            <ArrowHead color={flowStyle?.stroke} />
           </defs>
-          <BaseLayer data={world} projection={projection} />
+          <BaseLayer data={world} projection={mapOptions.projection} />
           <FlowLayer
-            projection={projection}
+            projection={mapOptions.projection}
             data={odMatrix}
-            scaleWidth={flowConfig.scaleWidth}
-            flowStyle={flowConfig.style}
+            scaleWidth={scaleWidth}
+            flowStyle={flowStyle}
             pointStyle={pointStyle}
           />
 
           {odMatrix.flows.features.slice(0, 5).map((d) => {
-            const flowPoints = getFlowPoints(d, projection);
+            const flowPoints = getFlowPoints(d, mapOptions.projection);
             const labelPosition = flowPoints?.[1];
             return (
               labelPosition && (
@@ -105,10 +104,10 @@ const Flights: NextPage<Props> = ({ odMatrix, world }) => {
           })}
           <FlowLegend
             data={odMatrix.flows.features.map((flow) => flow.properties?.value)}
-            scaleWidth={flowConfig.scaleWidth}
+            scaleWidth={scaleWidth}
             title="No. of Flights in 2019"
             unitLabel="Flights"
-            style={flowConfig.style}
+            style={flowStyle}
           />
         </svg>
 

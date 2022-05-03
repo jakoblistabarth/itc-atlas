@@ -3,13 +3,13 @@ import * as d3 from "d3";
 import { Feature, LineString } from "geojson";
 import { FC } from "react";
 import getFlowPoints from "../../lib/cartographic/getFlowPoints";
-import { SymbolAppearance } from "../../types/SymbolAppearance";
+import { Appearance } from "../../types/Appearance";
 
 const Flow: FC<{
   datum: Feature<LineString>;
   projection: GeoProjection;
   scale: ScaleLinear<number, number>;
-  style?: SymbolAppearance;
+  style?: Appearance;
 }> = ({ datum, scale, projection, style }) => {
   const line = d3
     .line()
@@ -26,9 +26,9 @@ const Flow: FC<{
       opacity={style?.opacity ?? 0.8}
       d={linePath}
       fill="none"
-      stroke={style?.stroke?.color ?? style?.fill?.color ?? "black"}
+      stroke={style?.stroke ?? style?.fill ?? "black"}
       strokeWidth={scale(datum.properties?.value)}
-      strokeLinejoin={style?.stroke?.linejoin ?? "round"}
+      strokeLinejoin={style?.strokeLineJoin ?? "round"}
     />
   ) : (
     <></>

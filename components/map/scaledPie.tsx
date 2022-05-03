@@ -2,7 +2,7 @@ import * as d3 from "d3";
 import type { ScaleLinear, ScalePower, PieArcDatum } from "d3";
 import type { Position } from "geojson";
 import type { FC } from "react";
-import type { SymbolAppearance } from "../../types/SymbolAppearance";
+import type { Appearance } from "../../types/Appearance";
 import { nanoid } from "nanoid";
 
 export type pieDatum = {
@@ -16,7 +16,7 @@ const ScaledPie: FC<{
   pieSize: number;
   data: pieDatum[];
   colorScheme?: string[];
-  style?: SymbolAppearance;
+  style?: Appearance;
 }> = ({
   xy,
   style,
@@ -47,11 +47,11 @@ const ScaledPie: FC<{
           key={nanoid()}
           d={arcGenerator(sector) ?? undefined}
           fill={color(sector.data.label)}
-          fillOpacity={style?.fill?.opacity ?? 1}
-          stroke={style?.stroke?.color ?? style?.fill?.color ?? "black"}
-          strokeOpacity={style?.stroke?.opacity ?? 1}
-          strokeWidth={style?.stroke?.width ?? 0}
-          strokeLinejoin={style?.stroke?.linejoin ?? "round"}
+          fillOpacity={style?.fillOpacity ?? 1}
+          stroke={style?.stroke ?? style?.fill ?? "black"}
+          strokeOpacity={style?.strokeOpacity ?? 1}
+          strokeWidth={style?.strokeWidth ?? 0}
+          strokeLinejoin={style?.strokeLineJoin ?? "round"}
         />
       ))}
     </g>

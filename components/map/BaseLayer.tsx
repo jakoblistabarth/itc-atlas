@@ -1,17 +1,19 @@
 import * as d3 from "d3";
-import { GeoGeometryObjects, geoPath, GeoSphere } from "d3-geo";
+import { geoPath, GeoSphere } from "d3-geo";
 import type { FC } from "react";
 import * as topojson from "topojson-client";
 import type { Topology } from "topojson-specification";
-import { color } from "../../lib/cartographic/colors";
+import themes from "../../lib/styles/themes";
+import type { MapTheme } from "../../types/MapTheme";
 
 type Props = {
   data: Topology<{ [name: string]: any }>;
   // object?: string; // TODO: to be Implemented
   projection?: any;
+  theme?: MapTheme;
 };
 
-const BaseLayer: FC<Props> = ({ data, projection }) => {
+const BaseLayer: FC<Props> = ({ data, projection, theme = themes.muted }) => {
   const path = geoPath(projection);
   const sphere: GeoSphere = { type: "Sphere" }; // Question: okay to do so?
   const ocean = path(sphere);
@@ -30,7 +32,7 @@ const BaseLayer: FC<Props> = ({ data, projection }) => {
     <g className="base-map">
       {ocean && (
         <g className="oceans">
-          <path d={ocean} fill={color.background} />
+          <path d={ocean} fill={theme.background.fill} />
         </g>
       )}
 
@@ -39,16 +41,16 @@ const BaseLayer: FC<Props> = ({ data, projection }) => {
           <path
             d={graticulePath}
             fill="none"
-            stroke={color.graticule}
-            strokeWidth={0.5}
-            strokeOpacity={0.25}
+            stroke={theme.graticule.stroke}
+            strokeWidth={theme.graticule.strokeWidth}
+            strokeOpacity={theme.graticule.strokeOpacity}
           />
         </g>
       )}
 
       {landPath && (
         <g className="countries">
-          <path d={landPath} fill="white" />
+          <path d={landPath} fill={theme.base.fill} />
         </g>
       )}
 
@@ -57,9 +59,9 @@ const BaseLayer: FC<Props> = ({ data, projection }) => {
           <path
             d={bordersPath}
             fill="none"
-            stroke={color.background}
-            strokeLinejoin="round"
-            strokeWidth={1}
+            stroke={theme.base.stroke}
+            strokeLinejoin={theme.base.strokeLineJoin ?? "round"}
+            strokeWidth={theme.base.strokeWidth}
           />
         </g>
       )}
