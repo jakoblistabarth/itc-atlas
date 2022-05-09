@@ -33,9 +33,17 @@ const BaseLayer: FC<Props> = ({ data, projection, theme = themes.muted }) => {
 
   const hasGraticuleLabels = theme.hasGraticuleLables ?? false;
   const hasOutline = theme.hasOutline ?? false;
+  const hasShadow = theme.hasShadow ?? true;
 
   return (
     <>
+      {hasShadow && (
+        <ShadowLayer
+          geoPath={pathSphere}
+          color={theme.background.fill}
+          blur={30}
+        />
+      )}
       <g className="base-map" clipPath="url(#clip)">
         {pathSphere && (
           <defs>
@@ -43,12 +51,23 @@ const BaseLayer: FC<Props> = ({ data, projection, theme = themes.muted }) => {
             <clipPath id="clip">
               <use xlinkHref="#outline" />
             </clipPath>
+            {theme.background.gradient && (
+              <RadialGradient
+                id={"oceanGradient"}
+                colorStops={theme.background.gradient}
+              />
+            )}
           </defs>
         )}
         {pathSphere && (
-          <g className="oceans">
-            <path d={pathSphere} fill={theme.background.fill} />
-          </g>
+          <path
+            d={pathSphere}
+            fill={
+              theme.background.gradient
+                ? "url(#oceanGradient)"
+                : theme.background.fill
+            }
+          />
         )}
 
         {graticulePath && (

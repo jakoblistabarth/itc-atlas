@@ -2,6 +2,7 @@ export type Appearance = {
   text?: TextAppearance;
   opacity?: number;
   fill?: string;
+  gradient?: ColorStop[];
   fillOpacity?: number;
   pattern?: PatternAppearance;
   stroke?: string;
@@ -34,3 +35,5 @@ export type PatternAppearance = {
   strokeWidth?: number;
   family?: string;
 };
+
+export type ColorStop = { color: string; stop: number };

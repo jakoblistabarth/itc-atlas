@@ -10,4 +10,5 @@ export type MapTheme = {
   label?: TextAppearance;
   hasGraticuleLables?: boolean;
   hasOutline?: boolean;
+  hasShadow?: boolean;
 };

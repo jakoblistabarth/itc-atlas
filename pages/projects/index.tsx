@@ -48,6 +48,13 @@ const Travels: NextPage<Props> = ({ projects }) => {
               </h2>
             </a>
           </Link>
+          <Link href="/projects/projectsafrica">
+            <a className={styles.card}>
+              <h2>
+                Sub-Saharan Africa <MdOutlineArrowRightAlt />
+              </h2>
+            </a>
+          </Link>
         </div>
         <p>
           <BackToHome />

@@ -9,6 +9,7 @@ const anthrazit = "#444";
 const eth: MapTheme = {
   hasGraticuleLables: true,
   hasOutline: true,
+  hasShadow: false,
   background: {
     fill: petrol,
   },
