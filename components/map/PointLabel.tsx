@@ -4,25 +4,31 @@ import { TextAppearance } from "../../types/Appearance";
 
 type Props = React.PropsWithChildren<{
   xy: Position;
-  offset?: {
-    x: number;
-    y: number;
-  };
+  offsetX?: number;
+  offsetY?: number;
   style?: TextAppearance & {
-    size: number;
+    fontSize: number;
   };
 }>;
 
 const PointLabel: FC<Props> = ({
   xy,
-  offset = { x: 10, y: 0 },
-  style = { size: 10 },
+  offsetX = 10,
+  offsetY = 0,
+  style = { fontSize: 10 },
   children,
 }) => {
   return (
     <g
-      fontSize={style.size}
-      transform={`translate(${xy[0] + offset.x}, ${xy[1] + style.size * 0.5})`}
+      fontSize={style.fontSize}
+      fontFamily={style.fontFamily}
+      style={{
+        textTransform: style.textTransform ?? "none",
+        letterSpacing: style.letterSpacing,
+      }}
+      transform={`translate(${xy[0] + offsetX}, ${
+        xy[1] - style.fontSize * 0.25 + offsetY
+      })`}
     >
       {children}
     </g>

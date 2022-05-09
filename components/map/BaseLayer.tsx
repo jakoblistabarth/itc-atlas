@@ -1,5 +1,5 @@
 import * as d3 from "d3";
-import { geoPath, GeoSphere, GeoProjection } from "d3-geo";
+import { geoPath, GeoSphere, GeoProjection, geoCircle } from "d3-geo";
 import type { FC } from "react";
 import * as topojson from "topojson-client";
 import type { Topology } from "topojson-specification";
@@ -7,23 +7,37 @@ import themes from "../../lib/styles/themes";
 import type { MapTheme } from "../../types/MapTheme";
 import GraticuleLabelLayer from "./GraticuleLabelLayer";
 import geoEquator from "../../lib/cartographic/geoEquator";
+import geoCirclesLat from "../../lib/cartographic/geoCirclesLat";
+import ShadowLayer from "./ShadowLayer";
+import BendedLabel from "./BendedLabel";
+import PointLabel from "./PointLabel";
+import { nanoid } from "nanoid";
+import RadialGradient from "../defs/radialGradient";
 
 type Props = {
-  data: Topology<{ [name: string]: any }>;
+  data: Topology;
   // object?: string; // TODO: to be Implemented
   projection: GeoProjection;
   theme?: MapTheme;
+  labels?: boolean;
 };
 
-const BaseLayer: FC<Props> = ({ data, projection, theme = themes.muted }) => {
+const BaseLayer: FC<Props> = ({
+  data,
+  projection,
+  theme = themes.muted,
+  labels = false,
+}) => {
   const path = geoPath(projection);
   const sphere: GeoSphere = { type: "Sphere" };
   const pathSphere = path(sphere);
   const graticule = d3.geoGraticule10();
   const graticulePath = path(graticule);
   const equatorPath = path(geoEquator);
+  const circlesPath = path(geoCirclesLat);
   const land = topojson.merge(data, data.objects.countries.geometries);
   const landPath = path(land);
+  const countries = topojson.feature(data, data.objects.countries);
   const borders = topojson.mesh(
     data,
     data.objects.countries,
@@ -90,6 +104,16 @@ const BaseLayer: FC<Props> = ({ data, projection, theme = themes.muted }) => {
           </g>
         )}
 
+        {circlesPath && (
+          <path
+            d={circlesPath}
+            fill={"none"}
+            stroke={theme.graticule.stroke}
+            strokeDasharray="4, 2, 1, 2"
+            strokeWidth={(theme.graticule.strokeWidth ?? 0.5) * 2}
+          />
+        )}
+
         {landPath && (
           <g className="countries">
             <path d={landPath} fill={theme.base.fill} />
@@ -109,14 +133,46 @@ const BaseLayer: FC<Props> = ({ data, projection, theme = themes.muted }) => {
         )}
 
         {hasGraticuleLabels && (
-          <GraticuleLabelLayer
-            style={theme.graticuleLabel}
-            projection={projection}
-            latRange={{ min: -60, max: 60, step: 10 }}
-            lonRange={{ min: -180, max: 180, step: 30 }}
-          />
+          <>
+            <GraticuleLabelLayer
+              key={nanoid()}
+              style={theme.graticuleLabel}
+              projection={projection}
+              latRange={{ min: -60, max: 60, step: 10 }}
+              lonRange={{ min: -180, max: 180, step: 30 }}
+            />
+            {geoCirclesLat.features.map((circle) => {
+              return (
+                <BendedLabel
+                  key={nanoid()}
+                  graticuleType="lat"
+                  degree={circle.properties?.lat}
+                  projection={projection}
+                  yOffset={7}
+                  xOffset={10}
+                  style={theme.graticuleLabel}
+                >
+                  {circle.properties?.name}
+                </BendedLabel>
+              );
+            })}
+          </>
         )}
+
+        {labels &&
+          countries.features.map((country) => {
+            return (
+              <PointLabel
+                xy={projection(d3.geoCentroid(country.geometry))}
+                style={theme.label}
+                offset={{ x: 0, y: -100 }}
+              >
+                <text textAnchor="middle">{country.properties.name}</text>
+              </PointLabel>
+            );
+          })}
       </g>
+
       {hasOutline && (
         <use
           xlinkHref="#outline"
