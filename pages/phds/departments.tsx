@@ -166,7 +166,7 @@ const PhdDepartments: NextPage<Props> = ({ phdCandidates, world }) => {
   );
 };
 
-export const getStaticProps: Awaited<GetStaticProps<Props>> = async () => {
+export const getStaticProps: GetStaticProps<Props> = async () => {
   const phdCandidates = await getPhdCandidates();
   const world = await getCountries();
   return {

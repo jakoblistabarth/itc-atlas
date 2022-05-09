@@ -8,6 +8,5 @@ export default async function handler(
   res: NextApiResponse
 ) {
   const { q } = req.query ?? UnLevel.Countries;
-  const level = typeof q === "string" ? q : q[0];
-  res.status(200).json(await getUnsdCodes(level));
+  res.status(200).json(await getUnsdCodes(q));
 }

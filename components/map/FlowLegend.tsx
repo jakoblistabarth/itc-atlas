@@ -46,7 +46,7 @@ const FlowLegend: FC<{
                 fill={style.fill ?? "none"}
                 opacity={style.opacity ?? "1"}
                 strokeWidth={scaleWidth(entry)}
-                marker-end={`url(#${style.markerEnd})`}
+                markerEnd={`url(#${style.markerEnd})`}
               />
               <text x={100} y={fontSize / 2} fontSize={fontSize}>
                 {fInt(entry) + " " + unitLabel ?? null}

@@ -1,9 +1,3 @@
-import { DataFrame, Row } from "./DataFrame";
-
-// export interface ProjectTable extends Table {
-//   Array<Project>
-// }
-
 export type Project = {
   projectID: string | null;
   projectName: string | null;

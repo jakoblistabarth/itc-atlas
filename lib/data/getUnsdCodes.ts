@@ -8,7 +8,7 @@ export default async function getUnsdCodes(level: UnLevel) {
 
   const countryCodes = countries.map((d) => ({
     code: d["Region Code"],
-    name: d["Region Name"],
+    name: d["Country or Area"],
   }));
 
   const regions = Array.from(new Set(countries.map((d) => d["Region Code"])))

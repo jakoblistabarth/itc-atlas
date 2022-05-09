@@ -7,18 +7,18 @@ const NominalLegend: FC<{
   title: string;
 }> = ({ entries, title }) => {
   const fontSize = 10;
-  const radius = fontSize * 0.75;
+  const radius = fontSize * 0.5;
   return (
     <g transform={`translate(0, 0)`}>
       <LegendTitle>{title}</LegendTitle>
       {entries.map((entry, index) => (
         <g
           key={nanoid()}
-          transform={`translate(0, ${fontSize * 4 + index * fontSize * 2})`}
+          transform={`translate(0, ${fontSize * 4 + index * fontSize * 1.75})`}
         >
           <circle
             cx={radius}
-            cy={-radius * 0.5}
+            cy={-radius * 0.75}
             r={radius}
             fill={entry.color}
           />
