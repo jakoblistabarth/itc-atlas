@@ -5,6 +5,7 @@ import type { Appearance } from "../../types/Appearance";
 import Flow from "./Flow";
 import PointSymbol from "./PointSymbol";
 import ArrowHead from "../defs/marker/ArrowHead";
+import { nanoid } from "nanoid";
 
 const FlowLayer: FC<{
   data: ODMatrix;
@@ -25,12 +26,18 @@ const FlowLayer: FC<{
         ]);
         return (
           position && (
-            <PointSymbol xy={position} radius={1} style={pointStyle} />
+            <PointSymbol
+              key={nanoid()}
+              xy={position}
+              radius={1}
+              style={pointStyle}
+            />
           )
         );
       })}
       {data.flows.features.map((feature) => (
         <Flow
+          key={nanoid()}
           projection={projection}
           datum={feature}
           scale={scaleWidth}

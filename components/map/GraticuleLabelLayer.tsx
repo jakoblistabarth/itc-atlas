@@ -4,6 +4,7 @@ import type { TextAppearance } from "../../types/Appearance";
 import * as d3 from "d3";
 import GraticuleLabel from "./GraticuleLabel";
 import { GraticuleLabelOptions } from "../../types/GraticuleLableOptions";
+import { nanoid } from "nanoid";
 
 const GraticuleLabelLayer: FC<{
   projection: GeoProjection;
@@ -29,6 +30,7 @@ const GraticuleLabelLayer: FC<{
           lon > -180 && (
             <>
               <GraticuleLabel
+                key={nanoid()}
                 type="longitude"
                 xy={xyTop}
                 fontSize={style?.fontSize ?? 10}
@@ -36,6 +38,7 @@ const GraticuleLabelLayer: FC<{
                 {lon}°
               </GraticuleLabel>
               <GraticuleLabel
+                key={nanoid()}
                 type="longitude"
                 xy={xyBottom}
                 fontSize={style?.fontSize ?? 10}
@@ -53,6 +56,7 @@ const GraticuleLabelLayer: FC<{
         return (
           <>
             <GraticuleLabel
+              key={nanoid()}
               type="latitude"
               xy={xyLeft}
               fontSize={style?.fontSize ?? 10}
@@ -60,6 +64,7 @@ const GraticuleLabelLayer: FC<{
               {lat}°
             </GraticuleLabel>
             <GraticuleLabel
+              key={nanoid()}
               type="latitude"
               xy={xyRight}
               fontSize={style?.fontSize ?? 10}

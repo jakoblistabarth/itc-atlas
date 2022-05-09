@@ -4,6 +4,7 @@ import { ScaleLinear } from "d3";
 import { fInt } from "../../lib/utilities/formaters";
 import { Appearance } from "../../types/Appearance";
 import LegendTitle from "./LegendTitle";
+import { nanoid } from "nanoid";
 
 const FlowLegend: FC<{
   x?: number;
@@ -38,7 +39,7 @@ const FlowLegend: FC<{
           const fontSize = style.text?.fontSize ?? 10;
 
           return (
-            <g transform={`translate(10, ${index * 30})`}>
+            <g key={nanoid()} transform={`translate(10, ${index * 30})`}>
               <path
                 d={linePath}
                 stroke={style.stroke ?? "black"}
