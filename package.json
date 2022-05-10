@@ -10,6 +10,8 @@
     "type-check": "npx tsc --noEmit"
   },
   "dependencies": {
+    "@react-three/drei": "^9.7.1",
+    "@react-three/fiber": "^8.0.13",
     "csvtojson": "^2.0.10",
     "d3": "^7.3.0",
     "d3-geo": "^3.0.1",
@@ -17,11 +19,12 @@
     "fuse.js": "^6.5.3",
     "lodash": "^4.17.21",
     "nanoid": "^3.3.2",
-    "next": "12.1.0",
+    "next": "^12.1.6",
     "prop-types": "^15.8.1",
-    "react": "17.0.2",
-    "react-dom": "17.0.2",
+    "react": "^18.1.0",
+    "react-dom": "^18.1.0",
     "react-icons": "^4.3.1",
+    "three": "^0.140.2",
     "topojson-client": "^3.1.0",
     "xlsx": "^0.18.4"
   },
@@ -31,6 +34,7 @@
     "@types/lodash": "^4.14.181",
     "@types/node": "17.0.21",
     "@types/react": "17.0.40",
+    "@types/three": "^0.140.0",
     "@types/topojson-client": "^3.1.1",
     "eslint": "8.11.0",
     "eslint-config-next": "^0.2.4",
