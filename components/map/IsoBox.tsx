@@ -3,6 +3,7 @@ import { Appearance } from "../../types/Appearance";
 import type { Position } from "geojson";
 import PointLabel from "./PointLabel";
 import { ScaleLinear } from "d3";
+import { nanoid } from "nanoid";
 
 const IsoBox: FC<{
   xy: Position[];
@@ -56,6 +57,7 @@ const IsoBox: FC<{
       />
       {faces.map((face) => (
         <path
+          key={nanoid()}
           transform={`translate(0, ${-height + side / 2})`}
           d={face}
           fill={style?.fill ?? "none"}

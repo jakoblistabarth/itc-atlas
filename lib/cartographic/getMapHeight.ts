@@ -1,7 +1,11 @@
 import { GeoProjection, GeoSphere } from "d3-geo";
 import * as d3 from "d3";
 
-function getMapHeight(width: number, projection: GeoProjection) {
+function getMapHeight(
+  width: number,
+  projection: GeoProjection,
+  marginBottom: number = 0
+) {
   const sphere: GeoSphere = { type: "Sphere" };
   const [[x0, y0], [x1, y1]] = d3
     .geoPath(projection.fitWidth(width, sphere))
@@ -9,7 +13,7 @@ function getMapHeight(width: number, projection: GeoProjection) {
   const dy = Math.ceil(y1 - y0),
     l = Math.min(Math.ceil(x1 - x0), dy);
   projection.scale((projection.scale() * (l - 1)) / l).precision(0.2);
-  return dy;
+  return dy + marginBottom;
 }
 
 export default getMapHeight;

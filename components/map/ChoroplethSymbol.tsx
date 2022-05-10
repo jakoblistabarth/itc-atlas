@@ -14,9 +14,14 @@ const PointSymbol: FC<{
   const featurePath = path(feature);
   if (!featurePath) return <></>;
   return (
+    // TODO: insert pattern defs here, remove from baselayer
     <path
       d={featurePath}
-      fill={`url(#${theme.choropleth?.pattern?.id})`}
+      fill={
+        theme.choropleth?.pattern?.id
+          ? `url(#${theme.choropleth?.pattern?.id})`
+          : theme.choropleth?.fill
+      }
       stroke={theme.choropleth?.stroke}
       strokeWidth={theme.choropleth?.strokeWidth}
       strokeLinejoin={theme.choropleth?.strokeLineJoin ?? "round"}

@@ -1,18 +1,18 @@
 import { FC } from "react";
+import GaussianBlur from "../defs/filter/GaussianBlur";
 
 const ShadowLayer: FC<{
   geoPath: string;
   blur: number;
   color: string;
 }> = ({ geoPath, blur, color }) => {
+  const filterId = "blurFilter";
   return (
     <g>
       <defs>
-        <filter id="f1" x="-50%" y="-50%" width="200%" height="200%">
-          <feGaussianBlur in="sourceAlpha" stdDeviation={blur} />
-        </filter>
+        <GaussianBlur id={filterId} blur={100} />
       </defs>
-      <path fill={color} d={geoPath} filter="url(#f1)" />)
+      <path fill={color} d={geoPath} filter={`url(#${filterId})`} />)
     </g>
   );
 };

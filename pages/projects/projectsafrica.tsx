@@ -10,7 +10,12 @@ import getProjects from "../../lib/data/getProjects";
 import BaseLayer from "../../components/map/BaseLayer";
 import Heading, { Headings } from "../../components/heading";
 import { FeatureCollection, Feature, Point, MultiPolygon } from "geojson";
-import { AreaCode } from "../../types/UnsdCodes";
+import type {
+  Topology,
+  Objects,
+  GeometryCollection,
+} from "topojson-specification";
+import type { AreaCode } from "../../types/UnsdCodes";
 import getUnsdCountries from "../../lib/data/getUnsdCountries";
 import { nanoid } from "nanoid";
 import themes from "../../lib/styles/themes";
@@ -21,7 +26,7 @@ import IsoBox from "../../components/map/IsoBox";
 
 type Props = {
   projects: Project[];
-  world: Awaited<ReturnType<typeof getCountries>>;
+  world: Topology<Objects<{ type: GeometryCollection }>>;
   areaCodes: AreaCode[];
 };
 

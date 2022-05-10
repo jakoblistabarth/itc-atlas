@@ -1,5 +1,5 @@
 import * as d3 from "d3";
-import { geoPath, GeoSphere, GeoProjection, geoCircle } from "d3-geo";
+import { geoPath, GeoSphere, GeoProjection } from "d3-geo";
 import type { FC } from "react";
 import * as topojson from "topojson-client";
 import type { Topology } from "topojson-specification";

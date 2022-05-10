@@ -18,6 +18,9 @@ const muted: MapTheme = {
     strokeWidth: 1,
     fill: red,
   },
+  choropleth: {
+    fill: "black",
+  },
 };
 
 export default muted;
