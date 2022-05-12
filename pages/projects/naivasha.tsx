@@ -10,14 +10,14 @@ import { Environment, OrbitControls } from "@react-three/drei";
 import NaivashaRegion from "../../components/models/NaivashaRegion";
 import Cubes from "../../components/models/TestCubes";
 import LocatorMap from "../../components/map/LocatorMap";
+import Footer from "../../components/footer";
 import getCountries from "../../lib/data/getCountries";
 
 type Props = {
-  world: Topology;
   model: string;
-};
+} & SharedPageProps;
 
-const Naivasha: NextPage<Props> = ({ world, model }) => {
+const Naivasha: NextPage<Props> = ({ model, countries }) => {
   return (
     <>
       <Head>
@@ -28,7 +28,8 @@ const Naivasha: NextPage<Props> = ({ world, model }) => {
 
       <main className={styles.main}>
         <Heading Tag={Headings.H1}>Naivasha Region</Heading>
-        <LocatorMap data={world} highlight={["AUS", "DEU"]} />
+        <LocatorMap data={countries} highlight={["NLD"]} />
+        <Heading Tag={Headings.H2}>3D Block Diagram</Heading>
         <div style={{ width: "100%", height: "500px" }}>
           <Canvas shadows>
             <Suspense fallback={null}>
@@ -53,16 +54,22 @@ const Naivasha: NextPage<Props> = ({ world, model }) => {
           </Canvas>
         </div>
       </main>
+      <Footer />
     </>
   );
 };
 
+type SharedPageProps = {
+  countries: any;
+};
+
 export const getStaticProps: GetStaticProps<Props> = async () => {
-  const world = await getCountries();
+  const [countries] = await Promise.all([getCountries()]);
+
   return {
     props: {
       model: "",
-      world,
+      countries,
     },
   };
 };

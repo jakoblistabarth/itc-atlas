@@ -10,7 +10,7 @@ const ShadowLayer: FC<{
   return (
     <g>
       <defs>
-        <GaussianBlur id={filterId} blur={100} />
+        <GaussianBlur id={filterId} blur={30} />
       </defs>
       <path fill={color} d={geoPath} filter={`url(#${filterId})`} />)
     </g>
