@@ -14,12 +14,20 @@ const muted: MapTheme = {
     stroke: lightgrey,
   },
   symbol: {
-    stroke: lightgrey,
+    stroke: red,
     strokeWidth: 1,
     fill: red,
+    fillOpacity: 0.1,
+  },
+  scaledPie: {
+    fillOpacity: 1,
+    stroke: lightgrey,
+    strokeWidth: 2,
   },
   choropleth: {
-    fill: "black",
+    fill: "none",
+    stroke: "black",
+    strokeWidth: 1,
   },
 };
 

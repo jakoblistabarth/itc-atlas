@@ -1,10 +1,11 @@
 import styles from "../styles/summarytable.module.scss";
-import { FC, useEffect, useRef } from "react";
+import { FC } from "react";
 import * as d3 from "d3";
 import { colorMap } from "../lib/summarytable/colorMap";
 import Heading, { Headings } from "./heading";
 import type { Description } from "../types/DataFrame";
 import { fFloat } from "../lib/utilities/formaters";
+import { nanoid } from "nanoid";
 
 type SummaryTableCardProps = {
   description: Description;
@@ -55,6 +56,7 @@ const SummaryTableCard: FC<SummaryTableCardProps> = ({ description }) => {
         >
           {description.columns.map((column) => (
             <rect
+              key={nanoid()}
               y={0}
               x={scale(column.label)}
               fill={colorMap.get(column.type)?.baseColor ?? "grey"}

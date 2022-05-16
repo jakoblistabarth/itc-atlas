@@ -19,7 +19,6 @@ function getColumnIcon(type: ColumnType) {
   switch (type) {
     case "ordinal":
       return <MdFormatListBulleted />;
-
     case "date":
       return <MdCalendarToday />;
     case "array":

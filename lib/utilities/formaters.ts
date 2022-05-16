@@ -6,3 +6,4 @@ export const fInt = d3.format(",");
 export const fDateLong = d3.timeFormat("%B %d, %Y");
 export const fDateShort = d3.timeFormat("%Y-%m-%d");
 export const fDateMonthYear = d3.timeFormat("%B, %Y");
+export const fDateYear = d3.timeFormat("%Y");

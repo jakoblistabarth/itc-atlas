@@ -7,6 +7,7 @@ export type MapTheme = {
   base: Appearance;
   choropleth?: Appearance;
   symbol?: Appearance;
+  scaledPie?: Appearance;
   label?: TextAppearance;
   hasGraticuleLables?: boolean;
   hasOutline?: boolean;

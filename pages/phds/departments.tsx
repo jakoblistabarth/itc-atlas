@@ -32,7 +32,6 @@ const PhdDepartments: NextPage<Props> = ({ phdCandidates, world }) => {
   };
 
   const theme = themes.muted;
-  // const projection = geoBertin1953();
   const projection = geoInterruptedMollweide();
   dimension.height = getMapHeight(dimension.width, projection);
 
@@ -126,7 +125,7 @@ const PhdDepartments: NextPage<Props> = ({ phdCandidates, world }) => {
       <main className={styles.main}>
         <Heading Tag={Headings.H1}>ITC's PhD candidates</Heading>
         <svg width={dimension.width} height={dimension.height}>
-          <BaseLayer data={world} projection={projection} />
+          <BaseLayer data={world} projection={projection} theme={theme} />
           <g id="symbols">
             {points.features.map((point) => {
               if (!point.properties?.departments) return;
@@ -138,7 +137,7 @@ const PhdDepartments: NextPage<Props> = ({ phdCandidates, world }) => {
                   colorScheme={Object.values(departmentColors)}
                   pieSize={point.properties?.totalPhdCount}
                   data={point.properties?.departments}
-                  style={theme.symbol}
+                  style={theme.scaledPie}
                 />
               );
             })}

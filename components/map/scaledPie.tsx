@@ -48,6 +48,7 @@ const ScaledPie: FC<{
           d={arcGenerator(sector) ?? undefined}
           fill={color(sector.data.label)}
           fillOpacity={style?.fillOpacity ?? 1}
+          paintOrder={"stroke"}
           stroke={style?.stroke ?? style?.fill ?? "black"}
           strokeOpacity={style?.strokeOpacity ?? 1}
           strokeWidth={style?.strokeWidth ?? 0}

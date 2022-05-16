@@ -1,12 +1,12 @@
 import * as d3 from "d3";
+import { nanoid } from "nanoid";
 import type { NextPage } from "next";
 import Head from "next/head";
-import { useEffect, useRef } from "react";
 import Heading, { Headings } from "../../components/heading";
 import getProjects from "../../lib/data/getProjects";
 import getUnsdCountries from "../../lib/data/getUnsdCountries";
 import isPartOfUnsdGroup from "../../lib/isPartOfUnsdGroup";
-import { fDateLong } from "../../lib/utilities/formaters";
+import { fDateYear } from "../../lib/utilities/formaters";
 import styles from "../../styles/home.module.css";
 import { Project, ProjectStatus } from "../../types/Project";
 import { AreaCode, UnGroupings } from "../../types/UnsdCodes";
@@ -32,87 +32,33 @@ const Timeline: NextPage<TimelineProps> = ({ projects, countries }) => {
     d3.ascending(new Date(a.dateStart), new Date(b.dateStart))
   );
 
-  const margin = {
-      top: 10,
-      right: 30,
-      bottom: 80,
-      left: 250,
+  const wrapper = {
+      width: 1280,
+      height: 3500,
     },
-    width = 1080 - margin.left - margin.right,
-    height = 2000 - margin.top - margin.bottom;
+    margin = {
+      top: 30,
+      right: 30,
+      bottom: 30,
+      left: 30,
+    },
+    bounds = {
+      width: wrapper.width - margin.left - margin.right,
+      height: wrapper.height - margin.top - margin.bottom,
+    };
 
-  const x = d3
-    .scaleTime()
-    .range([0, width])
-    .domain([
-      // TODO: specify fallbacks
-      d3.min(projectsSelection.map((d) => new Date(d.dateStart))) ??
-        new Date("1950"),
-      d3.max(projectsSelection.map((d) => new Date(d.dateEnd))) ?? new Date(),
-    ]);
+  const minDate =
+    d3.min(projectsSelection.map((d) => new Date(d.dateStart))) ??
+    new Date("1950");
+  const maxDate =
+    d3.max(projectsSelection.map((d) => new Date(d.dateEnd))) ?? new Date();
+
+  const x = d3.scaleTime().range([0, bounds.width]).domain([minDate, maxDate]);
 
   const y = d3
     .scalePoint()
-    .range([0, height])
-    .domain(projectsSelection.map((d) => d.projectID))
-    .padding(1);
-
-  useEffect(() => {
-    const svgEl = d3
-      .select(svgRef.current)
-      .attr("width", width + margin.left + margin.right)
-      .attr("height", height + margin.top + margin.bottom)
-      .append("g")
-      .attr("transform", `translate(${margin.left}, ${margin.top})`);
-
-    svgEl
-      .append("g")
-      .attr("transform", `translate(0,${height})`)
-      .call(d3.axisBottom(x))
-      .selectAll("text")
-      .style("text-anchor", "center");
-
-    svgEl.append("g").call(d3.axisLeft(y));
-
-    // Lines
-    svgEl
-      .append("g")
-      .attr("id", "lines")
-      .selectAll("line")
-      .data(projectsSelection)
-      .enter()
-      .append("line")
-      .attr("x1", (d) => x(new Date(d.dateStart)))
-      .attr("x2", (d) => x(new Date(d.dateEnd)))
-      .attr("y1", (d) => y(d.projectID) ?? null)
-      .attr("y2", (d) => y(d.projectID) ?? null)
-      .attr("stroke", (d) =>
-        d.countries.some((e) => {
-          return isPartOfUnsdGroup(countries, e, UnGroupings.LDC);
-        })
-          ? "red"
-          : "black"
-      )
-      .attr("stroke-dasharray", (d) =>
-        new Date(d.dateEnd) < new Date() ? "none" : "1"
-      )
-      .attr("stroke-opacity", 0.5)
-      .attr("stroke-width", (d) =>
-        d.status === ProjectStatus.Undone ? "1px" : "2px"
-      )
-      .append("svg:title")
-      .text(
-        (d) =>
-          d.projectShortName +
-          " (" +
-          fDateLong(new Date(d.dateStart)) +
-          "-" +
-          fDateLong(new Date(d.dateEnd)) +
-          ")"
-      );
-  });
-
-  const svgRef = useRef(null);
+    .range([0, bounds.height])
+    .domain(projectsSelection.map((d) => d.projectID));
 
   return (
     <>
@@ -123,8 +69,72 @@ const Timeline: NextPage<TimelineProps> = ({ projects, countries }) => {
 
       <main className={styles.main}>
         <Heading Tag={Headings.H1}>Projects</Heading>
-        <p>681 projects</p>
-        <svg ref={svgRef} width={1080} height={2000} />
+        <p>{projectsSelection.length} projects</p>
+        <div style={{ overflowX: "scroll", maxHeight: "300px" }}>
+          <svg width={wrapper.width} height={wrapper.height}>
+            <g transform={`translate(${margin.left}, ${margin.top})`}>
+              <g>
+                {x.ticks().map((tick) => (
+                  <g key={nanoid()}>
+                    <line
+                      x1={x(tick)}
+                      x2={x(tick)}
+                      y1={0}
+                      y2={bounds.height}
+                      strokeWidth={0.5}
+                      stroke={"lightgrey"}
+                    />
+                    <text
+                      fontSize={10}
+                      textAnchor="middle"
+                      y={-margin.top / 2}
+                      x={x(tick)}
+                    >
+                      {fDateYear(tick)}
+                    </text>
+                    <text
+                      fontSize={10}
+                      textAnchor="middle"
+                      y={bounds.height + margin.top / 2}
+                      x={x(tick)}
+                    >
+                      {fDateYear(tick)}
+                    </text>
+                  </g>
+                ))}
+                {projectsSelection.map((project) => (
+                  <g key={nanoid()}>
+                    <g transform={`translate(0,${y(project.projectID)})`}>
+                      <line
+                        x1={x(new Date(project.dateStart))}
+                        x2={x(new Date(project.dateEnd))}
+                        y1={0}
+                        y2={0}
+                        stroke={
+                          project.countries.some((e) => {
+                            return isPartOfUnsdGroup(
+                              countries,
+                              e,
+                              UnGroupings.LDC
+                            );
+                          })
+                            ? "red"
+                            : "black"
+                        }
+                        strokeWidth={
+                          project.status === ProjectStatus.Ongoing ? 1 : 2
+                        }
+                        strokeLinecap={"round"}
+                        fill={"none"}
+                      ></line>
+                      {/* <text fontSize={7}>{project.projectShortName}</text> */}
+                    </g>
+                  </g>
+                ))}
+              </g>
+            </g>
+          </svg>
+        </div>
       </main>
     </>
   );

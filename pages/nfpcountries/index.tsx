@@ -51,7 +51,6 @@ const NfpCountries: NextPage<Props> = ({ nfps }) => {
             {d3.range(yearRange[0], yearRange[1] + 1, 1).map((year) => {
               const yearData = perYear.get(year);
               const y = scaleTime(year);
-              console.log(year, y, yearData?.length);
               return (
                 <g transform={`translate(${scaleTime(year)}, ${maxSize})`}>
                   <circle
