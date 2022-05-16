@@ -1,5 +1,5 @@
 export enum ColumnType {
-  Contiuous = "continuous",
+  Continuous = "continuous",
   Ordinal = "ordinal",
   Date = "date",
   Array = "array",

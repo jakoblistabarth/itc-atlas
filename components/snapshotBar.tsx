@@ -1,9 +1,13 @@
-import { FC, useEffect, useRef } from "react";
+import { FC, useState } from "react";
 import * as d3 from "d3";
 import { colorMap } from "../lib/summarytable/colorMap";
 import { ColumnType } from "../types/Column";
-import { fPercentage } from "../lib/utilities/formaters";
 import { Column } from "../types/DataFrame";
+import { nanoid } from "nanoid";
+import { usePopperTooltip } from "react-popper-tooltip";
+import "react-popper-tooltip/dist/styles.css";
+import { fPercentage } from "../lib/utilities/formaters";
+import { createStack } from "../lib/summarytable/stack";
 
 type Props = {
   column: Column;
@@ -11,7 +15,9 @@ type Props = {
 };
 
 const SnapshotBar: FC<Props> = ({ column, type }) => {
-  const ref = useRef<HTMLDivElement>(null);
+  const [tooltipData, setTooltipData] = useState<
+    Partial<ReturnType<typeof createStack>[number]>
+  >({});
 
   const width = 200;
   const height = 30;
@@ -22,30 +28,6 @@ const SnapshotBar: FC<Props> = ({ column, type }) => {
 
   const innerHeight = height - margin.vertical * 2;
   const innerWidth = width - margin.horizontal * 2;
-
-  function createStack(column: Column) {
-    const ColumnNoNA = column.filter(
-      (d) => d !== undefined && d !== null && d !== "" && d != "null"
-    );
-
-    const frequencies = d3.rollup(
-      ColumnNoNA,
-      (v) => v.length,
-      (d) => d
-    );
-
-    const total = ColumnNoNA.length;
-    let cnt = 0;
-    return Array.from(frequencies)
-      .sort((a, b) => b[1] - a[1])
-      .map((d) => ({
-        value: d[0],
-        cnt: d[1] / total,
-        start: cnt / total,
-        end: (cnt += d[1]) / total,
-      }))
-      .sort((a, b) => a.start - b.start);
-  }
 
   const stack = createStack(column);
 
@@ -65,80 +47,111 @@ const SnapshotBar: FC<Props> = ({ column, type }) => {
       colorMap.get(type)?.brighter ?? "lightgrey",
     ]);
 
-  useEffect(() => {
-    const svgContainer = d3.select(ref.current);
+  // const tooltip = d3
+  //   .select("body")
+  //   .append("div")
+  //   .attr("id", "tooltip")
+  //   .style("position", "absolute")
+  //   .style("display", "none")
+  //   .style("background-color", "white")
+  //   .style("padding", "5px")
+  //   .style("box-shadow", "0 0 5px rgba(0,0,0,.5")
+  //   .style("font-size", "x-small");
 
-    const svgElement = svgContainer
-      .append("svg")
-      .attr("width", width)
-      .attr("height", height);
+  // This happens within useTooltip: const tooltip = d3.select("#tooltip")
 
-    const inner = svgElement
-      .append("g")
-      .attr("transform", `translate(${margin.horizontal},${margin.vertical})`);
+  // const { mouseover, mousemove, mouseleave } = useTooltip({
+  //   onShow: (event) =>  d3.select(event.target).style("stroke", "black"),
+  //   onHide: (event) => d3.select(event.target).style("stroke", "none").style("opacity", 1),
+  //   component: (d) => <><strong>{d.value}</strong><br />{pctFormat(d.count)}</>
+  // })
 
-    const tooltip = d3
-      .select("body")
-      .append("div")
-      .attr("id", "tooltip")
-      .style("position", "absolute")
-      .style("display", "none")
-      .style("background-color", "white")
-      .style("padding", "5px")
-      .style("box-shadow", "0 0 5px rgba(0,0,0,.5")
-      .style("font-size", "x-small");
+  // const mouseover = (event) => {
+  //   tooltip.style("display", "inline"); // onShow()
+  //   d3.select(event.target).style("stroke", "black");
+  // };
+  // const mousemove = (event, d) => {
+  //   const tooltipHeight = tooltip.node()?.offsetHeight ?? 0;
+  //   const tooltipWidth = tooltip.node()?.offsetWidth ?? 0;
+  //   tooltip
+  //     .style(
+  //       "left",
+  //       -tooltipWidth / 2 +
+  //         d3.pointer(event, d3.select("body").node())[0] +
+  //         "px"
+  //     )
+  //     .style(
+  //       "top",
+  //       d3.pointer(event, d3.select("body").node())[1] -
+  //         tooltipHeight -
+  //         5 +
+  //         "px"
+  //     )
+  //     .html(`<strong>${d.value}</strong><br>${fPercentage(d.count)}`);
+  // };
+  // const mouseleave = (event) => {
+  //   tooltip.style("display", "none"); // onHide();
+  //   d3.select(event.target).style("stroke", "none").style("opacity", 1);
+  // };
 
-    // This happens within useTooltip: const tooltip = d3.select("#tooltip")
+  //   inner
+  //     .selectAll("rect")
+  //     .data(stack)
+  //     .join("rect")
+  //     .attr("x", (d) => x(d.start))
+  //     .attr("y", 0)
+  //     .attr("width", (d) => Math.abs(x(d.start) - x(d.end)))
+  //     .attr("height", innerHeight)
+  //     .attr("fill", (d) => color(d.start))
+  //     .on("mouseover", mouseover)
+  //     .on("mousemove", mousemove)
+  //     .on("mouseleave", mouseleave);
+  // });
 
-    // const { mouseover, mousemove, mouseleave } = useTooltip({
-    //   onShow: (event) =>  d3.select(event.target).style("stroke", "black"),
-    //   onHide: (event) => d3.select(event.target).style("stroke", "none").style("opacity", 1),
-    //   component: (d) => <><strong>{d.value}</strong><br />{pctFormat(d.cnt)}</>
-    // })
+  const {
+    getArrowProps,
+    getTooltipProps,
+    setTooltipRef,
+    setTriggerRef,
+    visible,
+  } = usePopperTooltip({ followCursor: true });
 
-    const mouseover = (event) => {
-      tooltip.style("display", "inline"); // onShow()
-      d3.select(event.target).style("stroke", "black");
-    };
-    const mousemove = (event, d) => {
-      const tooltipHeight = tooltip.node()?.offsetHeight ?? 0;
-      const tooltipWidth = tooltip.node()?.offsetWidth ?? 0;
-      tooltip
-        .style(
-          "left",
-          -tooltipWidth / 2 +
-            d3.pointer(event, d3.select("body").node())[0] +
-            "px"
-        )
-        .style(
-          "top",
-          d3.pointer(event, d3.select("body").node())[1] -
-            tooltipHeight -
-            5 +
-            "px"
-        )
-        .html(`<strong>${d.value}</strong><br>${fPercentage(d.cnt)}`);
-    };
-    const mouseleave = (event) => {
-      tooltip.style("display", "none"); // onHide();
-      d3.select(event.target).style("stroke", "none").style("opacity", 1);
-    };
-
-    inner
-      .selectAll("rect")
-      .data(stack)
-      .join("rect")
-      .attr("x", (d) => x(d.start))
-      .attr("y", 0)
-      .attr("width", (d) => Math.abs(x(d.start) - x(d.end)))
-      .attr("height", innerHeight)
-      .attr("fill", (d) => color(d.start))
-      .on("mouseover", mouseover)
-      .on("mousemove", mousemove)
-      .on("mouseleave", mouseleave);
-  });
-
-  return <div ref={ref} />;
+  return (
+    <div ref={setTriggerRef}>
+      {/* <button type="button" ref={setTriggerRef}>
+        Trigger element
+      </button> */}
+      <svg width={width} height={height}>
+        <g transform={`translate(${margin.horizontal},${margin.vertical})`}>
+          {stack.map((d) => (
+            <rect
+              key={nanoid()}
+              x={x(d.start)}
+              y={0}
+              width={Math.abs(x(d.start) - x(d.end))}
+              height={innerHeight}
+              fill={color(d.start)}
+              onMouseOver={(e) => {
+                setTooltipData(d);
+                e.target.attributes.stroke = "black";
+              }}
+              onMouseLeave={(e) => setTooltipData({})}
+            />
+          ))}
+        </g>
+      </svg>
+      {visible && tooltipData && (
+        <div
+          ref={setTooltipRef}
+          {...getTooltipProps({ className: "tooltip-container" })}
+        >
+          {tooltipData?.value || "no data set"}
+          {tooltipData.count && <span>{fPercentage(tooltipData.count)}</span>}
+          <div {...getArrowProps({ className: "tooltip-arrow" })} />
+        </div>
+      )}
+    </div>
+  );
 };
 
 export default SnapshotBar;

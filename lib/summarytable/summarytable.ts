@@ -6,7 +6,7 @@ import type { Column } from "../../types/DataFrame";
 export function getType(column: Column): ColumnType {
   for (const value of column) {
     if (value == null) continue;
-    if (typeof value === "number") return ColumnType.Contiuous;
+    if (typeof value === "number") return ColumnType.Continuous;
     if (Array.isArray(value)) return ColumnType.Array;
     if (typeof value === "string" && Date.parse(value)) return ColumnType.Date;
     return ColumnType.Ordinal;
@@ -20,7 +20,7 @@ export function getColumnStats(column: Column) {
 
   const missing =
     column.filter((d) => d === null || d === "").length / column.length;
-  const isContinuous = type === ColumnType.Contiuous;
+  const isContinuous = type === ColumnType.Continuous;
   const mean = isContinuous
     ? (column.reduce((acc: number, d: number) => (acc += d), 0) as number) /
       column.length

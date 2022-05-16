@@ -52,10 +52,19 @@ export default function getTestData(): TestRow[] {
       name: "Amely",
       nickname: "",
       gender: "d",
-      height: null,
+      height: 160,
       dateOfBirth: new Date("2000-10-10").toISOString(),
       luckyNumber: 2,
       pinArray: [10, 20, 30],
+    },
+    {
+      name: "Astrid",
+      nickname: "",
+      gender: "f",
+      height: 190,
+      dateOfBirth: new Date("1990-03-10").toISOString(),
+      luckyNumber: 33,
+      pinArray: [3, 2, 1],
     },
   ];
 }

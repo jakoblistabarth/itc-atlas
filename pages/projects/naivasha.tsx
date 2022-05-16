@@ -1,17 +1,15 @@
+import { OrbitControls } from "@react-three/drei";
+import { Canvas } from "@react-three/fiber";
 import type { GetStaticProps, NextPage } from "next";
 import Head from "next/head";
-import Heading, { Headings } from "../../components/heading";
-import styles from "../../styles/home.module.css";
-
 import { Suspense } from "react";
-import { Canvas } from "@react-three/fiber";
-import { Environment, OrbitControls } from "@react-three/drei";
-
+import Footer from "../../components/footer";
+import Heading, { Headings } from "../../components/heading";
+import LocatorMap from "../../components/map/LocatorMap";
 import NaivashaRegion from "../../components/models/NaivashaRegion";
 import Cubes from "../../components/models/TestCubes";
-import LocatorMap from "../../components/map/LocatorMap";
-import Footer from "../../components/footer";
 import getCountries from "../../lib/data/getCountries";
+import styles from "../../styles/home.module.css";
 
 type Props = {
   model: string;

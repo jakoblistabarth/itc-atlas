@@ -1,10 +1,10 @@
-import { FC, useEffect, useRef } from "react";
+import { FC, useRef } from "react";
 import * as d3 from "d3";
 import { colorMap } from "../lib/summarytable/colorMap";
 import { ColumnType } from "../types/Column";
 import { fDateLong, fDateShort, fFloat } from "../lib/utilities/formaters";
 import type { Column, Datum } from "../types/DataFrame";
-import { Bin } from "d3";
+import { nanoid } from "nanoid";
 
 type Props = {
   column: Datum[];
@@ -12,8 +12,6 @@ type Props = {
 };
 
 const SnapshotHistogram: FC<Props> = ({ column, type }) => {
-  const ref = useRef<HTMLDivElement>(null);
-
   const dimension = {
     width: 200,
     height: 30,
@@ -31,8 +29,6 @@ const SnapshotHistogram: FC<Props> = ({ column, type }) => {
   const cleanedColumn =
     type === ColumnType.Date ? columnNoNA.map((d) => new Date(d)) : columnNoNA;
 
-  const typeFormat = type === ColumnType.Date ? fDateLong : fFloat;
-
   // How does this actually work? TODO: type after figuring it out
   function thresholdTime(n: number) {
     return (column: Column, min: number, max: number) => {
@@ -41,8 +37,9 @@ const SnapshotHistogram: FC<Props> = ({ column, type }) => {
   }
 
   const histogram =
-    // type === ColumnType.Contiuous
-    true ? d3.bin() : d3.bin().thresholds(thresholdTime(10));
+    type === ColumnType.Continuous
+      ? d3.bin()
+      : d3.bin().thresholds(thresholdTime(10));
   const bins = histogram(cleanedColumn);
 
   const xDomain = [bins[0].x0, bins[bins.length - 1].x1];
@@ -64,127 +61,92 @@ const SnapshotHistogram: FC<Props> = ({ column, type }) => {
     { name: "median", label: "M", value: d3.median(cleanedColumn) },
   ];
 
-  useEffect(() => {
-    const svgContainer = d3.select(ref.current);
+  const tickFormat = type === ColumnType.Continuous ? fFloat : fDateShort;
+  const fontSize = 7;
 
-    const svgElement = svgContainer
-      .append("svg")
-      .attr("width", dimension.width)
-      .attr("height", dimension.height);
-
-    const tooltip = d3
-      .select("body")
-      .append("div")
-      .attr("id", "tooltip")
-      .style("position", "absolute")
-      .style("display", "none")
-      .style("background-color", "white")
-      .style("padding", "5px")
-      .style("box-shadow", "0 0 5px rgba(0,0,0,.5")
-      .style("font-size", "x-small");
-
-    const mouseover = (event: MouseEvent) => {
-      tooltip.style("display", "inline");
-      d3.select(event.target).attr("stroke", "black");
-    };
-    const mousemove = (event: MouseEvent, d: Bin<Datum, number>) => {
-      const tooltipHeight = tooltip.node()?.offsetHeight ?? 0;
-      const tooltipWidth = tooltip.node()?.offsetWidth ?? 0;
-      const bodyNode = d3.select("body").node();
-      tooltip
-        .style(
-          "left",
-          -tooltipWidth / 2 + d3.pointer(event, bodyNode)[0] + "px"
-        )
-        .style(
-          "top",
-          d3.pointer(event, bodyNode)[1] - tooltipHeight - 10 + "px"
-        )
-        .html(
-          `<strong>${typeFormat(d.x0)}-${typeFormat(d.x1)}</strong><br>${fFloat(
-            d.length
-          )} rows`
-        );
-    };
-    const mouseleave = (event: MouseEvent) => {
-      tooltip.style("display", "none");
-      d3.select(event.target).attr("stroke", "none").style("opacity", 1);
-    };
-
-    // append the bar rectangles to the svg element
-    svgElement
-      .selectAll("rect")
-      .data(bins)
-      .enter()
-      .append("rect")
-      .attr("x", (d) => x(d.x0) + dimension.barInset)
-      .attr("y", (d) => y(d.length))
-      .attr(
-        "width",
-        (d) => Math.max(0, x(d.x1) - x(d.x0)) - dimension.barInset * 2
-      )
-      .attr("height", (d) => y(0) - y(d.length))
-      .attr("fill", colorMap.get(type)?.baseColor ?? "black")
-      .attr("stroke", "transparent")
-      .attr("stroke-width", "1px");
-
-    svgElement
-      .append("g")
-      .attr("id", "overlay")
-      .selectAll("rect")
-      .data(bins)
-      .enter()
-      .append("rect")
-      .attr("x", (d) => x(d.x0) + dimension.barInset)
-      .attr("y", dimension.margin.top)
-      .attr(
-        "width",
-        (d) => Math.max(0, x(d.x1) - x(d.x0)) - dimension.barInset * 2
-      )
-      .attr(
-        "height",
-        dimension.height - dimension.margin.bottom - dimension.margin.top
-      )
-      .attr("fill-opacity", "0")
-      .on("mouseover", mouseover)
-      .on("mousemove", mousemove)
-      .on("mouseleave", mouseleave);
-
-    const xAxis = svgElement
-      .append("g")
-      .attr(
-        "transform",
-        `translate(0,${dimension.height - dimension.margin.bottom})`
-      )
-      .call(
-        d3
-          .axisBottom(x)
-          .tickValues(xDomain)
-          .tickFormat(type === ColumnType.Contiuous ? fFloat : fDateShort)
-          .tickSize(2)
-      )
-      .attr("font-size", 7);
-
-    xAxis.selectAll("text").attr("text-anchor", (d, i) => {
-      return i % 2 ? "end" : "start";
-    });
-
-    const indicators = svgElement
-      .append("g")
-      .attr("opacity", 0.3)
-      .selectAll("line")
-      .data(stats)
-      .join("line")
-      .attr("x1", (d) => x(d.value))
-      .attr("x2", (d) => x(d.value))
-      .attr("y1", dimension.height - dimension.margin.bottom)
-      .attr("y2", 0)
-      .attr("stroke", "black")
-      .attr("stroke-width", (d, i) => `${i % 2 ? 2 : 1}px`)
-      .attr("stroke-dasharray", (d, i) => `${i % 2 ? 0 : 1}`);
-  });
-
-  return <div ref={ref} />;
+  return (
+    <svg width={dimension.width} height={dimension.height}>
+      {bins.map(
+        (bin) =>
+          bin.x0 &&
+          bin.x1 && (
+            <rect
+              key={nanoid()}
+              fill={colorMap.get(type)?.baseColor ?? "black"}
+              x={x(bin.x0) + dimension.barInset}
+              y={y(bin.length)}
+              width={
+                Math.max(0, x(bin.x1) - x(bin.x0)) - dimension.barInset * 2
+              }
+              height={y(0) - y(bin.length)}
+              stroke={"none"}
+              strokeWidth="1px"
+            />
+          )
+      )}
+      <g
+        fontSize={fontSize}
+        transform={`translate(0, ${
+          dimension.height - dimension.margin.bottom
+        })`}
+      >
+        <line
+          x1={dimension.margin.side / 2}
+          x2={dimension.width - dimension.margin.side / 2}
+          y1={0}
+          y2={0}
+          stroke={"black"}
+          strokeWidth={1}
+        />
+        <g transform={`translate(${dimension.margin.side / 2},0)`}>
+          <line
+            x1={0}
+            x2={0}
+            y1={0}
+            y2={2.5}
+            stroke={"black"}
+            strokeWidth={0.5}
+          />
+          <text dy={fontSize} y={2.5} textAnchor="start">
+            {/* {console.log(tickFormat(bins[0]))} */}
+            {tickFormat(bins[0][0])}
+          </text>
+        </g>
+        <g
+          transform={`translate(${
+            dimension.width - dimension.margin.side / 2
+          },0)`}
+        >
+          <line
+            x1={0}
+            x2={0}
+            y1={0}
+            y2={2.5}
+            stroke={"black"}
+            strokeWidth={0.5}
+          />
+          <text dy={fontSize} y={2.5} textAnchor="end">
+            {console.log(bins[bins.length - 1][0])}
+            {tickFormat(bins[bins.length - 1][0])}
+          </text>
+        </g>
+      </g>
+      <g opacity={0.3}>
+        {stats &&
+          stats.map((stat, i) => (
+            <line
+              x1={x(stat.value)}
+              x2={x(stat.value)}
+              y1={dimension.height - dimension.margin.bottom}
+              y2={0}
+              stroke={"black"}
+              strokeWidth={i % 2 ? "2px" : "1px"}
+              strokeDasharray={i % 2 ? "0" : "1"}
+            />
+          ))}
+      </g>
+    </svg>
+  );
 };
 
 export default SnapshotHistogram;

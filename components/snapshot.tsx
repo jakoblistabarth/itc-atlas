@@ -23,7 +23,7 @@ const Snapshot: FC<Props> = ({ column, columnName, type, detailed }) => {
           .filter((d) => d)
           .map((d) => d?.join(", "));
         return <SnapshotBar type={type} column={flattenedArray} />;
-      case ColumnType.Contiuous:
+      case ColumnType.Continuous:
         return <SnapshotHistogram type={type} column={column} />;
       case ColumnType.Date:
         return <SnapshotHistogram type={type} column={column} />;
