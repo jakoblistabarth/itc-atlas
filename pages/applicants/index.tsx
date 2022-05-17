@@ -1,9 +1,9 @@
 import type { GetStaticProps, NextPage } from "next";
 import Head from "next/head";
-import BackToHome from "../../components/backToHome";
-import Footer from "../../components/footer";
-import Heading, { Headings } from "../../components/heading";
-import SummaryTable from "../../components/summaryTable";
+import BackToHome from "../../components/BackToHome";
+import Footer from "../../components/Footer";
+import Heading, { Headings } from "../../components/Heading";
+import SummaryTable from "../../components/SummaryTable";
 import DataFrame from "../../lib/DataFrame/DataFrame";
 import getApplicants from "../../lib/data/getApplicants";
 import styles from "../../styles/home.module.css";

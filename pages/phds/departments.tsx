@@ -1,13 +1,13 @@
 import * as d3 from "d3";
-import { geoBertin1953, geoInterruptedMollweide } from "d3-geo-projection";
+import { geoInterruptedMollweide } from "d3-geo-projection";
 import type { Feature, FeatureCollection, MultiPolygon, Point } from "geojson";
 import { nanoid } from "nanoid";
 import type { GetStaticProps, NextPage } from "next";
 import Head from "next/head";
 import * as topojson from "topojson-client";
 import type { Topology } from "topojson-specification";
-import Footer from "../../components/footer";
-import Heading, { Headings } from "../../components/heading";
+import Footer from "../../components/Footer";
+import Heading, { Headings } from "../../components/Heading";
 import BaseLayer from "../../components/map/BaseLayer";
 import NominalLegend from "../../components/map/NominalLegend";
 import ScaledPie, { pieDatum } from "../../components/map/ScaledPie";

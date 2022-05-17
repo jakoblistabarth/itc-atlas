@@ -1,8 +1,8 @@
 import type { GetStaticProps, NextPage } from "next";
 import Head from "next/head";
-import BackToHome from "../../components/backToHome";
-import Footer from "../../components/footer";
-import Heading, { Headings } from "../../components/heading";
+import BackToHome from "../../components/BackToHome";
+import Footer from "../../components/Footer";
+import Heading, { Headings } from "../../components/Heading";
 import getNfpCountries from "../../lib/data/getNfpCountries";
 import styles from "../../styles/home.module.css";
 import * as d3 from "d3";

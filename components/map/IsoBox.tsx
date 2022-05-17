@@ -6,7 +6,7 @@ import { ScaleLinear } from "d3";
 import { nanoid } from "nanoid";
 
 const IsoBox: FC<{
-  xy: Position[];
+  xy: Position;
   side: number;
   value: number;
   scale: ScaleLinear<number, number>;

@@ -3,8 +3,8 @@ import Head from "next/head";
 import styles from "../styles/home.module.css";
 import { MdOutlineArrowRightAlt } from "react-icons/md";
 import Link from "next/link";
-import Footer from "../components/footer";
-import Heading, { Headings } from "../components/heading";
+import Footer from "../components/Footer";
+import Heading, { Headings } from "../components/Heading";
 
 const Home: NextPage = () => {
   return (

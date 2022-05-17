@@ -135,7 +135,7 @@ const SnapshotBar: FC<Props> = ({ column, type }) => {
                 setTooltipData(d);
                 e.target.attributes.stroke = "black";
               }}
-              onMouseLeave={(e) => setTooltipData({})}
+              onMouseLeave={() => null} //TODO: hide on mouseleave
             />
           ))}
         </g>

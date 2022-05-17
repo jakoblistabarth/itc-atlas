@@ -18,8 +18,6 @@ type Props = {
 };
 
 const LocatorMap: FC<Props> = ({ data, highlight, theme = themes.muted }) => {
-  const [newHighlight, setHighlight] = useState(highlight ?? ["AUT"]);
-
   const dimension = {
     width: 300,
     height: 0,
@@ -32,7 +30,7 @@ const LocatorMap: FC<Props> = ({ data, highlight, theme = themes.muted }) => {
   const highlightCountries: FeatureCollection = {
     type: "FeatureCollection",
     features: countries.features.filter((country) => {
-      return newHighlight.includes(country.properties?.iso3code);
+      return highlight?.includes(country.properties?.iso3code);
     }),
   };
   const centroid = d3.geoCentroid(highlightCountries);
@@ -44,12 +42,6 @@ const LocatorMap: FC<Props> = ({ data, highlight, theme = themes.muted }) => {
 
   return (
     <>
-      <input
-        type={"text"}
-        placeholder={"type ISO alpha-3 country code"}
-        onBlur={(event) => setHighlight(event.target?.value)}
-        style={{ marginBottom: "1rem" }}
-      ></input>
       <svg width={dimension.width} height={dimension.height}>
         <defs>
           <GaussianBlur id={"blur"} blur={0} />
@@ -73,7 +65,7 @@ const LocatorMap: FC<Props> = ({ data, highlight, theme = themes.muted }) => {
             />
           ))}
         </g>
-        {!newHighlight && (
+        {!highlight?.length && (
           <g>
             <rect
               fill="white"

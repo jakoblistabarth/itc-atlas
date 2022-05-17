@@ -2,7 +2,7 @@ import * as d3 from "d3";
 import { nanoid } from "nanoid";
 import type { NextPage } from "next";
 import Head from "next/head";
-import Heading, { Headings } from "../../components/heading";
+import Heading, { Headings } from "../../components/Heading";
 import getProjects from "../../lib/data/getProjects";
 import getUnsdCountries from "../../lib/data/getUnsdCountries";
 import isPartOfUnsdGroup from "../../lib/isPartOfUnsdGroup";

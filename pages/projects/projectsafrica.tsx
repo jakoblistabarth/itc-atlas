@@ -8,7 +8,7 @@ import { Project } from "../../types/Project";
 import getCountries from "../../lib/data/getCountries";
 import getProjects from "../../lib/data/getProjects";
 import BaseLayer from "../../components/map/BaseLayer";
-import Heading, { Headings } from "../../components/heading";
+import Heading, { Headings } from "../../components/Heading";
 import { FeatureCollection, Feature, Point, MultiPolygon } from "geojson";
 import type {
   Topology,

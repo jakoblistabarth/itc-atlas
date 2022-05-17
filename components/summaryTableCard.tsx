@@ -2,7 +2,7 @@ import styles from "../styles/summarytable.module.scss";
 import { FC } from "react";
 import * as d3 from "d3";
 import { colorMap } from "../lib/summarytable/colorMap";
-import Heading, { Headings } from "./heading";
+import Heading, { Headings } from "./Heading";
 import type { Description } from "../types/DataFrame";
 import { fFloat } from "../lib/utilities/formaters";
 import { nanoid } from "nanoid";

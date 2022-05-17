@@ -1,9 +1,8 @@
-import { FC } from "react";
+import type { FC } from "react";
 import { nanoid } from "nanoid";
 import getGraticuleTextPath from "../../lib/cartographic/getGraticuleTextPath";
-import { GeoProjection } from "d3-geo";
-import { TextAppearance } from "../../types/Appearance";
-import { style } from "d3";
+import type { GeoProjection } from "d3-geo";
+import type { TextAppearance } from "../../types/Appearance";
 
 type Props = React.PropsWithChildren<{
   graticuleType: "lat" | "lon";
@@ -27,7 +26,7 @@ const BendedLabel: FC<Props> = ({
   const id = nanoid();
   return (
     <g>
-      <path id={id} d={path} fill={"none"} stroke={"none"} />
+      {path && <path id={id} d={path} fill={"none"} stroke={"none"} />}
       <text
         fontSize={style?.fontSize ?? 5}
         fontFamily={style?.fontFamily}

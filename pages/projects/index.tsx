@@ -3,13 +3,13 @@ import Head from "next/head";
 import styles from "../../styles/home.module.css";
 import { MdOutlineArrowRightAlt } from "react-icons/md";
 import Link from "next/link";
-import BackToHome from "../../components/backToHome";
-import SummaryTable from "../../components/summaryTable";
+import BackToHome from "../../components/BackToHome";
+import SummaryTable from "../../components/SummaryTable";
 import { Project } from "../../types/Project";
 import getProjects from "../../lib/data/getProjects";
-import Footer from "../../components/footer";
+import Footer from "../../components/Footer";
 import DataFrame from "../../lib/DataFrame/DataFrame";
-import Heading, { Headings } from "../../components/heading";
+import Heading, { Headings } from "../../components/Heading";
 
 type Props = React.PropsWithChildren<{
   projects: Project[];

@@ -57,8 +57,8 @@ const SnapshotHistogram: FC<Props> = ({ column, type }) => {
     .range([dimension.height - dimension.margin.bottom, dimension.margin.top]);
 
   const stats = [
-    { name: "mean", label: "x̅", value: d3.mean(cleanedColumn) },
-    { name: "median", label: "M", value: d3.median(cleanedColumn) },
+    { name: "mean", label: "x̅", value: d3.mean(cleanedColumn as number[]) },
+    { name: "median", label: "M", value: d3.median(cleanedColumn as number[]) },
   ];
 
   const tickFormat = type === ColumnType.Continuous ? fFloat : fDateShort;
@@ -108,7 +108,6 @@ const SnapshotHistogram: FC<Props> = ({ column, type }) => {
             strokeWidth={0.5}
           />
           <text dy={fontSize} y={2.5} textAnchor="start">
-            {/* {console.log(tickFormat(bins[0]))} */}
             {tickFormat(bins[0][0])}
           </text>
         </g>
@@ -126,7 +125,6 @@ const SnapshotHistogram: FC<Props> = ({ column, type }) => {
             strokeWidth={0.5}
           />
           <text dy={fontSize} y={2.5} textAnchor="end">
-            {console.log(bins[bins.length - 1][0])}
             {tickFormat(bins[bins.length - 1][0])}
           </text>
         </g>

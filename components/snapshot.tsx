@@ -1,8 +1,8 @@
 import { colorMap } from "../lib/summarytable/colorMap";
 import { ColumnType } from "../types/Column";
 import { FC } from "react";
-import SnapshotBar from "./snapshotBar";
-import SnapshotHistogram from "./snapshotHistogram";
+import SnapshotBar from "./SnapshotBar";
+import SnapshotHistogram from "./SnapshotHistogram";
 import type { Column, Datum } from "../types/DataFrame";
 
 type Props = {

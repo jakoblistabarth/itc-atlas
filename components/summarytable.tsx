@@ -12,8 +12,8 @@ import { fFloat, fPercentage } from "../lib/utilities/formaters";
 import { colorMap } from "../lib/summarytable/colorMap";
 import styles from "../styles/summarytable.module.scss";
 import { ColumnType } from "../types/Column";
-import SummaryTableCard from "./summaryTableCard";
-import Snapshot from "./snapshot";
+import SummaryTableCard from "./SummaryTableCard";
+import Snapshot from "./Snapshot";
 
 function getColumnIcon(type: ColumnType) {
   switch (type) {

@@ -4,7 +4,7 @@ import { nanoid } from "nanoid";
 import type { NextPage } from "next";
 import Head from "next/head";
 import type { Topology } from "topojson-specification";
-import Heading, { Headings } from "../../components/heading";
+import Heading, { Headings } from "../../components/Heading";
 import BaseLayer from "../../components/map/BaseLayer";
 import FlowLayer from "../../components/map/FlowLayer";
 import FlowLegend from "../../components/map/FlowLegend";

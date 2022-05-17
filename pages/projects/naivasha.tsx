@@ -3,7 +3,7 @@ import { Canvas } from "@react-three/fiber";
 import type { GetStaticProps, NextPage } from "next";
 import Head from "next/head";
 import { Suspense } from "react";
-import Footer from "../../components/footer";
+import Footer from "../../components/Footer";
 import Heading, { Headings } from "../../components/heading";
 import LocatorMap from "../../components/map/LocatorMap";
 import NaivashaRegion from "../../components/models/NaivashaRegion";
@@ -26,7 +26,7 @@ const Naivasha: NextPage<Props> = ({ model, countries }) => {
 
       <main className={styles.main}>
         <Heading Tag={Headings.H1}>Naivasha Region</Heading>
-        <LocatorMap data={countries} highlight={["NLD"]} />
+        <LocatorMap data={countries} highlight={["KEN"]} />
         <Heading Tag={Headings.H2}>3D Block Diagram</Heading>
         <div style={{ width: "100%", height: "500px" }}>
           <Canvas shadows>

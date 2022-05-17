@@ -8,21 +8,22 @@ import { Appearance } from "../../types/Appearance";
 const Flow: FC<{
   datum: Feature<LineString>;
   projection: GeoProjection;
+  bend?: number;
   scale: ScaleLinear<number, number>;
   style?: Appearance;
-}> = ({ datum, scale, projection, style }) => {
+}> = ({ datum, scale, bend, projection, style }) => {
   const line = d3
     .line()
     .x((d) => d[0])
     .y((d) => d[1])
     .curve(d3.curveBasis);
 
-  const flowPoints = getFlowPoints(datum, projection);
+  const flowPoints = getFlowPoints(datum, projection, bend);
   const linePath = flowPoints ? line(flowPoints) : null;
 
   return typeof linePath === "string" ? (
     <path
-      markerEnd={`url(#${style?.markerEnd})`}
+      markerEnd={`url(#${style?.markerEnd ?? "ArrowHead"})`}
       opacity={style?.opacity ?? 0.8}
       d={linePath}
       fill="none"

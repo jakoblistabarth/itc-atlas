@@ -1,8 +1,8 @@
 import * as d3 from "d3";
-import { Column } from "../../types/DataFrame";
+import { Column, Datum } from "../../types/DataFrame";
 
 type StackItem = {
-  value: string;
+  value: Datum;
   count: number;
   start: number;
   end: number;

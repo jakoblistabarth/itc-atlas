@@ -12,7 +12,7 @@ import ShadowLayer from "./ShadowLayer";
 import BendedLabel from "./BendedLabel";
 import PointLabel from "./PointLabel";
 import { nanoid } from "nanoid";
-import RadialGradient from "../defs/radialGradient";
+import RadialGradient from "../defs/RadialGradient";
 
 type Props = {
   data: Topology;
@@ -51,10 +51,10 @@ const BaseLayer: FC<Props> = ({
 
   return (
     <>
-      {hasShadow && (
+      {hasShadow && pathSphere && (
         <ShadowLayer
           geoPath={pathSphere}
-          color={theme.background.fill}
+          color={theme.background.fill ?? "black"}
           blur={30}
         />
       )}

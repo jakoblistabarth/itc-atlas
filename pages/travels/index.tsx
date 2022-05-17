@@ -3,13 +3,13 @@ import Head from "next/head";
 import styles from "../../styles/home.module.css";
 import { MdOutlineArrowRightAlt } from "react-icons/md";
 import Link from "next/link";
-import BackToHome from "../../components/backToHome";
+import BackToHome from "../../components/BackToHome";
 import getFlights from "../../lib/data/getFlights";
-import SummaryTable from "../../components/summaryTable";
-import Footer from "../../components/footer";
+import SummaryTable from "../../components/SummaryTable";
+import Footer from "../../components/Footer";
 import DataFrame from "../../lib/DataFrame/DataFrame";
 import { Flight } from "../../types/Travels";
-import Heading, { Headings } from "../../components/heading";
+import Heading, { Headings } from "../../components/Heading";
 
 type Props = {
   flights: Flight[];

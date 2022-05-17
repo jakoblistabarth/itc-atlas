@@ -1,8 +1,13 @@
 import { nanoid } from "nanoid";
 import { FC } from "react";
 
+type ColorStop = {
+  color: string;
+  stop: number;
+};
+
 const RadialGradient: FC<{
-  colorStops: colorStop[];
+  colorStops: ColorStop[];
   id: string;
 }> = ({ colorStops, id }) => {
   return (

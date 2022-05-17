@@ -5,7 +5,7 @@ import Head from "next/head";
 import styles from "../../styles/home.module.css";
 import type { Topology } from "topojson-specification";
 import { FeatureCollection, Point } from "geojson";
-import Heading, { Headings } from "../../components/heading";
+import Heading, { Headings } from "../../components/Heading";
 import getCountries from "../../lib/data/getCountries";
 import getFlights from "../../lib/data/getFlights";
 import BaseLayer from "../../components/map/BaseLayer";
