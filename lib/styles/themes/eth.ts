@@ -22,6 +22,10 @@ const eth: MapTheme = {
     fontWeight: "bold",
     fontStyle: "italic",
   },
+  label: {
+    fontFamily: "Inter",
+    fontSize: 10,
+  },
   base: {
     fill: yellow,
     stroke: petrol,

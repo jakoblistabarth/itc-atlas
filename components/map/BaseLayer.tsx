@@ -10,7 +10,6 @@ import geoEquator from "../../lib/cartographic/geoEquator";
 import geoCirclesLat from "../../lib/cartographic/geoCirclesLat";
 import ShadowLayer from "./ShadowLayer";
 import BendedLabel from "./BendedLabel";
-import PointLabel from "./PointLabel";
 import { nanoid } from "nanoid";
 import RadialGradient from "../defs/RadialGradient";
 
@@ -161,14 +160,18 @@ const BaseLayer: FC<Props> = ({
 
         {labels &&
           countries.features.map((country) => {
+            const [textOriginDegree, degree] = d3.geoCentroid(country.geometry);
             return (
-              <PointLabel
-                xy={projection(d3.geoCentroid(country.geometry))}
+              <BendedLabel
+                graticuleType="lat"
+                degree={d3.geoCentroid(country.geometry)[1]}
+                textOriginDegree={d3.geoCentroid(country.geometry)[0]}
+                textAnchor={"middle"}
                 style={theme.label}
-                offset={{ x: 0, y: -100 }}
+                projection={projection}
               >
-                <text textAnchor="middle">{country.properties.name}</text>
-              </PointLabel>
+                {country.properties.name}
+              </BendedLabel>
             );
           })}
       </g>
@@ -179,6 +182,7 @@ const BaseLayer: FC<Props> = ({
           stroke={theme.graticule.stroke}
           fill={"none"}
           strokeWidth={theme.graticule.strokeWidth}
+          style={theme.label}
         ></use>
       )}
     </>

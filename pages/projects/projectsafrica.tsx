@@ -74,7 +74,6 @@ const ProjectCountries: NextPage<Props> = ({ projects, world, areaCodes }) => {
 
   const scale = d3
     .scaleLinear()
-    // .scaleSqrt()
     .domain([minRange, maxRange])
     .range([minHeight, maxHeight]);
 
@@ -137,6 +136,7 @@ const ProjectCountries: NextPage<Props> = ({ projects, world, areaCodes }) => {
             data={world}
             projection={mapOptions.projection}
             theme={mapOptions.theme}
+            labels
           />
           <g className="choroplethLayer">
             {polygons.features.map((feature) => (
