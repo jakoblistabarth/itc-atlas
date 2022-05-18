@@ -8,8 +8,7 @@ export default async function handler(
   res: NextApiResponse<Topology | { error: string }>
 ) {
   const scale = req.query.scale?.toString();
-
-  // use type guard with enum
+  //TODO: use type guard with enum
   if (
     scale !== undefined &&
     scale !== "10m" &&
