@@ -11,7 +11,6 @@ import Heading, { Headings } from "../../components/Heading";
 import BaseLayer from "../../components/map/BaseLayer";
 import NominalLegend from "../../components/map/NominalLegend";
 import ScaledPie, { pieDatum } from "../../components/map/ScaledPie";
-import themes from "../../lib/styles/themes";
 import getCountries from "../../lib/data/getCountries";
 import getPhdCandidates from "../../lib/data/getPhdCandidates";
 import { Department, departmentColors } from "../../lib/mappings/departments";
@@ -19,6 +18,7 @@ import styles from "../../styles/home.module.css";
 import type { PhdCandidate } from "../../types/PhdCandidate";
 import getMapHeight from "../../lib/cartographic/getMapHeight";
 import LegendTitle from "../../components/map/LegendTitle";
+import defaultTheme from "../../lib/styles/themes/defaultTheme";
 
 type Props = {
   phdCandidates: PhdCandidate[];
@@ -31,7 +31,7 @@ const PhdDepartments: NextPage<Props> = ({ phdCandidates, world }) => {
     height: 0,
   };
 
-  const theme = themes.muted;
+  const theme = defaultTheme;
   const projection = geoInterruptedMollweide();
   dimension.height = getMapHeight(dimension.width, projection);
 

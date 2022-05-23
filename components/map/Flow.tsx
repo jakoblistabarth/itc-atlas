@@ -3,6 +3,7 @@ import * as d3 from "d3";
 import { Feature, LineString } from "geojson";
 import { FC } from "react";
 import getFlowPoints from "../../lib/cartographic/getFlowPoints";
+import defaultTheme from "../../lib/styles/themes/defaultTheme";
 import { Appearance } from "../../types/Appearance";
 
 const Flow: FC<{
@@ -23,7 +24,7 @@ const Flow: FC<{
 
   return typeof linePath === "string" ? (
     <path
-      markerEnd={`url(#${style?.markerEnd ?? "ArrowHead"})`}
+      markerEnd={`url(#${style?.markerEnd ?? defaultTheme.flow?.markerEnd})`}
       opacity={style?.opacity ?? 0.8}
       d={linePath}
       fill="none"

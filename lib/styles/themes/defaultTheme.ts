@@ -4,7 +4,8 @@ const lightgrey = "#E7E7E7";
 const darkgrey = "#c5c5c5";
 const red = "#f00";
 
-const muted: MapTheme = {
+const defaultTheme: MapTheme = {
+  fontFamily: "Inter",
   hasOutline: true,
   hasShadow: false,
   background: { fill: lightgrey },
@@ -24,6 +25,11 @@ const muted: MapTheme = {
     stroke: lightgrey,
     strokeWidth: 2,
   },
+  flow: {
+    stroke: "grey",
+    opacity: 0.25,
+    markerEnd: "ArrowHead",
+  },
   choropleth: {
     fill: "none",
     stroke: "black",
@@ -31,4 +37,4 @@ const muted: MapTheme = {
   },
 };
 
-export default muted;
+export default defaultTheme;

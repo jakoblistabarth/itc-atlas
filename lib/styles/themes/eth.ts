@@ -7,6 +7,7 @@ const red = "#d51d09";
 const anthrazit = "#444";
 
 const eth: MapTheme = {
+  fontFamily: "Fraunces",
   hasGraticuleLables: true,
   hasOutline: true,
   hasShadow: false,
@@ -41,6 +42,11 @@ const eth: MapTheme = {
     },
     stroke: orange,
     strokeWidth: 0.5,
+  },
+  flow: {
+    opacity: 0.2,
+    stroke: "red",
+    markerEnd: "ArrowHead",
   },
   symbol: {
     fill: red,

@@ -14,7 +14,6 @@ import getCountries from "../../lib/data/getCountries";
 import getFlights from "../../lib/data/getFlights";
 import styles from "../../styles/home.module.css";
 import type { ODMatrix } from "../../types/ODMatrix";
-import { Appearance } from "../../types/Appearance";
 import themes from "../../lib/styles/themes";
 import getMapHeight from "../../lib/cartographic/getMapHeight";
 import { MapOptions } from "../../types/MapOptions";
@@ -30,6 +29,18 @@ const Flights: NextPage<Props> = ({ odMatrix, world }) => {
     width: 1280,
     height: 0,
     theme: themes.eth,
+    styles: {
+      flowStyle: {
+        opacity: 0.2,
+        stroke: "red",
+        markerEnd: "ArrowHead",
+      },
+      pointStyle: {
+        fill: "grey",
+        fillOpacity: 1,
+        strokeWidth: 0,
+      },
+    },
   };
 
   mapOptions.height = getMapHeight(mapOptions.width, mapOptions.projection);
@@ -39,19 +50,7 @@ const Flights: NextPage<Props> = ({ odMatrix, world }) => {
   );
   const min = d3.min(flightsPerRoute);
   const max = d3.max(flightsPerRoute);
-
-  const flowStyle: Appearance = {
-    opacity: 0.2,
-    stroke: "red",
-    markerEnd: "ArrowHead",
-  };
   const scaleWidth = d3.scaleLinear().domain([min, max]).range([1, 15]);
-
-  const pointStyle: Appearance = {
-    fill: "grey",
-    fillOpacity: 1,
-    strokeWidth: 0,
-  };
 
   // useEffect(() => {
   // setData(json.data)
@@ -85,8 +84,8 @@ const Flights: NextPage<Props> = ({ odMatrix, world }) => {
             projection={mapOptions.projection}
             data={odMatrix}
             scaleWidth={scaleWidth}
-            flowStyle={flowStyle}
-            pointStyle={pointStyle}
+            flowStyle={mapOptions.styles.flowStyle}
+            pointStyle={mapOptions.styles.pointStyle}
           />
 
           {odMatrix.flows.features.slice(0, 5).map((d) => {
@@ -108,7 +107,7 @@ const Flights: NextPage<Props> = ({ odMatrix, world }) => {
             scaleWidth={scaleWidth}
             title="No. of Flights in 2019"
             unitLabel="Flights"
-            style={flowStyle}
+            style={mapOptions.theme.flow}
           />
         </svg>
 

@@ -5,6 +5,7 @@ import { fInt } from "../../lib/utilities/formaters";
 import { Appearance } from "../../types/Appearance";
 import LegendTitle from "./LegendTitle";
 import { nanoid } from "nanoid";
+import defaultTheme from "../../lib/styles/themes/defaultTheme";
 
 const FlowLegend: FC<{
   x?: number;
@@ -13,8 +14,16 @@ const FlowLegend: FC<{
   scaleWidth: ScaleLinear<number, number>;
   title: string;
   unitLabel: string;
-  style: Appearance;
-}> = ({ data, scaleWidth, title, unitLabel, style, x = 0, y = 0 }) => {
+  style?: Appearance;
+}> = ({
+  data,
+  scaleWidth,
+  title,
+  unitLabel,
+  style = defaultTheme.flow,
+  x = 0,
+  y = 0,
+}) => {
   const min = d3.min(data);
   const max = d3.max(data);
   if (!min || !max) return <g />;
@@ -36,17 +45,19 @@ const FlowLegend: FC<{
       <LegendTitle>{title}</LegendTitle>
       <g id="entries" transform="translate(0, 40)">
         {entries.map((entry, index) => {
-          const fontSize = style.text?.fontSize ?? 10;
+          const fontSize = 10;
 
           return (
             <g key={nanoid()} transform={`translate(10, ${index * 30})`}>
               <path
                 d={linePath}
-                stroke={style.stroke ?? "black"}
-                fill={style.fill ?? "none"}
-                opacity={style.opacity ?? "1"}
+                stroke={style?.stroke ?? defaultTheme.flow?.stroke}
+                fill={style?.fill ?? defaultTheme.flow?.fill}
+                opacity={style?.opacity ?? defaultTheme.flow?.opacity}
                 strokeWidth={scaleWidth(entry)}
-                markerEnd={`url(#${style.markerEnd})`}
+                markerEnd={`url(#${
+                  style?.markerEnd ?? defaultTheme.flow?.markerEnd
+                })`}
               />
               <text x={100} y={fontSize / 2} fontSize={fontSize}>
                 {fInt(entry) + " " + unitLabel ?? null}

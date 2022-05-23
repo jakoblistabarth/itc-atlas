@@ -3,7 +3,6 @@ import { geoPath, GeoSphere, GeoProjection } from "d3-geo";
 import type { FC } from "react";
 import * as topojson from "topojson-client";
 import type { Topology } from "topojson-specification";
-import themes from "../../lib/styles/themes";
 import type { MapTheme } from "../../types/MapTheme";
 import GraticuleLabelLayer from "./GraticuleLabelLayer";
 import geoEquator from "../../lib/cartographic/geoEquator";
@@ -12,6 +11,7 @@ import ShadowLayer from "./ShadowLayer";
 import BendedLabel from "./BendedLabel";
 import { nanoid } from "nanoid";
 import RadialGradient from "../defs/RadialGradient";
+import defaultTheme from "../../lib/styles/themes/defaultTheme";
 
 type Props = {
   data: Topology;
@@ -24,7 +24,7 @@ type Props = {
 const BaseLayer: FC<Props> = ({
   data,
   projection,
-  theme = themes.muted,
+  theme = defaultTheme,
   labels = false,
 }) => {
   const path = geoPath(projection);

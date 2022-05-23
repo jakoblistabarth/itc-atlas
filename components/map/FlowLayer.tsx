@@ -6,6 +6,7 @@ import Flow from "./Flow";
 import PointSymbol from "./PointSymbol";
 import ArrowHead from "../defs/marker/ArrowHead";
 import { nanoid } from "nanoid";
+import defaultTheme from "../../lib/styles/themes/defaultTheme";
 
 const FlowLayer: FC<{
   data: ODMatrix;
@@ -13,7 +14,13 @@ const FlowLayer: FC<{
   scaleWidth: ScaleLinear<number, number>;
   flowStyle?: Appearance;
   pointStyle?: Appearance;
-}> = ({ data, projection, scaleWidth, flowStyle, pointStyle }) => {
+}> = ({
+  data,
+  projection,
+  scaleWidth,
+  flowStyle = defaultTheme.flow,
+  pointStyle = defaultTheme.point,
+}) => {
   return (
     <g id="flow-Layer">
       <defs>

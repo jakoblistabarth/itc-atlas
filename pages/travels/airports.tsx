@@ -11,7 +11,7 @@ import getFlights from "../../lib/data/getFlights";
 import BaseLayer from "../../components/map/BaseLayer";
 import PointLabel from "../../components/map/PointLabel";
 import PointSymbol from "../../components/map/PointSymbol";
-import themes from "../../lib/styles/themes";
+import defaultTheme from "../../lib/styles/themes/defaultTheme";
 
 export async function getStaticProps() {
   const flights = await getFlights();
@@ -59,7 +59,7 @@ const Airports: NextPage<{
           <BaseLayer data={world} projection={projection} />
           {airportsGeo.features.map((airport) => (
             <PointSymbol
-              style={themes.muted.symbol}
+              style={defaultTheme.symbol}
               xy={projection(airport.geometry.coordinates)}
               radius={scale(airport.properties?.value)}
             />

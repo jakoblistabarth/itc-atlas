@@ -1,6 +1,5 @@
 import * as d3 from "d3";
 import { FC } from "react";
-import themes from "../../lib/styles/themes";
 import * as topojson from "topojson-client";
 import type { Topology } from "topojson-specification";
 import { FeatureCollection } from "geojson";
@@ -9,6 +8,7 @@ import { MapTheme } from "../../types/MapTheme";
 import getMapHeight from "../../lib/cartographic/getMapHeight";
 import ChoroplethSymbol from "./ChoroplethSymbol";
 import { nanoid } from "nanoid";
+import defaultTheme from "../../lib/styles/themes/defaultTheme";
 
 type Props = {
   data: Topology;
@@ -16,7 +16,7 @@ type Props = {
   theme?: MapTheme;
 };
 
-const LocatorMap: FC<Props> = ({ data, highlight, theme = themes.muted }) => {
+const LocatorMap: FC<Props> = ({ data, highlight, theme = defaultTheme }) => {
   const dimension = {
     width: 300,
     height: 0,

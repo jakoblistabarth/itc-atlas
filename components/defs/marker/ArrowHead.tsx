@@ -1,6 +1,9 @@
 import { FC } from "react";
+import defaultTheme from "../../../lib/styles/themes/defaultTheme";
 
-const ArrowHead: FC<{ color?: string }> = ({ color }) => {
+const ArrowHead: FC<{ color?: string }> = ({
+  color = defaultTheme.flow?.stroke,
+}) => {
   return (
     <marker
       id="ArrowHead"

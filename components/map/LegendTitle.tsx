@@ -4,7 +4,7 @@ type Props = React.PropsWithChildren<{}>;
 
 const LegendTitle: FC<Props> = ({ children }) => {
   return (
-    <text y={20} fontFamily="Fraunces" fontWeight={"bold"}>
+    <text dy={"1em"} fontWeight={"bold"}>
       {children}
     </text>
   );
