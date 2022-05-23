@@ -1,5 +1,5 @@
 import * as d3 from "d3";
-import { FC, useState } from "react";
+import { FC } from "react";
 import themes from "../../lib/styles/themes";
 import * as topojson from "topojson-client";
 import type { Topology } from "topojson-specification";
@@ -9,7 +9,6 @@ import { MapTheme } from "../../types/MapTheme";
 import getMapHeight from "../../lib/cartographic/getMapHeight";
 import ChoroplethSymbol from "./ChoroplethSymbol";
 import { nanoid } from "nanoid";
-import GaussianBlur from "../defs/filter/GaussianBlur";
 
 type Props = {
   data: Topology;
@@ -43,16 +42,12 @@ const LocatorMap: FC<Props> = ({ data, highlight, theme = themes.muted }) => {
   return (
     <>
       <svg width={dimension.width} height={dimension.height}>
-        <defs>
-          <GaussianBlur id={"blur"} blur={0} />
-        </defs>
         <ellipse
           cx={dimension.width / 2}
           cy={dimension.height - shadowRadius}
           ry={shadowRadius}
           rx={dimension.width * 0.3}
           opacity={0.05}
-          filter={`url(#blur)`}
         />
         <BaseLayer data={data} projection={projection} theme={theme} />
         <g>
@@ -64,6 +59,21 @@ const LocatorMap: FC<Props> = ({ data, highlight, theme = themes.muted }) => {
               theme={themes.muted}
             />
           ))}
+        </g>
+        <defs>
+          <mask id="shadow-mask">
+            <use xlinkHref="#outline" fill="white"></use>
+            <use
+              transform={`translate(${dimension.width * -0.35}, ${
+                dimension.height * -0.5
+              }) scale(1.4)`}
+              xlinkHref="#outline"
+              fill="black"
+            ></use>
+          </mask>
+        </defs>
+        <g mask="url(#shadow-mask)">
+          <use xlinkHref="#outline" fill={"black"} fillOpacity={0.05} />
         </g>
         {!highlight?.length && (
           <g>
