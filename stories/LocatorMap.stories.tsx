@@ -36,7 +36,6 @@ const Template: ComponentStory<typeof LocatorMap> = (
 };
 
 export const Simple = Template.bind({});
-// More on args: https://storybook.js.org/docs/react/writing-stories/args
 Simple.args = {
   ...Template.args,
   highlight: ["NLD"],

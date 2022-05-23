@@ -1,5 +1,6 @@
 import { GeoProjection, GeoSphere } from "d3-geo";
 import * as d3 from "d3";
+import { Bounds } from "../../types/MapOptions";
 
 function getMapHeight(
   width: number,
@@ -17,3 +18,23 @@ function getMapHeight(
 }
 
 export default getMapHeight;
+
+export function setMapBounds(bounds: Bounds, projection: GeoProjection) {
+  const width =
+    bounds.width - ((bounds.frame?.left ?? 0) + (bounds.frame?.right ?? 0));
+  if (!bounds.height) {
+    const height = getMapHeight(width, projection);
+    bounds.mapBody = { width, height };
+    bounds.height =
+      bounds.mapBody.height +
+      (bounds.frame?.top ?? 0) +
+      (bounds.frame?.bottom ?? 0);
+  } else {
+    const height =
+      bounds.height - ((bounds.frame?.top ?? 0) + (bounds.frame?.bottom ?? 0));
+    bounds.mapBody = { width, height };
+    projection.fitSize([bounds.mapBody.width, bounds.mapBody.height], {
+      type: "Sphere",
+    });
+  }
+}
