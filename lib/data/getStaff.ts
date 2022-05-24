@@ -2,7 +2,7 @@ import xlsx from "xlsx";
 import cleanStaff from "./cleanStaff";
 
 export default async function getStaff() {
-  const filePath = "./data/ITCHRDWH.xlsx";
+  const filePath = "./data/thematic/ITCHRDWH.xlsx";
   const file = xlsx.readFile(filePath, {
     cellDates: true,
   });

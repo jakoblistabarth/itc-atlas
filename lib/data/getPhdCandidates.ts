@@ -2,7 +2,7 @@ import xlsx from "xlsx";
 import { cleanPhdCandiates } from "./cleanPhdCandidates";
 
 export default async function getPhdCandidates() {
-  const filePath = "./data/ITCPHDCANDIDATES.xlsx";
+  const filePath = "./data/thematic/ITCPHDCANDIDATES.xlsx";
   const file = xlsx.readFile(filePath, {
     cellDates: true,
   });

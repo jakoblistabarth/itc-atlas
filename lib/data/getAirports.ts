@@ -2,7 +2,7 @@ import csv from "csvtojson";
 import type { Feature, FeatureCollection } from "geojson";
 
 export default async function getAirports() {
-  const csvFilePath = "./data/airports.csv";
+  const csvFilePath = "./data/thematic/airports.csv";
   const airports = await csv({
     checkType: true,
   }).fromFile(csvFilePath);

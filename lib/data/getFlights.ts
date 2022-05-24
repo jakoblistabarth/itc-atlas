@@ -5,7 +5,7 @@ import countFlightsperAirport from "./countFlightsPerAirport";
 import cleanTravelData2019 from "./cleanTravelData2019";
 
 export default async function getFlights() {
-  const filePath = "./data/UT.01jan-31dec2019-ITConly.xlsx";
+  const filePath = "./data/thematic/UT.01jan-31dec2019-ITConly.xlsx";
   const file = xlsx.readFile(filePath, {
     cellDates: true,
   });
