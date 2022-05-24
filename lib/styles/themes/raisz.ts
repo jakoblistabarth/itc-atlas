@@ -7,6 +7,7 @@ const red = "#d51d09";
 
 const raisz: MapTheme = {
   hasOutline: true,
+  hasShadow: true,
   background: {
     fill: oceanblue,
     gradient: [

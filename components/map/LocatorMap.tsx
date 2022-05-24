@@ -56,7 +56,7 @@ const LocatorMap: FC<Props> = ({ data, highlight, theme = defaultTheme }) => {
               key={nanoid()}
               feature={feature}
               projection={projection}
-              theme={themes.muted}
+              theme={theme}
             />
           ))}
         </g>

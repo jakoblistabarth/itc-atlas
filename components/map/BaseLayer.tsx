@@ -12,6 +12,8 @@ import BendedLabel from "./BendedLabel";
 import { nanoid } from "nanoid";
 import RadialGradient from "../defs/RadialGradient";
 import defaultTheme from "../../lib/styles/themes/defaultTheme";
+import getLakes from "../../lib/data/getLakes";
+import getRivers from "../../lib/data/getRivers";
 
 type Props = {
   data: Topology;
@@ -19,6 +21,11 @@ type Props = {
   projection: GeoProjection;
   theme?: MapTheme;
   labels?: boolean;
+  drawLakes?: boolean;
+  drawRivers?: boolean;
+  drawOutline?: boolean;
+  drawGraticuleLabels?: boolean;
+  drawShadow?: boolean;
 };
 
 const BaseLayer: FC<Props> = ({
@@ -26,6 +33,11 @@ const BaseLayer: FC<Props> = ({
   projection,
   theme = defaultTheme,
   labels = false,
+  drawLakes,
+  drawRivers,
+  drawOutline,
+  drawGraticuleLabels,
+  drawShadow,
 }) => {
   const path = geoPath(projection);
   const sphere: GeoSphere = { type: "Sphere" };
@@ -43,10 +55,19 @@ const BaseLayer: FC<Props> = ({
     (a, b) => a !== b
   );
   const bordersPath = path(borders);
+  const lakes = getLakes();
+  const lakesGeoJSON = topojson.feature(lakes, lakes.objects.ne_lakes);
+  const lakesPath = path(lakesGeoJSON);
+  const rivers = getRivers();
+  const riversGeoJSON = topojson.feature(rivers, rivers.objects.ne_rivers);
+  const riversPath = path(riversGeoJSON);
 
-  const hasGraticuleLabels = theme.hasGraticuleLables ?? false;
-  const hasOutline = theme.hasOutline ?? false;
-  const hasShadow = theme.hasShadow ?? true;
+  const hasGraticuleLabels =
+    drawGraticuleLabels ?? theme.hasGraticuleLables ?? false;
+  const hasOutline = drawOutline ?? theme.hasOutline ?? false;
+  const hasShadow = drawShadow ?? theme.hasShadow ?? false;
+  const hasLakes = drawLakes ?? theme.hasLakes ?? true;
+  const hasRivers = drawRivers ?? theme.hasRivers ?? true;
 
   return (
     <>
@@ -116,6 +137,23 @@ const BaseLayer: FC<Props> = ({
         {landPath && (
           <g className="countries">
             <path d={landPath} fill={theme.base.fill} />
+          </g>
+        )}
+
+        {hasLakes && lakesPath && (
+          <g className="lakes">
+            <path d={lakesPath} fill={theme.background.fill} />
+          </g>
+        )}
+
+        {hasRivers && riversPath && (
+          <g className="rivers">
+            <path
+              d={riversPath}
+              fill={"none"}
+              strokeWidth={0.5}
+              stroke={theme.background.fill}
+            />
           </g>
         )}
 
