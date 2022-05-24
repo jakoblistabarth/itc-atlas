@@ -16,7 +16,7 @@ const projection = geoBertin1953();
 const bounds = {
   width: 600,
   height: 300,
-  frame: { top: 100, bottom: 10, left: 10, right: 10 },
+  frame: { top: 10, bottom: 10, left: 10, right: 10 },
 };
 
 const Template: ComponentStory<typeof Map> = (
@@ -42,8 +42,17 @@ Simple.args = {
   bounds: bounds,
 };
 
-export const BigLeftAside = Template.bind({});
-BigLeftAside.args = {
+export const BigHeader = Template.bind({});
+BigHeader.args = {
+  ...Template.args,
+  debug: true,
+  theme: defaultTheme,
+  projection: projection,
+  bounds: { width: 900, frame: { top: 100, left: 0 } },
+};
+
+export const LeftAside = Template.bind({});
+LeftAside.args = {
   ...Template.args,
   debug: true,
   theme: defaultTheme,

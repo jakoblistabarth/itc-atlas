@@ -36,14 +36,16 @@ const BendedLabel: FC<Props> = ({
   const scaleOffset = scaleLinear().domain(domain).range([0, 100]);
   const id = nanoid();
   return (
-    <g>[1,20].map((r,i) => (
-      <circle
-        cx={projection(textOrigin)[0]}
-        cy={projection(textOrigin)[1]}
-        r={20}
-        stroke={"red"}
-        fill={"white"}
-      />))
+    <g>
+      {[1, 20].map((r, i) => (
+        <circle
+          cx={projection(textOrigin)[0]}
+          cy={projection(textOrigin)[1]}
+          r={20}
+          stroke={"red"}
+          fill={"white"}
+        />
+      ))}
       {path && (
         <path
           id={id}

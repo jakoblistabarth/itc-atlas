@@ -146,7 +146,11 @@ const SnapshotBar: FC<Props> = ({ column, type }) => {
           {...getTooltipProps({ className: "tooltip-container" })}
         >
           {tooltipData?.value || "no data set"}
-          {tooltipData.count && <span>{fPercentage(tooltipData.count)}</span>}
+          {tooltipData.count && (
+            <span style={{ fontSize: "small", fontWeight: "bold" }}>
+              {fPercentage(tooltipData.count)}
+            </span>
+          )}
           <div {...getArrowProps({ className: "tooltip-arrow" })} />
         </div>
       )}

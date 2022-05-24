@@ -20,7 +20,7 @@ export type MapOptions = {
 
 export type Bounds = {
   width: number;
-  height: number;
+  height?: number;
   frame?: {
     top?: number;
     bottom?: number;

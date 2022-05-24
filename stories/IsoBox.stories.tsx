@@ -8,7 +8,7 @@ const width = 300;
 const height = 300;
 
 export default {
-  title: "Cartographic/Iso Box",
+  title: "Cartographic/Symbology/Iso Box",
   component: IsoBox,
   argTypes: {
     side: { control: { type: "range", min: 5, max: 50, step: 1 } },
