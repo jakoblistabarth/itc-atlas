@@ -1,5 +1,5 @@
 import React, { FC } from "react";
-import styles from "../styles/heading.module.scss";
+import styles from "../styles/Heading.module.scss";
 
 export enum Headings {
   H1 = "h1",

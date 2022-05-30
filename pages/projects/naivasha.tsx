@@ -4,12 +4,13 @@ import type { GetStaticProps, NextPage } from "next";
 import Head from "next/head";
 import { Suspense } from "react";
 import Footer from "../../components/Footer";
-import Heading, { Headings } from "../../components/heading";
+import Heading, { Headings } from "../../components/Heading";
 import LocatorMap from "../../components/map/LocatorMap";
 import NaivashaRegion from "../../components/models/NaivashaRegion";
 import Cubes from "../../components/models/TestCubes";
 import getCountries from "../../lib/data/getCountries";
 import styles from "../../styles/home.module.css";
+import { SharedPageProps } from "../../types/Props";
 
 type Props = {
   model: string;
@@ -55,10 +56,6 @@ const Naivasha: NextPage<Props> = ({ model, countries }) => {
       <Footer />
     </>
   );
-};
-
-type SharedPageProps = {
-  countries: any;
 };
 
 export const getStaticProps: GetStaticProps<Props> = async () => {

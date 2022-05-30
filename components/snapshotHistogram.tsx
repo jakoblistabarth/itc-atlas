@@ -1,10 +1,10 @@
-import { FC, useRef } from "react";
 import * as d3 from "d3";
-import { colorMap } from "../lib/summarytable/colorMap";
-import { ColumnType } from "../types/Column";
-import { fDateLong, fDateShort, fFloat } from "../lib/utilities/formaters";
-import type { Column, Datum } from "../types/DataFrame";
 import { nanoid } from "nanoid";
+import { FC } from "react";
+import { colorMap } from "../lib/summarytable/colorMap";
+import { fDateShort, fFloat } from "../lib/utilities/formaters";
+import { ColumnType } from "../types/Column";
+import type { Column, Datum } from "../types/DataFrame";
 
 type Props = {
   column: Datum[];
