@@ -10,7 +10,6 @@ export const parameters = {
   },
 };
 
-// TODO: fix CORS error
 export const loaders = [
   async () => ({
     countries: await (

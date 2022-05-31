@@ -1,9 +1,6 @@
-import { FC, useLayoutEffect, useRef, useState } from "react";
-import { Vector3 } from "three";
-import { geoEquirectangular, geoGraticule10, geoPath } from "d3-geo";
 import { ContactShadows, useTexture } from "@react-three/drei";
-import React from "react";
-import { animated, config, useSpring } from "@react-spring/three";
+import React, { FC, RefObject } from "react";
+import { Vector3 } from "three";
 
 type PropTypes = React.PropsWithChildren<{
   position?: Vector3;
@@ -11,12 +8,14 @@ type PropTypes = React.PropsWithChildren<{
   texture?: "day" | "night" | "explorer" | "grid";
   bumpScale?: number;
   displacementScale?: number;
-  //   canvas; TODO: use canvas to display generated texture
+  canvasTexture: boolean;
+  canvasRef?: RefObject<HTMLCanvasElement>;
 }>;
 
 const Globe: FC<PropTypes> = ({
   position = new Vector3(0, 0, 0),
-  //   canvas,
+  canvasRef,
+  canvasTexture = false,
   radius = 1,
   texture = "day",
   children,
@@ -41,41 +40,20 @@ const Globe: FC<PropTypes> = ({
     bumpMap: "/textures/gebco_08_rev_elev_2000x1000.png",
   });
 
-  //   useLayoutEffect(() => {
-  //     const texture = canvas;
-  //     const width = 2400;
-  //     const height = width / 2;
-  //     texture.width = width;
-  //     texture.height = height;
-
-  //     const ctx = texture.getContext("2d");
-  //     if (!ctx) return;
-
-  //     const graticule = geoGraticule10();
-  //     const projection = geoEquirectangular().fitSize([width, height], {
-  //       type: "Sphere",
-  //     });
-  //     const path = geoPath(projection, ctx);
-  //     (ctx.fillStyle = "white"), ctx.fill();
-  //     ctx.fillRect(0, 0, width, height);
-  //     ctx.save();
-  //     ctx.beginPath(), path(graticule), (ctx.strokeStyle = "grey"), ctx.stroke();
-  //     ctx.beginPath(), path(world), (ctx.strokeStyle = "black"), ctx.stroke();
-  //     ctx.restore();
-  //   });
-
   return (
     <>
       <ambientLight args={[undefined, 0.2]} />
-      <directionalLight castShadow position={[10, 10, 0]} args={["white", 3]} />
+      <directionalLight castShadow position={[10, 10, 0]} args={["white", 2]} />
       <mesh castShadow receiveShadow position={position}>
         <sphereGeometry args={[radius, 512, 256]} />
         <meshPhongMaterial
           displacementScale={displacementScale}
           bumpScale={bumpScale}
-          {...textureProps}
+          {...(!canvasTexture && textureProps)}
         >
-          {/* <canvasTexture ref={canvas} attach="map" image={canvas} /> */}
+          {canvasTexture && canvasRef?.current && (
+            <canvasTexture attach={"map"} image={canvasRef?.current} />
+          )}
         </meshPhongMaterial>
       </mesh>
       {children}

@@ -15,6 +15,7 @@ import React, { useRef } from "react";
 import { scaleLinear } from "d3";
 import Globe from "../../components/map-3d/Globe";
 import lonLatToXYZ from "../../lib/cartographic/lonLatToXYZ";
+import GlobeTexture from "../../components/map-3d/GlobeTexture";
 
 type Props = SharedPageProps;
 
@@ -22,37 +23,7 @@ const ProjectExplorer3D: NextPage<Props> = ({ countries }) => {
   const earthRadius = 1;
   const world = topojson.feature(countries, countries.objects.countries);
 
-  const canvasRef = useRef(null);
-  const canvasObj = canvasRef.current;
-
-  const Scene = () => {
-    return (
-      <>
-        <Globe radius={earthRadius} texture={"explorer"} canvas={canvasObj}>
-          {world.features.map((country, i) => {
-            const centroid = geoCentroid(country);
-            const radius = scaleLinear().domain([0, 1]).range([0.005, 0.03])(
-              Math.random()
-            );
-            const pos = lonLatToXYZ(
-              centroid[0],
-              centroid[1],
-              earthRadius,
-              radius
-            );
-            return (
-              <Point3D
-                key={i}
-                pos={pos}
-                radius={radius}
-                data={country.properties}
-              />
-            );
-          })}
-        </Globe>
-      </>
-    );
-  };
+  const canvasRef = useRef<HTMLCanvasElement>(null);
 
   return (
     <>
@@ -66,10 +37,31 @@ const ProjectExplorer3D: NextPage<Props> = ({ countries }) => {
         <Heading Tag={Headings.H1}>Projects Explorer</Heading>
         <div style={{ width: "100%", height: "500px" }}>
           <Canvas camera={{ position: [0, 0, 5], fov: 30 }} shadows>
-            <Scene />
+            <Globe radius={earthRadius} texture={"explorer"}>
+              {world.features.map((country, i) => {
+                const centroid = geoCentroid(country);
+                const radius = scaleLinear()
+                  .domain([0, 1])
+                  .range([0.005, 0.03])(Math.random());
+                const pos = lonLatToXYZ(
+                  centroid[0],
+                  centroid[1],
+                  earthRadius,
+                  radius
+                );
+                return (
+                  <Point3D
+                    key={i}
+                    pos={pos}
+                    radius={radius}
+                    data={country.properties}
+                  />
+                );
+              })}
+            </Globe>
             <OrbitControls enableZoom={false} enablePan={false} />
           </Canvas>
-          <canvas style={{ display: "none" }} ref={canvasRef} />
+          <GlobeTexture countries={countries} ref={canvasRef} />
         </div>
       </main>
       <Footer />
