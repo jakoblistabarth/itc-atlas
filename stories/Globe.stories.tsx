@@ -50,7 +50,7 @@ const Template: ComponentStory<typeof Globe> = (
           maxPolarAngle={Math.PI / 2}
         />
       </Canvas>
-      <GlobeTexture ref={canvasRef} countries={countries} />
+      <GlobeTexture ref={canvasRef} {...args.texture} countries={countries} />
     </>
   );
 };
@@ -77,4 +77,17 @@ export const CanvasTexture = Template.bind({});
 CanvasTexture.args = {
   ...Template.args,
   canvasTexture: true,
+};
+
+export const HoloTexture = Template.bind({});
+HoloTexture.args = {
+  ...Template.args,
+  canvasTexture: true,
+  transparent: true,
+  texture: {
+    fillColor: "rgba(0,200,255,0.3)",
+    strokeColor: "lightblue",
+    graticuleColor: "rgba(0,200,255,0.1)",
+    sphereColor: "rgba(255,255,255,0.1)",
+  },
 };

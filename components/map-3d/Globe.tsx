@@ -1,6 +1,6 @@
 import { ContactShadows, useTexture } from "@react-three/drei";
 import React, { FC, RefObject } from "react";
-import { Vector3 } from "three";
+import { Vector3, FrontSide, DoubleSide } from "three";
 
 type PropTypes = React.PropsWithChildren<{
   position?: Vector3;
@@ -8,8 +8,9 @@ type PropTypes = React.PropsWithChildren<{
   texture?: "day" | "night" | "explorer" | "grid";
   bumpScale?: number;
   displacementScale?: number;
-  canvasTexture: boolean;
+  canvasTexture?: boolean;
   canvasRef?: RefObject<HTMLCanvasElement>;
+  transparent?: boolean;
 }>;
 
 const Globe: FC<PropTypes> = ({
@@ -21,6 +22,7 @@ const Globe: FC<PropTypes> = ({
   children,
   bumpScale = 0.01,
   displacementScale = 0.025,
+  transparent = false,
 }) => {
   let textureFile;
   switch (texture) {
@@ -43,16 +45,26 @@ const Globe: FC<PropTypes> = ({
   return (
     <>
       <ambientLight args={[undefined, 0.2]} />
-      <directionalLight castShadow position={[10, 10, 0]} args={["white", 2]} />
+      <directionalLight
+        castShadow
+        position={[10, 10, 0]}
+        args={["white", 0.5]}
+      />
       <mesh castShadow receiveShadow position={position}>
         <sphereGeometry args={[radius, 512, 256]} />
         <meshPhongMaterial
           displacementScale={displacementScale}
           bumpScale={bumpScale}
           {...(!canvasTexture && textureProps)}
+          transparent
+          side={transparent ? DoubleSide : FrontSide}
         >
           {canvasTexture && canvasRef?.current && (
-            <canvasTexture attach={"map"} image={canvasRef?.current} />
+            <canvasTexture
+              attach={"map"}
+              image={canvasRef?.current}
+              anisotropy={4}
+            />
           )}
         </meshPhongMaterial>
       </mesh>

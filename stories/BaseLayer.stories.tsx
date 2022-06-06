@@ -43,8 +43,6 @@ const defaultArgs = {
   projection: geoBertin1953(),
 };
 
-console.log(Object.keys(themes));
-
 const Template: ComponentStory<typeof BaseLayer> = (
   args,
   { loaded: { countries } }

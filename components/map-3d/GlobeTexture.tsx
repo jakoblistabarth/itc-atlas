@@ -4,10 +4,25 @@ import { Topology } from "topojson-specification";
 import { feature } from "topojson-client";
 import React from "react";
 
-type Props = { countries: Topology };
+type Props = {
+  countries: Topology;
+  sphereColor?: string;
+  graticuleColor?: string;
+  fillColor?: string;
+  strokeColor?: string;
+};
 
 const GlobeTexture = React.forwardRef<HTMLCanvasElement, Props>(
-  ({ countries }, ref) => {
+  (
+    {
+      countries,
+      sphereColor = "white",
+      graticuleColor = "grey",
+      fillColor = "lightgrey",
+      strokeColor = "white",
+    },
+    ref
+  ) => {
     const world = feature(countries, countries.objects.countries);
 
     const internalRef = useRef<HTMLCanvasElement>(null);
@@ -28,14 +43,15 @@ const GlobeTexture = React.forwardRef<HTMLCanvasElement, Props>(
         type: "Sphere",
       });
       const path = geoPath(projection, ctx);
-      (ctx.fillStyle = "white"), ctx.fill();
+      (ctx.fillStyle = sphereColor), ctx.fill();
       ctx.fillRect(0, 0, width, height);
       ctx.save();
       ctx.beginPath(),
         path(graticule),
-        (ctx.strokeStyle = "grey"),
+        (ctx.strokeStyle = graticuleColor),
         ctx.stroke();
-      ctx.beginPath(), path(world), (ctx.strokeStyle = "black"), ctx.stroke();
+      ctx.beginPath(), path(world), (ctx.fillStyle = fillColor), ctx.fill();
+      (ctx.strokeStyle = strokeColor), ctx.stroke();
       ctx.restore();
     });
 
