@@ -72,7 +72,7 @@ const Flights: NextPage<Props> = ({ odMatrix, world }) => {
       </Head>
 
       <main className={styles.main}>
-        <Heading Tag={Headings.H1}>ITC's Travel Activity</Heading>
+        <Heading Tag={Headings.H1}>ITC's travel activity</Heading>
 
         <svg width={mapOptions.width} height={mapOptions.height}>
           <BaseLayer
@@ -105,8 +105,8 @@ const Flights: NextPage<Props> = ({ odMatrix, world }) => {
           <FlowLegend
             data={odMatrix.flows.features.map((flow) => flow.properties?.value)}
             scaleWidth={scaleWidth}
-            title="No. of Flights in 2019"
-            unitLabel="Flights"
+            title="No. of flights in 2019"
+            unitLabel="flights"
             style={mapOptions.theme.flow}
           />
         </svg>

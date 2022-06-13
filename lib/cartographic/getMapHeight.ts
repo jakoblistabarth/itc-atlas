@@ -19,6 +19,13 @@ function getMapHeight(
 
 export default getMapHeight;
 
+/**
+ * Sets the map bounds based on a bounds object.
+ * Also adjusts the provided projection based on the bounds.
+ * @param bounds A {@link Bounds} object.
+ * @param projection A {@link GeoProjection}.
+ * @returns The adjusted {@link GeoProjection}.
+ */
 export function setMapBounds(bounds: Bounds, projection: GeoProjection) {
   const width =
     bounds.width - ((bounds.frame?.left ?? 0) + (bounds.frame?.right ?? 0));
@@ -37,4 +44,5 @@ export function setMapBounds(bounds: Bounds, projection: GeoProjection) {
       type: "Sphere",
     });
   }
+  return projection;
 }

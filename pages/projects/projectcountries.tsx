@@ -1,32 +1,36 @@
+import { geoBertin1953 } from "d3-geo-projection";
+import { FeatureCollection, MultiPolygon, Point } from "geojson";
+import { nanoid } from "nanoid";
 import type { GetStaticProps, NextPage } from "next";
 import Head from "next/head";
-import styles from "../../styles/home.module.css";
-import { geoBertin1953 } from "d3-geo-projection";
-import * as d3 from "d3";
-import * as topojson from "topojson-client";
-import { Project } from "../../types/Project";
-import getCountries from "../../lib/data/getCountries";
-import getProjects from "../../lib/data/getProjects";
-import BaseLayer from "../../components/map/BaseLayer";
+import PatternLines from "../../components/defs/patterns/PatternLines";
 import Heading, { Headings } from "../../components/Heading";
-import { FeatureCollection, Feature, Point, MultiPolygon } from "geojson";
+import BaseLayer from "../../components/map/BaseLayer";
+import ChoroplethSymbol from "../../components/map/ChoroplethSymbol";
 import PointSymbol from "../../components/map/PointSymbol";
 import ProportionalSymbolLegend from "../../components/map/ProportionalSymbolLegend";
 import getMapHeight from "../../lib/cartographic/getMapHeight";
-import { AreaCode } from "../../types/UnsdCodes";
-import getUnsdCountries from "../../lib/data/getUnsdCountries";
-import { nanoid } from "nanoid";
-import PatternLines from "../../components/defs/patterns/PatternLines";
+import getCountries from "../../lib/data/getCountries";
+import getProjectsByCountry from "../../lib/data/getProjectsByCountry";
 import themes from "../../lib/styles/themes";
-import ChoroplethSymbol from "../../components/map/ChoroplethSymbol";
+import styles from "../../styles/home.module.css";
+import { scaleSqrt } from "d3";
+import getCountriesByCategory from "../../lib/data/getCountriesByGroup";
+import { UnGrouping } from "../../types/UnsdCodes";
 
 type Props = {
-  projects: Project[];
+  data: FeatureCollection<Point>;
+  domain: [number, number];
   world: Awaited<ReturnType<typeof getCountries>>;
-  areaCodes: AreaCode[];
+  highlightCountries: FeatureCollection<MultiPolygon>;
 };
 
-const ProjectCountries: NextPage<Props> = ({ projects, world, areaCodes }) => {
+const ProjectCountries: NextPage<Props> = ({
+  data,
+  domain,
+  world,
+  highlightCountries,
+}) => {
   const dimension = {
     width: 1280,
     height: 0,
@@ -34,66 +38,7 @@ const ProjectCountries: NextPage<Props> = ({ projects, world, areaCodes }) => {
   const theme = themes.eth;
   const projection = geoBertin1953();
   dimension.height = getMapHeight(dimension.width, projection);
-
-  const count = d3
-    .rollups(
-      projects.reduce((acc: string[], proj) => {
-        acc.push(...proj.countries); // or proj.allCountries
-        return acc;
-      }, []),
-      (v) => v.length,
-      (d) => d
-    )
-    .sort((a, b) => d3.descending(a[1], b[1]));
-  const projectsCountry = new Map(count);
-
-  const minRadius = 1;
-  const maxRadius = 30;
-
-  const projectCount = Array.from(projectsCountry.values());
-  const minRange = d3.min(projectCount) ?? 0; // TODO: meaningful fallback values
-  const maxRange = d3.max(projectCount) ?? 10;
-
-  const scale = d3
-    .scaleSqrt()
-    .domain([minRange, maxRange])
-    .range([minRadius, maxRadius]);
-
-  const points: FeatureCollection<Point> = {
-    type: "FeatureCollection",
-    features: topojson
-      .feature(world, world.objects.countries)
-      .features.map((feature: Feature<MultiPolygon>) => {
-        const value = projectsCountry.get(feature.properties?.iso3code);
-        return {
-          type: "Feature",
-          properties: {
-            projectCount: value,
-            ...feature.properties,
-          },
-          geometry: {
-            coordinates: [
-              d3.geoCentroid(feature)[0],
-              d3.geoCentroid(feature)[1],
-            ],
-          },
-        };
-      })
-      .filter((feature: Feature) => feature.properties?.projectCount),
-  };
-
-  const polygons: FeatureCollection<MultiPolygon> = {
-    type: "FeatureCollection",
-    features: topojson
-      .feature(world, world.objects.countries)
-      .features.filter((feature: Feature<MultiPolygon>) => {
-        const matchedCountry = areaCodes.find(
-          (area) => area["ISO-alpha3 Code"] === feature.properties?.iso3code
-        );
-        const highlight = matchedCountry?.["Least Developed Countries (LDC)"];
-        return highlight;
-      }),
-  };
+  const scale = scaleSqrt().domain(domain).range([2, 40]);
 
   return (
     <>
@@ -114,17 +59,17 @@ const ProjectCountries: NextPage<Props> = ({ projects, world, areaCodes }) => {
           </defs>
           <BaseLayer data={world} projection={projection} theme={theme} />
           <g className="choroplethLayer">
-            {polygons.features.map((feature) => (
+            {highlightCountries.features.map((feature) => (
               <ChoroplethSymbol
                 key={nanoid()}
                 projection={projection}
                 feature={feature}
-                theme={theme}
+                theme={theme} // TODO: do I really need to add theme and style here?
               />
             ))}
           </g>
           <g className="symbolLayer">
-            {points.features.map((feature) => (
+            {data.features.map((feature) => (
               <PointSymbol
                 key={nanoid()}
                 xy={projection(feature.geometry.coordinates)}
@@ -135,7 +80,7 @@ const ProjectCountries: NextPage<Props> = ({ projects, world, areaCodes }) => {
           </g>
           <ProportionalSymbolLegend
             key={nanoid()}
-            data={points.features.map(
+            data={data.features.map(
               (feature) => feature.properties?.projectCount ?? 0
             )}
             scaleRadius={scale}
@@ -150,30 +95,18 @@ const ProjectCountries: NextPage<Props> = ({ projects, world, areaCodes }) => {
 };
 
 export const getStaticProps: GetStaticProps<Props> = async () => {
-  const projects = await getProjects();
-
-  const projectSelection = projects.filter(
-    (
-      row
-    ): row is Omit<Project, "dateStart" | "dateEnd" | "projectID"> & {
-      dateStart: string;
-      dateEnd: string;
-      projectID: string;
-    } => typeof row.dateStart === "string" && typeof row.dateEnd === "string"
-  );
-
-  projectSelection.sort((a, b) =>
-    d3.ascending(new Date(a.dateStart), new Date(b.dateStart))
-  );
-
-  const world = await getCountries();
-  const areaCodes = await getUnsdCountries();
+  const [{ data, domain }, world, highlightCountries] = await Promise.all([
+    getProjectsByCountry(),
+    getCountries(),
+    getCountriesByCategory(UnGrouping.LDC),
+  ]);
 
   return {
     props: {
-      projects: projectSelection,
+      data,
+      domain,
       world,
-      areaCodes,
+      highlightCountries,
     },
   };
 };

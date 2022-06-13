@@ -15,9 +15,9 @@ const defaultTheme: MapTheme = {
     stroke: lightgrey,
   },
   symbol: {
-    stroke: red,
+    stroke: "black",
     strokeWidth: 1,
-    fill: red,
+    fill: "black",
     fillOpacity: 0.1,
   },
   scaledPie: {
@@ -28,7 +28,7 @@ const defaultTheme: MapTheme = {
   flow: {
     stroke: "grey",
     opacity: 0.25,
-    markerEnd: "ArrowHead",
+    markerEnd: "tip",
   },
   choropleth: {
     fill: "none",

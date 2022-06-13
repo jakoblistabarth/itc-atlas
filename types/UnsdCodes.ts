@@ -1,7 +1,7 @@
-export enum UnGroupings {
-  LDC = "LDC",
-  LLDC = "LLDC",
-  SIDS = "SIDS",
+export enum UnGrouping {
+  LDC = "Least Developed Countries (LDC)",
+  LLDC = "Land Locked Developing Countries (LLDC)",
+  SIDS = "Small Island Developing States (SIDS)",
 }
 
 export enum UnLevel {

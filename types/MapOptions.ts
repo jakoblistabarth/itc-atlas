@@ -7,13 +7,13 @@ export type MapOptions = {
   bounds: Bounds;
   projection: GeoProjection;
   theme: MapTheme;
-  scales: {
+  scales?: {
     [name: string]:
       | ScaleLinear<number, number>
       | ScalePower<number, number>
       | ScaleOrdinal<string, string>;
   };
-  styles: {
+  styles?: {
     [name: string]: Appearance;
   };
 };

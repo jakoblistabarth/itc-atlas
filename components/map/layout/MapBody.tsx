@@ -7,7 +7,10 @@ type Props = React.PropsWithChildren<{
 
 const MapBody: FC<Props> = ({ bounds, children }) => {
   return (
-    <g transform={`translate(${bounds.frame?.left}, ${bounds.frame?.top})`}>
+    <g
+      className="map-body"
+      transform={`translate(${bounds.frame?.left}, ${bounds.frame?.top})`}
+    >
       {children}
     </g>
   );

@@ -1,31 +1,35 @@
-import * as d3 from "d3";
+import { scaleSqrt } from "d3";
 import { geoInterruptedMollweide } from "d3-geo-projection";
-import type { Feature, FeatureCollection, MultiPolygon, Point } from "geojson";
+import type { FeatureCollection, Point } from "geojson";
 import { nanoid } from "nanoid";
 import type { GetStaticProps, NextPage } from "next";
 import Head from "next/head";
-import * as topojson from "topojson-client";
-import type { Topology } from "topojson-specification";
 import Footer from "../../components/Footer";
 import Heading, { Headings } from "../../components/Heading";
 import BaseLayer from "../../components/map/BaseLayer";
-import NominalLegend from "../../components/map/NominalLegend";
-import ScaledPie, { pieDatum } from "../../components/map/ScaledPie";
-import getCountries from "../../lib/data/getCountries";
-import getPhdCandidates from "../../lib/data/getPhdCandidates";
-import { Department, departmentColors } from "../../lib/mappings/departments";
-import styles from "../../styles/home.module.css";
-import type { PhdCandidate } from "../../types/PhdCandidate";
-import getMapHeight from "../../lib/cartographic/getMapHeight";
 import LegendTitle from "../../components/map/LegendTitle";
+import NominalLegend from "../../components/map/NominalLegend";
+import ScaledPie from "../../components/map/ScaledPie";
+import getMapHeight from "../../lib/cartographic/getMapHeight";
+import getCountries from "../../lib/data/getCountries";
+import getPhdCandidatesByCountryByDepartment from "../../lib/data/getPhdCandidatesByCountryByDepartment";
+import { departmentColors } from "../../lib/mappings/departments";
 import defaultTheme from "../../lib/styles/themes/defaultTheme";
+import styles from "../../styles/home.module.css";
+import { SharedPageProps } from "../../types/Props";
 
 type Props = {
-  phdCandidates: PhdCandidate[];
-  world: Topology;
-};
+  data: FeatureCollection<Point>;
+  legendEntries: any;
+  domain: [number, number];
+} & SharedPageProps;
 
-const PhdDepartments: NextPage<Props> = ({ phdCandidates, world }) => {
+const PhdDepartments: NextPage<Props> = ({
+  countries,
+  data,
+  legendEntries,
+  domain,
+}) => {
   const dimension = {
     width: 1280,
     height: 0,
@@ -35,84 +39,7 @@ const PhdDepartments: NextPage<Props> = ({ phdCandidates, world }) => {
   const projection = geoInterruptedMollweide();
   dimension.height = getMapHeight(dimension.width, projection);
 
-  const count = d3.group(
-    phdCandidates,
-    (d) => d.country,
-    (d) => d.department1
-  );
-
-  const featureCollection: FeatureCollection<MultiPolygon> = topojson.feature(
-    world,
-    world.objects.countries
-  );
-
-  const points: FeatureCollection<Point> = {
-    type: "FeatureCollection",
-    features: featureCollection.features
-      .map((feature: Feature<MultiPolygon>) => {
-        const departments = count.get(feature.properties?.iso3code);
-        const departmentCount = departments
-          ? Array.from(departments?.entries()).map(([key, value]) => {
-              return {
-                label: key,
-                value: value.length,
-              };
-            })
-          : null;
-        const totalCount = departments
-          ? Array.from(departments.values()).reduce(
-              (sum, d) => sum + d.length,
-              0
-            )
-          : null;
-        const pointFeature: Feature<Point> = {
-          type: "Feature",
-          properties: {
-            totalPhdCount: totalCount,
-            departments: departmentCount,
-            ...feature.properties,
-          },
-          geometry: {
-            type: "Point",
-            coordinates: [
-              d3.geoCentroid(feature)[0],
-              d3.geoCentroid(feature)[1],
-            ],
-          },
-        };
-        return pointFeature;
-      })
-      .filter((feature: Feature) => feature.properties?.totalPhdCount)
-      .sort((a: Feature, b: Feature) =>
-        d3.descending(a.properties?.totalPhdCount, b.properties?.totalPhdCount)
-      ),
-  };
-
-  const legendEntries = points.features
-    .reduce((acc: Department[], point) => {
-      point.properties?.departments.forEach((department: pieDatum) => {
-        if (!acc.includes(department.label as Department))
-          acc.push(department.label as Department);
-      });
-      return acc;
-    }, [])
-    .map((department) => {
-      return {
-        label: department,
-        color: departmentColors[department],
-      };
-    });
-
-  const phdCount = Array.from(count.values()).map((d) =>
-    Array.from(d.values()).reduce((sum, d) => sum + d.length, 0)
-  );
-  const min = d3.min(phdCount);
-  const max = d3.max(phdCount);
-
-  const scale = d3
-    .scaleSqrt()
-    .domain([min ?? 0, max ?? 10])
-    .range([1, 100]);
+  const scale = scaleSqrt().domain(domain).range([1, 100]);
 
   return (
     <>
@@ -125,9 +52,9 @@ const PhdDepartments: NextPage<Props> = ({ phdCandidates, world }) => {
       <main className={styles.main}>
         <Heading Tag={Headings.H1}>ITC's PhD candidates</Heading>
         <svg width={dimension.width} height={dimension.height}>
-          <BaseLayer data={world} projection={projection} theme={theme} />
+          <BaseLayer data={countries} projection={projection} theme={theme} />
           <g id="symbols">
-            {points.features.map((point) => {
+            {data.features.map((point) => {
               if (!point.properties?.departments) return;
               return (
                 <ScaledPie
@@ -145,7 +72,7 @@ const PhdDepartments: NextPage<Props> = ({ phdCandidates, world }) => {
           <NominalLegend title={"ITC's departments"} entries={legendEntries} />
           <g transform={`translate(${dimension.width - 170},0)`}>
             <LegendTitle>Top 5 PhD countries</LegendTitle>
-            {points.features.slice(0, 5).map((feature, index) => (
+            {data.features.slice(0, 5).map((feature, index) => (
               <g
                 fontSize={10}
                 transform={`translate(0, ${40 + index * 15})`}
@@ -166,12 +93,15 @@ const PhdDepartments: NextPage<Props> = ({ phdCandidates, world }) => {
 };
 
 export const getStaticProps: GetStaticProps<Props> = async () => {
-  const phdCandidates = await getPhdCandidates();
-  const world = await getCountries();
+  const { data, domain, legendEntries } =
+    await getPhdCandidatesByCountryByDepartment();
+  const countries = await getCountries();
   return {
     props: {
-      phdCandidates,
-      world,
+      data,
+      domain,
+      legendEntries,
+      countries,
     },
   };
 };

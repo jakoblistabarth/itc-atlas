@@ -25,7 +25,7 @@ export default async function handler(
     res.status(500).json({ error: "invalid theme name" });
   }
 
-  const [odMatrix, countries] = await Promise.all([
+  const [odMatrix, world] = await Promise.all([
     (await getFlights()).odMatrix,
     getCountries(),
   ]);
@@ -35,14 +35,14 @@ export default async function handler(
   );
   const min = d3.min(flightsPerRoute);
   const max = d3.max(flightsPerRoute);
-  const scaleWidth = d3.scaleLinear().domain([min, max]).range([1, 15]);
+  const scale = d3.scaleLinear().domain([min, max]).range([1, 15]);
 
   const mapOptions: MapOptions = {
     bounds: {
       width: 900,
       height: 500,
       frame: {
-        top: 75,
+        top: 70,
         bottom: 0,
         left: 150,
         right: 0,
@@ -50,11 +50,10 @@ export default async function handler(
     },
     projection: geoBertin1953(),
     theme: theme,
-    scales: { scaleWidth },
+    scales: { scale },
     styles: {
       pointStyle: {
         stroke: "none",
-        fill: "red",
         fillOpacity: 1,
       },
     },
@@ -68,31 +67,31 @@ export default async function handler(
     >
       <MapHeader
         bounds={mapOptions.bounds}
-        title={"ITC's Flight Activities"}
-        subtitle={"in 2019"}
+        title={"ITC's flight activities"}
+        subtitle={"by staff for projects and examinations"}
         theme={theme}
       />
       <MapAside xOffset={0} yOffset={mapOptions.bounds?.frame?.top}>
         <FlowLegend
           data={odMatrix.flows.features.map((flow) => flow.properties?.value)}
-          scaleWidth={mapOptions.scales.scaleWidth}
-          title="No. of Flights in 2019"
-          unitLabel="Flights"
+          scaleWidth={mapOptions.scales?.scale}
+          title="No. of flights in 2019"
+          unitLabel="flights"
           style={mapOptions.theme.flow}
         />
       </MapAside>
       <MapBody bounds={mapOptions.bounds}>
         <BaseLayer
-          data={countries}
+          data={world}
           projection={mapOptions.projection}
           theme={mapOptions.theme}
         />
         <FlowLayer
           projection={mapOptions.projection}
           data={odMatrix}
-          scaleWidth={mapOptions.scales.scaleWidth}
+          scaleWidth={mapOptions.scales?.scale}
           flowStyle={mapOptions.theme.flow}
-          pointStyle={mapOptions.styles.pointStyle}
+          pointStyle={mapOptions.styles?.pointStyle}
         />
       </MapBody>
     </Map>

@@ -9,7 +9,7 @@ import isPartOfUnsdGroup from "../../lib/isPartOfUnsdGroup";
 import { fDateYear } from "../../lib/utilities/formaters";
 import styles from "../../styles/home.module.css";
 import { Project, ProjectStatus } from "../../types/Project";
-import { AreaCode, UnGroupings } from "../../types/UnsdCodes";
+import { AreaCode, UnGrouping } from "../../types/UnsdCodes";
 
 type TimelineProps = {
   projects: Project[];
@@ -115,7 +115,7 @@ const Timeline: NextPage<TimelineProps> = ({ projects, countries }) => {
                             return isPartOfUnsdGroup(
                               countries,
                               e,
-                              UnGroupings.LDC
+                              UnGrouping.LDC
                             );
                           })
                             ? "red"

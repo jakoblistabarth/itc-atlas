@@ -1,6 +1,7 @@
 import { FC } from "react";
 import { Position } from "geojson";
 import { Appearance } from "../../types/Appearance";
+import defaultTheme from "../../lib/styles/themes/defaultTheme";
 
 const PointSymbol: FC<{
   xy: Position;
@@ -12,11 +13,11 @@ const PointSymbol: FC<{
       cx={xy[0]}
       cy={xy[1]}
       r={radius}
-      fill={style?.fill ?? "black"}
-      fillOpacity={style?.fillOpacity ?? 0.2}
-      stroke={style?.stroke ?? style?.fill ?? "black"}
-      strokeOpacity={style?.strokeOpacity ?? 0.8}
-      strokeWidth={style?.strokeWidth ?? 1}
+      fill={style?.fill ?? defaultTheme.symbol?.fill}
+      fillOpacity={style?.fillOpacity ?? defaultTheme.symbol?.fillOpacity}
+      stroke={style?.stroke ?? defaultTheme.symbol?.stroke}
+      strokeOpacity={style?.strokeOpacity ?? defaultTheme.symbol?.strokeOpacity}
+      strokeWidth={style?.strokeWidth ?? defaultTheme.symbol?.strokeWidth}
       strokeLinejoin={style?.strokeLineJoin ?? "round"}
     />
   );

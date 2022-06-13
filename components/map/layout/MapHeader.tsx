@@ -12,7 +12,7 @@ type Props = {
 
 const MapHeader: FC<Props> = ({ bounds, theme, title, subtitle }) => {
   return (
-    <g className="MapHeader" transform={`translate(${bounds.width / 2})`}>
+    <g className="map-header" transform={`translate(${bounds.width / 2})`}>
       <text
         fontFamily={theme?.fontFamily ?? defaultTheme.fontFamily}
         textAnchor="middle"

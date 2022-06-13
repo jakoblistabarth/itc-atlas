@@ -8,7 +8,7 @@ type Props = React.PropsWithChildren<{
 const MapAside: FC<Props> = ({ xOffset, yOffset, children }) => {
   return (
     <g
-      className="MapAside"
+      className="map-aside"
       transform={`translate(${xOffset ?? 0} , ${yOffset ?? 0})`}
     >
       {children}
