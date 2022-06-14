@@ -18,7 +18,7 @@ export default {
       },
     },
     projection: {
-      options: ["Bertin", "Interrupted Mollweide"],
+      options: ["Bertin", "Interrupted Mollweide"], //TODO: fix projections in args menu
       mapping: [geoBertin1953, geoInterruptedMollweide],
       control: {
         type: "select",

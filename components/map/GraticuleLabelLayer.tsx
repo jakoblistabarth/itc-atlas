@@ -28,9 +28,8 @@ const GraticuleLabelLayer: FC<{
         if (!xyTop || !xyBottom) return <></>;
         return (
           lon > -180 && (
-            <>
+            <g key={nanoid()}>
               <GraticuleLabel
-                key={nanoid()}
                 type="longitude"
                 xy={xyTop}
                 fontSize={style?.fontSize ?? 10}
@@ -38,14 +37,13 @@ const GraticuleLabelLayer: FC<{
                 {lon}°
               </GraticuleLabel>
               <GraticuleLabel
-                key={nanoid()}
                 type="longitude"
                 xy={xyBottom}
                 fontSize={style?.fontSize ?? 10}
               >
                 {lon}°
               </GraticuleLabel>
-            </>
+            </g>
           )
         );
       })}
@@ -54,9 +52,8 @@ const GraticuleLabelLayer: FC<{
         const xyRight = projection([-170, lat]);
         if (!xyLeft || !xyRight) return <></>;
         return (
-          <>
+          <g key={nanoid()}>
             <GraticuleLabel
-              key={nanoid()}
               type="latitude"
               xy={xyLeft}
               fontSize={style?.fontSize ?? 10}
@@ -64,14 +61,13 @@ const GraticuleLabelLayer: FC<{
               {lat}°
             </GraticuleLabel>
             <GraticuleLabel
-              key={nanoid()}
               type="latitude"
               xy={xyRight}
               fontSize={style?.fontSize ?? 10}
             >
               {lat}°
             </GraticuleLabel>
-          </>
+          </g>
         );
       })}
     </g>

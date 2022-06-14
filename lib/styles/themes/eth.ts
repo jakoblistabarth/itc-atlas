@@ -46,7 +46,7 @@ const eth: MapTheme = {
   flow: {
     opacity: 0.2,
     stroke: "red",
-    markerEnd: "ArrowHead",
+    markerEnd: "tip",
   },
   symbol: {
     fill: red,

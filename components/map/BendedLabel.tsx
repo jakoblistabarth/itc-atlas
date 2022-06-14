@@ -46,7 +46,7 @@ const BendedLabel: FC<Props> = ({
           fill={"white"}
         />
       ))} */}
-      {path && (
+      {/* {path && (
         <path
           id={id}
           d={path}
@@ -54,7 +54,7 @@ const BendedLabel: FC<Props> = ({
           stroke={"grey"}
           strokeWidth={0.5}
         />
-      )}
+      )} */}
       <text
         fontSize={style?.fontSize ?? 5}
         fontFamily={style?.fontFamily}

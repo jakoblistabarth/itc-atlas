@@ -172,7 +172,6 @@ const BaseLayer: FC<Props> = ({
         {hasGraticuleLabels && (
           <>
             <GraticuleLabelLayer
-              key={nanoid()}
               style={theme.graticuleLabel}
               projection={projection}
               latRange={{ min: -60, max: 60, step: 10 }}
@@ -201,6 +200,7 @@ const BaseLayer: FC<Props> = ({
             const [textOriginDegree, degree] = d3.geoCentroid(country.geometry);
             return (
               <BendedLabel
+                key={nanoid()}
                 graticuleType="lat"
                 degree={d3.geoCentroid(country.geometry)[1]}
                 textOriginDegree={d3.geoCentroid(country.geometry)[0]}

@@ -32,9 +32,6 @@ export default {
   decorators: [
     (Story) => (
       <svg width={width} height={height}>
-        <defs>
-          <ArrowHead color="black" />
-        </defs>
         <path
           d={geoPath(defaultArgs.projection)({ type: "Sphere" }) ?? ""}
           stroke={"grey"}
@@ -47,7 +44,14 @@ export default {
   ],
 } as ComponentMeta<typeof Flow>;
 
-const Template: ComponentStory<typeof Flow> = (args) => <Flow {...args} />;
+const Template: ComponentStory<typeof Flow> = (args) => (
+  <>
+    <defs>
+      <ArrowHead color={args.style?.stroke} type={args.style?.markerEnd} />
+    </defs>
+    <Flow {...args} />
+  </>
+);
 
 const defaultArgs = {
   scale: scaleLinear().domain([0, 100]).range([0, 10]),
@@ -57,16 +61,18 @@ const defaultArgs = {
     })
     .translate([width / 2, height / 2]),
   datum: getLineString(),
-  style: { fill: "white", stroke: "black" },
+  style: { fill: "none", stroke: "black" },
 };
 
-export const SmallFlow = Template.bind({});
-SmallFlow.args = {
+export const SmallFlowTip = Template.bind({});
+SmallFlowTip.args = {
   ...defaultArgs,
 };
 
-export const BigFlow = Template.bind({});
-BigFlow.args = {
+export const BigFlowTriangle = Template.bind({});
+BigFlowTriangle.args = {
   ...defaultArgs,
   datum: getLineString(100),
+  bend: -0.2,
+  style: { fill: "none", stroke: "red", opacity: 0.5, markerEnd: "triangle" },
 };

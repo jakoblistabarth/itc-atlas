@@ -19,12 +19,12 @@ const FlowLayer: FC<{
   projection,
   scaleWidth,
   flowStyle = defaultTheme.flow,
-  pointStyle = defaultTheme.point,
+  pointStyle = defaultTheme.symbol,
 }) => {
   return (
     <g id="flow-Layer">
       <defs>
-        <ArrowHead color={flowStyle?.stroke} />
+        <ArrowHead type={flowStyle?.markerEnd} color={flowStyle?.stroke} />
       </defs>
       {data.points.features.map((feature) => {
         const position = projection([

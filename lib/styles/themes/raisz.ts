@@ -40,6 +40,11 @@ const raisz: MapTheme = {
     stroke: red,
     // strokeWidth: 1,
   },
+  flow: {
+    opacity: 0.4,
+    stroke: "rgb(150, 5, 5)",
+    markerEnd: "tip",
+  },
   symbol: {
     fill: "white",
     fillOpacity: 0.2,

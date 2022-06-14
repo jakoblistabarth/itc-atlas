@@ -9,7 +9,7 @@ export type Appearance = {
   strokeWidth?: number;
   strokeOpacity?: number;
   strokeLineJoin?: "round" | "bevel" | "miter" | "round";
-  markerEnd?: string;
+  markerEnd?: "tip" | "triangle";
 };
 
 export type TextAppearance = {
