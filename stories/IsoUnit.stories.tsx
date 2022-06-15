@@ -2,14 +2,14 @@ import React from "react";
 import { ComponentStory, ComponentMeta } from "@storybook/react";
 import { scaleLinear } from "d3-scale";
 
-import IsoBox from "../components/map/IsoBox";
+import IsoUnit from "../components/map/IsoUnit";
 
 const width = 300;
 const height = 300;
 
 export default {
-  title: "Cartographic/Symbology/Iso Box",
-  component: IsoBox,
+  title: "Cartographic/Symbology/Iso Unit",
+  component: IsoUnit,
   argTypes: {
     side: { control: { type: "range", min: 5, max: 50, step: 1 } },
     value: { control: { type: "range", min: 1, max: 100, step: 1 } },
@@ -21,9 +21,11 @@ export default {
       </svg>
     ),
   ],
-} as ComponentMeta<typeof IsoBox>;
+} as ComponentMeta<typeof IsoUnit>;
 
-const Template: ComponentStory<typeof IsoBox> = (args) => <IsoBox {...args} />;
+const Template: ComponentStory<typeof IsoUnit> = (args) => (
+  <IsoUnit {...args} />
+);
 
 const defaultArgs = {
   scale: scaleLinear().domain([0, 100]).range([0, 100]),
@@ -31,16 +33,25 @@ const defaultArgs = {
   style: { fill: "white", stroke: "black" },
 };
 
-export const SmallBox = Template.bind({});
-SmallBox.args = {
+export const SmallUnit = Template.bind({});
+SmallUnit.args = {
   ...defaultArgs,
   value: 10,
   side: 10,
 };
 
-export const BigBox = Template.bind({});
-BigBox.args = {
+export const BigUnit = Template.bind({});
+BigUnit.args = {
   ...defaultArgs,
   value: 90,
   side: 10,
+};
+
+export const ColoredUnitLabel = Template.bind({});
+ColoredUnitLabel.args = {
+  ...defaultArgs,
+  value: 90,
+  side: 10,
+  label: true,
+  style: { fill: "darksalmon", stroke: "darkmagenta" },
 };

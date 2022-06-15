@@ -22,7 +22,7 @@ import themes from "../../lib/styles/themes";
 import ChoroplethSymbol from "../../components/map/ChoroplethSymbol";
 import { MapOptions } from "../../types/MapOptions";
 import PatternDots from "../../components/defs/patterns/PatternDots";
-import IsoBox from "../../components/map/IsoBox";
+import IsoUnit from "../../components/map/IsoUnit";
 
 type Props = {
   projects: Project[];
@@ -150,7 +150,7 @@ const ProjectCountries: NextPage<Props> = ({ projects, world, areaCodes }) => {
           </g>
           <g className="symbolLayer">
             {points.features.map((feature) => (
-              <IsoBox
+              <IsoUnit
                 key={nanoid()}
                 xy={mapOptions.projection(feature.geometry.coordinates)}
                 scale={scale}
