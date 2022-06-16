@@ -44,11 +44,11 @@ const Globe: FC<PropTypes> = ({
 
   return (
     <>
-      <ambientLight args={[undefined, 0.2]} />
+      <ambientLight args={[undefined, 0.3]} />
       <directionalLight
         castShadow
         position={[10, 10, 0]}
-        args={["white", 0.5]}
+        args={["white", 0.75]}
       />
       <mesh castShadow receiveShadow position={position}>
         <sphereGeometry args={[radius, 512, 256]} />
