@@ -1,6 +1,6 @@
-import Vector2D from "./vector2D";
 import type { GeoProjection } from "d3-geo";
 import type { Feature, LineString } from "geojson";
+import { Vector2 } from "three";
 
 const getFlowPoints = (
   flow: Feature<LineString>,
@@ -12,19 +12,22 @@ const getFlowPoints = (
   const a = projection ? projection([o[0], o[1]]) : o;
   const b = projection ? projection([d[0], d[1]]) : d;
   if (!a || !b) return;
-  const v = new Vector2D(b[0] - a[0], b[1] - a[1]);
-  const midPoint = new Vector2D(a[0], a[1]).plus(v.times(0.5));
-  const controlPoint = midPoint.plus(v.getNormal().times(bend)).toPoint();
-  const vStart = new Vector2D(controlPoint[0] - a[0], controlPoint[1] - a[1]);
-  const vEnd = new Vector2D(controlPoint[0] - b[0], controlPoint[1] - b[1]);
+
+  const av = new Vector2(a[0], a[1]);
+  const bv = new Vector2(b[0], b[1]);
+  const v = bv.clone().sub(av);
+  const m = av.clone().add(v.clone().multiplyScalar(0.5));
+  const controlPoint = m
+    .clone()
+    .add(v.clone().multiplyScalar(bend))
+    .rotateAround(m, Math.PI / 2);
+
+  const vStart = controlPoint.clone().sub(av);
+  const vEnd = controlPoint.clone().sub(bv);
   const offset = 3;
-  const startPoint = new Vector2D(a[0], a[1])
-    .plus(vStart.getUnitVector().times(offset))
-    .toPoint();
-  const endPoint = new Vector2D(b[0], b[1])
-    .plus(vEnd.getUnitVector().times(offset)) // TODO: add more offset based on linewidth (i.e. size of arrowhead)
-    .toPoint();
-  return [startPoint, controlPoint, endPoint];
+  const startPoint = av.clone().add(vStart.normalize().multiplyScalar(offset));
+  const endPoint = bv.clone().add(vEnd.normalize().multiplyScalar(offset));
+  return [startPoint, controlPoint, endPoint].map((v2) => v2.toArray());
 };
 
 export default getFlowPoints;
