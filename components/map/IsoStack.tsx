@@ -16,19 +16,19 @@ type Props = {
 };
 
 const IsoStack: FC<Props> = ({ xy, value, side, maxUnits, style, label }) => {
-  const stackScale = scaleLinear().domain([0, 100]).range([0, maxUnits]);
-  const stackNo = Math.ceil(stackScale(value));
+  const unitNoScale = scaleLinear().domain([0, 100]).range([0, maxUnits]);
+  const unitNo = Math.ceil(unitNoScale(value));
   const unitScale = scaleLinear().domain([0, 10]).range([0, 10]);
   return (
     <g transform={`translate(${xy[0]}, ${xy[1]})`}>
       <IsoUnit
         scale={unitScale}
-        value={side * stackNo}
+        value={side * unitNo}
         xy={[0, 0]}
         side={side}
         style={{ strokeWidth: 2 }}
       />
-      {range(0, -stackNo, -1).map((no) => {
+      {range(0, -unitNo, -1).map((no) => {
         return (
           <IsoUnit
             key={nanoid()}

@@ -57,6 +57,7 @@ const LocatorMap: FC<Props> = ({ data, highlight, theme = defaultTheme }) => {
               feature={feature}
               projection={projection}
               theme={theme}
+              style={{ stroke: "black" }}
             />
           ))}
         </g>

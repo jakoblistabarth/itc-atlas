@@ -22,7 +22,7 @@ const PointSymbol: FC<{
           ? `url(#${theme.choropleth?.pattern?.id})`
           : theme.choropleth?.fill
       }
-      stroke={theme.choropleth?.stroke}
+      stroke={style?.stroke ?? theme.choropleth?.stroke}
       strokeWidth={theme.choropleth?.strokeWidth}
       strokeLinejoin={theme.choropleth?.strokeLineJoin ?? "round"}
     />

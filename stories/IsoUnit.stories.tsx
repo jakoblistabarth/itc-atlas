@@ -8,7 +8,7 @@ const width = 300;
 const height = 300;
 
 export default {
-  title: "Cartographic/Symbology/Iso Unit",
+  title: "Cartographic/Symbology/IsoUnit",
   component: IsoUnit,
   argTypes: {
     side: { control: { type: "range", min: 5, max: 50, step: 1 } },
@@ -33,8 +33,8 @@ const defaultArgs = {
   style: { fill: "white", stroke: "black" },
 };
 
-export const SmallUnit = Template.bind({});
-SmallUnit.args = {
+export const ThinUnit = Template.bind({});
+ThinUnit.args = {
   ...defaultArgs,
   value: 10,
   side: 10,
@@ -43,8 +43,8 @@ SmallUnit.args = {
 export const BigUnit = Template.bind({});
 BigUnit.args = {
   ...defaultArgs,
-  value: 90,
-  side: 10,
+  value: 10,
+  side: 50,
 };
 
 export const ColoredUnitLabel = Template.bind({});

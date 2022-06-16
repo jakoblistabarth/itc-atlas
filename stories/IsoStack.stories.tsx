@@ -1,7 +1,5 @@
 import React from "react";
 import { ComponentStory, ComponentMeta } from "@storybook/react";
-import { scaleQuantize } from "d3-scale";
-import { range } from "d3-array";
 
 import IsoStack from "../components/map/IsoStack";
 
@@ -9,7 +7,7 @@ const width = 300;
 const height = 300;
 
 export default {
-  title: "Cartographic/Symbology/Iso Stack",
+  title: "Cartographic/Symbology/IsoStack",
   component: IsoStack,
   argTypes: {
     side: { control: { type: "range", min: 5, max: 50, step: 1 } },

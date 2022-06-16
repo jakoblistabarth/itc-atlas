@@ -156,7 +156,7 @@ const ProjectCountries: NextPage<Props> = ({ projects, world, areaCodes }) => {
                 scale={scale}
                 value={feature.properties?.projectCount}
                 side={5}
-                style={mapOptions.theme.symbol}
+                style={{ ...mapOptions.theme.symbol, fillOpacity: 1 }}
                 label={true}
               />
             ))}

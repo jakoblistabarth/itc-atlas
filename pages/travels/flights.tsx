@@ -107,7 +107,7 @@ const Flights: NextPage<Props> = ({ odMatrix, world }) => {
             scaleWidth={scaleWidth}
             title="No. of flights in 2019"
             unitLabel="flights"
-            style={mapOptions.theme.flow}
+            style={mapOptions.styles.flowStyle}
           />
         </svg>
 

@@ -32,7 +32,7 @@ const defaultTheme: MapTheme = {
   },
   choropleth: {
     fill: "none",
-    stroke: "black",
+    stroke: darkgrey,
     strokeWidth: 1,
   },
 };
