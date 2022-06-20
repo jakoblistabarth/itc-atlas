@@ -13,6 +13,9 @@ export default {
     value: {
       control: { type: "range", min: 0, max: 100, step: 0.01 },
     },
+    arcHeight: {
+      control: { type: "range", min: 0, max: 1, step: 0.01 },
+    },
   },
   args: {},
   decorators: [
@@ -29,12 +32,7 @@ const Template: ComponentStory<typeof Flow3D> = (args) => {
     <>
       <Canvas camera={{ position: [0, 0, 5], fov: 30 }} shadows>
         <Flow3D {...args} />
-        {/* <Globe texture="explorer" /> */}
-        <ambientLight args={[undefined, 1]} />
-        <mesh receiveShadow>
-          <sphereGeometry args={[1, 512, 256]} />
-          <meshPhongMaterial color={"grey"} opacity={0.8} transparent />
-        </mesh>
+        <Globe texture="explorer" />
         <OrbitControls
           enableZoom={false}
           enablePan={false}
@@ -55,5 +53,19 @@ Default.args = {
     origin: "Los Angeles",
     destination: "Santiago de Chile",
     value: 30,
+  },
+};
+
+export const LongFlow = Template.bind({});
+LongFlow.args = {
+  ...Template.args,
+  origin: [0, 90],
+  destination: [0, -90],
+  value: 30,
+  arcHeight: 0.5,
+  data: {
+    origin: "North Pole",
+    destination: "South Pole",
+    value: 50,
   },
 };

@@ -11,7 +11,7 @@ const Point3D: FC<{
   const [hover, setHover] = useState(false);
 
   const { scale } = useSpring({
-    scale: hover ? 3 : 1,
+    scale: hover ? 2 : 1,
     config: config.wobbly,
   });
 
