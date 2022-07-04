@@ -48,6 +48,14 @@ const Travels: NextPage<Props> = ({ flights }) => {
               </h2>
             </a>
           </Link>
+
+          <Link href="/travels/flights3D">
+            <a className={styles.card}>
+              <h2>
+                Flights (Globe) <MdOutlineArrowRightAlt />
+              </h2>
+            </a>
+          </Link>
         </div>
         <SummaryTable data={flightsDf} />
         <p>
