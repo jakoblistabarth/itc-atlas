@@ -1,7 +1,6 @@
 import * as d3 from "d3";
 import { FC } from "react";
 import * as topojson from "topojson-client";
-import type { Topology } from "topojson-specification";
 import { FeatureCollection } from "geojson";
 import BaseLayer from "./BaseLayer";
 import { MapTheme } from "../../types/MapTheme";
@@ -9,22 +8,27 @@ import getMapHeight from "../../lib/cartographic/getMapHeight";
 import ChoroplethSymbol from "./ChoroplethSymbol";
 import { nanoid } from "nanoid";
 import defaultTheme from "../../lib/styles/themes/defaultTheme";
+import { NeCountriesTopoJson } from "../../types/NeCountriesTopoJson";
 
 type Props = {
-  data: Topology;
+  neCountriesTopoJson: NeCountriesTopoJson;
   highlight?: string[];
   theme?: MapTheme;
 };
 
-const LocatorMap: FC<Props> = ({ data, highlight, theme = defaultTheme }) => {
+const LocatorMap: FC<Props> = ({
+  neCountriesTopoJson,
+  highlight,
+  theme = defaultTheme,
+}) => {
   const dimension = {
     width: 300,
     height: 0,
   };
 
   const countries = topojson.feature(
-    data,
-    data.objects.countries
+    neCountriesTopoJson,
+    neCountriesTopoJson.objects.countries
   ) as FeatureCollection;
   const highlightCountries: FeatureCollection = {
     type: "FeatureCollection",
@@ -33,7 +37,7 @@ const LocatorMap: FC<Props> = ({ data, highlight, theme = defaultTheme }) => {
     }),
   };
   const centroid = d3.geoCentroid(highlightCountries);
-  const rotation = centroid.map((val) => -val);
+  const rotation: [number, number] = [-centroid[0], -centroid[1]];
 
   const projection = d3.geoOrthographic().rotate(rotation);
   const shadowRadius = dimension.width / 30;
@@ -49,7 +53,11 @@ const LocatorMap: FC<Props> = ({ data, highlight, theme = defaultTheme }) => {
           rx={dimension.width * 0.3}
           opacity={0.05}
         />
-        <BaseLayer data={data} projection={projection} theme={theme} />
+        <BaseLayer
+          data={neCountriesTopoJson}
+          projection={projection}
+          theme={theme}
+        />
         <g>
           {highlightCountries.features.map((feature) => (
             <ChoroplethSymbol

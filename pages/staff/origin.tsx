@@ -5,7 +5,6 @@ import { nanoid } from "nanoid";
 import type { GetStaticProps, NextPage } from "next";
 import Head from "next/head";
 import * as topojson from "topojson-client";
-import type { Topology } from "topojson-specification";
 import Footer from "../../components/Footer";
 import Heading, { Headings } from "../../components/Heading";
 import BaseLayer from "../../components/map/BaseLayer";
@@ -15,17 +14,17 @@ import getMapHeight from "../../lib/cartographic/getMapHeight";
 import getCountries from "../../lib/data/getCountries";
 import getStaff from "../../lib/data/getStaff";
 import styles from "../../styles/home.module.css";
+import { SharedPageProps } from "../../types/Props";
 import type { Staff } from "../../types/Staff";
 
 type Props = {
   staff: Staff[];
-  world: Topology;
-};
+} & SharedPageProps;
 
-const StaffOrigin: NextPage<Props> = ({ staff, world }) => {
-  const worldFeatureCollection = topojson.feature(
-    world,
-    world.objects.countries
+const StaffOrigin: NextPage<Props> = ({ staff, neCountriesTopoJson }) => {
+  const neCountriesGeoJson = topojson.feature(
+    neCountriesTopoJson,
+    neCountriesTopoJson.objects.countries
   );
 
   const count = d3.group(staff, (d) => d.nationality);
@@ -39,8 +38,8 @@ const StaffOrigin: NextPage<Props> = ({ staff, world }) => {
 
   const points: FeatureCollection<Point> = {
     type: "FeatureCollection",
-    features: worldFeatureCollection.features
-      .map((feature: Feature<MultiPolygon>) => {
+    features: neCountriesGeoJson.features
+      .map((feature) => {
         const staffCount = count.get(feature.properties?.iso3code)?.length;
         const pointFeature: Feature<Point> = {
           type: "Feature",
@@ -86,7 +85,7 @@ const StaffOrigin: NextPage<Props> = ({ staff, world }) => {
       <main className={styles.main}>
         <Heading Tag={Headings.H1}>ITC's staff origin</Heading>
         <svg width={dimension.width} height={dimension.height}>
-          <BaseLayer data={world} projection={projection} />
+          <BaseLayer data={neCountriesTopoJson} projection={projection} />
           <g id="symbols">
             {points.features.map((point) => (
               <PointSymbol
@@ -111,13 +110,16 @@ const StaffOrigin: NextPage<Props> = ({ staff, world }) => {
   );
 };
 
-export const getStaticProps: Awaited<GetStaticProps<Props>> = async () => {
-  const staff = await getStaff();
-  const world = await getCountries();
+export const getStaticProps: GetStaticProps<Props> = async () => {
+  const [staff, neCountriesTopoJson] = await Promise.all([
+    getStaff(),
+    getCountries(),
+  ]);
+
   return {
     props: {
       staff,
-      world,
+      neCountriesTopoJson,
     },
   };
 };

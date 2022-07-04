@@ -29,7 +29,7 @@ const Template: ComponentStory<typeof IsoUnit> = (args) => (
 
 const defaultArgs = {
   scale: scaleLinear().domain([0, 100]).range([0, 100]),
-  xy: [width / 2, height / 2],
+  xy: [width / 2, height / 2] as [number, number], //Question: proper ts solution?
   style: { fill: "white", stroke: "black" },
 };
 

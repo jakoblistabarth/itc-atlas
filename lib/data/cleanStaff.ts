@@ -70,7 +70,7 @@ const cleanStaff = async (staff: any): Promise<Staff[]> => {
       "description",
     ]);
 
-  return df.toArray();
+  return df.toArray() as Staff[]; //TODO: use explicit map
 };
 
 export default cleanStaff;

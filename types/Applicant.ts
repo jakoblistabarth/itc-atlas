@@ -1,5 +1,4 @@
 export type Applicant = {
-  start: string;
   description: string;
   specialization: string;
   gender: string;
@@ -11,9 +10,9 @@ export type Applicant = {
   progDept: string;
   specialAwardMention: string;
   finalResult: string;
-  SponsorCategory: string;
-  Sponsor: string;
-  CourseNo: string;
+  sponsorCategory: string;
+  sponsor: string;
+  courseNo: string;
   diploma: string;
   dateOfBirth: string;
   startDate: string;
@@ -23,5 +22,5 @@ export type Applicant = {
   finalScore: string;
   applicantStatus: string;
   thesisTitle: string;
-  ITCCode: string;
+  itcCode: string;
 };

@@ -4,10 +4,10 @@ import { colorMap } from "../lib/summarytable/colorMap";
 import { ColumnType } from "../types/Column";
 import { Column } from "../types/DataFrame";
 import { nanoid } from "nanoid";
-import { usePopperTooltip } from "react-popper-tooltip";
-import "react-popper-tooltip/dist/styles.css";
+import { useFloating } from "@floating-ui/react-dom-interactions";
 import { fPercentage } from "../lib/utilities/formaters";
 import { createStack } from "../lib/summarytable/stack";
+import SnapshotCell from "./SnapshotCell";
 
 type Props = {
   column: Column;
@@ -31,7 +31,7 @@ const SnapshotBar: FC<Props> = ({ column, type }) => {
 
   const stack = createStack(column);
 
-  const x = d3
+  const xScale = d3
     .scaleLinear()
     .domain([
       d3.min(stack.map((d) => d.start)) ?? 0,
@@ -40,110 +40,45 @@ const SnapshotBar: FC<Props> = ({ column, type }) => {
     .range([0, innerWidth]);
 
   const color = d3
-    .scaleLinear()
-    .domain(d3.extent(stack.map((d) => d.start)))
-    .range([
+    .scaleSequential([
       colorMap.get(type)?.baseColor ?? "black",
       colorMap.get(type)?.brighter ?? "lightgrey",
+    ])
+    .domain([
+      d3.min(stack.map((d) => d.start)) ?? 0,
+      d3.max(stack.map((d) => d.start)) ?? 1,
     ]);
-
-  // const tooltip = d3
-  //   .select("body")
-  //   .append("div")
-  //   .attr("id", "tooltip")
-  //   .style("position", "absolute")
-  //   .style("display", "none")
-  //   .style("background-color", "white")
-  //   .style("padding", "5px")
-  //   .style("box-shadow", "0 0 5px rgba(0,0,0,.5")
-  //   .style("font-size", "x-small");
-
-  // This happens within useTooltip: const tooltip = d3.select("#tooltip")
-
-  // const { mouseover, mousemove, mouseleave } = useTooltip({
-  //   onShow: (event) =>  d3.select(event.target).style("stroke", "black"),
-  //   onHide: (event) => d3.select(event.target).style("stroke", "none").style("opacity", 1),
-  //   component: (d) => <><strong>{d.value}</strong><br />{pctFormat(d.count)}</>
-  // })
-
-  // const mouseover = (event) => {
-  //   tooltip.style("display", "inline"); // onShow()
-  //   d3.select(event.target).style("stroke", "black");
-  // };
-  // const mousemove = (event, d) => {
-  //   const tooltipHeight = tooltip.node()?.offsetHeight ?? 0;
-  //   const tooltipWidth = tooltip.node()?.offsetWidth ?? 0;
-  //   tooltip
-  //     .style(
-  //       "left",
-  //       -tooltipWidth / 2 +
-  //         d3.pointer(event, d3.select("body").node())[0] +
-  //         "px"
-  //     )
-  //     .style(
-  //       "top",
-  //       d3.pointer(event, d3.select("body").node())[1] -
-  //         tooltipHeight -
-  //         5 +
-  //         "px"
-  //     )
-  //     .html(`<strong>${d.value}</strong><br>${fPercentage(d.count)}`);
-  // };
-  // const mouseleave = (event) => {
-  //   tooltip.style("display", "none"); // onHide();
-  //   d3.select(event.target).style("stroke", "none").style("opacity", 1);
-  // };
-
-  //   inner
-  //     .selectAll("rect")
-  //     .data(stack)
-  //     .join("rect")
-  //     .attr("x", (d) => x(d.start))
-  //     .attr("y", 0)
-  //     .attr("width", (d) => Math.abs(x(d.start) - x(d.end)))
-  //     .attr("height", innerHeight)
-  //     .attr("fill", (d) => color(d.start))
-  //     .on("mouseover", mouseover)
-  //     .on("mousemove", mousemove)
-  //     .on("mouseleave", mouseleave);
-  // });
-
-  const {
-    getArrowProps,
-    getTooltipProps,
-    setTooltipRef,
-    setTriggerRef,
-    visible,
-  } = usePopperTooltip({ followCursor: true });
+  const [open, setOpen] = useState(false);
+  const { x, y, reference, floating, strategy } = useFloating({
+    open,
+    onOpenChange: setOpen,
+  });
 
   return (
-    <div ref={setTriggerRef}>
-      {/* <button type="button" ref={setTriggerRef}>
-        Trigger element
-      </button> */}
+    <div>
       <svg width={width} height={height}>
         <g transform={`translate(${margin.horizontal},${margin.vertical})`}>
           {stack.map((d) => (
-            <rect
+            <SnapshotCell
               key={nanoid()}
-              x={x(d.start)}
+              ref={reference} //TODO: fix ref for tooltip?
+              x={xScale(d.start)}
               y={0}
-              width={Math.abs(x(d.start) - x(d.end))}
+              width={Math.abs(xScale(d.start) - xScale(d.end))}
               height={innerHeight}
-              fill={color(d.start)}
-              onMouseOver={(e) => {
-                setTooltipData(d);
-                e.target.attributes.stroke = "black";
-              }}
-              onMouseLeave={() => null} //TODO: hide on mouseleave
+              fill={color(d.start).toString()}
             />
           ))}
         </g>
       </svg>
-      {visible && tooltipData && (
+      {open && (
         <div
-          ref={setTooltipRef}
-          {...getTooltipProps({ className: "tooltip-container" })}
+          ref={floating}
+          style={{
+            position: strategy,
+            top: y ?? "",
+            left: x ?? "",
+          }}
         >
           {tooltipData?.value || "no data set"}
           {tooltipData.count && (
@@ -151,7 +86,6 @@ const SnapshotBar: FC<Props> = ({ column, type }) => {
               {fPercentage(tooltipData.count)}
             </span>
           )}
-          <div {...getArrowProps({ className: "tooltip-arrow" })} />
         </div>
       )}
     </div>

@@ -31,7 +31,7 @@ const LayoutDebug: FC<Props> = ({ bounds }) => (
         y={bounds.frame?.top ?? 0}
         width={bounds.frame.left}
         height={
-          bounds.height -
+          (bounds.height ?? 0) -
           ((bounds.frame?.top ?? 0) + (bounds.frame?.bottom ?? 0))
         }
         fill={"green"}
@@ -43,7 +43,7 @@ const LayoutDebug: FC<Props> = ({ bounds }) => (
         y={bounds.frame?.top ?? 0}
         width={bounds.frame.right}
         height={
-          bounds.height -
+          (bounds.height ?? 0) -
           ((bounds.frame?.top ?? 0) + (bounds.frame?.bottom ?? 0))
         }
         fill={"yellow"}

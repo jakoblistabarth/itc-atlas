@@ -11,7 +11,7 @@ export type pieDatum = {
 };
 
 const ScaledPie: FC<{
-  xy: Position;
+  xy: [number, number];
   scale: ScaleLinear<number, number> | ScalePower<number, number>;
   pieSize: number;
   data: pieDatum[];

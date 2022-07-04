@@ -6,11 +6,12 @@ import Point3D from "./Point3D";
 import getFlowCurve3D from "../../lib/cartographic/getFlowCurve3D";
 import { scaleLinear } from "d3";
 import { nanoid } from "nanoid";
+import type { GeoJsonProperties } from "geojson";
 
 const Flow3D: FC<{
   origin: Position;
   destination: Position;
-  data: Row;
+  data: GeoJsonProperties;
   value: number;
   arcHeight?: number;
 }> = ({ origin, destination, data, value, arcHeight = 0.4 }) => {

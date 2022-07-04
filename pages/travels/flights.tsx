@@ -3,7 +3,6 @@ import { geoBertin1953 } from "d3-geo-projection";
 import { nanoid } from "nanoid";
 import type { NextPage } from "next";
 import Head from "next/head";
-import type { Topology } from "topojson-specification";
 import Heading, { Headings } from "../../components/Heading";
 import BaseLayer from "../../components/map/BaseLayer";
 import FlowLayer from "../../components/map/FlowLayer";
@@ -14,26 +13,29 @@ import getCountries from "../../lib/data/getCountries";
 import getFlights from "../../lib/data/getFlights";
 import styles from "../../styles/home.module.css";
 import type { ODMatrix } from "../../types/ODMatrix";
-import themes from "../../lib/styles/themes";
+import themes, { ThemeNames } from "../../lib/styles/themes";
 import getMapHeight from "../../lib/cartographic/getMapHeight";
 import { MapOptions } from "../../types/MapOptions";
+import { SharedPageProps } from "../../types/Props";
+import defaultTheme from "../../lib/styles/themes/defaultTheme";
 
 type Props = {
   odMatrix: ODMatrix;
-  world: Topology;
-};
+} & SharedPageProps;
 
-const Flights: NextPage<Props> = ({ odMatrix, world }) => {
+const Flights: NextPage<Props> = ({ odMatrix, neCountriesTopoJson }) => {
   const mapOptions: MapOptions = {
     projection: geoBertin1953(),
-    width: 1280,
-    height: 0,
-    theme: themes.eth,
+    bounds: {
+      width: 1280,
+      height: 0,
+    },
+    theme: themes.get(ThemeNames.ETH) ?? defaultTheme,
     styles: {
       flowStyle: {
         opacity: 0.2,
         stroke: "red",
-        markerEnd: "ArrowHead",
+        markerEnd: "tip",
       },
       pointStyle: {
         fill: "grey",
@@ -43,14 +45,20 @@ const Flights: NextPage<Props> = ({ odMatrix, world }) => {
     },
   };
 
-  mapOptions.height = getMapHeight(mapOptions.width, mapOptions.projection);
+  mapOptions.bounds.height = getMapHeight(
+    mapOptions.bounds.width,
+    mapOptions.projection
+  );
 
   const flightsPerRoute = odMatrix.flows.features.map(
     (flow) => flow.properties?.value
   );
   const min = d3.min(flightsPerRoute);
   const max = d3.max(flightsPerRoute);
-  const scaleWidth = d3.scaleLinear().domain([min, max]).range([1, 15]);
+  const scaleWidth = d3
+    .scaleLinear()
+    .domain([min ?? 0, max ?? 1])
+    .range([1, 15]);
 
   // useEffect(() => {
   // setData(json.data)
@@ -74,9 +82,9 @@ const Flights: NextPage<Props> = ({ odMatrix, world }) => {
       <main className={styles.main}>
         <Heading Tag={Headings.H1}>ITC's travel activity</Heading>
 
-        <svg width={mapOptions.width} height={mapOptions.height}>
+        <svg width={mapOptions.bounds.width} height={mapOptions.bounds.height}>
           <BaseLayer
-            data={world}
+            data={neCountriesTopoJson}
             theme={mapOptions.theme}
             projection={mapOptions.projection}
           />
@@ -84,8 +92,8 @@ const Flights: NextPage<Props> = ({ odMatrix, world }) => {
             projection={mapOptions.projection}
             data={odMatrix}
             scaleWidth={scaleWidth}
-            flowStyle={mapOptions.styles.flowStyle}
-            pointStyle={mapOptions.styles.pointStyle}
+            flowStyle={mapOptions.styles?.flowStyle}
+            pointStyle={mapOptions.styles?.pointStyle}
           />
 
           {odMatrix.flows.features.slice(0, 5).map((d) => {
@@ -107,7 +115,7 @@ const Flights: NextPage<Props> = ({ odMatrix, world }) => {
             scaleWidth={scaleWidth}
             title="No. of flights in 2019"
             unitLabel="flights"
-            style={mapOptions.styles.flowStyle}
+            style={mapOptions.styles?.flowStyle}
           />
         </svg>
 
@@ -121,12 +129,14 @@ const Flights: NextPage<Props> = ({ odMatrix, world }) => {
 };
 
 export async function getStaticProps() {
-  const flights = await getFlights();
-  const world = await getCountries();
+  const [odMatrix, neCountriesTopoJson] = await await Promise.all([
+    (await getFlights()).odMatrix,
+    getCountries(),
+  ]);
   return {
     props: {
-      odMatrix: flights.odMatrix,
-      world,
+      odMatrix,
+      neCountriesTopoJson,
     },
   };
 }

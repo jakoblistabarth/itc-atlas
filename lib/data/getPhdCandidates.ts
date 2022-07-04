@@ -1,4 +1,5 @@
 import xlsx from "xlsx";
+import { Data, Row } from "../../types/DataFrame";
 import { cleanPhdCandiates } from "./cleanPhdCandidates";
 
 export default async function getPhdCandidates() {
@@ -10,7 +11,7 @@ export default async function getPhdCandidates() {
     defval: null,
   });
 
-  const cleaned = cleanPhdCandiates(data);
+  const cleaned = cleanPhdCandiates(data as Data<Row>);
 
   return cleaned;
 }

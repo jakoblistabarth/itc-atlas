@@ -2,7 +2,7 @@ import React from "react";
 import { ComponentStory, ComponentMeta } from "@storybook/react";
 import { geoPath } from "d3-geo";
 import { geoRobinson, geoBertin1953 } from "d3-geo-projection";
-import themes from "../lib/styles/themes";
+import eth from "../lib/styles/themes/eth";
 
 import BendedLabel from "../components/map/BendedLabel";
 
@@ -40,7 +40,7 @@ const Template: ComponentStory<typeof BendedLabel> = (args) => (
 
 const defaultArgs = {
   children: "Label Text",
-  graticuleType: "lon",
+  graticuleType: "lon" as "lon", // QUESTION: improve typing
   degree: 10,
   xOffset: 0,
   yOffset: 10,
@@ -49,7 +49,7 @@ const defaultArgs = {
       type: "Sphere",
     })
     .translate([width / 2, height / 2]),
-  style: themes.eth.label,
+  style: eth.label,
 };
 
 export const LonBendedLabel = Template.bind({});

@@ -36,7 +36,7 @@ const getFlowCurve3D = (
     mid
   );
   const splineCurveB = new CubicBezierCurve3(mid, midEndAnchor, endAnchor, end);
-  const curve = new CurvePath();
+  const curve = new CurvePath<Vector3>();
   curve.add(splineCurveA);
   curve.add(splineCurveB);
 

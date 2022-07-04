@@ -5,6 +5,7 @@ import { colorMap } from "../lib/summarytable/colorMap";
 import { fDateShort, fFloat } from "../lib/utilities/formaters";
 import { ColumnType } from "../types/Column";
 import type { Column, Datum } from "../types/DataFrame";
+import SnapshotCell from "./SnapshotCell";
 
 type Props = {
   column: Datum[];
@@ -42,9 +43,9 @@ const SnapshotHistogram: FC<Props> = ({ column, type }) => {
       : d3.bin().thresholds(thresholdTime(10));
   const bins = histogram(cleanedColumn);
 
-  const xDomain = [bins[0].x0, bins[bins.length - 1].x1];
+  const xDomain = [bins[0].x0 ?? 0, bins[bins.length - 1].x1 ?? 1];
 
-  const yDomain = [0, d3.max(bins.map((d) => d.length))];
+  const yDomain = [0, d3.max(bins.map((d) => d.length)) ?? 1];
 
   const x = d3
     .scaleLinear()
@@ -70,7 +71,7 @@ const SnapshotHistogram: FC<Props> = ({ column, type }) => {
         (bin) =>
           bin.x0 &&
           bin.x1 && (
-            <rect
+            <SnapshotCell
               key={nanoid()}
               fill={colorMap.get(type)?.baseColor ?? "black"}
               x={x(bin.x0) + dimension.barInset}
@@ -80,7 +81,7 @@ const SnapshotHistogram: FC<Props> = ({ column, type }) => {
               }
               height={y(0) - y(bin.length)}
               stroke={"none"}
-              strokeWidth="1px"
+              strokeWidth={1}
             />
           )
       )}
@@ -133,6 +134,7 @@ const SnapshotHistogram: FC<Props> = ({ column, type }) => {
         {stats &&
           stats.map((stat, i) => (
             <line
+              key={nanoid()}
               x1={x(stat.value)}
               x2={x(stat.value)}
               y1={dimension.height - dimension.margin.bottom}

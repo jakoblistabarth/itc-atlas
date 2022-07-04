@@ -25,7 +25,7 @@ export default async function handler(
   res: NextApiResponse
 ) {
   const themeReq = req.query.theme?.toString();
-  const theme = !themeReq ? defaultTheme : themes[themeReq];
+  const theme = !themeReq ? defaultTheme : themes.get(themeReq);
   if (!theme) {
     res.status(500).json({ error: "invalid theme name" });
   }
@@ -51,7 +51,7 @@ export default async function handler(
     get projection() {
       return setMapBounds(this.bounds, geoInterruptedMollweide());
     },
-    theme: theme,
+    theme: theme ?? defaultTheme,
     scales: { scale },
   };
 
@@ -77,16 +77,21 @@ export default async function handler(
           {data.features.map((feature: Feature<Point>) => {
             if (!feature.properties?.departments) return;
             const projection = mapOptions.projection;
+            const xy = projection(
+              feature.geometry.coordinates as [number, number]
+            );
             return (
-              <ScaledPie
-                key={nanoid()}
-                xy={projection(feature.geometry.coordinates)}
-                scale={scale}
-                colorScheme={Object.values(departmentColors)}
-                pieSize={feature.properties?.totalPhdCount}
-                data={feature.properties?.departments}
-                style={theme.scaledPie}
-              />
+              xy && (
+                <ScaledPie
+                  key={nanoid()}
+                  xy={xy}
+                  scale={scale}
+                  colorScheme={Object.values(departmentColors)}
+                  pieSize={feature.properties?.totalPhdCount}
+                  data={feature.properties?.departments}
+                  style={theme?.scaledPie}
+                />
+              )
             );
           })}
         </g>

@@ -1,12 +1,12 @@
 import { FC, useState } from "react";
 import { Vector3 } from "three";
 import { useSpring, animated, config } from "@react-spring/three";
-import { Row } from "../../types/DataFrame";
+import { GeoJsonProperties } from "geojson";
 
 const Point3D: FC<{
   pos: Vector3;
   radius: number;
-  data: Row;
+  data: GeoJsonProperties;
 }> = ({ pos, radius, data }) => {
   const [hover, setHover] = useState(false);
 

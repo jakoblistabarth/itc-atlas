@@ -1,13 +1,12 @@
 import { FC } from "react";
 import { Appearance } from "../../types/Appearance";
-import type { Position } from "geojson";
 import PointLabel from "./PointLabel";
 import { ScaleLinear } from "d3";
 import { nanoid } from "nanoid";
 import defaultTheme from "../../lib/styles/themes/defaultTheme";
 
 const IsoUnit: FC<{
-  xy: Position;
+  xy: [number, number];
   side: number;
   value: number;
   scale: ScaleLinear<number, number>;

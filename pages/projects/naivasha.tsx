@@ -16,7 +16,7 @@ type Props = {
   model: string;
 } & SharedPageProps;
 
-const Naivasha: NextPage<Props> = ({ model, countries }) => {
+const Naivasha: NextPage<Props> = ({ model, neCountriesTopoJson }) => {
   return (
     <>
       <Head>
@@ -27,7 +27,10 @@ const Naivasha: NextPage<Props> = ({ model, countries }) => {
 
       <main className={styles.main}>
         <Heading Tag={Headings.H1}>Naivasha Region</Heading>
-        <LocatorMap data={countries} highlight={["KEN"]} />
+        <LocatorMap
+          neCountriesTopoJson={neCountriesTopoJson}
+          highlight={["KEN"]}
+        />
         <Heading Tag={Headings.H2}>3D Block Diagram</Heading>
         <div style={{ width: "100%", height: "500px" }}>
           <Canvas shadows>
@@ -59,12 +62,12 @@ const Naivasha: NextPage<Props> = ({ model, countries }) => {
 };
 
 export const getStaticProps: GetStaticProps<Props> = async () => {
-  const [countries] = await Promise.all([getCountries()]);
+  const [neCountriesTopoJson] = await Promise.all([getCountries()]);
 
   return {
     props: {
       model: "",
-      countries,
+      neCountriesTopoJson,
     },
   };
 };

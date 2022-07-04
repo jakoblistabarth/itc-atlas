@@ -25,7 +25,7 @@ type Props = {
 } & SharedPageProps;
 
 const PhdDepartments: NextPage<Props> = ({
-  countries,
+  neCountriesTopoJson,
   data,
   legendEntries,
   domain,
@@ -52,7 +52,11 @@ const PhdDepartments: NextPage<Props> = ({
       <main className={styles.main}>
         <Heading Tag={Headings.H1}>ITC's PhD candidates</Heading>
         <svg width={dimension.width} height={dimension.height}>
-          <BaseLayer data={countries} projection={projection} theme={theme} />
+          <BaseLayer
+            data={neCountriesTopoJson}
+            projection={projection}
+            theme={theme}
+          />
           <g id="symbols">
             {data.features.map((point) => {
               if (!point.properties?.departments) return;
@@ -93,15 +97,18 @@ const PhdDepartments: NextPage<Props> = ({
 };
 
 export const getStaticProps: GetStaticProps<Props> = async () => {
-  const { data, domain, legendEntries } =
-    await getPhdCandidatesByCountryByDepartment();
-  const countries = await getCountries();
+  const [{ data, domain, legendEntries }, neCountriesTopoJson] =
+    await Promise.all([
+      getPhdCandidatesByCountryByDepartment(),
+      getCountries(),
+    ]);
+
   return {
     props: {
       data,
       domain,
       legendEntries,
-      countries,
+      neCountriesTopoJson,
     },
   };
 };

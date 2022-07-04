@@ -1,3 +1,5 @@
+import { NeCountriesTopoJson } from "./NeCountriesTopoJson";
+
 export type SharedPageProps = {
-  countries: any;
+  neCountriesTopoJson: NeCountriesTopoJson;
 };

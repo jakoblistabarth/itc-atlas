@@ -1,11 +1,10 @@
-// Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import type { NextApiRequest, NextApiResponse } from "next";
 import getCountries from "../../../../lib/data/getCountries";
-import { Topology } from "topojson-specification";
+import { NeCountriesTopoJson } from "../../../../types/NeCountriesTopoJson";
 
 export default async function handler(
   req: NextApiRequest,
-  res: NextApiResponse<Topology | { error: string }>
+  res: NextApiResponse<NeCountriesTopoJson | { error: string }>
 ) {
   const scale = req.query.scale?.toString();
   //TODO: use type guard with enum

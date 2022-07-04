@@ -10,37 +10,39 @@ import getProjects from "../../lib/data/getProjects";
 import BaseLayer from "../../components/map/BaseLayer";
 import Heading, { Headings } from "../../components/Heading";
 import { FeatureCollection, Feature, Point, MultiPolygon } from "geojson";
-import type {
-  Topology,
-  Objects,
-  GeometryCollection,
-} from "topojson-specification";
 import type { AreaCode } from "../../types/UnsdCodes";
 import getUnsdCountries from "../../lib/data/getUnsdCountries";
 import { nanoid } from "nanoid";
-import themes from "../../lib/styles/themes";
+import themes, { ThemeNames } from "../../lib/styles/themes";
 import ChoroplethSymbol from "../../components/map/ChoroplethSymbol";
 import { MapOptions } from "../../types/MapOptions";
 import PatternDots from "../../components/defs/patterns/PatternDots";
 import IsoUnit from "../../components/map/IsoUnit";
+import { SharedPageProps } from "../../types/Props";
+import defaultTheme from "../../lib/styles/themes/defaultTheme";
 
 type Props = {
   projects: Project[];
-  world: Topology<Objects<{ type: GeometryCollection }>>;
   areaCodes: AreaCode[];
-};
+} & SharedPageProps;
 
-const ProjectCountries: NextPage<Props> = ({ projects, world, areaCodes }) => {
+const ProjectCountries: NextPage<Props> = ({
+  projects,
+  areaCodes,
+  neCountriesTopoJson,
+}) => {
   const mapOptions: MapOptions = {
-    width: 1080,
-    height: 550,
+    bounds: {
+      width: 1080,
+      height: 550,
+    },
     projection: geoSatellite()
       .scale(1280)
       .rotate([-20, -15, 180])
       .tilt(10)
       .distance(2)
       .translate([1080 / 2, 750]),
-    theme: themes.raisz,
+    theme: themes.get(ThemeNames.RAISZ) ?? defaultTheme,
   };
 
   const count = d3
@@ -80,31 +82,33 @@ const ProjectCountries: NextPage<Props> = ({ projects, world, areaCodes }) => {
   const points: FeatureCollection<Point> = {
     type: "FeatureCollection",
     features: topojson
-      .feature(world, world.objects.countries)
-      .features.map((feature: Feature<MultiPolygon>) => {
+      .feature(neCountriesTopoJson, neCountriesTopoJson.objects.countries)
+      .features.map((feature) => {
         const value = projectsCountry.get(feature.properties?.iso3code);
-        return {
+        const pointFeature: Feature<Point> = {
           type: "Feature",
           properties: {
             projectCount: value,
             ...feature.properties,
           },
           geometry: {
+            type: "Point",
             coordinates: [
               d3.geoCentroid(feature)[0],
               d3.geoCentroid(feature)[1],
             ],
           },
         };
+        return pointFeature;
       })
-      .filter((feature: Feature) => feature.properties?.projectCount),
+      .filter((feature) => feature.properties?.projectCount),
   };
 
-  const polygons: FeatureCollection<MultiPolygon> = {
+  const polygons = {
     type: "FeatureCollection",
     features: topojson
-      .feature(world, world.objects.countries)
-      .features.filter((feature: Feature<MultiPolygon>) => {
+      .feature(neCountriesTopoJson, neCountriesTopoJson.objects.countries)
+      .features.filter((feature) => {
         const matchedCountry = areaCodes.find(
           (area) => area["ISO-alpha3 Code"] === feature.properties?.iso3code
         );
@@ -125,7 +129,7 @@ const ProjectCountries: NextPage<Props> = ({ projects, world, areaCodes }) => {
         <Heading Tag={Headings.H1}>
           ITC's projects in Sub-Saharan Africa
         </Heading>
-        <svg width={mapOptions.width} height={mapOptions.height}>
+        <svg width={mapOptions.bounds.width} height={mapOptions.bounds.height}>
           <defs>
             <PatternDots
               style={mapOptions.theme.choropleth?.pattern}
@@ -133,7 +137,7 @@ const ProjectCountries: NextPage<Props> = ({ projects, world, areaCodes }) => {
             ></PatternDots>
           </defs>
           <BaseLayer
-            data={world}
+            data={neCountriesTopoJson}
             projection={mapOptions.projection}
             theme={mapOptions.theme}
             labels
@@ -149,17 +153,24 @@ const ProjectCountries: NextPage<Props> = ({ projects, world, areaCodes }) => {
             ))}
           </g>
           <g className="symbolLayer">
-            {points.features.map((feature) => (
-              <IsoUnit
-                key={nanoid()}
-                xy={mapOptions.projection(feature.geometry.coordinates)}
-                scale={scale}
-                value={feature.properties?.projectCount}
-                side={5}
-                style={{ ...mapOptions.theme.symbol, fillOpacity: 1 }}
-                label={true}
-              />
-            ))}
+            {points.features.map((feature) => {
+              const xy = mapOptions.projection(
+                feature.geometry.coordinates as [number, number]
+              );
+              return (
+                xy && (
+                  <IsoUnit
+                    key={nanoid()}
+                    xy={xy}
+                    scale={scale}
+                    value={feature.properties?.projectCount}
+                    side={5}
+                    style={{ ...mapOptions.theme.symbol, fillOpacity: 1 }}
+                    label={true}
+                  />
+                )
+              );
+            })}
           </g>
         </svg>
       </main>
@@ -184,14 +195,14 @@ export const getStaticProps: GetStaticProps<Props> = async () => {
     d3.ascending(new Date(a.dateStart), new Date(b.dateStart))
   );
 
-  const world = await getCountries("50m");
   const areaCodes = await getUnsdCountries();
+  const neCountriesTopoJson = await getCountries("50m");
 
   return {
     props: {
       projects: projectSelection,
-      world,
       areaCodes,
+      neCountriesTopoJson,
     },
   };
 };

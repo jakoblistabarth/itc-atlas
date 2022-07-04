@@ -19,7 +19,7 @@ export const departmentColors = {
   null: "#aaaaaa",
 };
 
-export const departmentMap = {
-  RES: Department.ALL,
-  ESA: Department.AES,
-};
+export enum DepartmentMap {
+  RES = Department.ALL,
+  ESA = Department.AES,
+}

@@ -32,7 +32,7 @@ const Template: ComponentStory<typeof LocatorMap> = (
   args,
   { loaded: { countries } }
 ) => {
-  return <LocatorMap {...args} data={countries} />;
+  return <LocatorMap {...args} neCountriesTopoJson={countries} />;
 };
 
 export const Simple = Template.bind({});

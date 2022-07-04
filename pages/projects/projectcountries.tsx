@@ -12,30 +12,32 @@ import ProportionalSymbolLegend from "../../components/map/ProportionalSymbolLeg
 import getMapHeight from "../../lib/cartographic/getMapHeight";
 import getCountries from "../../lib/data/getCountries";
 import getProjectsByCountry from "../../lib/data/getProjectsByCountry";
-import themes from "../../lib/styles/themes";
+import themes, { ThemeNames } from "../../lib/styles/themes";
 import styles from "../../styles/home.module.css";
 import { scaleSqrt } from "d3";
-import getCountriesByCategory from "../../lib/data/getCountriesByGroup";
+import getCountriesByGroup from "../../lib/data/getCountriesByGroup";
 import { UnGrouping } from "../../types/UnsdCodes";
+import { NeCountriesGeoJson } from "../../types/NeCountriesGeoJson";
+import { SharedPageProps } from "../../types/Props";
+import defaultTheme from "../../lib/styles/themes/defaultTheme";
 
 type Props = {
   data: FeatureCollection<Point>;
   domain: [number, number];
-  world: Awaited<ReturnType<typeof getCountries>>;
-  highlightCountries: FeatureCollection<MultiPolygon>;
-};
+  highlightCountries: NeCountriesGeoJson;
+} & SharedPageProps;
 
 const ProjectCountries: NextPage<Props> = ({
   data,
   domain,
-  world,
   highlightCountries,
+  neCountriesTopoJson,
 }) => {
   const dimension = {
     width: 1280,
     height: 0,
   };
-  const theme = themes.eth;
+  const theme = themes.get(ThemeNames.ETH) ?? defaultTheme; // Question: this seems strange, I know that such theme exists, that's the point of the enum
   const projection = geoBertin1953();
   dimension.height = getMapHeight(dimension.width, projection);
   const scale = scaleSqrt().domain(domain).range([2, 40]);
@@ -57,7 +59,11 @@ const ProjectCountries: NextPage<Props> = ({
               angle={20}
             ></PatternLines>
           </defs>
-          <BaseLayer data={world} projection={projection} theme={theme} />
+          <BaseLayer
+            data={neCountriesTopoJson}
+            projection={projection}
+            theme={theme}
+          />
           <g className="choroplethLayer">
             {highlightCountries.features.map((feature) => (
               <ChoroplethSymbol
@@ -95,17 +101,18 @@ const ProjectCountries: NextPage<Props> = ({
 };
 
 export const getStaticProps: GetStaticProps<Props> = async () => {
-  const [{ data, domain }, world, highlightCountries] = await Promise.all([
-    getProjectsByCountry(),
-    getCountries(),
-    getCountriesByCategory(UnGrouping.LDC),
-  ]);
+  const [{ data, domain }, neCountriesTopoJson, highlightCountries] =
+    await Promise.all([
+      getProjectsByCountry(),
+      getCountries(),
+      getCountriesByGroup(UnGrouping.LDC),
+    ]);
 
   return {
     props: {
       data,
       domain,
-      world,
+      neCountriesTopoJson,
       highlightCountries,
     },
   };

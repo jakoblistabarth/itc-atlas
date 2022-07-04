@@ -9,8 +9,8 @@ type Props = React.PropsWithChildren<{
   graticuleType: "lat" | "lon";
   degree: number;
   projection: GeoProjection;
-  textOriginDegree: number;
   textAnchor: "middle" | "start" | "end";
+  textOriginDegree?: number;
   xOffset?: number;
   yOffset?: number;
   style?: TextAppearance;
@@ -46,15 +46,15 @@ const BendedLabel: FC<Props> = ({
           fill={"white"}
         />
       ))} */}
-      {/* {path && (
+      {path && (
         <path
           id={id}
           d={path}
           fill={"none"}
-          stroke={"grey"}
+          stroke={"none"}
           strokeWidth={0.5}
         />
-      )} */}
+      )}
       <text
         fontSize={style?.fontSize ?? 5}
         fontFamily={style?.fontFamily}
@@ -64,7 +64,7 @@ const BendedLabel: FC<Props> = ({
       >
         <textPath
           startOffset={`${scaleOffset(textOriginDegree)}%`}
-          side={degree < 0 && graticuleType === "lon" ? "right" : "left"}
+          // side={degree < 0 && graticuleType === "lon" ? "right" : "left"}
           xlinkHref={`#${id}`}
         >
           {children}

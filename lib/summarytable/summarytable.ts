@@ -1,5 +1,4 @@
 import * as d3 from "d3";
-import * as _ from "lodash";
 import { ColumnType } from "../../types/Column";
 import type { Column } from "../../types/DataFrame";
 
@@ -22,7 +21,7 @@ export function getColumnStats(column: Column) {
     column.filter((d) => d === null || d === "").length / column.length;
   const isContinuous = type === ColumnType.Continuous;
   const mean = isContinuous
-    ? (column.reduce((acc: number, d: number) => (acc += d), 0) as number) /
+    ? (column.reduce((acc: number, d) => (acc += d as number), 0) as number) /
       column.length
     : undefined;
   const median = isContinuous

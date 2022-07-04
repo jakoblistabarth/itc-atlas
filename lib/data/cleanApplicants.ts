@@ -54,7 +54,6 @@ export default async function cleanApplicants(
       "Date of Birth",
       "Start Date",
       "End Date",
-      "SponsorCategory",
     ])
     .renameColumn({ Start: "start" })
     .renameColumn({ Description: "description" })
@@ -68,14 +67,41 @@ export default async function cleanApplicants(
     .renameColumn({ ProgDept: "progDept" })
     .renameColumn({ SpecialAwardMention: "specialAwardMention" })
     .renameColumn({ Sponsor: "sponsor" })
+    .renameColumn({ SponsorCategory: "sponsorCategory" })
     .renameColumn({ COURSENO: "courseNo" })
     .renameColumn({ Diploma: "diploma" })
     .renameColumn({ FinalResult: "finalResult" })
     .renameColumn({ "Final Score": "finalScore" })
     .renameColumn({ "Applicant status": "applicantStatus" })
     .renameColumn({ "Thesis Title": "thesisTitle" })
-    .renameColumn({ "ITC code": "ITCCode" })
-    .renameColumn({ "ITC code": "ITCCode" });
+    .renameColumn({ "ITC code": "itcCode" });
 
-  return applicants.toArray();
+  return applicants.toArray() as Applicant[]; //Question: better to make a explicit mapping?
+
+  // return applicants.toArray().map((row) => ({
+  //   dateOfBirth: row.dateOfBirth?.toString(),
+  //   startDate,
+  //   endDate,
+  //   description,
+  //   specialization,
+  //   gender,
+  //   nationality,
+  //   countryOrigin,
+  //   level,
+  //   prog,
+  //   dept,
+  //   progDept,
+  //   specialAwardMention,
+  //   sponsor,
+  //   sponsorCategory,
+  //   courseNo,
+  //   diploma,
+  //   certificateDate,
+  //   yearCertExamDipl,
+  //   finalResult,
+  //   finalScore,
+  //   applicantStatus,
+  //   thesisTitle,
+  //   itcCode,
+  // }));
 }

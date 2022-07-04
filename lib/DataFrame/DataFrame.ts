@@ -114,7 +114,6 @@ class DataFrame {
   }
 
   where(filterFunction: (t: any) => boolean) {
-    const df = _.cloneDeep(this);
     const newData = this.data.filter((row: Row) => filterFunction(row));
     return new DataFrame(newData);
   }

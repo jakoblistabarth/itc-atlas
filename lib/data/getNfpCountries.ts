@@ -1,4 +1,5 @@
 import xlsx from "xlsx";
+import { NfpCountry } from "../../types/NfpCountry";
 
 export default function getNfpCountries() {
   const filePath = "./data/thematic/nfpCountries.xlsx";
@@ -9,5 +10,5 @@ export default function getNfpCountries() {
     defval: null,
   });
 
-  return data;
+  return data as NfpCountry[];
 }

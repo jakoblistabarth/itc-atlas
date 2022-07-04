@@ -3,4 +3,5 @@ export enum ColumnType {
   Ordinal = "ordinal",
   Date = "date",
   Array = "array",
+  Object = "object",
 }

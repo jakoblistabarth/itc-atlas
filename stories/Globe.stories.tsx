@@ -50,7 +50,12 @@ const Template: ComponentStory<typeof Globe> = (
           maxPolarAngle={Math.PI / 2}
         />
       </Canvas>
-      <GlobeTexture ref={canvasRef} {...args.texture} countries={countries} />
+      <GlobeTexture
+        ref={canvasRef}
+        /* @ts-expect-error */
+        {...args.canvasTextureStyle}
+        neCountriesTopoJson={countries}
+      />
     </>
   );
 };
@@ -84,7 +89,8 @@ HoloTexture.args = {
   ...Template.args,
   canvasTexture: true,
   transparent: true,
-  texture: {
+  // @ts-expect-error
+  canvasTextureStyle: {
     fillColor: "rgba(0,200,255,0.3)",
     strokeColor: "lightblue",
     graticuleColor: "rgba(0,200,255,0.1)",

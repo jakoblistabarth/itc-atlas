@@ -43,25 +43,28 @@ const getProjectsByCountry = async () => {
   const maxDomain = d3.max(projectCount) ?? 10;
   const domain: [number, number] = [minDomain, maxDomain];
 
+  const neCountriesGeoJson = topojson.feature(world, world.objects.countries);
+
   const data: FeatureCollection<Point> = {
     type: "FeatureCollection",
-    features: topojson
-      .feature(world, world.objects.countries)
-      .features.map((feature: Feature<MultiPolygon>) => {
+    features: neCountriesGeoJson.features
+      .map((feature) => {
         const value = projectsCountry.get(feature.properties?.iso3code);
-        return {
+        const pointFeature: Feature<Point> = {
           type: "Feature",
           properties: {
             projectCount: value,
             ...feature.properties,
           },
           geometry: {
+            type: "Point",
             coordinates: [
               d3.geoCentroid(feature)[0],
               d3.geoCentroid(feature)[1],
             ],
           },
         };
+        return pointFeature;
       })
       .filter((feature: Feature) => feature.properties?.projectCount),
   };

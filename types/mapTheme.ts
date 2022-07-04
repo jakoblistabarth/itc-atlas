@@ -14,4 +14,6 @@ export type MapTheme = {
   hasGraticuleLables?: boolean;
   hasOutline?: boolean;
   hasShadow?: boolean;
+  hasLakes?: boolean;
+  hasRivers?: boolean;
 };

@@ -21,7 +21,8 @@ const Snapshot: FC<Props> = ({ column, columnName, type, detailed }) => {
       case ColumnType.Array:
         const flattenedArray = column
           .filter((d) => d)
-          .map((d) => d?.join(", "));
+          .map((d) => (Array.isArray(d) ? d?.join(", ") : []));
+        // TODO: implement Column as class and add function to update only data array? (keep or updated label, type, stats)
         return <SnapshotBar type={type} column={flattenedArray} />;
       case ColumnType.Continuous:
         return <SnapshotHistogram type={type} column={column} />;

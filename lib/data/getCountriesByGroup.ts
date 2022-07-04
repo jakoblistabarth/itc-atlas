@@ -1,27 +1,32 @@
 import getCountries from "./getCountries";
-import type { FeatureCollection, Feature, MultiPolygon } from "geojson";
 import * as topojson from "topojson-client";
 import getUnsdCountries from "./getUnsdCountries";
 import { UnGrouping } from "../../types/UnsdCodes";
+import { NeCountriesGeoJson } from "../../types/NeCountriesGeoJson";
 
 const getCountriesByGroup = async (group: UnGrouping) => {
-  const world = await getCountries();
+  const neCountriesTopojson = await getCountries();
   const areaCodes = await getUnsdCountries();
 
   const countriesOfGroup = areaCodes
     .filter((area) => area[group])
     .map((area) => area["ISO-alpha3 Code"]);
 
-  const countries: FeatureCollection<MultiPolygon> = {
+  const neCountriesGeoJson = topojson.feature(
+    neCountriesTopojson,
+    neCountriesTopojson.objects.countries
+  ) as NeCountriesGeoJson;
+
+  const countryFeatures = neCountriesGeoJson.features.filter((feature) =>
+    countriesOfGroup.includes(feature.properties?.iso3code)
+  );
+
+  const countryFeatureCollection: NeCountriesGeoJson = {
     type: "FeatureCollection",
-    features: topojson
-      .feature(world, world.objects.countries)
-      .features.filter((feature: Feature<MultiPolygon>) =>
-        countriesOfGroup.includes(feature.properties?.iso3code)
-      ),
+    features: countryFeatures,
   };
 
-  return countries;
+  return countryFeatureCollection;
 };
 
 export default getCountriesByGroup;

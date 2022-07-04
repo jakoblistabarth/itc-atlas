@@ -10,7 +10,7 @@ import getCountries from "../../../lib/data/getCountries";
 import getProjectsByCountry from "../../../lib/data/getProjectsByCountry";
 import themes from "../../../lib/styles/themes";
 import { scaleSqrt } from "d3";
-import getCountriesByCategory from "../../../lib/data/getCountriesByGroup";
+import getCountriesByGroup from "../../../lib/data/getCountriesByGroup";
 import { UnGrouping } from "../../../types/UnsdCodes";
 import MapAside from "../../../components/map/layout/MapAside";
 import MapBody from "../../../components/map/layout/MapBody";
@@ -26,7 +26,7 @@ export default async function handler(
   res: NextApiResponse
 ) {
   const themeReq = req.query.theme?.toString();
-  const theme = !themeReq ? defaultTheme : themes[themeReq];
+  const theme = !themeReq ? defaultTheme : themes.get(themeReq);
   if (!theme) {
     res.status(500).json({ error: "invalid theme name" });
   }
@@ -34,7 +34,7 @@ export default async function handler(
   const [{ data, domain }, world, highlightCountries] = await Promise.all([
     getProjectsByCountry(),
     getCountries(),
-    getCountriesByCategory(UnGrouping.LDC),
+    getCountriesByGroup(UnGrouping.LDC),
   ]);
 
   const scale = scaleSqrt().domain(domain).range([2, 40]);
@@ -53,7 +53,7 @@ export default async function handler(
     get projection() {
       return setMapBounds(this.bounds, geoBertin1953());
     },
-    theme: theme,
+    theme: theme ?? defaultTheme,
     scales: { scale },
   };
 
@@ -78,7 +78,7 @@ export default async function handler(
           scaleRadius={scale}
           title={"Projects per country"}
           unitLabel={"project"}
-          style={theme.symbol}
+          style={theme?.symbol}
         />
       </MapAside>
       <MapBody bounds={mapOptions.bounds}>
@@ -90,7 +90,7 @@ export default async function handler(
         <g className="choroplethLayer">
           <defs>
             <PatternLines
-              style={theme.choropleth?.pattern}
+              style={theme?.choropleth?.pattern}
               angle={20}
             ></PatternLines>
           </defs>
@@ -104,14 +104,21 @@ export default async function handler(
           ))}
         </g>
         <g className="symbolLayer">
-          {data.features.map((feature) => (
-            <PointSymbol
-              key={nanoid()}
-              xy={mapOptions.projection(feature.geometry.coordinates)}
-              radius={scale(feature.properties?.projectCount)}
-              style={theme.symbol}
-            />
-          ))}
+          {data.features.map((feature) => {
+            const xy = mapOptions.projection(
+              feature.geometry.coordinates as [number, number]
+            );
+            return (
+              xy && (
+                <PointSymbol
+                  key={nanoid()}
+                  xy={xy}
+                  radius={scale(feature.properties?.projectCount)}
+                  style={theme?.symbol}
+                />
+              )
+            );
+          })}
         </g>
       </MapBody>
     </Map>

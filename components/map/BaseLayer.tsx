@@ -2,7 +2,10 @@ import * as d3 from "d3";
 import { geoPath, GeoSphere, GeoProjection } from "d3-geo";
 import type { FC } from "react";
 import * as topojson from "topojson-client";
-import type { Topology } from "topojson-specification";
+import type {
+  MultiPolygon as MultiPolygonT,
+  Polygon as PolygonT,
+} from "topojson-specification";
 import type { MapTheme } from "../../types/MapTheme";
 import GraticuleLabelLayer from "./GraticuleLabelLayer";
 import geoEquator from "../../lib/cartographic/geoEquator";
@@ -14,10 +17,14 @@ import RadialGradient from "../defs/RadialGradient";
 import defaultTheme from "../../lib/styles/themes/defaultTheme";
 import getLakes from "../../lib/data/getLakes";
 import getRivers from "../../lib/data/getRivers";
+import type { FeatureCollection, Polygon, MultiPolygon } from "geojson";
+import {
+  CountryProperties,
+  NeCountriesTopoJson,
+} from "../../types/NeCountriesTopoJson";
 
 type Props = {
-  data: Topology;
-  // object?: string; // TODO: to be Implemented
+  data: NeCountriesTopoJson;
   projection: GeoProjection;
   theme?: MapTheme;
   labels?: boolean;
@@ -46,9 +53,17 @@ const BaseLayer: FC<Props> = ({
   const graticulePath = path(graticule);
   const equatorPath = path(geoEquator);
   const circlesPath = path(geoCirclesLat);
-  const land = topojson.merge(data, data.objects.countries.geometries);
+  const land = topojson.merge(
+    data,
+    data.objects.countries.geometries as Array<
+      MultiPolygonT<CountryProperties> | PolygonT<CountryProperties>
+    >
+  ); //Question: is there a way to avoid this, set geometry type in type definition?
   const landPath = path(land);
-  const countries = topojson.feature(data, data.objects.countries);
+  const countries = topojson.feature(
+    data,
+    data.objects.countries
+  ) as FeatureCollection<MultiPolygon | Polygon>;
   const borders = topojson.mesh(
     data,
     data.objects.countries,
@@ -56,7 +71,10 @@ const BaseLayer: FC<Props> = ({
   );
   const bordersPath = path(borders);
   const lakes = getLakes();
-  const lakesGeoJSON = topojson.feature(lakes, lakes.objects.ne_lakes);
+  const lakesGeoJSON = topojson.feature(
+    lakes,
+    lakes.objects.ne_lakes
+  ) as FeatureCollection<MultiPolygon | Polygon>;
   const lakesPath = path(lakesGeoJSON);
   const rivers = getRivers();
   const riversGeoJSON = topojson.feature(rivers, rivers.objects.ne_rivers);
@@ -151,7 +169,7 @@ const BaseLayer: FC<Props> = ({
             <path
               d={riversPath}
               fill={"none"}
-              strokeWidth={0.5}
+              strokeWidth={0.25}
               stroke={theme.background.fill}
             />
           </g>
@@ -182,6 +200,7 @@ const BaseLayer: FC<Props> = ({
                 <BendedLabel
                   key={nanoid()}
                   graticuleType="lat"
+                  textAnchor={"middle"}
                   degree={circle.properties?.lat}
                   projection={projection}
                   yOffset={7}
@@ -208,7 +227,7 @@ const BaseLayer: FC<Props> = ({
                 style={theme.label}
                 projection={projection}
               >
-                {country.properties.name}
+                {country.properties?.name}
               </BendedLabel>
             );
           })}

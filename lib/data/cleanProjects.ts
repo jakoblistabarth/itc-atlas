@@ -43,6 +43,7 @@ export default async function cleanProjects(input: any[]) {
   const output = merged.toArray();
 
   output.forEach((d) => {
+    if (typeof d.countriesRegion !== "string") return;
     d.countriesRegionArr = d.countriesRegion.split(/\s?[,/]\s?/gm);
     d.regions = [];
     d.subRegions = [];
@@ -59,65 +60,75 @@ export default async function cleanProjects(input: any[]) {
 
   // Matching
   // TODO: recognise group: EU
-  output.forEach((d, row) =>
-    d.countriesRegionArr?.forEach((e) => {
+  output.forEach((d, row) => {
+    if (!Array.isArray(d.countriesRegionArr)) return;
+    return d.countriesRegionArr?.forEach((e) => {
       if (!e) return;
 
+      const regions = output[row].regions;
       const regionMatch = regionCodes.find((f) => f.name === e);
-      if (regionMatch) {
-        return output[row].regions.push(regionMatch.name);
+      if (regionMatch && regionMatch.name && Array.isArray(regions)) {
+        return regions.push(regionMatch.name);
       }
 
+      const subRegions = output[row].subRegions;
       const subRegionMatch = subRegionCodes.find((f) => f.name === e);
-      if (subRegionMatch) {
-        return output[row].subRegions.push(subRegionMatch.name);
+      if (subRegionMatch && subRegionMatch.name && Array.isArray(subRegions)) {
+        return subRegions.push(subRegionMatch.name);
       }
 
+      const intermediateRegions = output[row].intermediateRegions;
       const intermediateRegionMatch = intermediateRegionCodes.find(
         (f) => f.name?.toUpperCase() === e.toUpperCase()
       );
-      if (intermediateRegionMatch) {
-        return output[row].intermediateRegions.push(
-          intermediateRegionMatch.name
-        );
+      if (
+        intermediateRegionMatch &&
+        intermediateRegionMatch.name &&
+        Array.isArray(intermediateRegions)
+      ) {
+        return intermediateRegions.push(intermediateRegionMatch.name);
       }
 
       const countryMatch = countries.find((f) =>
         f["Country or Area"].toUpperCase().match(e.toUpperCase())
       );
-      if (!countryMatch) return;
       const countriesList = output[row].countries;
+      if (!countryMatch || !Array.isArray(countriesList)) return;
       const code = countryMatch["ISO-alpha3 Code"];
-      if (!countriesList.includes(code)) output[row].countries.push(code);
-    })
-  );
+      if (!countriesList?.includes(code)) countriesList.push(code);
+    });
+  });
 
-  output.forEach((d, row) => {
+  output.forEach((d) => {
+    if (!Array.isArray(d.countries)) return;
     const allCountries = Array.from(d.countries);
 
-    d.regions.forEach((region) => {
-      allCountries.push(
-        ...countries
-          .filter((e) => e["Region Name"] === region)
-          .map((e) => e["ISO-alpha3 Code"])
-      );
-    });
+    if (Array.isArray(d.regions))
+      d.regions.forEach((region) => {
+        allCountries.push(
+          ...countries
+            .filter((e) => e["Region Name"] === region)
+            .map((e) => e["ISO-alpha3 Code"])
+        );
+      });
 
-    d.subRegions.forEach((subregion) => {
-      allCountries.push(
-        ...countries
-          .filter((e) => e["Sub-region Name"] === subregion)
-          .map((e) => e["ISO-alpha3 Code"])
-      );
-    });
+    if (Array.isArray(d.subRegions))
+      d.subRegions.forEach((subregion) => {
+        allCountries.push(
+          ...countries
+            .filter((e) => e["Sub-region Name"] === subregion)
+            .map((e) => e["ISO-alpha3 Code"])
+        );
+      });
 
-    d.intermediateRegions.forEach((intermediateRegion) => {
-      allCountries.push(
-        ...countries
-          .filter((e) => e["Intermediate Region Name"] === intermediateRegion)
-          .map((e) => e["ISO-alpha3 Code"])
-      );
-    });
+    if (Array.isArray(d.intermediateRegions))
+      d.intermediateRegions.forEach((intermediateRegion) => {
+        allCountries.push(
+          ...countries
+            .filter((e) => e["Intermediate Region Name"] === intermediateRegion)
+            .map((e) => e["ISO-alpha3 Code"])
+        );
+      });
 
     d.allCountries = Array.from(new Set(allCountries));
   });

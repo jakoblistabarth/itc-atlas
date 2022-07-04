@@ -12,6 +12,8 @@
     "build-storybook": "build-storybook"
   },
   "dependencies": {
+    "@floating-ui/react-dom": "^0.7.1",
+    "@floating-ui/react-dom-interactions": "^0.6.3",
     "@mdx-js/react": "^2.1.1",
     "@react-spring/three": "^9.4.5",
     "@react-three/drei": "^9.7.1",

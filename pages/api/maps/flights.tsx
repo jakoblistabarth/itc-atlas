@@ -20,7 +20,7 @@ export default async function handler(
   res: NextApiResponse
 ) {
   const themeReq = req.query.theme?.toString();
-  const theme = !themeReq ? defaultTheme : themes[themeReq];
+  const theme = !themeReq ? defaultTheme : themes.get(themeReq);
   if (!theme) {
     res.status(500).json({ error: "invalid theme name" });
   }
@@ -35,7 +35,10 @@ export default async function handler(
   );
   const min = d3.min(flightsPerRoute);
   const max = d3.max(flightsPerRoute);
-  const scale = d3.scaleLinear().domain([min, max]).range([1, 15]);
+  const scale = d3
+    .scaleLinear()
+    .domain([min ?? 0, max ?? 1])
+    .range([1, 15]);
 
   const mapOptions: MapOptions = {
     bounds: {
@@ -49,8 +52,7 @@ export default async function handler(
       },
     },
     projection: geoBertin1953(),
-    theme: theme,
-    scales: { scale },
+    theme: theme ?? defaultTheme,
     styles: {
       pointStyle: {
         stroke: "none",
@@ -74,7 +76,7 @@ export default async function handler(
       <MapAside xOffset={0} yOffset={mapOptions.bounds?.frame?.top}>
         <FlowLegend
           data={odMatrix.flows.features.map((flow) => flow.properties?.value)}
-          scaleWidth={mapOptions.scales?.scale}
+          scaleWidth={scale}
           title="No. of flights in 2019"
           unitLabel="flights"
           style={mapOptions.theme.flow}
@@ -89,7 +91,7 @@ export default async function handler(
         <FlowLayer
           projection={mapOptions.projection}
           data={odMatrix}
-          scaleWidth={mapOptions.scales?.scale}
+          scaleWidth={scale}
           flowStyle={mapOptions.theme.flow}
           pointStyle={mapOptions.styles?.pointStyle}
         />

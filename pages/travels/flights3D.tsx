@@ -23,7 +23,10 @@ const Flights: NextPage<Props> = ({ odMatrix }) => {
   );
   const min = d3.min(flightsPerRoute);
   const max = d3.max(flightsPerRoute);
-  const scaleWidth = d3.scaleLinear().domain([min, max]).range([0, 100]);
+  const scaleWidth = d3
+    .scaleLinear()
+    .domain([min ?? 0, max ?? 100])
+    .range([0, 100]);
 
   return (
     <>

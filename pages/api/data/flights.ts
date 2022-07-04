@@ -1,4 +1,3 @@
-// Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import type { NextApiRequest, NextApiResponse } from "next";
 import getFlights from "../../../lib/data/getFlights";
 import type { Data, Row } from "../../../types/DataFrame";

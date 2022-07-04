@@ -8,11 +8,11 @@ import getFlights from "../../lib/data/getFlights";
 import SummaryTable from "../../components/SummaryTable";
 import Footer from "../../components/Footer";
 import DataFrame from "../../lib/DataFrame/DataFrame";
-import { Flight } from "../../types/Travels";
 import Heading, { Headings } from "../../components/Heading";
+import { Row } from "../../types/DataFrame";
 
 type Props = {
-  flights: Flight[];
+  flights: Row[];
 };
 
 const Travels: NextPage<Props> = ({ flights }) => {

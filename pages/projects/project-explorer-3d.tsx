@@ -19,9 +19,12 @@ import GlobeTexture from "../../components/map-3d/GlobeTexture";
 
 type Props = SharedPageProps;
 
-const ProjectExplorer3D: NextPage<Props> = ({ countries }) => {
+const ProjectExplorer3D: NextPage<Props> = ({ neCountriesTopoJson }) => {
   const earthRadius = 1;
-  const world = topojson.feature(countries, countries.objects.countries);
+  const world = topojson.feature(
+    neCountriesTopoJson,
+    neCountriesTopoJson.objects.countries
+  );
 
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
@@ -61,7 +64,10 @@ const ProjectExplorer3D: NextPage<Props> = ({ countries }) => {
             </Globe>
             <OrbitControls enableZoom={false} enablePan={false} />
           </Canvas>
-          <GlobeTexture countries={countries} ref={canvasRef} />
+          <GlobeTexture
+            neCountriesTopoJson={neCountriesTopoJson}
+            ref={canvasRef}
+          />
         </div>
       </main>
       <Footer />
@@ -70,15 +76,14 @@ const ProjectExplorer3D: NextPage<Props> = ({ countries }) => {
 };
 
 export const getStaticProps: GetStaticProps<Props> = async () => {
-  const [countries, airports] = await Promise.all([
+  const [neCountriesTopoJson, airports] = await Promise.all([
     getCountries(),
     (await getAirports()).json,
   ]);
 
   return {
     props: {
-      airports,
-      countries,
+      neCountriesTopoJson,
     },
   };
 };

@@ -1,14 +1,21 @@
 import * as d3 from "d3";
 import type { Flight } from "../../types/Travels";
-import type { ODMatrix } from "../../types/ODMatrix";
-import type { Feature, FeatureCollection, LineString, Point } from "geojson";
+import type { FlowPointProperties, ODMatrix } from "../../types/ODMatrix";
+import type {
+  GeoJsonProperties,
+  Feature,
+  FeatureCollection,
+  LineString,
+  Point,
+} from "geojson";
 import getAirports from "./getAirports";
+import { FlowProperties } from "../../types/ODMatrix";
 
 type od = {
   origin: string;
   destination: string;
   od: string;
-  props: any;
+  props: GeoJsonProperties;
 };
 
 async function getODMatrix(flights: Flight[]): Promise<ODMatrix> {
@@ -22,8 +29,8 @@ async function getODMatrix(flights: Flight[]): Promise<ODMatrix> {
 
 async function getODFlows(
   flights: Flight[]
-): Promise<FeatureCollection<LineString>> {
-  const airports = await (await getAirports()).json;
+): Promise<FeatureCollection<LineString, FlowProperties>> {
+  const airports = (await getAirports()).json;
 
   const od = flights.reduce((acc: od[], d) => {
     const codes = d.airportCodes;
@@ -34,30 +41,30 @@ async function getODFlows(
       od: code + "-" + codes[index + 1],
       props: d,
     }));
-    acc.push(routes);
-    return acc.flat();
+    acc.push.apply(acc, routes);
+    return acc;
   }, []);
 
-  const features: Feature<LineString>[] = d3
+  const features = d3
     .rollups(
       od,
       (v) => v.length,
       (d) => d.od
     )
     .sort((a, b) => d3.descending(a[1], b[1]))
-    .map((d) => {
+    .reduce((acc: Feature<LineString, FlowProperties>[], d) => {
       const [od, value] = d;
       const [origin, destination] = od.split("-");
-      const properties = {
+      const oAirport = airports.find((d) => d.iata_code == origin);
+      const dAirport = airports.find((d) => d.iata_code == destination);
+      if (!oAirport || !dAirport) return acc;
+      const properties: FlowProperties = {
         od: od,
         o: origin,
         d: destination,
         value: value,
       };
-      const oAirport = airports.find((d) => d.iata_code == origin);
-      const dAirport = airports.find((d) => d.iata_code == destination);
-      if (!oAirport || !dAirport) return;
-      const feature: Feature<LineString> = {
+      const feature: Feature<LineString, FlowProperties> = {
         type: "Feature",
         properties: properties,
         geometry: {
@@ -68,9 +75,9 @@ async function getODFlows(
           ],
         },
       };
-      return feature;
-    })
-    .filter((d) => d);
+      acc.push(feature);
+      return acc;
+    }, []);
 
   return {
     type: "FeatureCollection",
@@ -79,26 +86,29 @@ async function getODFlows(
 }
 
 function getODPoints(
-  flows: FeatureCollection<LineString>
-): FeatureCollection<Point> {
-  const features = flows.features.reduce((points: Feature<Point>[], flow) => {
-    flow.geometry.coordinates.forEach((coordinates, index) => {
-      const name = index === 0 ? flow.properties?.o : flow.properties?.d;
-      if (!points.map((p) => p.properties?.name).includes(name))
-        points.push({
-          type: "Feature",
-          properties: {
-            name,
-            value: flow.properties?.value,
-          },
-          geometry: {
-            type: "Point",
-            coordinates: coordinates,
-          },
-        });
-    });
-    return points;
-  }, []);
+  flows: FeatureCollection<LineString, FlowProperties>
+): FeatureCollection<Point, FlowPointProperties> {
+  const features = flows.features.reduce(
+    (points: Feature<Point, FlowPointProperties>[], flow) => {
+      flow.geometry.coordinates.forEach((coordinates, index) => {
+        const name = index === 0 ? flow.properties?.o : flow.properties?.d;
+        if (!points.map((p) => p.properties?.name).includes(name))
+          points.push({
+            type: "Feature",
+            properties: {
+              name,
+              value: flow.properties?.value,
+            },
+            geometry: {
+              type: "Point",
+              coordinates: coordinates,
+            },
+          });
+      });
+      return points;
+    },
+    []
+  );
 
   return {
     type: "FeatureCollection",

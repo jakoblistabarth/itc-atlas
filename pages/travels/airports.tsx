@@ -1,6 +1,6 @@
 import * as d3 from "d3";
 import { geoBertin1953 } from "d3-geo-projection";
-import type { NextPage } from "next";
+import type { GetStaticProps, NextPage } from "next";
 import Head from "next/head";
 import styles from "../../styles/home.module.css";
 import type { Topology } from "topojson-specification";
@@ -12,23 +12,13 @@ import BaseLayer from "../../components/map/BaseLayer";
 import PointLabel from "../../components/map/PointLabel";
 import PointSymbol from "../../components/map/PointSymbol";
 import defaultTheme from "../../lib/styles/themes/defaultTheme";
+import { SharedPageProps } from "../../types/Props";
 
-export async function getStaticProps() {
-  const flights = await getFlights();
-  const airports = flights.perAirport;
-  const world = await getCountries();
-  return {
-    props: {
-      airports,
-      world,
-    },
-  };
-}
-
-const Airports: NextPage<{
+type Props = {
   airports: FeatureCollection<Point>;
-  world: Topology;
-}> = ({ airports, world }) => {
+} & SharedPageProps;
+
+const Airports: NextPage<Props> = ({ airports, neCountriesTopoJson }) => {
   const projection = geoBertin1953();
 
   const airportsGeo: FeatureCollection<Point> = {
@@ -56,7 +46,7 @@ const Airports: NextPage<{
       <main className={styles.main}>
         <Heading Tag={Headings.H1}>Airports</Heading>
         <svg width={1020} height={600}>
-          <BaseLayer data={world} projection={projection} />
+          <BaseLayer data={neCountriesTopoJson} projection={projection} />
           {airportsGeo.features.map((airport) => (
             <PointSymbol
               style={defaultTheme.symbol}
@@ -76,6 +66,20 @@ const Airports: NextPage<{
       </main>
     </>
   );
+};
+
+export const getStaticProps: GetStaticProps<Props> = async () => {
+  const [airports, neCountriesTopoJson] = await Promise.all([
+    (await getFlights()).perAirport,
+    getCountries(),
+  ]);
+
+  return {
+    props: {
+      airports,
+      neCountriesTopoJson,
+    },
+  };
 };
 
 export default Airports;

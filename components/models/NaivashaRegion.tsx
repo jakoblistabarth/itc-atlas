@@ -17,10 +17,11 @@ type GLTFResult = GLTF & {
 };
 
 export default function Model(props: JSX.IntrinsicElements["group"]) {
-  const group = useRef<THREE.Group>();
+  const group = useRef<THREE.Group>(null);
+  // @ts-ignore
   const { nodes, materials } = useGLTF(
     "/models/lake-naivasha-green.glb"
-  ) as GLTFResult;
+  ) as GLTFResult; //TODO: fix typing
   return (
     <group ref={group} {...props} dispose={null}>
       <mesh

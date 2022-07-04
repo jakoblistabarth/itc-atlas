@@ -1,11 +1,11 @@
 import { geoEquirectangular, geoGraticule10, geoPath } from "d3-geo";
 import { useImperativeHandle, useLayoutEffect, useRef } from "react";
-import { Topology } from "topojson-specification";
 import { feature } from "topojson-client";
 import React from "react";
+import { NeCountriesTopoJson } from "../../types/NeCountriesTopoJson";
 
 type Props = {
-  countries: Topology;
+  neCountriesTopoJson: NeCountriesTopoJson;
   sphereColor?: string;
   graticuleColor?: string;
   fillColor?: string;
@@ -15,7 +15,7 @@ type Props = {
 const GlobeTexture = React.forwardRef<HTMLCanvasElement, Props>(
   (
     {
-      countries,
+      neCountriesTopoJson,
       sphereColor = "white",
       graticuleColor = "grey",
       fillColor = "lightgrey",
@@ -23,7 +23,10 @@ const GlobeTexture = React.forwardRef<HTMLCanvasElement, Props>(
     },
     ref
   ) => {
-    const world = feature(countries, countries.objects.countries);
+    const world = feature(
+      neCountriesTopoJson,
+      neCountriesTopoJson.objects.countries
+    );
 
     const internalRef = useRef<HTMLCanvasElement>(null);
     useImperativeHandle<HTMLCanvasElement | null, HTMLCanvasElement | null>(

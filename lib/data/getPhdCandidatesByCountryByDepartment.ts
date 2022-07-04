@@ -1,7 +1,7 @@
-import { group, geoCentroid, descending, min, max, scaleSqrt } from "d3";
+import { group, geoCentroid, descending, min, max } from "d3";
 import getCountries from "./getCountries";
 import getPhdCandidates from "./getPhdCandidates";
-import type { FeatureCollection, Feature, MultiPolygon, Point } from "geojson";
+import type { FeatureCollection, Feature, Point } from "geojson";
 import * as topojson from "topojson-client";
 import { Department, departmentColors } from "../mappings/departments";
 import { pieDatum } from "../../components/map/ScaledPie";
@@ -12,10 +12,7 @@ const getPhdCandidatesByCountryByDepartment = async () => {
     getPhdCandidates(),
   ]);
 
-  const worldGeoJson: FeatureCollection<MultiPolygon> = topojson.feature(
-    world,
-    world.objects.countries
-  );
+  const neCountriesGeoJson = topojson.feature(world, world.objects.countries);
 
   const count = group(
     phdCandidates,
@@ -25,8 +22,8 @@ const getPhdCandidatesByCountryByDepartment = async () => {
 
   const data: FeatureCollection<Point> = {
     type: "FeatureCollection",
-    features: worldGeoJson.features
-      .map((feature: Feature<MultiPolygon>) => {
+    features: neCountriesGeoJson.features
+      .map((feature) => {
         const departments = count.get(feature.properties?.iso3code);
         const departmentCount = departments
           ? Array.from(departments?.entries()).map(([key, value]) => {
@@ -82,8 +79,9 @@ const getPhdCandidatesByCountryByDepartment = async () => {
   );
   const minCount = min(phdCount) ?? 0;
   const maxCount = max(phdCount) ?? 10;
+  const domain: [number, number] = [minCount, maxCount];
 
-  return { data, domain: [minCount, maxCount], legendEntries };
+  return { data, domain, legendEntries };
 };
 
 export default getPhdCandidatesByCountryByDepartment;

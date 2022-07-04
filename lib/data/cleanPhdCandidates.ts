@@ -2,7 +2,7 @@ import Fuse from "fuse.js";
 import type { Data } from "../../types/DataFrame";
 import DataFrame from "../DataFrame/DataFrame";
 import { mapCountries } from "../mappings/country.name.EN";
-import { departmentMap } from "../mappings/departments";
+import { DepartmentMap } from "../mappings/departments";
 import getUnsdCountries from "./getUnsdCountries";
 
 export async function cleanPhdCandiates(phdCandidates: Data) {
@@ -28,13 +28,14 @@ export async function cleanPhdCandiates(phdCandidates: Data) {
       if (!result) return null;
       return result.item["ISO-alpha3 Code"];
     })
-    .mutate(
-      "department1",
-      (row) => departmentMap[row.Department] ?? row.Department
+    .mutate("department1", (row) =>
+      row.Department in DepartmentMap
+        ? DepartmentMap[row.Department]
+        : row.Department
     )
     .mutate(
       "department2",
-      (row) => departmentMap[row.DepartmentSecond] ?? row.DepartmentSecond
+      (row) => DepartmentMap[row.DepartmentSecond] ?? row.DepartmentSecond
     )
     .mutate("graduated", (row) => {
       if (row.Graduated === null) return null;
@@ -59,5 +60,14 @@ export async function cleanPhdCandiates(phdCandidates: Data) {
       "graduated",
     ]);
 
-  return output.toArray(); // TODO: type error due to generic toArray Function
+  return output.toArray().map((row) => ({
+    studentID: row.studentID,
+    country: row.country,
+    department1: row.department1,
+    department2: row.department2,
+    sponsor: row.sponsor,
+    graduated: row.graduated,
+    startDate: row.startDate,
+    endDate: row.endDate,
+  })); // TODO: type error due to generic toArray Function
 }
