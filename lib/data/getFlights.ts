@@ -3,6 +3,7 @@ import getODMatrix from "./getODMatrix";
 import getAirports from "./getAirports";
 import countFlightsperAirport from "./countFlightsPerAirport";
 import cleanTravelData2019 from "./cleanTravelData2019";
+import fakeTravelData from "./fakeTravelData";
 
 export default async function getFlights() {
   const filePath = "./data/thematic/UT.01jan-31dec2019-ITConly.xlsx";
@@ -13,7 +14,9 @@ export default async function getFlights() {
     defval: null,
   });
 
-  const flights = cleanTravelData2019(data);
+  //TODO: use if excel sheet does not exist? or based on variable?
+  const devMode = true;
+  const flights = devMode ? await fakeTravelData() : cleanTravelData2019(data);
 
   const airports = await (await getAirports()).json;
 
