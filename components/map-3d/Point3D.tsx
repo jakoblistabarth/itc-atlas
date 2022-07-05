@@ -18,8 +18,8 @@ const Point3D: FC<{
   return (
     <animated.mesh
       scale={scale}
-      onPointerEnter={() => setHover(!hover)}
-      onPointerLeave={() => setHover(!hover)}
+      onPointerEnter={() => setHover(true)}
+      onPointerLeave={() => setHover(false)}
       onClick={() => console.log(data)}
       position={pos}
       castShadow

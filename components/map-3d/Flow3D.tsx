@@ -33,8 +33,8 @@ const Flow3D: FC<{
         />
       ))}
       <mesh
-        onPointerEnter={() => setHover(!hover)}
-        onPointerLeave={() => setHover(!hover)}
+        onPointerEnter={() => setHover(true)}
+        onPointerLeave={() => setHover(false)}
         onClick={() => console.log(data)}
         castShadow
         receiveShadow

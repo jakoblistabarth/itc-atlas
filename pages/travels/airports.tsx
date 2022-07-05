@@ -3,7 +3,6 @@ import { geoBertin1953 } from "d3-geo-projection";
 import type { GetStaticProps, NextPage } from "next";
 import Head from "next/head";
 import styles from "../../styles/home.module.css";
-import type { Topology } from "topojson-specification";
 import { FeatureCollection, Point } from "geojson";
 import Heading, { Headings } from "../../components/Heading";
 import getCountries from "../../lib/data/getCountries";
@@ -13,6 +12,7 @@ import PointLabel from "../../components/map/PointLabel";
 import PointSymbol from "../../components/map/PointSymbol";
 import defaultTheme from "../../lib/styles/themes/defaultTheme";
 import { SharedPageProps } from "../../types/Props";
+import { nanoid } from "nanoid";
 
 type Props = {
   airports: FeatureCollection<Point>;
@@ -49,17 +49,18 @@ const Airports: NextPage<Props> = ({ airports, neCountriesTopoJson }) => {
           <BaseLayer data={neCountriesTopoJson} projection={projection} />
           {airportsGeo.features.map((airport) => (
             <PointSymbol
+              key={nanoid()}
               style={defaultTheme.symbol}
               xy={projection(airport.geometry.coordinates)}
               radius={scale(airport.properties?.value)}
             />
           ))}
           {airportsGeo.features.slice(0, 5).map((d) => (
-            <PointLabel xy={projection(d.geometry.coordinates)}>
+            <PointLabel key={nanoid()} xy={projection(d.geometry.coordinates)}>
               <text>
                 <tspan fontWeight={"bold"}>{d.properties?.["iata_code"]}</tspan>
                 ({d.properties?.value})
-              </text>{" "}
+              </text>
             </PointLabel>
           ))}
         </svg>
