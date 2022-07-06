@@ -77,7 +77,10 @@ const BaseLayer: FC<Props> = ({
   ) as FeatureCollection<MultiPolygon | Polygon>;
   const lakesPath = path(lakesGeoJSON);
   const rivers = getRivers();
-  const riversGeoJSON = topojson.feature(rivers, rivers.objects.ne_rivers);
+  const riversGeoJSON = topojson.feature(
+    rivers,
+    rivers.objects.ne_rivers_lake_centerlines
+  );
   const riversPath = path(riversGeoJSON);
 
   const hasGraticuleLabels =

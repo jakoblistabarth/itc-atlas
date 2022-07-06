@@ -23,9 +23,9 @@ const Airports: NextPage<Props> = ({ airports, neCountriesTopoJson }) => {
 
   const airportsGeo: FeatureCollection<Point> = {
     type: "FeatureCollection",
-    features: airports.features
-      .filter((d) => d.properties?.iata_code != "AMS")
-      .sort((a, b) => d3.descending(a.properties?.value, b.properties?.value)),
+    features: airports.features.sort((a, b) =>
+      d3.descending(a.properties?.value, b.properties?.value)
+    ),
   };
 
   const flightCount = airportsGeo.features.map(

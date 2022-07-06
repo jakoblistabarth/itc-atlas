@@ -2,7 +2,7 @@ import xlsx from "xlsx";
 import cleanApplicants from "./cleanApplicants";
 
 export default async function getApplicants() {
-  const filePath = "./data/thematic/STUDENTSALUMNIv3 (20220304).xlsx";
+  const filePath = "./data/itc/STUDENTSALUMNIv3 (20220304).xlsx";
   const file = xlsx.readFile(filePath, {
     cellDates: true,
   });

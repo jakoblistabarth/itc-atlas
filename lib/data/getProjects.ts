@@ -3,7 +3,7 @@ import { Project } from "../types/Project";
 import cleanProjects from "./cleanProjects";
 
 export default async function getProjects(): Promise<Project[]> {
-  const filePath = "./data/thematic/ITCProjects.xlsx";
+  const filePath = "./data/itc/ITCProjects.xlsx";
   const file = xlsx.readFile(filePath, {
     cellDates: true,
   });

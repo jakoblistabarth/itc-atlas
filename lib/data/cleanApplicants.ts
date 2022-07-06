@@ -1,6 +1,6 @@
 import DataFrame from "../DataFrame/DataFrame";
 import { Applicant } from "../../types/Applicant";
-import { ddmmyyyyToDate } from "./timeparser";
+import { ddmmyyyyToDate } from "../utilities/timeparser";
 
 export default async function cleanApplicants(
   input: unknown[]

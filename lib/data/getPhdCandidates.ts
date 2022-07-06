@@ -3,7 +3,7 @@ import { Data, Row } from "../../types/DataFrame";
 import { cleanPhdCandiates } from "./cleanPhdCandidates";
 
 export default async function getPhdCandidates() {
-  const filePath = "./data/thematic/ITCPHDCANDIDATES.xlsx";
+  const filePath = "./data/itc/ITCPHDCANDIDATES.xlsx";
   const file = xlsx.readFile(filePath, {
     cellDates: true,
   });

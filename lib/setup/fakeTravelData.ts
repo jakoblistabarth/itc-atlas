@@ -1,20 +1,24 @@
 import { faker } from "@faker-js/faker";
-import { range } from "d3-array";
+import range from "../utilities/range"; // FIXME: workaround due to failed module workaround
 import { Flight } from "../../types/Travels";
 import getRandomElement from "../utilities/getRandomElement";
-import getAirports from "./getAirports";
+import getAirports from "../data/getAirports";
 
-const fakeTravelData = async (number: number = 500): Promise<Flight[]> => {
-  // TODO: use a set of origin-destination combinations to make fake data more realistic
-  // hubs improved the results but still too many different combinations
-  const airportCodes = (await getAirports()).json
-    .filter((airport) => airport.type == "large_airport")
-    .filter((airport) => airport.iata_code)
-    .filter(() => Math.random() > 0.8)
-    .map((airport) => airport.iata_code);
-  const hubs = airportCodes.filter(() => Math.random() > 0.95);
-  console.log(hubs.length);
-  const data = range(0, number).map(() => {
+// TODO: change function so that it returns an excel file or (database output?) similar to the actual input
+const fakeTravelData = async (number: number = 1000): Promise<Flight[]> => {
+  const airports = (await getAirports()).json;
+  const airportSelection = airports
+    .filter(
+      (airport) =>
+        airport.iata_code &&
+        airport.iata_code !== "AMS" &&
+        airport.type == "large_airport"
+    )
+    .filter(() => Math.random() > 0.9);
+  const hubs = airportSelection.filter(() => Math.random() > 0.98);
+  const ams = airports.find((airport) => airport.iata_code === "AMS");
+  if (!hubs.map((hub) => hub.iata_code).includes("AMS") && ams) hubs.push(ams);
+  const data = range(number).map(() => {
     const traveldays = Math.round(Math.random() * 30);
     const minArrival = new Date("2019");
     minArrival.setDate(minArrival.getDate() + traveldays + 1);
@@ -28,7 +32,10 @@ const fakeTravelData = async (number: number = 500): Promise<Flight[]> => {
       orderDate: orderDate.toISOString(),
       departureDate: departureDate.toISOString(),
       arrivalDate: arrivalDate.toISOString(),
-      airportCodes: getRandomAirports(airportCodes, hubs),
+      airportCodes: getRandomAirports(
+        airportSelection.map((d) => d.iata_code),
+        hubs.map((d) => d.iata_code)
+      ),
       travelDays: traveldays,
       ticketcount: Math.round(Math.random()),
       fare: parseFloat(faker.commerce.price(100, 3000)),
@@ -46,10 +53,10 @@ const getRandomAirports = (
   airportCodes: string[],
   hubs: string[]
 ): string[] => {
-  const numberOfStops = Math.ceil(Math.pow(Math.random(), 24) * 4);
-  const originAirport = getRandomElement(airportCodes);
-  const stops = range(0, numberOfStops).map(() => {
-    const list = Math.random() < 0.99 ? hubs : airportCodes;
+  const numberOfStops = Math.ceil(Math.pow(Math.random(), 24) * 5);
+  const originAirport = getRandomElement(hubs);
+  const stops = range(numberOfStops).map(() => {
+    const list = Math.random() < 0.7 ? hubs : airportCodes;
     return getRandomElement(list);
   });
 

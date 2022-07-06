@@ -2,7 +2,7 @@ import xlsx from "xlsx";
 import { NfpCountry } from "../../types/NfpCountry";
 
 export default function getNfpCountries() {
-  const filePath = "./data/thematic/nfpCountries.xlsx";
+  const filePath = "./data/static/nfpCountries.xlsx";
   const file = xlsx.readFile(filePath, {
     cellDates: true,
   });

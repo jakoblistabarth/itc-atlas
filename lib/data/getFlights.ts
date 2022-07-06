@@ -3,20 +3,29 @@ import getODMatrix from "./getODMatrix";
 import getAirports from "./getAirports";
 import countFlightsperAirport from "./countFlightsPerAirport";
 import cleanTravelData2019 from "./cleanTravelData2019";
-import fakeTravelData from "./fakeTravelData";
+import fakeTravelData from "../setup/fakeTravelData";
+import fs from "fs";
+import { Flight } from "../../types/Travels";
 
 export default async function getFlights() {
-  const filePath = "./data/thematic/UT.01jan-31dec2019-ITConly.xlsx";
-  const file = xlsx.readFile(filePath, {
-    cellDates: true,
-  });
-  const data = xlsx.utils.sheet_to_json(file.Sheets[file.SheetNames[0]], {
-    defval: null,
-  });
+  const filePath = "./data/itc/UT.01jan-31dec2019-ITConly.xlsx";
 
-  //TODO: use if excel sheet does not exist? or based on variable?
-  const devMode = true;
-  const flights = devMode ? await fakeTravelData() : cleanTravelData2019(data);
+  const flights: Flight[] = [];
+
+  fs.access(filePath, async (err) => {
+    if (err) {
+      const fakeFlights = await fakeTravelData();
+      flights.push(...fakeFlights);
+      return;
+    }
+    const file = xlsx.readFile(filePath, {
+      cellDates: true,
+    });
+    const data = xlsx.utils.sheet_to_json(file.Sheets[file.SheetNames[0]], {
+      defval: null,
+    });
+    flights.push(...cleanTravelData2019(data));
+  });
 
   const airports = await (await getAirports()).json;
 
@@ -24,7 +33,6 @@ export default async function getFlights() {
   const perAirport = countFlightsperAirport(flights, airports);
 
   return {
-    allTravels: data,
     flights: flights,
     odMatrix: odMatrix,
     perAirport: perAirport,

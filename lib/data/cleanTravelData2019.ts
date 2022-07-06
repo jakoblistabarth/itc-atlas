@@ -1,8 +1,14 @@
+import { Flight } from "../../types/Travels";
 import DataFrame from "../DataFrame/DataFrame";
 
 const cleanTravelData2019 = (data: any) => {
   const df = new DataFrame(data)
-    .where((row) => row["Sales Type"] !== "Train" && row.Route)
+    .where(
+      (row) =>
+        row["Sales Type"] !== "Train" &&
+        row["Product Description"] == "Air ticket" &&
+        row.Route
+    )
     .dropColumn("Hotel location")
     .mutate("airportCodes", (row) => row.Route.split("-"))
     .dropColumn("Route")
@@ -24,7 +30,7 @@ const cleanTravelData2019 = (data: any) => {
     .dropColumn("Ref2")
     .renameColumn({ Ref1: "ref1" });
 
-  return df.toArray();
+  return df.toArray() as Flight[];
 };
 
 export default cleanTravelData2019;

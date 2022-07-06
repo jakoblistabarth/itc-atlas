@@ -2,7 +2,7 @@ import csv from "csvtojson";
 import { AreaCode, UnLevel } from "../../types/UnsdCodes";
 
 export default async function getUnsdCodes(level: UnLevel) {
-  const csvFilePath = "./data/thematic/UNSD-Methodology.csv";
+  const csvFilePath = "./data/static/UNSD-Methodology.csv";
   // source: https://unstats.un.org/unsd/methodology/m49/overview/
   const countries: AreaCode[] = await csv().fromFile(csvFilePath);
 

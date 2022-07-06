@@ -4,11 +4,25 @@ This atlas on ITC and its global activities is a [Next.js](https://nextjs.org/) 
 
 ## Getting Started 🚀
 
+### 1. Dependencies
+
 First, install the required dependencies using node:
 
 ```bash
 npm i
 ```
+
+### 2. Static data sources
+
+Create the required static data sets with
+
+```bash
+npm run setup-data
+```
+
+This command is also meant to create fake itc data if the original data is not available. (temporary work-around)
+
+### 3. Starting the next.js app
 
 Then run the development server (to check out the current state or start developing):
 
