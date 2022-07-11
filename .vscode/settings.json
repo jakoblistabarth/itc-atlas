@@ -1,4 +1,4 @@
 {
-    "editor.formatOnSave": true,
-    "todohighlight.keywordsPattern": "TODO|todo|QUESTION|Question",
+  "editor.formatOnSave": true,
+  "todohighlight.keywordsPattern": "TODO|todo|QUESTION|Question|FIXME|fixme"
 }
