@@ -21,7 +21,7 @@ export default function countFlightsPerAirport(
         type: "Feature",
         geometry: {
           type: "Point",
-          coordinates: [d.long, d.lat],
+          coordinates: [d.lon, d.lat],
         },
         properties: { ...d, value: value },
       };

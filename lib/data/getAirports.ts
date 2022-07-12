@@ -1,20 +1,17 @@
-import csv from "csvtojson";
 import type { Feature, FeatureCollection } from "geojson";
 import { AirportProperties } from "../../types/Travels";
+import fs from "fs";
 
-export default async function getAirports() {
-  // file containing only major airports derived from https://datahub.io/core/airport-codes
-  const csvFilePath = "./data/static/airports.csv";
-  const airports = await csv({
-    checkType: true,
-  }).fromFile(csvFilePath);
+export default function getAirports() {
+  const rawData = fs.readFileSync("data/topographic/airports.json", "utf-8");
+  const airports = JSON.parse(rawData);
 
-  const features: Feature[] = airports.map((d) => {
+  const features: Feature[] = airports.map((d: AirportProperties) => {
     return {
       type: "Feature",
       geometry: {
         type: "Point",
-        coordinates: [d.long, d.lat],
+        coordinates: [d.lon, d.lat],
       },
       properties: d,
     };
@@ -27,6 +24,6 @@ export default async function getAirports() {
 
   return {
     json: airports as AirportProperties[],
-    geoJSON: geoJSON,
+    geoJSON,
   };
 }

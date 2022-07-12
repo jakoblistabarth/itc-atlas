@@ -1,5 +1,7 @@
 import fakeTravelData from "./fakeTravelData";
-import getNaturalEarthData from "./getNaturalEarthData";
+import loadNaturalEarthData from "./loadNaturalEarthData";
+import loadAirports from "./loadAirports";
 
+loadAirports();
 fakeTravelData();
-getNaturalEarthData();
+loadNaturalEarthData();

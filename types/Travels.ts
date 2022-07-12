@@ -23,6 +23,6 @@ export type AirportProperties = {
   gps_code: string;
   iata_code: string;
   local_code: string;
-  long: number;
+  lon: number;
   lat: number;
 };

@@ -70,8 +70,8 @@ async function getODFlows(
         geometry: {
           type: "LineString",
           coordinates: [
-            [oAirport.long, oAirport.lat],
-            [dAirport.long, dAirport.lat],
+            [oAirport.lon, oAirport.lat],
+            [dAirport.lon, dAirport.lat],
           ],
         },
       };

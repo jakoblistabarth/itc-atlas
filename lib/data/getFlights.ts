@@ -5,36 +5,43 @@ import countFlightsperAirport from "./countFlightsPerAirport";
 import cleanTravelData2019 from "./cleanTravelData2019";
 import fakeTravelData from "../setup/fakeTravelData";
 import fs from "fs";
-import { Flight } from "../../types/Travels";
 
 export default async function getFlights() {
   const filePath = "./data/itc/UT.01jan-31dec2019-ITConly.xlsx";
 
-  const flights: Flight[] = [];
+  // const flights: Flight[] = [];
 
-  fs.access(filePath, async (err) => {
-    if (err) {
-      const fakeFlights = await fakeTravelData();
-      flights.push(...fakeFlights);
-      return;
-    }
-    const file = xlsx.readFile(filePath, {
-      cellDates: true,
-    });
-    const data = xlsx.utils.sheet_to_json(file.Sheets[file.SheetNames[0]], {
-      defval: null,
-    });
-    flights.push(...cleanTravelData2019(data));
+  // fs.access(filePath, async (err) => {
+  //   if (err) {
+  //     const fakeFlights = await fakeTravelData();
+  //     flights.push(...fakeFlights);
+  //     return;
+  //   }
+  //   const file = xlsx.readFile(filePath, {
+  //     cellDates: true,
+  //   });
+  //   const data = xlsx.utils.sheet_to_json(file.Sheets[file.SheetNames[0]], {
+  //     defval: null,
+  //   });
+  //   flights.push(...cleanTravelData2019(data));
+  // });
+
+  const file = xlsx.readFile(filePath, {
+    cellDates: true,
   });
+  const data = xlsx.utils.sheet_to_json(file.Sheets[file.SheetNames[0]], {
+    defval: null,
+  });
+  const flights = cleanTravelData2019(data);
 
-  const airports = await (await getAirports()).json;
+  const airports = getAirports().json;
 
   const odMatrix = await getODMatrix(flights);
   const perAirport = countFlightsperAirport(flights, airports);
 
   return {
-    flights: flights,
-    odMatrix: odMatrix,
-    perAirport: perAirport,
+    flights,
+    odMatrix,
+    perAirport,
   };
 }

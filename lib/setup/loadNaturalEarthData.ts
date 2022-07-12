@@ -4,7 +4,7 @@ import admZip from "adm-zip";
 import mapShaper from "mapshaper";
 import axios from "axios";
 
-const getNaturalEarthData = () => {
+const loadNaturalEarthData = () => {
   const tmpDir = os.tmpdir() + "/";
 
   const baseUrl =
@@ -50,4 +50,4 @@ const getNaturalEarthData = () => {
   }
 };
 
-export default getNaturalEarthData;
+export default loadNaturalEarthData;
