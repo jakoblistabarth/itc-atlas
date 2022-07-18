@@ -11,7 +11,7 @@ import PointSymbol from "../../components/map/PointSymbol";
 import ProportionalSymbolLegend from "../../components/map/ProportionalSymbolLegend";
 import getMapHeight from "../../lib/cartographic/getMapHeight";
 import getCountries from "../../lib/data/getCountries";
-import getProjectsByCountry from "../../lib/data/getProjectsByCountry";
+import getProjectsPerCountry from "../../lib/data/getProjectsPerCountry";
 import themes, { ThemeNames } from "../../lib/styles/themes";
 import styles from "../../styles/home.module.css";
 import { scaleSqrt } from "d3";
@@ -103,7 +103,7 @@ const ProjectCountries: NextPage<Props> = ({
 export const getStaticProps: GetStaticProps<Props> = async () => {
   const [{ data, domain }, neCountriesTopoJson, highlightCountries] =
     await Promise.all([
-      getProjectsByCountry(),
+      getProjectsPerCountry(),
       getCountries(),
       getCountriesByGroup(UnGrouping.LDC),
     ]);

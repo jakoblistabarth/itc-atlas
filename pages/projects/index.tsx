@@ -58,7 +58,14 @@ const Travels: NextPage<Props> = ({ projects }) => {
           <Link href="/projects/naivasha">
             <a className={styles.card}>
               <h2>
-                Projects Naivasha Region <MdOutlineArrowRightAlt />
+                Naivasha Region <MdOutlineArrowRightAlt />
+              </h2>
+            </a>
+          </Link>
+          <Link href="/projects/indonesia">
+            <a className={styles.card}>
+              <h2>
+                Indonesia <MdOutlineArrowRightAlt />
               </h2>
             </a>
           </Link>

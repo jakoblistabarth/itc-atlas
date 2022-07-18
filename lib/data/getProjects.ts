@@ -1,5 +1,5 @@
 import xlsx from "xlsx";
-import { Project } from "../types/Project";
+import { Project } from "../../types/Project";
 import cleanProjects from "./cleanProjects";
 
 export default async function getProjects(): Promise<Project[]> {
@@ -13,7 +13,6 @@ export default async function getProjects(): Promise<Project[]> {
 
   const projects = await cleanProjects([projectsPre2019, projectsPost2019]);
 
-  // TODO type remaining columns?
   return projects.map(
     ({
       projectID,
@@ -24,6 +23,29 @@ export default async function getProjects(): Promise<Project[]> {
       status,
       dateStart,
       dateEnd,
+      result,
+      nextAction,
+      projectSummary,
+      remarks,
+      fundingType,
+      tenderType,
+      percentageCoveredByITC,
+      percentageCoveredByPartners,
+      division,
+      projectOfficer,
+      projectSupervisor,
+      projectAdministrator,
+      ITCStaffInvolved,
+      manMonthsITC,
+      manMonthsPartners,
+      personMonthsAbroad,
+      personMonthsNL,
+      studentMonthsAbroad,
+      studentMonthsNL,
+      totalBudget,
+      totalITCBudget,
+      subContractorBudget,
+      consultingBudget,
     }) => ({
       projectID,
       projectName,
@@ -33,6 +55,29 @@ export default async function getProjects(): Promise<Project[]> {
       status,
       dateStart,
       dateEnd,
+      result,
+      nextAction,
+      projectSummary,
+      remarks,
+      fundingType,
+      tenderType,
+      percentageCoveredByITC,
+      percentageCoveredByPartners,
+      division,
+      projectOfficer,
+      projectSupervisor,
+      projectAdministrator,
+      ITCStaffInvolved,
+      manMonthsITC,
+      manMonthsPartners,
+      personMonthsAbroad,
+      personMonthsNL,
+      studentMonthsAbroad,
+      studentMonthsNL,
+      totalBudget,
+      totalITCBudget,
+      subContractorBudget,
+      consultingBudget,
     })
   );
 }

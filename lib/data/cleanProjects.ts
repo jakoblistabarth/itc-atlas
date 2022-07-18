@@ -1,6 +1,6 @@
 import DataFrame from "../DataFrame/DataFrame";
 import getUnsdCodes from "./getUnsdCodes";
-import { ProjectType, ProjectStatus } from "../../types/Project";
+import { ProjectType, ProjectStatus, Project } from "../../types/Project";
 import { mapCountries } from "../mappings/country.name.EN";
 import { UnLevel } from "../../types/UnsdCodes";
 import getUnsdCountries from "./getUnsdCountries";
@@ -38,6 +38,31 @@ export default async function cleanProjects(input: any[]) {
     .mutate("type", (row) => ProjectType[row.type] || row.type)
     .mutate("status", (row) => ProjectStatus[row.status] || row.status)
     .mutate("countriesRegion", (row) => mapCountries(row.countriesRegion))
+    .renameColumn({ Result: "result" })
+    .renameColumn({ "Next action": "nextAction" })
+    .renameColumn({ Remarks: "remarks" })
+    .renameColumn({ "Project summary": "projectSummary" })
+    .renameColumn({ "Funding type": "fundingType" })
+    .renameColumn({ "Tender type": "tenderType" })
+    .renameColumn({ "Percentage covered by ITC": "percentageCoveredByITC" })
+    .renameColumn({
+      "Percentage covered by partner(s)": "percentageCoveredByPartners",
+    })
+    .renameColumn({ Division: "division" })
+    .renameColumn({ "Project officer": "projectOfficer" })
+    .renameColumn({ "Project supervisor": "projectSupervisor" })
+    .renameColumn({ "Project administrator": "projectAdministrator" })
+    .renameColumn({ "Number of ITC staff involved": "ITCStaffInvolved" })
+    .renameColumn({ "Number of man months ITC": "manMonthsITC" })
+    .renameColumn({ "Number of man months partner(s)": "manMonthsPartners" })
+    .renameColumn({ "Personmonths abroad": "personMonthsAbroad" })
+    .renameColumn({ "Personmonths in NL": "personMonthsNL" })
+    .renameColumn({ "Student months abroad": "studentMonthsAbroad" })
+    .renameColumn({ "Student months in NL": "studentMonthsNL" })
+    .renameColumn({ "Total project budget": "totalBudget" })
+    .renameColumn({ "Total ITC budget": "totalITCBudget" })
+    .renameColumn({ "Sub contractor budget": "subContractorBudget" })
+    .renameColumn({ "Consulting budget": "consultingBudget" })
     .where((row) => new Date(row.dateStart) < new Date(row.dateEnd)); // TODO: fix projects whith old entries
 
   const output = merged.toArray();
@@ -133,5 +158,5 @@ export default async function cleanProjects(input: any[]) {
     d.allCountries = Array.from(new Set(allCountries));
   });
 
-  return output;
+  return output as Project[];
 }

@@ -7,7 +7,7 @@ import ChoroplethSymbol from "../../../components/map/PolygonSymbol";
 import PointSymbol from "../../../components/map/PointSymbol";
 import ProportionalSymbolLegend from "../../../components/map/ProportionalSymbolLegend";
 import getCountries from "../../../lib/data/getCountries";
-import getProjectsByCountry from "../../../lib/data/getProjectsByCountry";
+import getProjectsPerCountry from "../../../lib/data/getProjectsPerCountry";
 import themes from "../../../lib/styles/themes";
 import { scaleSqrt } from "d3";
 import getCountriesByGroup from "../../../lib/data/getCountriesByGroup";
@@ -32,7 +32,7 @@ export default async function handler(
   }
 
   const [{ data, domain }, world, highlightCountries] = await Promise.all([
-    getProjectsByCountry(),
+    getProjectsPerCountry(),
     getCountries(),
     getCountriesByGroup(UnGrouping.LDC),
   ]);
