@@ -1,19 +1,25 @@
 import type { GetStaticProps, NextPage } from "next";
 import Head from "next/head";
+import Timeline from "../../components/charts/timeline/Timeline";
 import Heading, { Headings } from "../../components/Heading";
 import SummaryTable from "../../components/SummaryTable";
 import getProjectsByCountry from "../../lib/data/getProjectsByCountry";
 import DataFrame from "../../lib/DataFrame/DataFrame";
 import styles from "../../styles/home.module.css";
 import { Project } from "../../types/Project";
+import { TimelineEvent } from "../../types/TimelineEvent";
 
 type Props = {
   projects: Project[];
 };
 
 const ProjectCountries: NextPage<Props> = ({ projects }) => {
-  console.log(projects);
-  // console.log(Array.from(Object.keys(projects[0])));
+  const events: TimelineEvent[] = projects.map((project) => ({
+    name: project.projectName ?? "unnamed project",
+    yOffset: project.projectID ?? "",
+    dateStart: new Date(project.dateStart),
+    dateEnd: new Date(project.dateEnd),
+  }));
 
   return (
     <>
@@ -26,7 +32,15 @@ const ProjectCountries: NextPage<Props> = ({ projects }) => {
       <main className={styles.main}>
         <Heading Tag={Headings.H1}>ITC's projects in Indonesia</Heading>
         <SummaryTable data={new DataFrame(projects)} />
-        <svg width={1000} height={300}></svg>
+        <svg width={1000} height={700}>
+          <Timeline
+            position={[0, 0]}
+            width={1000}
+            height={700}
+            events={events}
+            grid
+          />
+        </svg>
       </main>
     </>
   );

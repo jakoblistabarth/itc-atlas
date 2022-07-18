@@ -33,7 +33,7 @@ const Travels: NextPage<Props> = ({ projects }) => {
         </p>
 
         <div className={styles.grid}>
-          <Link href="/projects/timeline">
+          <Link href="/projects/projects-timeline">
             <a className={styles.card}>
               <h2>
                 Timeline <MdOutlineArrowRightAlt />
