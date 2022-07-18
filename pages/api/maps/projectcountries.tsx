@@ -3,7 +3,7 @@ import { nanoid } from "nanoid";
 import type { NextApiRequest, NextApiResponse } from "next";
 import PatternLines from "../../../components/defs/patterns/PatternLines";
 import BaseLayer from "../../../components/map/BaseLayer";
-import ChoroplethSymbol from "../../../components/map/ChoroplethSymbol";
+import ChoroplethSymbol from "../../../components/map/PolygonSymbol";
 import PointSymbol from "../../../components/map/PointSymbol";
 import ProportionalSymbolLegend from "../../../components/map/ProportionalSymbolLegend";
 import getCountries from "../../../lib/data/getCountries";

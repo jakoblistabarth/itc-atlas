@@ -14,7 +14,7 @@ import type { AreaCode } from "../../types/UnsdCodes";
 import getUnsdCountries from "../../lib/data/getUnsdCountries";
 import { nanoid } from "nanoid";
 import themes, { ThemeNames } from "../../lib/styles/themes";
-import ChoroplethSymbol from "../../components/map/ChoroplethSymbol";
+import ChoroplethSymbol from "../../components/map/PolygonSymbol";
 import { MapOptions } from "../../types/MapOptions";
 import PatternDots from "../../components/defs/patterns/PatternDots";
 import IsoUnit from "../../components/map/IsoUnit";

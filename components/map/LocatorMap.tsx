@@ -5,7 +5,7 @@ import { FeatureCollection } from "geojson";
 import BaseLayer from "./BaseLayer";
 import { MapTheme } from "../../types/MapTheme";
 import getMapHeight from "../../lib/cartographic/getMapHeight";
-import ChoroplethSymbol from "./ChoroplethSymbol";
+import ChoroplethSymbol from "./PolygonSymbol";
 import { nanoid } from "nanoid";
 import defaultTheme from "../../lib/styles/themes/defaultTheme";
 import { NeCountriesTopoJson } from "../../types/NeCountriesTopoJson";

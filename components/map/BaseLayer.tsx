@@ -22,6 +22,7 @@ import {
   CountryProperties,
   NeCountriesTopoJson,
 } from "../../types/NeCountriesTopoJson";
+import PolygonSymbol from "./PolygonSymbol";
 
 type Props = {
   data: NeCountriesTopoJson;
@@ -178,6 +179,18 @@ const BaseLayer: FC<Props> = ({
           </g>
         )}
 
+        {countries &&
+          countries.features.map((country) => {
+            return (
+              <PolygonSymbol
+                key={nanoid()}
+                feature={country}
+                projection={projection}
+                style={theme.base}
+              />
+            );
+          })}
+
         {bordersPath && (
           <g className="borders">
             <path
@@ -219,7 +232,6 @@ const BaseLayer: FC<Props> = ({
 
         {labels &&
           countries.features.map((country) => {
-            const [textOriginDegree, degree] = d3.geoCentroid(country.geometry);
             return (
               <BendedLabel
                 key={nanoid()}

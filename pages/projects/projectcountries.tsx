@@ -6,7 +6,7 @@ import Head from "next/head";
 import PatternLines from "../../components/defs/patterns/PatternLines";
 import Heading, { Headings } from "../../components/Heading";
 import BaseLayer from "../../components/map/BaseLayer";
-import ChoroplethSymbol from "../../components/map/ChoroplethSymbol";
+import ChoroplethSymbol from "../../components/map/PolygonSymbol";
 import PointSymbol from "../../components/map/PointSymbol";
 import ProportionalSymbolLegend from "../../components/map/ProportionalSymbolLegend";
 import getMapHeight from "../../lib/cartographic/getMapHeight";
@@ -70,7 +70,7 @@ const ProjectCountries: NextPage<Props> = ({
                 key={nanoid()}
                 projection={projection}
                 feature={feature}
-                theme={theme} // TODO: do I really need to add theme and style here?
+                style={theme.choropleth}
               />
             ))}
           </g>

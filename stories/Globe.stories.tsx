@@ -22,7 +22,7 @@ export default {
       control: { type: "range", min: 0, max: 0.5, step: 0.001 },
     },
     displacementScale: {
-      control: { type: "range", min: 0, max: 0.05, step: 0.001 },
+      control: { type: "range", min: 0, max: 0.1, step: 0.001 },
     },
   },
   args: {},
