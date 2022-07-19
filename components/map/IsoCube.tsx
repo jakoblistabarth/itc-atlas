@@ -1,11 +1,10 @@
-import { FC } from "react";
-import { Appearance } from "../../types/Appearance";
+import { range, scaleLinear } from "d3";
 import type { Position } from "geojson";
-import PointLabel from "./PointLabel";
-import IsoUnit from "./IsoUnit";
-import { range, scaleQuantize, scaleLinear, scaleThreshold } from "d3";
 import { nanoid } from "nanoid";
+import { FC } from "react";
 import { Vector2 } from "three";
+import { Appearance } from "../../types/Appearance";
+import IsoUnit from "./IsoUnit";
 
 type Props = {
   xy: Position;

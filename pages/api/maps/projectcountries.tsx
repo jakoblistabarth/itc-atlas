@@ -8,7 +8,7 @@ import PointSymbol from "../../../components/map/PointSymbol";
 import ProportionalSymbolLegend from "../../../components/map/ProportionalSymbolLegend";
 import getCountries from "../../../lib/data/getCountries";
 import getProjectsPerCountry from "../../../lib/data/getProjectsPerCountry";
-import themes from "../../../lib/styles/themes";
+import themes, { ThemeNames } from "../../../lib/styles/themes";
 import { scaleSqrt } from "d3";
 import getCountriesByGroup from "../../../lib/data/getCountriesByGroup";
 import { UnGrouping } from "../../../types/UnsdCodes";
@@ -25,7 +25,7 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  const themeReq = req.query.theme?.toString();
+  const themeReq = req.query.theme?.toString() as ThemeNames;
   const theme = !themeReq ? defaultTheme : themes.get(themeReq);
   if (!theme) {
     res.status(500).json({ error: "invalid theme name" });

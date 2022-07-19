@@ -1,5 +1,5 @@
 import xlsx from "xlsx";
-import { Data, Row } from "../../types/DataFrame";
+import { Data, Row } from "../../lib/DataFrame/DataFrame";
 import { cleanPhdCandiates } from "./cleanPhdCandidates";
 
 export default async function getPhdCandidates() {

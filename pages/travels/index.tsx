@@ -9,7 +9,7 @@ import SummaryTable from "../../components/SummaryTable";
 import Footer from "../../components/Footer";
 import DataFrame from "../../lib/DataFrame/DataFrame";
 import Heading, { Headings } from "../../components/Heading";
-import { Row } from "../../types/DataFrame";
+import { Row } from "../../lib/DataFrame/DataFrame";
 
 type Props = {
   flights: Row[];

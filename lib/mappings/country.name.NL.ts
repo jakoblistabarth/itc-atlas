@@ -1,4 +1,4 @@
-export const countryMapNE = {
+export const countryMapNE: { [key: string]: string } = {
   "Amerikaans burger": "United States of America",
   "Amerikaans Burger": "United States of America",
   "Amerikaans onderdaan": "United States of America",

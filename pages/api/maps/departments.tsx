@@ -16,7 +16,7 @@ import { setMapBounds } from "../../../lib/cartographic/getMapHeight";
 import getCountries from "../../../lib/data/getCountries";
 import getPhdCandidatesByCountryByDepartment from "../../../lib/data/getPhdCandidatesByCountryByDepartment";
 import { departmentColors } from "../../../lib/mappings/departments";
-import themes from "../../../lib/styles/themes";
+import themes, { ThemeNames } from "../../../lib/styles/themes";
 import defaultTheme from "../../../lib/styles/themes/defaultTheme";
 import { MapOptions } from "../../../types/MapOptions";
 
@@ -24,7 +24,7 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  const themeReq = req.query.theme?.toString();
+  const themeReq = req.query.theme?.toString() as ThemeNames;
   const theme = !themeReq ? defaultTheme : themes.get(themeReq);
   if (!theme) {
     res.status(500).json({ error: "invalid theme name" });
@@ -110,7 +110,7 @@ export default async function handler(
             </text>
           </g>
         ))}
-        <g transform={`translate(0,${mapOptions.bounds.height * 0.25})`}>
+        <g transform={`translate(0,${mapOptions.bounds.height ?? 0 * 0.25})`}>
           <NominalLegend title={"Departments"} entries={legendEntries} />
         </g>
       </MapAside>

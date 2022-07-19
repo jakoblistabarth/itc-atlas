@@ -14,12 +14,15 @@ type Props = {
 };
 
 const ProjectCountries: NextPage<Props> = ({ projects }) => {
-  const events: TimelineEvent[] = projects.map((project) => ({
-    name: project.projectName ?? "unnamed project",
-    yOffset: project.projectID ?? "",
-    dateStart: new Date(project.dateStart),
-    dateEnd: new Date(project.dateEnd),
-  }));
+  const events: TimelineEvent[] = projects.flatMap((project) => {
+    if (!project.dateStart || !project.dateEnd) return [];
+    return {
+      name: project.projectName ?? "unnamed project",
+      yOffset: project.projectID ?? "",
+      dateStart: new Date(project.dateStart),
+      dateEnd: new Date(project.dateEnd),
+    };
+  });
 
   return (
     <>

@@ -5,7 +5,7 @@ import { FeatureCollection } from "geojson";
 import BaseLayer from "./BaseLayer";
 import { MapTheme } from "../../types/MapTheme";
 import getMapHeight from "../../lib/cartographic/getMapHeight";
-import ChoroplethSymbol from "./PolygonSymbol";
+import PolygonSymbol from "./PolygonSymbol";
 import { nanoid } from "nanoid";
 import defaultTheme from "../../lib/styles/themes/defaultTheme";
 import { NeCountriesTopoJson } from "../../types/NeCountriesTopoJson";
@@ -60,12 +60,11 @@ const LocatorMap: FC<Props> = ({
         />
         <g>
           {highlightCountries.features.map((feature) => (
-            <ChoroplethSymbol
+            <PolygonSymbol
               key={nanoid()}
               feature={feature}
               projection={projection}
-              theme={theme}
-              style={{ stroke: "black" }}
+              style={{ ...defaultTheme.choropleth, stroke: "black" }}
             />
           ))}
         </g>

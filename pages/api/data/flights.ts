@@ -1,7 +1,7 @@
+import type { FeatureCollection } from "geojson";
 import type { NextApiRequest, NextApiResponse } from "next";
 import getFlights from "../../../lib/data/getFlights";
-import type { Data, Row } from "../../../types/DataFrame";
-import type { FeatureCollection } from "geojson";
+import type { Data, Row } from "../../../lib/DataFrame/DataFrame";
 import type { ODMatrix } from "../../../types/ODMatrix";
 
 type travelData = {

@@ -3,7 +3,7 @@ import { ColumnType } from "../types/Column";
 import { FC } from "react";
 import SnapshotBar from "./SnapshotBar";
 import SnapshotHistogram from "./SnapshotHistogram";
-import type { Column, Datum } from "../types/DataFrame";
+import type { Column, Datum } from "../lib/DataFrame/DataFrame";
 
 type Props = {
   column: Column;

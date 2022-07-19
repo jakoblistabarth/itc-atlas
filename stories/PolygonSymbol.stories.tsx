@@ -2,7 +2,7 @@ import React from "react";
 import { ComponentStory, ComponentMeta } from "@storybook/react";
 import * as topojson from "topojson-client";
 import { geoRobinson } from "d3-geo-projection";
-import type { FeatureCollection, Polygon } from "geojson";
+import type { FeatureCollection, Polygon, MultiPolygon } from "geojson";
 import type { NeCountriesTopoJson } from "../types/NeCountriesTopoJson";
 
 import PolygonSymbol from "../components/map/PolygonSymbol";

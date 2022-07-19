@@ -1,5 +1,5 @@
 import * as d3 from "d3";
-import { Column, Datum } from "../../types/DataFrame";
+import { Column, Datum } from "../../lib/DataFrame/DataFrame";
 
 type StackItem = {
   value: Datum;

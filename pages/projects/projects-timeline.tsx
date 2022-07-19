@@ -1,4 +1,3 @@
-import * as d3 from "d3";
 import type { NextPage } from "next";
 import Head from "next/head";
 import Timeline from "../../components/charts/timeline/Timeline";

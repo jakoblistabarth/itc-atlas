@@ -1,19 +1,46 @@
 import * as _ from "lodash";
-import { Column, Description, Data, Row, Datum } from "../../types/DataFrame";
 import { getType, getColumnStats } from "../summarytable/summarytable";
+import { ColumnType } from "../../types/Column";
 
-class DataFrame {
-  private _data: Data;
+export type Description = {
+  columns: Column[];
+  nColumns: number;
+  nRows: number;
+};
+
+export type Datum = string | number | Date | Object | string[] | null;
+
+export type Row = {
+  [key: string]: Datum;
+};
+
+export type Data<T = Row> = T[];
+
+export type Column = Array<Datum> & {
+  label: string;
+  type: ColumnType;
+  stats: ColumnStats;
+};
+
+export type ColumnStats = {
+  missing: number;
+  mean?: number;
+  median?: number;
+  sd?: number;
+};
+
+class DataFrame<T = Row> {
+  private _data: Data<T>;
 
   constructor(data: any[]) {
     this._data = data;
   }
 
-  get data(): Data {
+  get data(): Data<T> {
     return this._data;
   }
 
-  set data(data: Data) {
+  set data(data: Data<T>) {
     this._data = data;
   }
 
@@ -54,11 +81,11 @@ class DataFrame {
 
   /**
    * Gets a specific column of the table.
-   * @param columnName
+   * @param columnName A string with the name of the {@link Column} to retrieve.
    * @returns Returns a {@link Column}.
    */
   getColumn(columnName: string): Column {
-    const column = this.data.map((row: Row) => row[columnName]) as Column;
+    const column = this.data.map((row) => row[columnName]) as Column;
     column.label = columnName === "" ? "unlabeled" : columnName;
     column.type = getType(column);
     column.stats = getColumnStats(column);
@@ -70,12 +97,12 @@ class DataFrame {
    * @param names An object with the old name of the column as key and the new name as value.
    * @returns A new {@link DataFrame} with the renamed column
    */
-  renameColumn(names: { [oldColumnName: string]: string }): DataFrame {
+  renameColumn(names: { [oldColumnName: string]: string }): DataFrame<T> {
     let df = _.cloneDeep(this);
     const oldName = Object.keys(names)[0];
     const newName = Object.values(names)[0];
     return df
-      .mutate(newName, (row: Row) => {
+      .mutate(newName, (row) => {
         return row[oldName] ?? null;
       })
       .dropColumn(oldName);
@@ -87,8 +114,8 @@ class DataFrame {
    * @param rowIndices
    * @returns Returns an Array of {@link Row}s.
    */
-  between(rowIndices: number[]): Row[] {
-    return this.data.filter((row: Row) => row);
+  between(rowIndices: number[]): T[] {
+    return this.data.filter((row: T) => row);
   }
 
   // TODO: what happens if the new column already exists?
@@ -98,9 +125,12 @@ class DataFrame {
    * @param transformFunction
    * @returns Returns a {@link DataFrame} including the just created column.
    */
-  mutate(columnName: string, transformFunction: (t: any) => Datum): DataFrame {
+  mutate(
+    columnName: string,
+    transformFunction: (t: any) => Datum
+  ): DataFrame<T> {
     const df = _.cloneDeep(this);
-    const data = df.data.map((row: Row) => {
+    const data = df.data.map((row) => {
       row[columnName] = transformFunction(row);
       return row;
     });
@@ -108,27 +138,27 @@ class DataFrame {
     return df;
   }
 
-  merge(dataframe: DataFrame) {
+  merge(dataframe: DataFrame<T>) {
     // TODO: implement warning if columnnames are not the same?
-    return new DataFrame([...this.toArray(), ...dataframe.toArray()]);
+    return new DataFrame<T>([...this.toArray(), ...dataframe.toArray()]);
   }
 
   where(filterFunction: (t: any) => boolean) {
-    const newData = this.data.filter((row: Row) => filterFunction(row));
+    const newData = this.data.filter((row: T) => filterFunction(row));
     return new DataFrame(newData);
   }
 
   /**
    * Create a new column and only keep this column in the Dataframe.
-   * @param columnName The name of the new Column
+   * @param columnName The name of the new column.
    * @param transformFunction A function to creating the new column, using the row as callback.
    * @returns Returns a {@link DataFrame} with the just created column.
    */
   transmute(columnName: string, transformFunction: (t: any) => Datum) {
     const newRow = this.data.map(
-      (row: Row) => (row[columnName] = transformFunction(row))
+      (row: T) => (row[columnName] = transformFunction(row))
     );
-    return new DataFrame(newRow);
+    return new DataFrame<T>(newRow);
   }
 
   /**
@@ -141,7 +171,7 @@ class DataFrame {
   dropColumn(columnNames: string | string[]) {
     const toDrop =
       typeof columnNames === "string" ? [columnNames] : columnNames;
-    const data = this.data.map((row: Row) => {
+    const data = this.data.map((row: T) => {
       for (const columnName of toDrop) {
         delete row[columnName];
       }

@@ -2,7 +2,7 @@ import { FC, useState } from "react";
 import * as d3 from "d3";
 import { colorMap } from "../lib/summarytable/colorMap";
 import { ColumnType } from "../types/Column";
-import { Column } from "../types/DataFrame";
+import { Column } from "../lib/DataFrame/DataFrame";
 import { nanoid } from "nanoid";
 import { useFloating } from "@floating-ui/react-dom-interactions";
 import { fPercentage } from "../lib/utilities/formaters";

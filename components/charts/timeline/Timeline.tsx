@@ -54,7 +54,7 @@ const Timeline: FC<Props> = ({
         return (
           <Event
             key={nanoid()}
-            position={[xScale(dateStart), yScale(event.yOffset)]}
+            position={[xScale(dateStart), yScale(event.yOffset) ?? 0]}
             width={xScale(dateEnd) - xScale(dateStart)}
             height={3}
             event={event}

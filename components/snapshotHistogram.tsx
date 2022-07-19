@@ -4,7 +4,7 @@ import { FC } from "react";
 import { colorMap } from "../lib/summarytable/colorMap";
 import { fDateShort, fFloat } from "../lib/utilities/formaters";
 import { ColumnType } from "../types/Column";
-import type { Column, Datum } from "../types/DataFrame";
+import type { Column, Datum } from "../lib/DataFrame/DataFrame";
 import SnapshotCell from "./SnapshotCell";
 
 type Props = {

@@ -1,5 +1,6 @@
 import Fuse from "fuse.js";
-import type { Data } from "../../types/DataFrame";
+import type { Data } from "../../lib/DataFrame/DataFrame";
+import { PhdCandidate } from "../../types/PhdCandidate";
 import DataFrame from "../DataFrame/DataFrame";
 import { mapCountries } from "../mappings/country.name.EN";
 import { DepartmentMap } from "../mappings/departments";
@@ -60,14 +61,17 @@ export async function cleanPhdCandiates(phdCandidates: Data) {
       "graduated",
     ]);
 
-  return output.toArray().map((row) => ({
-    studentID: row.studentID,
-    country: row.country,
-    department1: row.department1,
-    department2: row.department2,
-    sponsor: row.sponsor,
-    graduated: row.graduated,
-    startDate: row.startDate,
-    endDate: row.endDate,
-  })); // TODO: type error due to generic toArray Function
+  return output.toArray().map(
+    (row) =>
+      ({
+        studentID: row.studentID,
+        country: row.country,
+        department1: row.department1,
+        department2: row.department2,
+        sponsor: row.sponsor,
+        graduated: row.graduated,
+        startDate: row.startDate,
+        endDate: row.endDate,
+      } as PhdCandidate) //QUESTION: typing okay?
+  );
 }

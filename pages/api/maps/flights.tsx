@@ -4,7 +4,7 @@ import ReactDOMServer from "react-dom/server";
 import getCountries from "../../../lib/data/getCountries";
 import BaseLayer from "../../../components/map/BaseLayer";
 import { geoBertin1953 } from "d3-geo-projection";
-import themes from "../../../lib/styles/themes";
+import themes, { ThemeNames } from "../../../lib/styles/themes";
 import FlowLayer from "../../../components/map/FlowLayer";
 import Map from "../../../components/map/layout/Map";
 import MapBody from "../../../components/map/layout/MapBody";
@@ -19,7 +19,7 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  const themeReq = req.query.theme?.toString();
+  const themeReq = req.query.theme?.toString() as ThemeNames;
   const theme = !themeReq ? defaultTheme : themes.get(themeReq);
   if (!theme) {
     res.status(500).json({ error: "invalid theme name" });

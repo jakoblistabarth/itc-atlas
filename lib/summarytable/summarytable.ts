@@ -1,6 +1,6 @@
 import * as d3 from "d3";
 import { ColumnType } from "../../types/Column";
-import type { Column } from "../../types/DataFrame";
+import type { Column } from "../../lib/DataFrame/DataFrame";
 
 export function getType(column: Column): ColumnType {
   for (const value of column) {

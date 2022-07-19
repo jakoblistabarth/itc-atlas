@@ -1,4 +1,4 @@
-import { Row } from "../../types/DataFrame";
+import { Row } from "../../lib/DataFrame/DataFrame";
 
 export type TestRow = {
   name: string;
