@@ -10,6 +10,10 @@ export type Description = {
 
 export type Datum = string | number | Date | Object | string[] | null;
 
+interface BaseRow {
+  [key: string]: any;
+}
+
 export type Row = {
   [key: string]: Datum;
 };
@@ -29,7 +33,7 @@ export type ColumnStats = {
   sd?: number;
 };
 
-class DataFrame<T = Row> {
+class DataFrame<T extends BaseRow = Row> {
   private _data: Data<T>;
 
   constructor(data: any[]) {
@@ -144,7 +148,7 @@ class DataFrame<T = Row> {
   }
 
   where(filterFunction: (t: any) => boolean) {
-    const newData = this.data.filter((row: T) => filterFunction(row));
+    const newData = this.data.filter((row) => filterFunction(row));
     return new DataFrame(newData);
   }
 
@@ -156,7 +160,7 @@ class DataFrame<T = Row> {
    */
   transmute(columnName: string, transformFunction: (t: any) => Datum) {
     const newRow = this.data.map(
-      (row: T) => (row[columnName] = transformFunction(row))
+      (row) => (row[columnName] = transformFunction(row))
     );
     return new DataFrame<T>(newRow);
   }

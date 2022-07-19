@@ -50,7 +50,7 @@ const Template: ComponentStory<typeof Timeline> = (args) => (
 const defaultArgs = {
   events: events,
   grid: true,
-  position: [0, 0],
+  position: [0, 0] as [number, number],
   yDimension: "title",
 };
 

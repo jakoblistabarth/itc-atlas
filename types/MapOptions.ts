@@ -1,7 +1,7 @@
-import { ScaleLinear, ScaleOrdinal, ScalePower } from "d3";
-import { GeoProjection } from "d3-geo";
-import { Appearance } from "./Appearance";
-import { MapTheme } from "./MapTheme";
+import type { ScaleLinear, ScaleOrdinal, ScalePower } from "d3";
+import type { GeoProjection } from "d3-geo";
+import type { Appearance } from "./Appearance";
+import type { MapTheme } from "./MapTheme";
 
 export type MapOptions = {
   bounds: Bounds;
