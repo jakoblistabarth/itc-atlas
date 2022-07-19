@@ -42,6 +42,8 @@ const Globe: FC<PropTypes> = ({
     bumpMap: "/textures/gebco_08_rev_elev_2000x1000.png",
   });
 
+  console.log('evripidis was here');
+
   return (
     <>
       <ambientLight args={[undefined, 0.3]} />
