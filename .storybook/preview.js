@@ -8,6 +8,11 @@ export const parameters = {
       date: /Date$/,
     },
   },
+  docs: {
+    source: {
+      excludeDecorators: true,
+    },
+  },
 };
 
 export const loaders = [

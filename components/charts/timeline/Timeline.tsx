@@ -13,15 +13,22 @@ type Props = {
   width: number;
   height: number;
   events: TimelineEvent[];
+  domain?: [Date, Date];
   theme?: MapTheme;
   grid?: boolean;
 };
 
+/**
+ * The Timeline components takes an Array of ```TimelineEvent```s to render a horizontal timeline off given dimensions.
+ * @param Props Allows setting the position, the width, the height, the events, and optionally a custom domain, a theme and the visibility of the grid.
+ * @returns An svg group element, containing the timeline.
+ */
 const Timeline: FC<Props> = ({
   position,
   width,
   height,
   events,
+  domain,
   theme = defaultTheme,
   grid = false,
 }) => {
@@ -29,14 +36,13 @@ const Timeline: FC<Props> = ({
 
   const minDate = min(events.map((d) => d.dateStart)) ?? new Date("1950");
   const maxDate = max(events.map((d) => d.dateEnd)) ?? new Date();
-  const domain = [minDate, maxDate];
 
   events.sort((a, b) =>
     ascending(new Date(a.dateStart), new Date(b.dateStart))
   );
 
   const xScale = scaleTime()
-    .domain(domain)
+    .domain(domain ?? [minDate, maxDate])
     .range([margin, width - margin]);
   const yScale = scalePoint()
     .range([margin, height - margin])

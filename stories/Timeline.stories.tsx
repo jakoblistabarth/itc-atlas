@@ -36,7 +36,7 @@ export default {
   component: Timeline,
   decorators: [
     (Story) => (
-      <svg width={700} height={800}>
+      <svg width={700} height={100}>
         <Story />
       </svg>
     ),
@@ -51,7 +51,6 @@ const defaultArgs = {
   events: events,
   grid: true,
   position: [0, 0] as [number, number],
-  yDimension: "title",
 };
 
 export const defaultTimeline = Template.bind({});
