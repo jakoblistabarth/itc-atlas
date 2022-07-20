@@ -1,10 +1,12 @@
 import DataFrame from "../DataFrame/DataFrame";
 import { Applicant } from "../../types/Applicant";
+import getAlumni from "../../lib/data/getAlumni";
 import { ddmmyyyyToDate } from "../utilities/timeparser";
 
 export default async function cleanApplicants(
   input: unknown[]
 ): Promise<Applicant[]> {
+  const alumni = await getAlumni();
   const applicants = new DataFrame(input)
     .where(
       (row) =>
@@ -15,12 +17,12 @@ export default async function cleanApplicants(
       if (!value) return null;
       return ddmmyyyyToDate(value).toISOString();
     })
-    .mutate("startDate", (row) => {
+    .mutate("dateStart", (row) => {
       const value = row["Start Date"];
       if (!value) return null;
       return ddmmyyyyToDate(value).toISOString();
     })
-    .mutate("endDate", (row) => {
+    .mutate("dateEnd", (row) => {
       const value = row["End Date"];
       if (!value) return null;
       return ddmmyyyyToDate(value).toISOString();
@@ -37,6 +39,11 @@ export default async function cleanApplicants(
       return new Date(date) > new Date("1949")
         ? new Date(date).toISOString()
         : null;
+    })
+    .mutate("city", (row) => {
+      const match = alumni.find((d) => d.contactNo === row["ContactNo"]);
+      if (!match) return null;
+      return match.city ?? null;
     })
     .dropColumn([
       "Name",
@@ -77,31 +84,4 @@ export default async function cleanApplicants(
     .renameColumn({ "ITC code": "itcCode" });
 
   return applicants.toArray() as Applicant[]; //Question: better to make a explicit mapping?
-
-  // return applicants.toArray().map((row) => ({
-  //   dateOfBirth: row.dateOfBirth?.toString(),
-  //   startDate,
-  //   endDate,
-  //   description,
-  //   specialization,
-  //   gender,
-  //   nationality,
-  //   countryOrigin,
-  //   level,
-  //   prog,
-  //   dept,
-  //   progDept,
-  //   specialAwardMention,
-  //   sponsor,
-  //   sponsorCategory,
-  //   courseNo,
-  //   diploma,
-  //   certificateDate,
-  //   yearCertExamDipl,
-  //   finalResult,
-  //   finalScore,
-  //   applicantStatus,
-  //   thesisTitle,
-  //   itcCode,
-  // }));
 }

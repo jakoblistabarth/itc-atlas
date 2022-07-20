@@ -10,7 +10,7 @@ import FlowLegend from "../../components/map/FlowLegend";
 import PointLabel from "../../components/map/PointLabel";
 import getFlowPoints from "../../lib/cartographic/getFlowPoints";
 import getCountries from "../../lib/data/getCountries";
-import getFlights from "../../lib/data/getFlights";
+import getFlights2019 from "../../lib/data/getFlights2019";
 import styles from "../../styles/home.module.css";
 import type { ODMatrix } from "../../types/ODMatrix";
 import themes, { ThemeNames } from "../../lib/styles/themes";
@@ -130,7 +130,7 @@ const Flights: NextPage<Props> = ({ odMatrix, neCountriesTopoJson }) => {
 
 export async function getStaticProps() {
   const [odMatrix, neCountriesTopoJson] = await await Promise.all([
-    (await getFlights()).odMatrix,
+    (await getFlights2019()).odMatrix,
     getCountries(),
   ]);
   return {

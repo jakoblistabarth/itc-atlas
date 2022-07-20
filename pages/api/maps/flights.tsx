@@ -1,5 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from "next";
-import getFlights from "../../../lib/data/getFlights";
+import getFlights2019 from "../../../lib/data/getFlights2019";
 import ReactDOMServer from "react-dom/server";
 import getCountries from "../../../lib/data/getCountries";
 import BaseLayer from "../../../components/map/BaseLayer";
@@ -26,7 +26,7 @@ export default async function handler(
   }
 
   const [odMatrix, world] = await Promise.all([
-    (await getFlights()).odMatrix,
+    (await getFlights2019()).odMatrix,
     getCountries(),
   ]);
 

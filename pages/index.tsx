@@ -32,6 +32,15 @@ const Home: NextPage = () => {
             </a>
           </Link>
 
+          <Link href="/flights2019">
+            <a className={styles.card}>
+              <h2>
+                Flights 2019 <MdOutlineArrowRightAlt />
+              </h2>
+              <p>Insights into ITC's travels of 2019.</p>
+            </a>
+          </Link>
+
           <Link href="/projects">
             <a className={styles.card}>
               <h2>

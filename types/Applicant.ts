@@ -4,6 +4,7 @@ export type Applicant = {
   gender: string;
   nationality: string;
   countryOrigin: string;
+  city: string;
   level: string;
   prog: string;
   dept: string;
@@ -15,8 +16,8 @@ export type Applicant = {
   courseNo: string;
   diploma: string;
   dateOfBirth: string;
-  startDate: string;
-  endDate: string;
+  dateStart: string;
+  dateEnd: string;
   certificateDate: string;
   yearCertExamDipl: string;
   finalScore: string;

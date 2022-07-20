@@ -18,10 +18,10 @@ export async function cleanPhdCandiates(phdCandidates: Data) {
 
   const output = new DataFrame(phdCandidates)
     .mutate("studentID", (row) => row.ITCStudentNo + "")
-    .mutate("startDate", (row) =>
+    .mutate("dateStart", (row) =>
       row.PhDStart ? row.PhDStart.toISOString() : null
     )
-    .mutate("endDate", (row) => (row.PhDEnd ? row.PhDEnd.toISOString() : null))
+    .mutate("dateEnd", (row) => (row.PhDEnd ? row.PhDEnd.toISOString() : null))
     .mutate("country", (row) => {
       const clean = row.Country ? mapCountries(row.Country) : null;
       if (!clean) return null;
@@ -50,16 +50,18 @@ export async function cleanPhdCandiates(phdCandidates: Data) {
     //   Sponsor: "sponsor",
     // })
     .renameColumn({ Sponsor: "sponsor" })
-    .select([
-      "studentID",
-      "country",
-      "startDate",
-      "endDate",
-      "department1",
-      "department2",
-      "sponsor",
-      "graduated",
-    ]);
+    .renameColumn({ Thesis_Title: "thesisTitle" });
+  // .select([
+  //   "studentID",
+  //   "country",
+  //   "dateStart",
+  //   "dateEnd",
+  //   "department1",
+  //   "department2",
+  //   "sponsor",
+  //   "graduated",
+  //    "thesisTitle"
+  // ]);
 
   return output.toArray().map(
     (row) =>
@@ -70,8 +72,9 @@ export async function cleanPhdCandiates(phdCandidates: Data) {
         department2: row.department2,
         sponsor: row.sponsor,
         graduated: row.graduated,
-        startDate: row.startDate,
-        endDate: row.endDate,
+        dateStart: row.dateStart,
+        dateEnd: row.dateEnd,
+        thesisTitle: row.thesisTitle,
       } as PhdCandidate) //QUESTION: typing okay?
   );
 }

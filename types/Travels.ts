@@ -26,3 +26,23 @@ export type AirportProperties = {
   lon: number;
   lat: number;
 };
+
+export type Travel = {
+  dateStart: string;
+  dateEnd: string;
+  department: string;
+  mNumber: string;
+  country: string;
+  type: string;
+  destination: string;
+};
+
+export type BTOR = {
+  dateStart: string;
+  dateEnd: string;
+  destination: string;
+  purpose: string;
+  budget: string;
+  department: string;
+  daysOfTravel: number;
+};
