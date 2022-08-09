@@ -10,12 +10,12 @@ export enum Headings {
   H6 = "h6",
 }
 
-type HeadingProps = React.PropsWithChildren<{
+type Props = React.PropsWithChildren<{
   Tag: Headings;
   className?: Headings;
 }>;
 
-const Heading: FC<HeadingProps> = ({ Tag, className, children }) => {
+const Heading: FC<Props> = ({ Tag, className, children }) => {
   return <Tag className={className && styles[className]}>{children}</Tag>;
 };
 

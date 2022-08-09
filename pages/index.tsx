@@ -82,6 +82,14 @@ const Home: NextPage = () => {
               <p>Policy changes over time.</p>
             </a>
           </Link>
+          <Link href="/ui">
+            <a className={styles.card}>
+              <h2>
+                ui Tests <MdOutlineArrowRightAlt />
+              </h2>
+              <p>interactivity and stuff</p>
+            </a>
+          </Link>
         </div>
       </main>
 

@@ -1,10 +1,19 @@
-import { FC, useState } from "react";
+import { FC, useMemo, useState } from "react";
 import * as d3 from "d3";
 import { colorMap } from "../lib/summarytable/colorMap";
 import { ColumnType } from "../types/Column";
 import { Column } from "../lib/DataFrame/DataFrame";
 import { nanoid } from "nanoid";
-import { useFloating } from "@floating-ui/react-dom-interactions";
+import {
+  autoUpdate,
+  flip,
+  offset,
+  shift,
+  useDismiss,
+  useFloating,
+  useHover,
+  useInteractions,
+} from "@floating-ui/react-dom-interactions";
 import { fPercentage } from "../lib/utilities/formaters";
 import { createStack } from "../lib/summarytable/stack";
 import SnapshotCell from "./SnapshotCell";
@@ -15,6 +24,19 @@ type Props = {
 };
 
 const SnapshotBar: FC<Props> = ({ column, type }) => {
+  const [open, setOpen] = useState(false);
+  const { x, y, reference, floating, strategy, context } = useFloating({
+    open,
+    onOpenChange: setOpen,
+    whileElementsMounted: autoUpdate,
+    placement: "top",
+    middleware: [offset(10), flip(), shift()],
+  });
+  const { getReferenceProps, getFloatingProps } = useInteractions([
+    useDismiss(context),
+    useHover(context, { restMs: 50 }),
+  ]);
+
   const [tooltipData, setTooltipData] = useState<
     Partial<ReturnType<typeof createStack>[number]>
   >({});
@@ -29,7 +51,7 @@ const SnapshotBar: FC<Props> = ({ column, type }) => {
   const innerHeight = height - margin.vertical * 2;
   const innerWidth = width - margin.horizontal * 2;
 
-  const stack = createStack(column);
+  const stack = useMemo(() => createStack(column), [column]);
 
   const xScale = d3
     .scaleLinear()
@@ -48,41 +70,77 @@ const SnapshotBar: FC<Props> = ({ column, type }) => {
       d3.min(stack.map((d) => d.start)) ?? 0,
       d3.max(stack.map((d) => d.start)) ?? 1,
     ]);
-  const [open, setOpen] = useState(false);
-  const { x, y, reference, floating, strategy } = useFloating({
-    open,
-    onOpenChange: setOpen,
-  });
+
+  const svgOnMouseOver = (event: MouseEvent) => {
+    const { clientX, clientY } = event;
+    reference({
+      getBoundingClientRect() {
+        return {
+          x: clientX,
+          y: clientY,
+          top: clientY,
+          left: clientX,
+          bottom: clientY,
+          right: clientX,
+          width: 0,
+          height: 0,
+        };
+      },
+    });
+  };
 
   return (
     <div>
-      <svg width={width} height={height}>
+      <svg
+        {...getReferenceProps({ ref: reference })}
+        width={width}
+        height={height}
+        // onMouseEnter={() => {
+        //   setOpen(true);
+        // }}
+        // onMouseOver={svgOnMouseOver}
+        // onMouseLeave={() => {
+        //   setOpen(false);
+        // }}
+        // TODO: Use VirtualElement, does not seem to working properly this way:
+        // onMouseOver function might functions overrules the useHover hook?
+      >
         <g transform={`translate(${margin.horizontal},${margin.vertical})`}>
           {stack.map((d) => (
             <SnapshotCell
               key={nanoid()}
-              ref={reference} //TODO: fix ref for tooltip?
               x={xScale(d.start)}
               y={0}
               width={Math.abs(xScale(d.start) - xScale(d.end))}
               height={innerHeight}
               fill={color(d.start).toString()}
+              onMouseEnter={() => setTooltipData(d)}
             />
           ))}
         </g>
       </svg>
       {open && (
         <div
-          ref={floating}
+          {...getFloatingProps({ ref: floating })}
           style={{
             position: strategy,
             top: y ?? "",
             left: x ?? "",
+            padding: ".5em",
+            borderRadius: 3,
+            border: "1px solid",
+            background: "white",
           }}
         >
           {tooltipData?.value || "no data set"}
           {tooltipData.count && (
-            <span style={{ fontSize: "small", fontWeight: "bold" }}>
+            <span
+              style={{
+                marginLeft: ".5em",
+                fontSize: "small",
+                fontWeight: "bold",
+              }}
+            >
               {fPercentage(tooltipData.count)}
             </span>
           )}
