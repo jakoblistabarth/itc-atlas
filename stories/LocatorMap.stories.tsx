@@ -2,6 +2,11 @@ import React from "react";
 import { ComponentStory, ComponentMeta } from "@storybook/react";
 import LocatorMap from "../components/map/LocatorMap";
 
+// import countriesIso from "/countriesIso.json";
+// QUESTION: how does this work?
+// see: https://storybook.js.org/docs/react/configure/images-and-assets#serving-static-files-via-storybook-configuration
+// already added the sotries/assets/ folder to static dirs in storybook's main.js
+
 export default {
   title: "Cartographic/Locator Map",
   component: LocatorMap,

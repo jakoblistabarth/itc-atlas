@@ -16,9 +16,14 @@ export const parameters = {
 };
 
 export const loaders = [
-  async () => ({
-    countries: await (
-      await fetch("http://localhost:3000/api/data/geo/countries")
-    ).json(),
-  }),
+  async () => {
+    const countries = await (
+      await fetch(
+        "https://cdn.jsdelivr.net/npm/world-atlas@2/countries-110m.json" // TODO: load file with iso-codes instead from static folder?
+      )
+    ).json();
+    return {
+      countries,
+    };
+  },
 ];
