@@ -10,7 +10,7 @@ import {
 import DataFrame from "../lib/DataFrame/DataFrame";
 import { fFloat, fPercentage } from "../lib/utilities/formaters";
 import { colorMap } from "../lib/summarytable/colorMap";
-import styles from "../styles/summarytable.module.scss";
+import styles from "../styles/summarytable.module.css";
 import { ColumnType } from "../lib/DataFrame/Column";
 import SummaryTableCard from "./SummaryTableCard";
 import Snapshot from "./Snapshot";

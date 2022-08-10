@@ -19,8 +19,9 @@ const Snapshot: FC<Props> = ({ column, columnName, detailed }) => {
       case ColumnType.Array:
         const flat = column.data
           .filter((d) => d)
-          .map((d) => (Array.isArray(d) ? d?.join(", ") : "empty"));
+          .map((d) => (Array.isArray(d) ? `[${d?.join(", ")}]` : "empty"));
         const newColumn = new Column(flat, column.label);
+        newColumn.type = ColumnType.Array;
         return <SnapshotBar column={newColumn} />;
       case ColumnType.Continuous:
         return <SnapshotHistogram column={column} />;

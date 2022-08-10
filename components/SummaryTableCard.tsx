@@ -1,4 +1,4 @@
-import styles from "../styles/summarytable.module.scss";
+import styles from "../styles/summarytable.module.css";
 import { FC } from "react";
 import * as d3 from "d3";
 import { colorMap } from "../lib/summarytable/colorMap";

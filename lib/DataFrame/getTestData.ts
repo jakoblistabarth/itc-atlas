@@ -1,4 +1,4 @@
-export type TestRow = {
+type TestRow = {
   name: string;
   nickname?: string;
   gender: "m" | "f" | "d" | null;

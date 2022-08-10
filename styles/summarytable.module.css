@@ -1,0 +1,51 @@
+.summaryTableContainer {
+  display: grid;
+  grid-template-columns: 100px auto;
+  column-gap: 10px;
+}
+
+.summaryTableCard h3 {
+  margin-bottom: 0;
+}
+
+.summaryTable thead tr {
+  border-bottom: 1px solid lightgrey;
+  font-size: smaller;
+}
+
+.summaryTable th {
+  padding: 0 2em 0.5em 0;
+}
+
+.summaryTable tr {
+  border-bottom: 1px solid lightgrey;
+}
+
+.summaryTable td {
+  padding: 0.5em 2em 0.5em 0;
+}
+
+.summaryTable td svg {
+  display: flex;
+}
+
+.summaryTable td.icon {
+  padding-left: 0.75em;
+  padding-right: 0.5em;
+  border-left: 3px solid black;
+}
+
+.summaryTable td.label {
+  max-width: 160px;
+}
+
+.summaryTable td.alert {
+  font-weight: bold;
+  color: red;
+}
+
+.summaryTable .scrollable {
+  overflow-x: auto;
+  white-space: nowrap;
+  scrollbar-width: none;
+}

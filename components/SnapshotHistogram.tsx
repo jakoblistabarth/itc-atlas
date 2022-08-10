@@ -1,6 +1,6 @@
 import * as d3 from "d3";
 import { nanoid } from "nanoid";
-import { FC, useState } from "react";
+import { FC, useMemo, useState } from "react";
 import { colorMap } from "../lib/summarytable/colorMap";
 import { fDateShort, fFloat, fPercentage } from "../lib/utilities/formaters";
 import Column, { ColumnType } from "../lib/DataFrame/Column";
@@ -69,7 +69,7 @@ const SnapshotHistogram: FC<Props> = ({ column }) => {
     column.type === ColumnType.Continuous
       ? d3.bin()
       : d3.bin().thresholds(thresholdTime(10));
-  const bins = histogram(cleanedColumn);
+  const bins = useMemo(() => histogram(cleanedColumn), [column]);
 
   const xDomain = [bins[0].x0 ?? 0, bins[bins.length - 1].x1 ?? 1];
 
