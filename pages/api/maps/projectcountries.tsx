@@ -99,7 +99,6 @@ export default async function handler(
               key={nanoid()}
               projection={mapOptions.projection}
               feature={feature}
-              theme={theme} // TODO: do I really need to add theme and style here?
             />
           ))}
         </g>

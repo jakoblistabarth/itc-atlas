@@ -15,7 +15,6 @@ import {
   useHover,
   useInteractions,
 } from "@floating-ui/react-dom-interactions";
-import { createStack } from "../lib/summarytable/stack";
 
 type Props = {
   column: Column;
@@ -36,7 +35,7 @@ const SnapshotHistogram: FC<Props> = ({ column }) => {
   ]);
 
   const [tooltipData, setTooltipData] = useState<
-    Partial<ReturnType<typeof createStack>[number]>
+    Partial<d3.Bin<Date, Date> | d3.Bin<number, number>>
   >({});
 
   const dimension = {

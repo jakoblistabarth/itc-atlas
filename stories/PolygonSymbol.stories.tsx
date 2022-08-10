@@ -29,9 +29,10 @@ const Template: ComponentStory<typeof PolygonSymbol> = (
   args,
   { loaded: { countries } }
 ) => {
+  const countriesTyped = countries as NeCountriesTopoJson; // TODO: fix this typing
   const featureCollection = topojson.feature(
-    countries,
-    countries.objects.countries
+    countriesTyped,
+    countriesTyped.objects.countries
   ) as FeatureCollection<MultiPolygon | Polygon>;
   const feature = featureCollection.features[5];
   console.log(feature);

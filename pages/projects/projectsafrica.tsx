@@ -148,7 +148,6 @@ const ProjectCountries: NextPage<Props> = ({
                 key={nanoid()}
                 projection={mapOptions.projection}
                 feature={feature}
-                theme={mapOptions.theme}
               />
             ))}
           </g>
