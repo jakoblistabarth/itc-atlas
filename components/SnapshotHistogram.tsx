@@ -3,8 +3,7 @@ import { nanoid } from "nanoid";
 import { FC, useState } from "react";
 import { colorMap } from "../lib/summarytable/colorMap";
 import { fDateShort, fFloat, fPercentage } from "../lib/utilities/formaters";
-import { ColumnType } from "../types/Column";
-import type { Column, Datum } from "../lib/DataFrame/DataFrame";
+import Column, { ColumnType } from "../lib/DataFrame/Column";
 import SnapshotCell from "./SnapshotCell";
 import {
   autoUpdate,
@@ -16,13 +15,13 @@ import {
   useHover,
   useInteractions,
 } from "@floating-ui/react-dom-interactions";
+import { createStack } from "../lib/summarytable/stack";
 
 type Props = {
-  column: Datum[];
-  type: ColumnType;
+  column: Column;
 };
 
-const SnapshotHistogram: FC<Props> = ({ column, type }) => {
+const SnapshotHistogram: FC<Props> = ({ column }) => {
   const [open, setOpen] = useState(false);
   const { x, y, reference, floating, strategy, context } = useFloating({
     open,
@@ -51,11 +50,13 @@ const SnapshotHistogram: FC<Props> = ({ column, type }) => {
     },
   };
 
-  const columnNoNA = column.filter(
+  const columnNoNA = column.data.filter(
     (d) => d !== undefined && d !== null && d !== ""
   );
   const cleanedColumn =
-    type === ColumnType.Date ? columnNoNA.map((d) => new Date(d)) : columnNoNA;
+    column.type === ColumnType.Date
+      ? columnNoNA.map((d) => new Date(d))
+      : columnNoNA;
 
   // How does this actually work? TODO: type after figuring it out
   function thresholdTime(n: number) {
@@ -65,7 +66,7 @@ const SnapshotHistogram: FC<Props> = ({ column, type }) => {
   }
 
   const histogram =
-    type === ColumnType.Continuous
+    column.type === ColumnType.Continuous
       ? d3.bin()
       : d3.bin().thresholds(thresholdTime(10));
   const bins = histogram(cleanedColumn);
@@ -89,7 +90,8 @@ const SnapshotHistogram: FC<Props> = ({ column, type }) => {
     { name: "median", label: "M", value: d3.median(cleanedColumn as number[]) },
   ];
 
-  const tickFormat = type === ColumnType.Continuous ? fFloat : fDateShort;
+  const tickFormat =
+    column.type === ColumnType.Continuous ? fFloat : fDateShort;
   const fontSize = 7;
 
   return (
@@ -105,7 +107,7 @@ const SnapshotHistogram: FC<Props> = ({ column, type }) => {
             bin.x1 && (
               <SnapshotCell
                 key={nanoid()}
-                fill={colorMap.get(type)?.baseColor ?? "black"}
+                fill={colorMap.get(column.type)?.baseColor ?? "black"}
                 x={xScale(bin.x0) + dimension.barInset}
                 y={yScale(bin.length)}
                 width={
@@ -169,8 +171,8 @@ const SnapshotHistogram: FC<Props> = ({ column, type }) => {
             stats.map((stat, i) => (
               <line
                 key={nanoid()}
-                x1={xScale(stat.value)}
-                x2={xScale(stat.value)}
+                x1={xScale(stat.value ?? 0)}
+                x2={xScale(stat.value ?? 0)}
                 y1={dimension.height - dimension.margin.bottom}
                 y2={0}
                 stroke={"black"}

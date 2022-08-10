@@ -1,43 +1,41 @@
 import { colorMap } from "../lib/summarytable/colorMap";
-import { ColumnType } from "../types/Column";
 import { FC } from "react";
 import SnapshotBar from "./SnapshotBar";
 import SnapshotHistogram from "./SnapshotHistogram";
-import type { Column, Datum } from "../lib/DataFrame/DataFrame";
+import Column, { ColumnType } from "../lib/DataFrame/Column";
 
 type Props = {
   column: Column;
   columnName?: string;
-  type: ColumnType;
   detailed?: boolean;
 };
 
-const Snapshot: FC<Props> = ({ column, columnName, type, detailed }) => {
-  const color = colorMap.get(type);
+const Snapshot: FC<Props> = ({ column, columnName, detailed }) => {
+  const color = colorMap.get(column.type);
   function renderSnapshot(type: ColumnType) {
     switch (type) {
       case ColumnType.Ordinal:
-        return <SnapshotBar type={type} column={column} />;
+        return <SnapshotBar column={column} />;
       case ColumnType.Array:
-        const flattenedArray = column
+        const flat = column.data
           .filter((d) => d)
-          .map((d) => (Array.isArray(d) ? d?.join(", ") : []));
-        // TODO: implement Column as class and add function to update only data array? (keep or updated label, type, stats)
-        return <SnapshotBar type={type} column={flattenedArray} />;
+          .map((d) => (Array.isArray(d) ? d?.join(", ") : "empty"));
+        const newColumn = new Column(flat, column.label);
+        return <SnapshotBar column={newColumn} />;
       case ColumnType.Continuous:
-        return <SnapshotHistogram type={type} column={column} />;
+        return <SnapshotHistogram column={column} />;
       case ColumnType.Date:
-        return <SnapshotHistogram type={type} column={column} />;
+        return <SnapshotHistogram column={column} />;
     }
   }
-  return !type || !color ? (
+  return !column.type || !color ? (
     <div>Snapshot creation failed!</div>
   ) : (
     <>
-      {renderSnapshot(type)}
+      {renderSnapshot(column.type)}
       {detailed && (
         <small>
-          {columnName}, {column.length} Rows
+          {columnName}, {column.data.length} Rows
         </small>
       )}
     </>

@@ -7,6 +7,7 @@ import SummaryTable from "../../components/SummaryTable";
 import DataFrame from "../../lib/DataFrame/DataFrame";
 import getApplicants from "../../lib/data/getApplicants";
 import styles from "../../styles/home.module.css";
+import { Applicant } from "../../types/Applicant";
 
 type Props = {
   applicants: Applicant[];

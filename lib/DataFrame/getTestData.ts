@@ -1,5 +1,3 @@
-import { Row } from "../../lib/DataFrame/DataFrame";
-
 export type TestRow = {
   name: string;
   nickname?: string;

@@ -11,7 +11,7 @@ import DataFrame from "../lib/DataFrame/DataFrame";
 import { fFloat, fPercentage } from "../lib/utilities/formaters";
 import { colorMap } from "../lib/summarytable/colorMap";
 import styles from "../styles/summarytable.module.scss";
-import { ColumnType } from "../types/Column";
+import { ColumnType } from "../lib/DataFrame/Column";
 import SummaryTableCard from "./SummaryTableCard";
 import Snapshot from "./Snapshot";
 
@@ -68,11 +68,7 @@ const SummaryTable: FC<SummaryTableProps> = ({ data: df }) => {
                     <div className={styles.scrollable}>{column.label}</div>
                   </td>
                   <td>
-                    <Snapshot
-                      column={column}
-                      columnName={column.label}
-                      type={column.type}
-                    />
+                    <Snapshot column={column} columnName={column.label} />
                   </td>
                   <td
                     className={

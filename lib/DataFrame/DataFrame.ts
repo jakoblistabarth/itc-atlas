@@ -1,6 +1,5 @@
 import * as _ from "lodash";
-import { getType, getColumnStats } from "../summarytable/summarytable";
-import { ColumnType } from "../../types/Column";
+import Column from "./Column";
 
 export type Description = {
   columns: Column[];
@@ -19,12 +18,6 @@ export type Row = {
 };
 
 export type Data<T = Row> = T[];
-
-export type Column = Array<Datum> & {
-  label: string;
-  type: ColumnType;
-  stats: ColumnStats;
-};
 
 export type ColumnStats = {
   missing: number;
@@ -89,10 +82,8 @@ class DataFrame<T extends BaseRow = Row> {
    * @returns Returns a {@link Column}.
    */
   getColumn(columnName: string): Column {
-    const column = this.data.map((row) => row[columnName]) as Column;
-    column.label = columnName === "" ? "unlabeled" : columnName;
-    column.type = getType(column);
-    column.stats = getColumnStats(column);
+    const data = this.data.map((row) => row[columnName]);
+    const column = new Column(data, columnName);
     return column;
   }
 

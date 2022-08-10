@@ -1,8 +1,7 @@
 import { FC, useMemo, useState } from "react";
 import * as d3 from "d3";
 import { colorMap } from "../lib/summarytable/colorMap";
-import { ColumnType } from "../types/Column";
-import { Column } from "../lib/DataFrame/DataFrame";
+import Column, { ColumnType } from "../lib/DataFrame/Column";
 import { nanoid } from "nanoid";
 import {
   autoUpdate,
@@ -20,10 +19,9 @@ import SnapshotCell from "./SnapshotCell";
 
 type Props = {
   column: Column;
-  type: ColumnType;
 };
 
-const SnapshotBar: FC<Props> = ({ column, type }) => {
+const SnapshotBar: FC<Props> = ({ column }) => {
   const [open, setOpen] = useState(false);
   const { x, y, reference, floating, strategy, context } = useFloating({
     open,
@@ -63,8 +61,8 @@ const SnapshotBar: FC<Props> = ({ column, type }) => {
 
   const color = d3
     .scaleSequential([
-      colorMap.get(type)?.baseColor ?? "black",
-      colorMap.get(type)?.brighter ?? "lightgrey",
+      colorMap.get(column.type)?.baseColor ?? "black",
+      colorMap.get(column.type)?.brighter ?? "lightgrey",
     ])
     .domain([
       d3.min(stack.map((d) => d.start)) ?? 0,

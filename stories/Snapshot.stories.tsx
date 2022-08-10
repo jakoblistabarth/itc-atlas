@@ -4,12 +4,11 @@ import DataFrame from "../lib/DataFrame/DataFrame";
 import getTestData from "../lib/DataFrame/getTestData";
 
 import Snapshot from "../components/Snapshot";
-import { ColumnType } from "../types/Column";
 
 const df = new DataFrame(getTestData());
 
 export default {
-  title: "SummaryTable/SnapShot",
+  title: "SummaryTable/Snapshot",
   component: Snapshot,
 } as ComponentMeta<typeof Snapshot>;
 
@@ -26,7 +25,6 @@ NominalSnapshot.args = {
   ...defaultArgs,
   column: df.getColumn("name"),
   columnName: "Name",
-  type: ColumnType.Ordinal,
 };
 
 export const ContinuousSnapshot = Template.bind({});
@@ -34,7 +32,6 @@ ContinuousSnapshot.args = {
   ...defaultArgs,
   column: df.getColumn("height"),
   columnName: "Height",
-  type: ColumnType.Continuous,
 };
 
 export const ArraySnapshot = Template.bind({});
@@ -42,7 +39,6 @@ ArraySnapshot.args = {
   ...defaultArgs,
   column: df.getColumn("pinArray"),
   columnName: "PIN",
-  type: ColumnType.Array,
 };
 
 export const DateSnapshot = Template.bind({});
@@ -50,5 +46,4 @@ DateSnapshot.args = {
   ...defaultArgs,
   column: df.getColumn("dateOfBirth"),
   columnName: "Date of Birth",
-  type: ColumnType.Date,
 };

@@ -96,8 +96,7 @@ export const getStaticProps: GetStaticProps<Props> = async () => {
     await Promise.all([
       getProjectsByCountry("IDN"),
       getPhdCandidatesByCountry("IDN"),
-      // getApplicantsByCountry("Indonesia"),
-      "applicants",
+      getApplicantsByCountry("Indonesia"),
       getTravelsByCountry("Indonesia"),
       getBTORsByCountry("Indonesia"),
     ]);

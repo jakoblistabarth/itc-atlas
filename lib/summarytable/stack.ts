@@ -1,5 +1,6 @@
 import * as d3 from "d3";
-import { Column, Datum } from "../../lib/DataFrame/DataFrame";
+import { Datum } from "../../lib/DataFrame/DataFrame";
+import Column from "../../lib/DataFrame/Column";
 
 type StackItem = {
   value: Datum;
@@ -25,7 +26,7 @@ export const cropStack = (stack: Stack, maxCategories = 100) => {
 };
 
 export const createStack = (column: Column) => {
-  const ColumnNoNA = column.filter(
+  const ColumnNoNA = column.data.filter(
     (d) => d !== undefined && d !== null && d !== "" && d != "null"
   );
   const total = ColumnNoNA.length;
