@@ -11,7 +11,7 @@
     "type-check": "npx tsc --noEmit",
     "storybook": "start-storybook -p 6006",
     "build-storybook": "build-storybook",
-    "build-storybook-standalone": "npm run setup-data && npm run build-storybook"
+    "build-storybook-standalone": "npm run setup-data && npm run build-storybook --loglevel warn"
   },
   "dependencies": {
     "@floating-ui/react-dom": "^0.7.1",
