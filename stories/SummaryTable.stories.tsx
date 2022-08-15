@@ -6,10 +6,12 @@ import getTestData from "../lib/DataFrame/getTestData";
 import SummaryTable from "../components/SummaryTable";
 import getBigTestData from "../lib/DataFrame/getBigTestData";
 
+// import styles from "../styles/summarytable.module.css";
+// console.log(styles);
+//TODO: fix styling – why is the summarytable.module.css not loaded?
+
 const df = new DataFrame(getTestData());
 const dfBig = new DataFrame(getBigTestData());
-
-//TODO: fix styling – why is the summarytable.module.css not loaded?
 
 export default {
   title: "SummaryTable/SummaryTable",
