@@ -16,6 +16,7 @@ import {
 import { fPercentage } from "../lib/utilities/formaters";
 import { createStack } from "../lib/summarytable/stack";
 import SnapshotCell from "./SnapshotCell";
+import Tooltip from "./Tooltip";
 
 type Props = {
   column: Column;
@@ -118,16 +119,12 @@ const SnapshotBar: FC<Props> = ({ column }) => {
         </g>
       </svg>
       {open && (
-        <div
+        <Tooltip
           {...getFloatingProps({ ref: floating })}
           style={{
             position: strategy,
             top: y ?? "",
             left: x ?? "",
-            padding: ".5em",
-            borderRadius: 3,
-            border: "1px solid",
-            background: "white",
           }}
         >
           {tooltipData?.value || "no data set"}
@@ -142,7 +139,7 @@ const SnapshotBar: FC<Props> = ({ column }) => {
               {fPercentage(tooltipData.count)}
             </span>
           )}
-        </div>
+        </Tooltip>
       )}
     </div>
   );
