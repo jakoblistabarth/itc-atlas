@@ -9,6 +9,6 @@ module.exports = {
     "@storybook/addon-interactions",
     "storybook-css-modules-preset",
   ],
-  staticDirs: ["../public", "../stories/assets"],
+  staticDirs: ["../public", "../stories/assets", "../data/topographic"],
   framework: "@storybook/react",
 };

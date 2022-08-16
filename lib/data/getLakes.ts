@@ -4,11 +4,9 @@ import type { Topology } from "topojson-specification";
 
 export default function getLakes(scale?: "10m" | "50m" | "110m"): Topology {
   switch (scale) {
-    case "10m":
-      return lakes_10m;
-    case "50m":
-      return lakes_10m;
+    case "110m":
+      return lakes_110m as unknown as Topology;
     default:
-      return lakes_110m;
+      return lakes_10m as unknown as Topology;
   }
 }
