@@ -5,6 +5,13 @@ import { geoBertin1953, geoInterruptedMollweide } from "d3-geo-projection";
 import Map from "../components/map/layout/Map";
 import MapBody from "../components/map/layout/MapBody";
 import themes from "../lib/styles/themes";
+import getCountries from "../lib/data/getCountries";
+import getLakes from "../lib/data/getLakes";
+import getRivers from "../lib/data/getRivers";
+
+const countries = getCountries();
+const lakes = getLakes();
+const rivers = getRivers();
 
 export default {
   title: "Cartographic/Layer/BaseLayer",
@@ -43,23 +50,22 @@ const defaultArgs = {
   projection: geoBertin1953(),
 };
 
-const Template: ComponentStory<typeof BaseLayer> = (
-  args,
-  { loaded: { countries } }
-) => {
-  return <BaseLayer {...args} data={countries} />;
+const Template: ComponentStory<typeof BaseLayer> = (args) => {
+  return <BaseLayer {...args} />;
 };
 
 export const Simple = Template.bind({});
 Simple.args = {
   ...Template.args,
   projection: geoBertin1953(),
+  countries: countries,
 };
 
 export const Elaborate = Template.bind({});
 Elaborate.args = {
-  ...Template.args,
-  projection: geoBertin1953(),
+  ...Simple.args,
+  lakes: lakes,
+  rivers: rivers,
   drawGraticuleLabels: true,
   drawOutline: true,
 };

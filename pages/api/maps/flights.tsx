@@ -25,10 +25,8 @@ export default async function handler(
     res.status(500).json({ error: "invalid theme name" });
   }
 
-  const [odMatrix, world] = await Promise.all([
-    (await getFlights2019()).odMatrix,
-    getCountries(),
-  ]);
+  const neCountriesTopoJson = getCountries();
+  const [odMatrix] = await Promise.all([(await getFlights2019()).odMatrix]);
 
   const flightsPerRoute = odMatrix.flows.features.map(
     (flow) => flow.properties?.value
@@ -84,7 +82,7 @@ export default async function handler(
       </MapAside>
       <MapBody bounds={mapOptions.bounds}>
         <BaseLayer
-          data={world}
+          countries={neCountriesTopoJson}
           projection={mapOptions.projection}
           theme={mapOptions.theme}
         />

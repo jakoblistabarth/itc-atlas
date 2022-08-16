@@ -3,10 +3,12 @@ import { ComponentStory, ComponentMeta } from "@storybook/react";
 import * as topojson from "topojson-client";
 import { geoRobinson } from "d3-geo-projection";
 import type { FeatureCollection, Polygon, MultiPolygon } from "geojson";
-import type { NeCountriesTopoJson } from "../types/NeCountriesTopoJson";
+import type { NeCountriesTopoJson } from "../types/NeTopoJson";
 
 import PolygonSymbol from "../components/map/PolygonSymbol";
+import getCountries from "../lib/data/getCountries";
 
+const countries = getCountries();
 const width = 600;
 const height = 300;
 
@@ -25,17 +27,13 @@ export default {
   ],
 } as ComponentMeta<typeof PolygonSymbol>;
 
-const Template: ComponentStory<typeof PolygonSymbol> = (
-  args,
-  { loaded: { countries } }
-) => {
+const Template: ComponentStory<typeof PolygonSymbol> = (args) => {
   const countriesTyped = countries as NeCountriesTopoJson; // TODO: fix this typing
   const featureCollection = topojson.feature(
     countriesTyped,
-    countriesTyped.objects.countries
+    countriesTyped.objects.ne_admin_0_countries
   ) as FeatureCollection<MultiPolygon | Polygon>;
   const feature = featureCollection.features[5];
-  console.log(feature);
   const projection = geoRobinson().fitSize([width, height], feature);
   return (
     <>

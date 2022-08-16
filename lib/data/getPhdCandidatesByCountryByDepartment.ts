@@ -7,12 +7,13 @@ import { Department, departmentColors } from "../mappings/departments";
 import { pieDatum } from "../../components/map/ScaledPie";
 
 const getPhdCandidatesByCountryByDepartment = async () => {
-  const [world, phdCandidates] = await Promise.all([
-    getCountries(),
-    getPhdCandidates(),
-  ]);
+  const neCountriesTopojson = getCountries();
+  const [phdCandidates] = await Promise.all([getPhdCandidates()]);
 
-  const neCountriesGeoJson = topojson.feature(world, world.objects.countries);
+  const neCountriesGeoJson = topojson.feature(
+    neCountriesTopojson,
+    neCountriesTopojson.objects.ne_admin_0_countries
+  );
 
   const count = group(
     phdCandidates,
@@ -24,7 +25,7 @@ const getPhdCandidatesByCountryByDepartment = async () => {
     type: "FeatureCollection",
     features: neCountriesGeoJson.features
       .map((feature) => {
-        const departments = count.get(feature.properties?.iso3code);
+        const departments = count.get(feature.properties?.ADM0_A3_NL);
         const departmentCount = departments
           ? Array.from(departments?.entries()).map(([key, value]) => {
               return {

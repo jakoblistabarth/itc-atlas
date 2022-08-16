@@ -1,10 +1,10 @@
 import type { NextApiRequest, NextApiResponse } from "next";
-import getCountries from "../../../../lib/data/getCountries";
-import { NeCountriesTopoJson } from "../../../../types/NeTopoJson";
+import getLakes from "../../../../lib/data/getLakes";
+import { NeLakes } from "../../../../types/NeTopoJson";
 
 export default async function handler(
   req: NextApiRequest,
-  res: NextApiResponse<NeCountriesTopoJson | { error: string }>
+  res: NextApiResponse<NeLakes | { error: string }>
 ) {
   const scale = req.query.scale?.toString();
   //TODO: use type guard with enum
@@ -16,5 +16,5 @@ export default async function handler(
   )
     return res.status(400).json({ error: "invalid scale param" });
 
-  res.status(200).json(getCountries(scale));
+  res.status(200).json(getLakes(scale));
 }

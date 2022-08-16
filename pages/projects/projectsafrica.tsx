@@ -82,9 +82,12 @@ const ProjectCountries: NextPage<Props> = ({
   const points: FeatureCollection<Point> = {
     type: "FeatureCollection",
     features: topojson
-      .feature(neCountriesTopoJson, neCountriesTopoJson.objects.countries)
+      .feature(
+        neCountriesTopoJson,
+        neCountriesTopoJson.objects.ne_admin_0_countries
+      )
       .features.map((feature) => {
-        const value = projectsCountry.get(feature.properties?.iso3code);
+        const value = projectsCountry.get(feature.properties?.ADM0_A3_NL);
         const pointFeature: Feature<Point> = {
           type: "Feature",
           properties: {
@@ -107,10 +110,13 @@ const ProjectCountries: NextPage<Props> = ({
   const polygons = {
     type: "FeatureCollection",
     features: topojson
-      .feature(neCountriesTopoJson, neCountriesTopoJson.objects.countries)
+      .feature(
+        neCountriesTopoJson,
+        neCountriesTopoJson.objects.ne_admin_0_countries
+      )
       .features.filter((feature) => {
         const matchedCountry = areaCodes.find(
-          (area) => area["ISO-alpha3 Code"] === feature.properties?.iso3code
+          (area) => area["ISO-alpha3 Code"] === feature.properties?.ADM0_A3_NL
         );
         const highlight = matchedCountry?.["Least Developed Countries (LDC)"];
         return highlight;
@@ -137,7 +143,7 @@ const ProjectCountries: NextPage<Props> = ({
             ></PatternDots>
           </defs>
           <BaseLayer
-            data={neCountriesTopoJson}
+            countries={neCountriesTopoJson}
             projection={mapOptions.projection}
             theme={mapOptions.theme}
             labels
@@ -195,7 +201,7 @@ export const getStaticProps: GetStaticProps<Props> = async () => {
   );
 
   const areaCodes = await getUnsdCountries();
-  const neCountriesTopoJson = await getCountries("50m");
+  const neCountriesTopoJson = getCountries("50m");
 
   return {
     props: {

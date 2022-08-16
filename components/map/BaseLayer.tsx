@@ -15,34 +15,34 @@ import BendedLabel from "./BendedLabel";
 import { nanoid } from "nanoid";
 import RadialGradient from "../defs/RadialGradient";
 import defaultTheme from "../../lib/styles/themes/defaultTheme";
-import getLakes from "../../lib/data/getLakes";
-import getRivers from "../../lib/data/getRivers";
 import type { FeatureCollection, Polygon, MultiPolygon } from "geojson";
 import {
   CountryProperties,
   NeCountriesTopoJson,
-} from "../../types/NeCountriesTopoJson";
+  NeLakes,
+  NeRivers,
+} from "../../types/NeTopoJson";
 import PolygonSymbol from "./PolygonSymbol";
 
 type Props = {
-  data: NeCountriesTopoJson;
+  countries: NeCountriesTopoJson;
+  lakes?: NeLakes;
+  rivers?: NeRivers;
   projection: GeoProjection;
   theme?: MapTheme;
   labels?: boolean;
-  drawLakes?: boolean;
-  drawRivers?: boolean;
   drawOutline?: boolean;
   drawGraticuleLabels?: boolean;
   drawShadow?: boolean;
 };
 
 const BaseLayer: FC<Props> = ({
-  data,
+  countries,
+  lakes,
+  rivers,
   projection,
   theme = defaultTheme,
   labels = false,
-  drawLakes,
-  drawRivers,
   drawOutline,
   drawGraticuleLabels,
   drawShadow,
@@ -55,41 +55,37 @@ const BaseLayer: FC<Props> = ({
   const equatorPath = path(geoEquator);
   const circlesPath = path(geoCirclesLat);
   const land = topojson.merge(
-    data,
-    data.objects.countries.geometries as Array<
+    countries,
+    countries.objects.ne_admin_0_countries.geometries as Array<
       MultiPolygonT<CountryProperties> | PolygonT<CountryProperties>
     >
   ); //Question: is there a way to avoid this, set geometry type in type definition?
   const landPath = path(land);
-  const countries = topojson.feature(
-    data,
-    data.objects.countries
+  const countriesGeoJson = topojson.feature(
+    countries,
+    countries.objects.ne_admin_0_countries
   ) as FeatureCollection<MultiPolygon | Polygon>;
   const borders = topojson.mesh(
-    data,
-    data.objects.countries,
+    countries,
+    countries.objects.ne_admin_0_countries,
     (a, b) => a !== b
   );
   const bordersPath = path(borders);
-  const lakes = getLakes();
-  const lakesGeoJSON = topojson.feature(
-    lakes,
-    lakes.objects.ne_lakes
-  ) as FeatureCollection<MultiPolygon | Polygon>;
-  const lakesPath = path(lakesGeoJSON);
-  const rivers = getRivers();
-  const riversGeoJSON = topojson.feature(
-    rivers,
-    rivers.objects.ne_rivers_lake_centerlines
-  );
-  const riversPath = path(riversGeoJSON);
+  const lakesGeoJSON = lakes
+    ? (topojson.feature(lakes, lakes.objects.ne_lakes) as FeatureCollection<
+        MultiPolygon | Polygon
+      >)
+    : undefined;
+  const lakesPath = lakesGeoJSON ? path(lakesGeoJSON) : undefined;
+  const riversGeoJSON = rivers
+    ? topojson.feature(rivers, rivers.objects.ne_rivers_lake_centerlines)
+    : undefined;
+  const riversPath = riversGeoJSON ? path(riversGeoJSON) : undefined;
 
   const hasGraticuleLabels =
     drawGraticuleLabels ?? theme.hasGraticuleLables ?? false;
   const hasOutline = drawOutline ?? theme.hasOutline ?? false;
   const hasShadow = drawShadow ?? theme.hasShadow ?? false;
-  const hasLakes = drawLakes ?? theme.hasLakes ?? true;
-  const hasRivers = drawRivers ?? theme.hasRivers ?? true;
 
   return (
     <>
@@ -162,13 +158,13 @@ const BaseLayer: FC<Props> = ({
           </g>
         )}
 
-        {hasLakes && lakesPath && (
+        {lakesPath && (
           <g className="lakes">
             <path d={lakesPath} fill={theme.background.fill} />
           </g>
         )}
 
-        {hasRivers && riversPath && (
+        {riversPath && (
           <g className="rivers">
             <path
               d={riversPath}
@@ -178,18 +174,6 @@ const BaseLayer: FC<Props> = ({
             />
           </g>
         )}
-
-        {countries &&
-          countries.features.map((country) => {
-            return (
-              <PolygonSymbol
-                key={nanoid()}
-                feature={country}
-                projection={projection}
-                style={theme.base}
-              />
-            );
-          })}
 
         {bordersPath && (
           <g className="borders">
@@ -202,6 +186,18 @@ const BaseLayer: FC<Props> = ({
             />
           </g>
         )}
+
+        {countriesGeoJson &&
+          countriesGeoJson.features.map((country) => {
+            return (
+              <PolygonSymbol
+                key={nanoid()}
+                feature={country}
+                projection={projection}
+                style={{ ...theme.base, fill: "rgba(255,255,255,0)" }}
+              />
+            );
+          })}
 
         {hasGraticuleLabels && (
           <>
@@ -231,7 +227,7 @@ const BaseLayer: FC<Props> = ({
         )}
 
         {labels &&
-          countries.features.map((country) => {
+          countriesGeoJson.features.map((country) => {
             return (
               <BendedLabel
                 key={nanoid()}

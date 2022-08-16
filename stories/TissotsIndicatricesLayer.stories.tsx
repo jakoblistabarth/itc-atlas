@@ -11,6 +11,9 @@ import Map from "../components/map/layout/Map";
 import MapBody from "../components/map/layout/MapBody";
 import TissotsIndicatricesLayer from "../components/map/TissotsIndicatricesLayer";
 import themes from "../lib/styles/themes";
+import getCountries from "../lib/data/getCountries";
+
+const countries = getCountries();
 
 export default {
   title: "Cartographic/Layer/TissotsIndicatrices",
@@ -37,11 +40,11 @@ const bounds = { width: 300 };
 
 const Template: ComponentStory<
   typeof TissotsIndicatricesLayer | typeof BaseLayer
-> = (args, { loaded: { countries } }) => {
+> = (args) => {
   return (
     <Map projection={args.projection} bounds={bounds}>
       <MapBody bounds={bounds}>
-        <BaseLayer {...args} data={countries} />
+        <BaseLayer {...args} countries={countries} />
         {/* @ts-expect-error */}
         <TissotsIndicatricesLayer {...args} />
       </MapBody>

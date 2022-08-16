@@ -2,7 +2,7 @@ import { geoEquirectangular, geoGraticule10, geoPath } from "d3-geo";
 import { useImperativeHandle, useLayoutEffect, useRef } from "react";
 import { feature } from "topojson-client";
 import React from "react";
-import { NeCountriesTopoJson } from "../../types/NeCountriesTopoJson";
+import { NeCountriesTopoJson } from "../../types/NeTopoJson";
 
 type Props = {
   neCountriesTopoJson: NeCountriesTopoJson;
@@ -25,7 +25,7 @@ const GlobeTexture = React.forwardRef<HTMLCanvasElement, Props>(
   ) => {
     const world = feature(
       neCountriesTopoJson,
-      neCountriesTopoJson.objects.countries
+      neCountriesTopoJson.objects.ne_admin_0_countries
     );
 
     const internalRef = useRef<HTMLCanvasElement>(null);

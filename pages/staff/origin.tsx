@@ -24,7 +24,7 @@ type Props = {
 const StaffOrigin: NextPage<Props> = ({ staff, neCountriesTopoJson }) => {
   const neCountriesGeoJson = topojson.feature(
     neCountriesTopoJson,
-    neCountriesTopoJson.objects.countries
+    neCountriesTopoJson.objects.ne_admin_0_countries
   );
 
   const count = d3.group(staff, (d) => d.nationality);
@@ -40,7 +40,7 @@ const StaffOrigin: NextPage<Props> = ({ staff, neCountriesTopoJson }) => {
     type: "FeatureCollection",
     features: neCountriesGeoJson.features
       .map((feature) => {
-        const staffCount = count.get(feature.properties?.iso3code)?.length;
+        const staffCount = count.get(feature.properties?.ADM0_A3_NL)?.length;
         const pointFeature: Feature<Point> = {
           type: "Feature",
           properties: {
@@ -85,7 +85,7 @@ const StaffOrigin: NextPage<Props> = ({ staff, neCountriesTopoJson }) => {
       <main className={styles.main}>
         <Heading Tag={Headings.H1}>ITC's staff origin</Heading>
         <svg width={dimension.width} height={dimension.height}>
-          <BaseLayer data={neCountriesTopoJson} projection={projection} />
+          <BaseLayer countries={neCountriesTopoJson} projection={projection} />
           <g id="symbols">
             {points.features.map((point) => (
               <PointSymbol

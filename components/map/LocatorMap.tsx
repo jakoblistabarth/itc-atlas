@@ -8,7 +8,7 @@ import getMapHeight from "../../lib/cartographic/getMapHeight";
 import PolygonSymbol from "./PolygonSymbol";
 import { nanoid } from "nanoid";
 import defaultTheme from "../../lib/styles/themes/defaultTheme";
-import { NeCountriesTopoJson } from "../../types/NeCountriesTopoJson";
+import { NeCountriesTopoJson } from "../../types/NeTopoJson";
 
 type Props = {
   neCountriesTopoJson: NeCountriesTopoJson;
@@ -28,12 +28,12 @@ const LocatorMap: FC<Props> = ({
 
   const countries = topojson.feature(
     neCountriesTopoJson,
-    neCountriesTopoJson.objects.countries
-  ) as FeatureCollection;
+    neCountriesTopoJson.objects.ne_admin_0_countries
+  );
   const highlightCountries: FeatureCollection = {
     type: "FeatureCollection",
     features: countries.features.filter((country) => {
-      return highlight?.includes(country.properties?.iso3code);
+      return highlight?.includes(country.properties?.ADM0_A3_NL);
     }),
   };
   const centroid = d3.geoCentroid(highlightCountries);
@@ -54,7 +54,7 @@ const LocatorMap: FC<Props> = ({
           opacity={0.05}
         />
         <BaseLayer
-          data={neCountriesTopoJson}
+          countries={neCountriesTopoJson}
           projection={projection}
           theme={theme}
         />

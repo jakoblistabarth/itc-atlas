@@ -4,6 +4,9 @@ import Globe from "../components/map-3d/Globe";
 import { Canvas } from "@react-three/fiber";
 import { OrbitControls } from "@react-three/drei";
 import GlobeTexture from "../components/map-3d/GlobeTexture";
+import getCountries from "../lib/data/getCountries";
+
+const countries = getCountries();
 
 export default {
   title: "Cartographic/Globe",
@@ -35,10 +38,7 @@ export default {
   ],
 } as ComponentMeta<typeof Globe>;
 
-const Template: ComponentStory<typeof Globe> = (
-  args,
-  { loaded: { countries } }
-) => {
+const Template: ComponentStory<typeof Globe> = (args) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   return (
     <>

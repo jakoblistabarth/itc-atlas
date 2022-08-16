@@ -23,7 +23,7 @@ const ProjectExplorer3D: NextPage<Props> = ({ neCountriesTopoJson }) => {
   const earthRadius = 1;
   const world = topojson.feature(
     neCountriesTopoJson,
-    neCountriesTopoJson.objects.countries
+    neCountriesTopoJson.objects.ne_admin_0_countries
   );
 
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -76,10 +76,8 @@ const ProjectExplorer3D: NextPage<Props> = ({ neCountriesTopoJson }) => {
 };
 
 export const getStaticProps: GetStaticProps<Props> = async () => {
-  const [neCountriesTopoJson, airports] = await Promise.all([
-    getCountries(),
-    (await getAirports()).json,
-  ]);
+  const neCountriesTopoJson = getCountries();
+  const [airports] = await Promise.all([getAirports().json]);
 
   return {
     props: {

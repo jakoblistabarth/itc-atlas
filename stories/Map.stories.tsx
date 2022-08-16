@@ -6,6 +6,9 @@ import MapBody from "../components/map/layout/MapBody";
 import MapHeader from "../components/map/layout/MapHeader";
 import { geoBertin1953 } from "d3-geo-projection";
 import defaultTheme from "../lib/styles/themes/defaultTheme";
+import getCountries from "../lib/data/getCountries";
+
+const countries = getCountries();
 
 export default {
   title: "Cartographic/Map",
@@ -19,15 +22,12 @@ const bounds = {
   frame: { top: 10, bottom: 10, left: 10, right: 10 },
 };
 
-const Template: ComponentStory<typeof Map> = (
-  args,
-  { loaded: { countries } }
-) => {
+const Template: ComponentStory<typeof Map> = (args) => {
   return (
     <Map {...args}>
       <MapHeader bounds={args.bounds} title={"Map title"}></MapHeader>
       <MapBody bounds={args.bounds}>
-        <BaseLayer projection={projection} data={countries}></BaseLayer>
+        <BaseLayer projection={projection} countries={countries}></BaseLayer>
       </MapBody>
     </Map>
   );

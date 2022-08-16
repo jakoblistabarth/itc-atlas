@@ -29,9 +29,8 @@ export default async function handler(
   if (!theme) {
     res.status(500).json({ error: "invalid theme name" });
   }
-
-  const [world, { data, domain, legendEntries }] = await Promise.all([
-    getCountries(),
+  const neCountriesTopoJson = getCountries();
+  const [{ data, domain, legendEntries }] = await Promise.all([
     getPhdCandidatesByCountryByDepartment(),
   ]);
 
@@ -69,7 +68,7 @@ export default async function handler(
       />
       <MapBody bounds={mapOptions.bounds}>
         <BaseLayer
-          data={world}
+          countries={neCountriesTopoJson}
           projection={mapOptions.projection}
           theme={theme}
         />

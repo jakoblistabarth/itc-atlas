@@ -31,9 +31,9 @@ export default async function handler(
     res.status(500).json({ error: "invalid theme name" });
   }
 
-  const [{ data, domain }, world, highlightCountries] = await Promise.all([
+  const neCountriesTopoJson = getCountries();
+  const [{ data, domain }, highlightCountries] = await Promise.all([
     getProjectsPerCountry(),
-    getCountries(),
     getCountriesByGroup(UnGrouping.LDC),
   ]);
 
@@ -83,7 +83,7 @@ export default async function handler(
       </MapAside>
       <MapBody bounds={mapOptions.bounds}>
         <BaseLayer
-          data={world}
+          countries={neCountriesTopoJson}
           projection={mapOptions.projection}
           theme={theme}
         />

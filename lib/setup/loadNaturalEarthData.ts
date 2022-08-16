@@ -3,14 +3,20 @@ import admZip from "adm-zip";
 // @ts-ignore
 import mapShaper from "mapshaper";
 import axios from "axios";
+import { NeScales } from "../../types/NeTopoJson";
+
+type fCategory = "physical" | "cultural";
 
 const loadNaturalEarthData = () => {
   const tmpDir = os.tmpdir() + "/";
 
   const baseUrl =
     "https://www.naturalearthdata.com/http//www.naturalearthdata.com/download/";
-  const scales = [10, 110]; // available 110m 50m, 10m
-  const features = ["rivers_lake_centerlines", "lakes"];
+  const scales: NeScales[] = ["10m", "110m"]; // available 110m 50m, 10m
+  const features: { [K in fCategory]: string[] } = {
+    physical: ["rivers_lake_centerlines", "lakes"],
+    cultural: ["admin_0_countries"],
+  };
 
   const getName = (url: string): string => {
     return url.substring(url.lastIndexOf("/") + 1, url.lastIndexOf("."));
@@ -35,17 +41,20 @@ const loadNaturalEarthData = () => {
   };
 
   for (const scale of scales) {
-    for (const feature of features) {
-      const name = "ne_" + scale + "m_" + feature;
-      const url = baseUrl + scale + "m/physical/" + name + ".zip";
-      const shpPath = tmpDir + name + "/" + name + ".shp";
-      (async () => {
-        await getFile(url, () =>
-          mapShaper.runCommands(
-            `-i ${shpPath} name=ne_${feature} -o format=topojson data/topographic/${name}.json`
-          )
-        );
-      })();
+    let category: keyof typeof features;
+    for (category in features) {
+      for (const feature of features[category]) {
+        const name = `ne_${scale}_${feature}`;
+        const url = `${baseUrl}${scale}/${category}/${name}.zip`;
+        const shpPath = `${tmpDir}${name}/${name}.shp`;
+        (async () => {
+          await getFile(url, () =>
+            mapShaper.runCommands(
+              `-i ${shpPath} name=ne_${feature} -o format=topojson data/topographic/${name}.json`
+            )
+          );
+        })();
+      }
     }
   }
 };

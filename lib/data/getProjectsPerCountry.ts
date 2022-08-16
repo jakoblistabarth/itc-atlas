@@ -6,10 +6,8 @@ import type { Project } from "../../types/Project";
 import getCountries from "./getCountries";
 
 const getProjectsPerCountry = async () => {
-  const [allProjects, world] = await Promise.all([
-    getProjects(),
-    getCountries(),
-  ]);
+  const neCountriesTopojson = getCountries();
+  const [allProjects] = await Promise.all([getProjects()]);
 
   const projects = allProjects.filter(
     (
@@ -43,13 +41,16 @@ const getProjectsPerCountry = async () => {
   const maxDomain = d3.max(projectCount) ?? 10;
   const domain: [number, number] = [minDomain, maxDomain];
 
-  const neCountriesGeoJson = topojson.feature(world, world.objects.countries);
+  const neCountriesGeoJson = topojson.feature(
+    neCountriesTopojson,
+    neCountriesTopojson.objects.ne_admin_0_countries
+  );
 
   const data: FeatureCollection<Point> = {
     type: "FeatureCollection",
     features: neCountriesGeoJson.features
       .map((feature) => {
-        const value = projectsCountry.get(feature.properties?.iso3code);
+        const value = projectsCountry.get(feature.properties?.ADM0_A3_NL);
         const pointFeature: Feature<Point> = {
           type: "Feature",
           properties: {

@@ -60,7 +60,7 @@ const ProjectCountries: NextPage<Props> = ({
             ></PatternLines>
           </defs>
           <BaseLayer
-            data={neCountriesTopoJson}
+            countries={neCountriesTopoJson}
             projection={projection}
             theme={theme}
           />
@@ -101,12 +101,11 @@ const ProjectCountries: NextPage<Props> = ({
 };
 
 export const getStaticProps: GetStaticProps<Props> = async () => {
-  const [{ data, domain }, neCountriesTopoJson, highlightCountries] =
-    await Promise.all([
-      getProjectsPerCountry(),
-      getCountries(),
-      getCountriesByGroup(UnGrouping.LDC),
-    ]);
+  const neCountriesTopoJson = getCountries();
+  const [{ data, domain }, highlightCountries] = await Promise.all([
+    getProjectsPerCountry(),
+    getCountriesByGroup(UnGrouping.LDC),
+  ]);
 
   return {
     props: {

@@ -46,7 +46,7 @@ const Airports: NextPage<Props> = ({ airports, neCountriesTopoJson }) => {
       <main className={styles.main}>
         <Heading Tag={Headings.H1}>Airports</Heading>
         <svg width={1020} height={600}>
-          <BaseLayer data={neCountriesTopoJson} projection={projection} />
+          <BaseLayer countries={neCountriesTopoJson} projection={projection} />
           {airportsGeo.features.map((airport) => (
             <PointSymbol
               key={nanoid()}
@@ -70,10 +70,8 @@ const Airports: NextPage<Props> = ({ airports, neCountriesTopoJson }) => {
 };
 
 export const getStaticProps: GetStaticProps<Props> = async () => {
-  const [airports, neCountriesTopoJson] = await Promise.all([
-    (await getFlights2019()).perAirport,
-    getCountries(),
-  ]);
+  const neCountriesTopoJson = getCountries();
+  const [airports] = await Promise.all([(await getFlights2019()).perAirport]);
 
   return {
     props: {

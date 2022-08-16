@@ -84,7 +84,7 @@ const Flights: NextPage<Props> = ({ odMatrix, neCountriesTopoJson }) => {
 
         <svg width={mapOptions.bounds.width} height={mapOptions.bounds.height}>
           <BaseLayer
-            data={neCountriesTopoJson}
+            countries={neCountriesTopoJson}
             theme={mapOptions.theme}
             projection={mapOptions.projection}
           />
@@ -129,10 +129,8 @@ const Flights: NextPage<Props> = ({ odMatrix, neCountriesTopoJson }) => {
 };
 
 export async function getStaticProps() {
-  const [odMatrix, neCountriesTopoJson] = await await Promise.all([
-    (await getFlights2019()).odMatrix,
-    getCountries(),
-  ]);
+  const neCountriesTopoJson = getCountries();
+  const [odMatrix] = await Promise.all([(await getFlights2019()).odMatrix]);
   return {
     props: {
       odMatrix,

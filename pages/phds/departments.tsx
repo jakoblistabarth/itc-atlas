@@ -53,7 +53,7 @@ const PhdDepartments: NextPage<Props> = ({
         <Heading Tag={Headings.H1}>ITC's PhD candidates</Heading>
         <svg width={dimension.width} height={dimension.height}>
           <BaseLayer
-            data={neCountriesTopoJson}
+            countries={neCountriesTopoJson}
             projection={projection}
             theme={theme}
           />
@@ -97,11 +97,10 @@ const PhdDepartments: NextPage<Props> = ({
 };
 
 export const getStaticProps: GetStaticProps<Props> = async () => {
-  const [{ data, domain, legendEntries }, neCountriesTopoJson] =
-    await Promise.all([
-      getPhdCandidatesByCountryByDepartment(),
-      getCountries(),
-    ]);
+  const neCountriesTopoJson = getCountries();
+  const [{ data, domain, legendEntries }] = await Promise.all([
+    getPhdCandidatesByCountryByDepartment(),
+  ]);
 
   return {
     props: {

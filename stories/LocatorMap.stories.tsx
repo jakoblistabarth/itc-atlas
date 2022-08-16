@@ -1,11 +1,9 @@
 import React from "react";
 import { ComponentStory, ComponentMeta } from "@storybook/react";
 import LocatorMap from "../components/map/LocatorMap";
+import getCountries from "../lib/data/getCountries";
 
-// import countriesIso from "/countriesIso.json";
-// QUESTION: how does this work?
-// see: https://storybook.js.org/docs/react/configure/images-and-assets#serving-static-files-via-storybook-configuration
-// already added the sotries/assets/ folder to static dirs in storybook's main.js
+const countries = getCountries();
 
 export default {
   title: "Cartographic/Locator Map",
@@ -33,33 +31,31 @@ export default {
   },
 } as ComponentMeta<typeof LocatorMap>;
 
-const Template: ComponentStory<typeof LocatorMap> = (
-  args,
-  { loaded: { countries } }
-) => {
-  return <LocatorMap {...args} neCountriesTopoJson={countries} />;
+const Template: ComponentStory<typeof LocatorMap> = (args) => {
+  return <LocatorMap {...args} />;
 };
 
 export const Simple = Template.bind({});
 Simple.args = {
   ...Template.args,
+  neCountriesTopoJson: countries,
   highlight: ["NLD"],
 };
 
 export const MultipleHighlights = Template.bind({});
 MultipleHighlights.args = {
-  ...Template.args,
+  ...Simple.args,
   highlight: ["NLD", "AUT"],
 };
 
 export const NoHightlight = Template.bind({});
 NoHightlight.args = {
-  ...Template.args,
+  ...Simple.args,
   highlight: [],
 };
 
 export const DifferentHemispheres = Template.bind({});
 DifferentHemispheres.args = {
-  ...Template.args,
+  ...Simple.args,
   highlight: ["LAO", "CHL"],
 };
