@@ -5,8 +5,8 @@ import { Vector3 } from "three";
  * providing the radius of a sphere and an optional offset to this sphere.
  * @param lon The coordinate pair's longitude coordinate.
  * @param lat The coordinate pair's latitude coordinate.
- * @param radius The radius of the sphere used for the conversion
- * @param offset An offset (from the surface of this sphere) used to
+ * @param radius The radius of the sphere used for the conversion.
+ * @param offset An offset (from the surface of this sphere).
  * @returns A {@link Vector3} holding the Cartesian coordinates of the point.
  */
 const lonLatToXYZ = (lon: number, lat: number, radius: number, offset = 0) => {
