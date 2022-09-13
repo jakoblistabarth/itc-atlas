@@ -1,12 +1,14 @@
 import type { FC } from "react";
 import defaultTheme from "../../../lib/styles/themes/defaultTheme";
 import { MapTheme } from "../../../types/MapTheme";
-import { scaleTime, scalePoint } from "d3-scale";
+import { scaleTime, scalePoint, scaleSqrt } from "d3-scale";
+import type { ScaleOrdinal } from "d3-scale";
 import { TimelineEvent } from "../../../types/TimelineEvent";
 import { nanoid } from "nanoid";
-import Event from "./Event";
+import EventPeriod from "./EventPeriod";
 import TimelineGrid from "./TimelineGrid";
-import { min, max, ascending } from "d3-array";
+import { min, max, ascending, extent } from "d3-array";
+import EventPoint from "./EventPoint";
 
 type Props = {
   position: [number, number];
@@ -16,6 +18,7 @@ type Props = {
   domain?: [Date, Date];
   theme?: MapTheme;
   grid?: boolean;
+  scaled?: boolean;
 };
 
 /**
@@ -31,11 +34,12 @@ const Timeline: FC<Props> = ({
   domain,
   theme = defaultTheme,
   grid = false,
+  scaled = false,
 }) => {
   const margin = 20;
 
   const minDate = min(events.map((d) => d.dateStart)) ?? new Date("1950");
-  const maxDate = max(events.map((d) => d.dateEnd)) ?? new Date();
+  const maxDate = max(events.map((d) => d.dateEnd ?? new Date())) ?? new Date();
 
   events.sort((a, b) =>
     ascending(new Date(a.dateStart), new Date(b.dateStart))
@@ -47,6 +51,10 @@ const Timeline: FC<Props> = ({
   const yScale = scalePoint()
     .range([margin, height - margin])
     .domain(events.map((d) => d.yOffset));
+  const sizeDomain = extent(events, (d) => d.size);
+  const sizeScale = scaleSqrt()
+    .domain(sizeDomain ?? [0, 100])
+    .range([0, height / 5]);
 
   return (
     <g
@@ -56,14 +64,29 @@ const Timeline: FC<Props> = ({
       {grid && <TimelineGrid scale={xScale} height={height} />}
       {events.map((event) => {
         const dateStart = new Date(event.dateStart);
-        const dateEnd = new Date(event.dateEnd);
-        return (
-          <Event
+        const dateEnd = event.dateEnd ? new Date(event.dateEnd) : undefined;
+        const width = dateEnd ? xScale(dateEnd) - xScale(dateStart) : 3;
+        return dateEnd ? (
+          <EventPeriod
             key={nanoid()}
-            position={[xScale(dateStart), yScale(event.yOffset) ?? 0]}
-            width={xScale(dateEnd) - xScale(dateStart)}
+            yOffset={yScale(event.yOffset) ?? 0}
+            dateStart={dateStart}
+            dateEnd={dateEnd}
+            width={width}
             height={3}
-            event={event}
+            title={event.name}
+            xScale={xScale}
+          />
+        ) : (
+          <EventPoint
+            key={nanoid()}
+            yOffset={0}
+            date={event.dateStart}
+            size={scaled ? sizeScale(event.size ?? 5) : 5}
+            title={event.name}
+            xScale={xScale}
+            fill={event.fill ?? "black"}
+            transparent
           />
         );
       })}

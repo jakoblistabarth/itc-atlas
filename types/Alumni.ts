@@ -1,4 +1,6 @@
 export type Alumni = {
-  city: string;
   contactNo: string;
+  examYear: string;
+  country: string;
+  city: string;
 };

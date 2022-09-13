@@ -19,6 +19,7 @@ export default {
         ["ITA", "GBR"],
         ["MNG"],
         ["MNG", "BRA"],
+        ["IDN"],
       ],
     },
   },

@@ -1,5 +1,6 @@
 import * as _ from "lodash";
 import Column from "./Column";
+import { groups } from "d3";
 
 export type Description = {
   columns: Column[];
@@ -200,6 +201,11 @@ class DataFrame<T extends BaseRow = Row> {
    */
   toArray() {
     return this.data;
+  }
+
+  findDuplicates(columnName: string) {
+    const arr = groups(this.data, (d) => d[columnName]);
+    return arr.filter(([key, rows]) => rows.length > 1);
   }
 }
 

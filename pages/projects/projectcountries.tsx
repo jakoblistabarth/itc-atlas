@@ -1,5 +1,5 @@
 import { geoBertin1953 } from "d3-geo-projection";
-import { FeatureCollection, MultiPolygon, Point } from "geojson";
+import { FeatureCollection, Point } from "geojson";
 import { nanoid } from "nanoid";
 import type { GetStaticProps, NextPage } from "next";
 import Head from "next/head";
@@ -20,6 +20,7 @@ import { UnGrouping } from "../../types/UnsdCodes";
 import { NeCountriesGeoJson } from "../../types/NeCountriesGeoJson";
 import { SharedPageProps } from "../../types/Props";
 import defaultTheme from "../../lib/styles/themes/defaultTheme";
+import Footer from "../../components/Footer";
 
 type Props = {
   data: FeatureCollection<Point>;
@@ -96,6 +97,7 @@ const ProjectCountries: NextPage<Props> = ({
           />
         </svg>
       </main>
+      <Footer />
     </>
   );
 };

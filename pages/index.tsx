@@ -74,6 +74,14 @@ const Home: NextPage = () => {
               <p>ITC's applicants.</p>
             </a>
           </Link>
+          <Link href="/alumni">
+            <a className={styles.card}>
+              <h2>
+                Alumni <MdOutlineArrowRightAlt />
+              </h2>
+              <p>ITC's alumnis.</p>
+            </a>
+          </Link>
           <Link href="/nfpcountries">
             <a className={styles.card}>
               <h2>

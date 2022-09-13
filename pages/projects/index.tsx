@@ -17,6 +17,12 @@ type Props = React.PropsWithChildren<{
 
 const Travels: NextPage<Props> = ({ projects }) => {
   const projectsDf = new DataFrame(projects);
+  const duplicates = projectsDf.findDuplicates("projectShortName");
+  const sum = duplicates.reduce((acc, [key, rows]) => {
+    acc += rows.length;
+    return acc;
+  }, 0);
+  console.log(duplicates, sum);
   return (
     <>
       <Head>

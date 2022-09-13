@@ -24,7 +24,7 @@ export default async function cleanProjects(input: any[]) {
     .merge(post2019)
     .mutate("projectShortName", (row) =>
       row.projectShortName === ""
-        ? row.projectName.substr(0, 2)
+        ? `[${row.projectID}-${row.projectName.substr(0, 3)}]`
         : row.projectShortName
     )
     .mutate("dateStart", (row) =>

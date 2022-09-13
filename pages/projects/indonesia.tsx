@@ -1,35 +1,51 @@
 import type { GetStaticProps, NextPage } from "next";
 import Head from "next/head";
 import Timeline from "../../components/charts/timeline/Timeline";
+import Footer from "../../components/Footer";
 import Heading, { Headings } from "../../components/Heading";
 import SummaryTable from "../../components/SummaryTable";
-import getApplicantsByCountry from "../../lib/data/getApplicantsByCountry";
+import getAlumniByCountry from "../../lib/data/getAlumniByCountry";
 import getBTORsByCountry from "../../lib/data/getBTORsByCountry";
 import getPhdCandidatesByCountry from "../../lib/data/getPhdCandidatesByCountry";
 import getProjectsByCountry from "../../lib/data/getProjectsByCountry";
 import getTravelsByCountry from "../../lib/data/getTravelsByCountry";
 import DataFrame from "../../lib/DataFrame/DataFrame";
 import styles from "../../styles/home.module.css";
-import { Applicant } from "../../types/Applicant";
+import { Alumni } from "../../types/Alumni";
 import { PhdCandidate } from "../../types/PhdCandidate";
 import { Project } from "../../types/Project";
 import { TimelineEvent } from "../../types/TimelineEvent";
 import { BTOR, Travel } from "../../types/Travels";
+import { rollups } from "d3-array";
+import getDutchCabinets from "../../lib/data/getDutchCabinets";
+import { DutchCabinet } from "../../types/DutchCabinet";
+import getDutchForeignAffairsMinisters from "../../lib/data/getDutchForeignAffairsMinisters";
+import { Minister } from "../../types/Minister";
+import { ScaleOrdinal, scaleOrdinal } from "d3";
+import LocatorMap from "../../components/map/LocatorMap";
+import getCountries from "../../lib/data/getCountries";
+import { NeCountriesTopoJson } from "../../types/NeTopoJson";
 
 type Props = {
   projects: Project[];
   phdCandidates: PhdCandidate[];
-  applicants: Applicant[];
+  alumni: Alumni[];
   travels: Travel[];
   btors: BTOR[];
+  cabinets: DutchCabinet[];
+  ministers: Minister[];
+  neCountries: NeCountriesTopoJson;
 };
 
-const ProjectCountries: NextPage<Props> = ({
+const IndonesiaTimeline: NextPage<Props> = ({
   projects,
   phdCandidates,
-  applicants,
+  alumni,
   travels,
   btors,
+  cabinets,
+  ministers,
+  neCountries,
 }) => {
   const projectEvents: TimelineEvent[] = projects.flatMap((project) => {
     if (!project.dateStart || !project.dateEnd) return [];
@@ -51,11 +67,39 @@ const ProjectCountries: NextPage<Props> = ({
     };
   });
 
-  console.log(applicants);
-  console.log("travels", travels);
-  console.log("btors", btors);
+  const alumniPerYear = rollups(
+    alumni,
+    (v) => v.length,
+    (d) => d.examYear
+  );
+  const examEvents: TimelineEvent[] = alumniPerYear.map(([year, size]) => {
+    return {
+      name: year ? year.toString() : "",
+      yOffset: "",
+      dateStart: new Date(year),
+      size: size,
+    };
+  });
 
-  const commonDomain = [new Date(1950), new Date()] as [Date, Date];
+  const cabinetEvents: TimelineEvent[] = cabinets.map((cabinet) => ({
+    name: cabinet.name,
+    yOffset: "",
+    dateStart: new Date(cabinet.dateStart),
+    dateEnd: cabinet.dateEnd ? new Date(cabinet.dateEnd) : new Date(),
+  }));
+
+  const partyColors: ScaleOrdinal<string, string> = scaleOrdinal()
+    .domain(["CDA", "PvdA", "VVD", "D66"])
+    .range(["lightgreen", "darkred", "orange", "darkgreen"]);
+
+  const ministerEvents: TimelineEvent[] = ministers.map((minister) => ({
+    name: minister.name,
+    yOffset: "",
+    dateStart: new Date(minister.dateStart),
+    fill: partyColors(minister.party),
+  }));
+
+  const commonDomain = [new Date("1950"), new Date()] as [Date, Date];
 
   return (
     <>
@@ -66,50 +110,93 @@ const ProjectCountries: NextPage<Props> = ({
       </Head>
 
       <main className={styles.main}>
-        <Heading Tag={Headings.H1}>ITC's projects in Indonesia</Heading>
-        <svg width={1000} height={700}>
+        <Heading Tag={Headings.H1}>ITC's Activities in Indonesia</Heading>
+        <LocatorMap neCountriesTopoJson={neCountries} highlight={["IDN"]} />
+        <svg width={1000} height={800}>
           <Timeline
             position={[0, 0]}
             width={1000}
-            height={350}
+            height={50}
+            events={cabinetEvents}
+            domain={commonDomain}
+            grid
+          />
+          <Timeline
+            position={[0, 50]}
+            width={1000}
+            height={50}
+            events={ministerEvents}
+            domain={commonDomain}
+            grid
+          />
+          <Timeline
+            position={[0, 100]}
+            width={1000}
+            height={400}
             events={projectEvents}
             domain={commonDomain}
             grid
           />
           <Timeline
-            position={[0, 350]}
+            position={[0, 500]}
             width={1000}
             height={200}
             events={phdCandidateEvents}
             domain={commonDomain}
             grid
           />
+          <Timeline
+            position={[0, 700]}
+            width={1000}
+            height={100}
+            events={examEvents}
+            domain={commonDomain}
+            scaled
+            grid
+          />
         </svg>
-        <SummaryTable data={new DataFrame(btors)} />
+        <SummaryTable title={"alumni"} data={new DataFrame(alumni)} />
+        <SummaryTable title={"BTORS"} data={new DataFrame(btors)} />
+        <SummaryTable title={"Travels"} data={new DataFrame(travels)} />
       </main>
+      <Footer />
     </>
   );
 };
 
 export const getStaticProps: GetStaticProps<Props> = async () => {
-  const [projects, phdCandidates, applicants, travels, btors] =
-    await Promise.all([
-      getProjectsByCountry("IDN"),
-      getPhdCandidatesByCountry("IDN"),
-      getApplicantsByCountry("Indonesia"),
-      getTravelsByCountry("Indonesia"),
-      getBTORsByCountry("Indonesia"),
-    ]);
+  const [
+    projects,
+    phdCandidates,
+    travels,
+    btors,
+    alumni,
+    cabinets,
+    ministers,
+    neCountries,
+  ] = await Promise.all([
+    getProjectsByCountry("IDN"),
+    getPhdCandidatesByCountry("IDN"),
+    getTravelsByCountry("Indonesia"),
+    getBTORsByCountry("Indonesia"),
+    getAlumniByCountry("Indonesia"),
+    getDutchCabinets(),
+    getDutchForeignAffairsMinisters(),
+    getCountries(),
+  ]);
 
   return {
     props: {
       projects,
       phdCandidates,
-      applicants,
       travels,
       btors,
+      alumni,
+      cabinets,
+      ministers,
+      neCountries,
     },
   };
 };
 
-export default ProjectCountries;
+export default IndonesiaTimeline;

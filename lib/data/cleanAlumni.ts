@@ -5,9 +5,14 @@ const cleanAlumni = (data: any) => {
   const df = new DataFrame(data)
     .renameColumn({ City: "city" })
     .renameColumn({ "No.": "contactNo" })
-    .select(["city", "contactNo"]);
+    .renameColumn({ Country: "country" })
+    .mutate("examYear", (row) => {
+      const value = row["Exam Year"];
+      if (!value || !Number.isInteger(value)) return null;
+      return new Date(value + "").toISOString();
+    })
+    .select(["contactNo", "examYear", "city", "country"]);
 
-  console.log(df);
   return df.toArray() as Alumni[];
 };
 

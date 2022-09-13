@@ -4,6 +4,8 @@ export type TimelineEvent = {
   name: string;
   yOffset: string;
   dateStart: Date;
-  dateEnd: Date;
+  dateEnd?: Date;
+  fill?: string;
   data?: Row;
+  size?: number;
 };
