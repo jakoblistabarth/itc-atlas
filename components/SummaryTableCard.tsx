@@ -15,12 +15,13 @@ const SummaryTableCard: FC<SummaryTableCardProps> = ({ description }) => {
   const fontSize = 9;
   const dimension = {
     width: 100,
-    height: 50,
+    height: 75,
     margin: {
       top: 15,
       left: 15,
     },
   };
+  const headerHeight = 10;
 
   const scale = d3
     .scaleBand()
@@ -33,8 +34,8 @@ const SummaryTableCard: FC<SummaryTableCardProps> = ({ description }) => {
 
   return (
     <div className={styles.summaryTableCard}>
-      <Heading Tag={Headings.H3} className={Headings.H4}>
-        Overview
+      <Heading Tag={Headings.H3} className={Headings.H5}>
+        Dimensions
       </Heading>
       <svg>
         <g className="labels" fontSize={fontSize}>
@@ -42,9 +43,9 @@ const SummaryTableCard: FC<SummaryTableCardProps> = ({ description }) => {
             {fFloat(description.nColumns) + " ⭢"}
           </text>
           <text
-            y={dimension.margin.top + fontSize / 2}
+            y={dimension.margin.top + fontSize / 2 + headerHeight + 1}
             transform={`rotate(90,${fontSize / 2},${
-              dimension.margin.top + fontSize / 2
+              dimension.margin.top + fontSize / 2 + headerHeight + 1
             })`}
           >
             {fFloat(description.nRows) + " ⭢"}
@@ -54,16 +55,27 @@ const SummaryTableCard: FC<SummaryTableCardProps> = ({ description }) => {
           className="miniTable"
           transform={`translate(${dimension.margin.left},${dimension.margin.top})`}
         >
-          {description.columns.map((column) => (
-            <rect
-              key={nanoid()}
-              y={0}
-              x={scale(column.label)}
-              fill={colorMap.get(column.type)?.baseColor ?? "grey"}
-              width={scale.bandwidth()}
-              height={dimension.height}
-            />
-          ))}
+          <g>
+            {description.columns.map((column) => (
+              <g className="column" key={nanoid()}>
+                <rect
+                  y={0}
+                  x={scale(column.label)}
+                  fill={colorMap.get(column.type)?.baseColor ?? "grey"}
+                  width={scale.bandwidth()}
+                  height={headerHeight}
+                />
+                <rect
+                  y={headerHeight + 1}
+                  x={scale(column.label)}
+                  fill={colorMap.get(column.type)?.baseColor ?? "grey"}
+                  width={scale.bandwidth()}
+                  fillOpacity={0.3}
+                  height={dimension.height - headerHeight - 1}
+                />
+              </g>
+            ))}
+          </g>
         </g>
       </svg>
     </div>

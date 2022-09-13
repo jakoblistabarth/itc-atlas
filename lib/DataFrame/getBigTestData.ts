@@ -13,7 +13,7 @@ export default function getTestData(): TestRow[] {
 
   return range(400).map((record) => ({
     name: faker.name.findName(),
-    date: faker.date.between(1950, 2022).toISOString(),
+    date: faker.date.between("1950", "2022").toISOString(),
     job: getRandomElement(jobs),
   }));
 }

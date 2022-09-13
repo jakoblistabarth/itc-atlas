@@ -27,7 +27,8 @@ DefaultSummaryTable.args = {
   ...defaultArgs,
 };
 
-export const BigSummaryTable = Template.bind({});
-BigSummaryTable.args = {
+export const SummaryTableWithTitle = Template.bind({});
+SummaryTableWithTitle.args = {
   data: dfBig,
+  title: "Fake Staff Data",
 };

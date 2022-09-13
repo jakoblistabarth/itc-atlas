@@ -14,6 +14,7 @@ import styles from "../styles/summarytable.module.css";
 import { ColumnType } from "../lib/DataFrame/Column";
 import SummaryTableCard from "./SummaryTableCard";
 import Snapshot from "./Snapshot";
+import Heading, { Headings } from "./Heading";
 
 function getColumnIcon(type: ColumnType) {
   switch (type) {
@@ -29,82 +30,86 @@ function getColumnIcon(type: ColumnType) {
 }
 
 type SummaryTableProps = {
+  title?: string;
   data: DataFrame;
 };
 
-const SummaryTable: FC<SummaryTableProps> = ({ data: df }) => {
+const SummaryTable: FC<SummaryTableProps> = ({ data, title }) => {
   return (
-    <div className={styles.summaryTableContainer}>
-      <SummaryTableCard description={df.getDescription()} />
-      <div className={styles.summaryTable}>
-        <table>
-          <thead>
-            <tr>
-              <th></th>
-              <th>Column</th>
-              <th>Snapshot</th>
-              <th>Missing</th>
-              <th>Mean</th>
-              <th>Median</th>
-              <th>SD</th>
-            </tr>
-          </thead>
-          <tbody>
-            {df.getColumns().map((column) => {
-              // TODO: fix hydration error: calendar icon in first and last row??
-              const color = colorMap.get(column.type);
-              {
-                if (!color) return;
-              }
-              return (
-                <tr key={nanoid()}>
-                  <td
-                    className={styles.icon}
-                    style={{ borderColor: color.baseColor }}
-                  >
-                    {getColumnIcon(column.type)}
-                  </td>
-                  <td className={styles.label}>
-                    <div className={styles.scrollable}>{column.label}</div>
-                  </td>
-                  <td>
-                    <Snapshot column={column} columnName={column.label} />
-                  </td>
-                  <td
-                    className={
-                      column.stats?.missing > 0.5 ? styles.alert : undefined
-                    }
-                  >
-                    {fPercentage(column.stats.missing)}
-                  </td>
-                  <td>
-                    {typeof column.stats.mean === "number" ? (
-                      fFloat(column.stats.mean)
-                    ) : (
-                      <MdClose color="lightgrey" />
-                    )}
-                  </td>
-                  <td>
-                    {typeof column.stats.median === "number" ? (
-                      fFloat(column.stats.median)
-                    ) : (
-                      <MdClose color="lightgrey" />
-                    )}
-                  </td>
-                  <td>
-                    {typeof column.stats.sd === "number" ? (
-                      fFloat(column.stats.sd)
-                    ) : (
-                      <MdClose color="lightgrey" />
-                    )}
-                  </td>
-                </tr>
-              );
-            })}
-          </tbody>
-        </table>
+    <>
+      {title && <Heading Tag={Headings.H2}>{title}</Heading>}
+      <div className={styles.summaryTableContainer}>
+        <SummaryTableCard description={data.getDescription()} />
+        <div className={styles.summaryTable}>
+          <table>
+            <thead>
+              <tr>
+                <th></th>
+                <th>Column</th>
+                <th>Snapshot</th>
+                <th>Missing</th>
+                <th>Mean</th>
+                <th>Median</th>
+                <th>SD</th>
+              </tr>
+            </thead>
+            <tbody>
+              {data.getColumns().map((column) => {
+                // TODO: fix hydration error: calendar icon in first and last row??
+                const color = colorMap.get(column.type);
+                {
+                  if (!color) return;
+                }
+                return (
+                  <tr key={nanoid()}>
+                    <td
+                      className={styles.icon}
+                      style={{ borderColor: color.baseColor }}
+                    >
+                      {getColumnIcon(column.type)}
+                    </td>
+                    <td className={styles.label}>
+                      <div className={styles.scrollable}>{column.label}</div>
+                    </td>
+                    <td>
+                      <Snapshot column={column} columnName={column.label} />
+                    </td>
+                    <td
+                      className={
+                        column.stats?.missing > 0.5 ? styles.alert : undefined
+                      }
+                    >
+                      {fPercentage(column.stats.missing)}
+                    </td>
+                    <td>
+                      {typeof column.stats.mean === "number" ? (
+                        fFloat(column.stats.mean)
+                      ) : (
+                        <MdClose color="lightgrey" />
+                      )}
+                    </td>
+                    <td>
+                      {typeof column.stats.median === "number" ? (
+                        fFloat(column.stats.median)
+                      ) : (
+                        <MdClose color="lightgrey" />
+                      )}
+                    </td>
+                    <td>
+                      {typeof column.stats.sd === "number" ? (
+                        fFloat(column.stats.sd)
+                      ) : (
+                        <MdClose color="lightgrey" />
+                      )}
+                    </td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+        </div>
       </div>
-    </div>
+    </>
   );
 };
 

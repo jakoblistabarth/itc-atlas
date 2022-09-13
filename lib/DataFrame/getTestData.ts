@@ -16,7 +16,7 @@ export default function getTestData(): TestRow[] {
       gender: "f",
       height: null,
       dateOfBirth: new Date("1950-03-15").toISOString(),
-      luckyNumber: 10000000,
+      luckyNumber: 100,
       pinArray: [10, 20, 10],
     },
     {
