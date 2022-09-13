@@ -24,3 +24,16 @@ export type NeLakes = Topology<{
 export type NeRivers = Topology<{
   ne_rivers_lake_centerlines: GeometryCollection<NeTopoProperties>;
 }>;
+
+export type NePopulatedPlacesProperties = {
+  NAME_EN: string;
+  NAME_NL: string;
+  NAMEPAR: string;
+  ISO_A2: string;
+  LATITUDE: number;
+  LONGITUDE: number;
+};
+
+export type NePopulatedPlaces = Topology<{
+  ne_populated_places: GeometryCollection<NePopulatedPlacesProperties>;
+}>;

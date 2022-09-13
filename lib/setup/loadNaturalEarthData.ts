@@ -15,7 +15,7 @@ const loadNaturalEarthData = () => {
   const scales: NeScales[] = ["10m", "110m"]; // available 110m 50m, 10m
   const features: { [K in fCategory]: string[] } = {
     physical: ["rivers_lake_centerlines", "lakes"],
-    cultural: ["admin_0_countries"],
+    cultural: ["admin_0_countries", "populated_places"],
   };
 
   const getName = (url: string): string => {
