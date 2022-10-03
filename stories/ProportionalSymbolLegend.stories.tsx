@@ -5,10 +5,11 @@ import { scaleSqrt } from "d3";
 import ProportionalSymbolLegend from "../components/map/ProportionalSymbolLegend";
 
 const width = 600;
-const height = 300;
+const height = 600;
 
 const testData = [
-  0.25, 3, 6, 10, 4, 5, 30, 2, 100, 110, 30.8, 80, 200, 120, 197,
+  0.25, 4, 5, 6, 3, 10, 180, 195, 170, 3, 6, 10, 4, 5, 30, 2, 100, 110, 30.8,
+  80, 200, 120, 197,
 ];
 
 export default {
@@ -48,4 +49,10 @@ const defaultArgs = {
 export const simpleLegend = Template.bind({});
 simpleLegend.args = {
   ...defaultArgs,
+};
+
+export const largeRadius = Template.bind({});
+largeRadius.args = {
+  ...defaultArgs,
+  scaleRadius: scaleSqrt().domain([0, 200]).range([5, 100]),
 };
