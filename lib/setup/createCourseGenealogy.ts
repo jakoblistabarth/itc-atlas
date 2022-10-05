@@ -112,7 +112,10 @@ const createCourseGenealogy = async () => {
     links,
     nodes,
   };
-  fs.writeFileSync("data/itc/courseGenealogy.json", JSON.stringify(genealogy));
+  fs.writeFileSync(
+    "./data/itc/courseGenealogy.json",
+    JSON.stringify(genealogy)
+  );
 };
 
 export default createCourseGenealogy;
