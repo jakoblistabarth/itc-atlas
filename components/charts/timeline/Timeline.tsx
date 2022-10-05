@@ -2,12 +2,11 @@ import type { FC } from "react";
 import defaultTheme from "../../../lib/styles/themes/defaultTheme";
 import { MapTheme } from "../../../types/MapTheme";
 import { scaleTime, scalePoint, scaleSqrt } from "d3-scale";
-import type { ScaleOrdinal } from "d3-scale";
 import { TimelineEvent } from "../../../types/TimelineEvent";
 import { nanoid } from "nanoid";
 import EventPeriod from "./EventPeriod";
 import TimelineGrid from "./TimelineGrid";
-import { min, max, ascending, extent } from "d3-array";
+import { min, max, ascending } from "d3-array";
 import EventPoint from "./EventPoint";
 
 type Props = {
@@ -38,23 +37,27 @@ const Timeline: FC<Props> = ({
 }) => {
   const margin = 20;
 
-  const minDate = min(events.map((d) => d.dateStart)) ?? new Date("1950");
-  const maxDate = max(events.map((d) => d.dateEnd ?? new Date())) ?? new Date();
+  const minStartDate = min(events.map((d) => d.dateStart)) ?? new Date("1950");
+  const maxStartDate = max(events.map((d) => d.dateStart)) ?? new Date();
+  const maxEndDate =
+    max(events.map((d) => d.dateEnd ?? new Date())) ?? new Date();
+  const hasEndDate = events.every((d) => d.dateEnd);
 
   events.sort((a, b) =>
     ascending(new Date(a.dateStart), new Date(b.dateStart))
   );
 
   const xScale = scaleTime()
-    .domain(domain ?? [minDate, maxDate])
-    .range([margin, width - margin]);
+    .domain(domain ?? [minStartDate, hasEndDate ? maxEndDate : maxStartDate])
+    .range([margin, width - margin])
+    .nice();
   const yScale = scalePoint()
     .range([margin, height - margin])
     .domain(events.map((d) => d.yOffset));
-  const sizeDomain = extent(events, (d) => d.size);
+  const sizeMax = max(events, (d) => d.size);
   const sizeScale = scaleSqrt()
-    .domain(sizeDomain ?? [0, 100])
-    .range([0, height / 5]);
+    .domain([0, sizeMax || 100])
+    .range([0, height / (yScale.domain().length + 2)]);
 
   return (
     <g
@@ -72,7 +75,6 @@ const Timeline: FC<Props> = ({
             yOffset={yScale(event.yOffset) ?? 0}
             dateStart={dateStart}
             dateEnd={dateEnd}
-            width={width}
             height={3}
             title={event.name}
             xScale={xScale}
@@ -80,7 +82,7 @@ const Timeline: FC<Props> = ({
         ) : (
           <EventPoint
             key={nanoid()}
-            yOffset={0}
+            yOffset={yScale(event.yOffset) ?? 0}
             date={event.dateStart}
             size={scaled ? sizeScale(event.size ?? 5) : 5}
             title={event.name}

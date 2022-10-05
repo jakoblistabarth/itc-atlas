@@ -73,6 +73,7 @@ const ProportionalSymbolScaleFunction: FC<{
         />
         {[minData, maxData].map((val, idx) => (
           <text
+            key={nanoid()}
             x={xScale(val)}
             y={scaleRadius(maxData) + 10}
             textAnchor={idx < 1 ? "start" : "end"}

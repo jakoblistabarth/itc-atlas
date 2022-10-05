@@ -23,7 +23,7 @@ const Event: FC<Props> = ({
   const displayTitle = title.length > 20 ? title.slice(0, 20) + "…" : title;
   return (
     <g transform={`translate(${xScale(date)}, ${yOffset})`}>
-      <text fontSize={10} textAnchor="end" dominantBaseline="central">
+      <text fontSize={10} textAnchor="middle" dominantBaseline="central">
         {displayTitle}
       </text>
       <circle

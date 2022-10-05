@@ -41,6 +41,15 @@ const Home: NextPage = () => {
             </a>
           </Link>
 
+          <Link href="/courses">
+            <a className={styles.card}>
+              <h2>
+                Courses <MdOutlineArrowRightAlt />
+              </h2>
+              <p>Mapping ITC's courses throughout the decades.</p>
+            </a>
+          </Link>
+
           <Link href="/projects">
             <a className={styles.card}>
               <h2>

@@ -31,6 +31,33 @@ const events: TimelineEvent[] = [
   },
 ];
 
+const eventsScaled: TimelineEvent[] = [
+  {
+    name: "a",
+    yOffset: "a",
+    dateStart: new Date("1993"),
+    size: 30,
+  },
+  {
+    name: "b",
+    yOffset: "b",
+    dateStart: new Date("1900"),
+    size: 20,
+  },
+  {
+    name: "c",
+    yOffset: "c",
+    dateStart: new Date("2000"),
+    size: 40,
+  },
+  {
+    name: "a2",
+    yOffset: "a",
+    dateStart: new Date("2012"),
+    size: 60,
+  },
+];
+
 export default {
   title: "Charts/Timeline",
   component: Timeline,
@@ -58,4 +85,13 @@ defaultTimeline.args = {
   ...defaultArgs,
   width: 700,
   height: 100,
+};
+
+export const scaledTimeline = Template.bind({});
+scaledTimeline.args = {
+  ...defaultArgs,
+  events: eventsScaled,
+  width: 700,
+  height: 100,
+  scaled: true,
 };
