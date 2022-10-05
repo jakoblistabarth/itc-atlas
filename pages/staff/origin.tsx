@@ -1,6 +1,6 @@
 import * as d3 from "d3";
 import { geoBertin1953 } from "d3-geo-projection";
-import type { Feature, FeatureCollection, MultiPolygon, Point } from "geojson";
+import type { Feature, FeatureCollection, Point } from "geojson";
 import { nanoid } from "nanoid";
 import type { GetStaticProps, NextPage } from "next";
 import Head from "next/head";
@@ -72,7 +72,7 @@ const StaffOrigin: NextPage<Props> = ({ staff, neCountriesTopoJson }) => {
   const scale = d3
     .scaleSqrt()
     .domain([min, max])
-    .range([1, dimension.width / 15]);
+    .range([1, dimension.width / 30]);
 
   return (
     <>

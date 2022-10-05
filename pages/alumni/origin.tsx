@@ -1,7 +1,7 @@
-import * as d3 from "d3";
+import { descending, max, min, rollup, rollups, scaleSqrt, sum } from "d3";
 import { geoBertin1953 } from "d3-geo-projection";
 import Fuse from "fuse.js";
-import type { Feature, FeatureCollection, MultiPolygon, Point } from "geojson";
+import type { Feature, FeatureCollection, Point } from "geojson";
 import { nanoid } from "nanoid";
 import type { GetStaticProps, NextPage } from "next";
 import Head from "next/head";
@@ -22,138 +22,149 @@ import { SharedPageProps } from "../../types/Props";
 
 type Props = {
   alumni: Alumni[];
-  populatedPlaces: NePopulatedPlaces;
+  nePopulatedPlaces: NePopulatedPlaces;
 } & SharedPageProps;
 
 const AlumniOrigin: NextPage<Props> = ({
   alumni,
-  populatedPlaces,
+  nePopulatedPlaces,
   neCountriesTopoJson,
 }) => {
-  const neCountriesGeoJson = topojson.feature(
-    neCountriesTopoJson,
-    neCountriesTopoJson.objects.ne_admin_0_countries
-  );
+  const nePopulatedPlacesGeoJson = topojson.feature(
+    nePopulatedPlaces,
+    nePopulatedPlaces.objects.ne_populated_places
+  ) as FeatureCollection<Point>;
 
-  const count = d3.rollup(
+  const count = rollups(
     alumni,
     (d) => d.length,
     (v) => v.city
-  );
-  const alumniCities = Array.from(count.keys()).filter(
-    (city) => city && city !== null
-  );
+  )
+    .map((d) => ({
+      city: d[0],
+      alumni: d[1],
+    }))
+    .filter((d) => d.alumni >= 10)
+    .filter((d) => d.city)
+    .sort((a, b) => descending(a.alumni, b.alumni));
 
-  const geometries = populatedPlaces.objects.ne_populated_places.geometries;
-  const cities = geometries.map((geometry) => geometry.properties);
-  const cityNames = cities.map((city) => city?.NAME_EN);
+  const populatedPlaces = nePopulatedPlacesGeoJson.features;
+  const neCities = populatedPlaces.map((geometry) => geometry.properties);
 
   const fuseOptions = {
     includeScore: true,
     minMatchCharLength: 4,
     threshold: 0.2,
+    keys: ["NAME_EN"],
+  };
+  const fuse = new Fuse(neCities, fuseOptions);
+
+  const citiesMatched = count.flatMap((alumniEntry) => {
+    const results = fuse.search(alumniEntry.city);
+    if (!results.length) return [];
+    const city = results[0].item;
+    if (!city) return [];
+    return [
+      {
+        coordinates: [city.LONGITUDE, city.LATITUDE],
+        name: city.NAME_EN,
+        originalString: alumniEntry.city,
+        alumniCount: alumniEntry.alumni,
+      },
+    ];
+  });
+
+  const citiesGrouped = rollup(
+    citiesMatched,
+    (v) => sum(v, (d) => d.alumniCount),
+    (d) => d.name
+  );
+
+  const points: FeatureCollection<Point> = {
+    type: "FeatureCollection",
+    features: citiesMatched
+      .map((city) => {
+        const feature: Feature<Point> = {
+          type: "Feature",
+          geometry: {
+            type: "Point",
+            coordinates: city.coordinates,
+          },
+          properties: {
+            ...city,
+            alumniCount: citiesGrouped.get(city.name),
+          },
+        };
+        return feature;
+      })
+      .filter((feature: Feature) => feature.properties?.alumniCount)
+      .sort((a: Feature, b: Feature) =>
+        descending(a.properties?.alumniCount, b.properties?.alumniCount)
+      ),
   };
 
-  const fuse = new Fuse(cityNames, fuseOptions);
+  const dimension = {
+    width: 1280,
+    height: 0,
+  };
 
-  // const citiesNew = alumniCities.flatMap((cityName) => {
-  //   if (!cityName) return [];
-  //   const results = fuse.search(cityName);
-  //   if (!results.length) return [];
-  //   const city = results[0].item;
-  //   if (!city) return [];
-  //   return [
-  //     {
-  //       geometry: {
-  //         type: "Point",
-  //         coordinates: [city.LATITUDE, city.LONGITUDE],
-  //       },
-  //       properties: {
-  //         name: city,
-  //         originalString: cityName,
-  //         alumniCount: count.get(cityName),
-  //       },
-  //     },
-  //   ];
-  // });
-  // console.log(citiesNew.length, alumniCities.length);
+  const projection = geoBertin1953();
+  dimension.height = getMapHeight(dimension.width, projection);
 
-  // const dimension = {
-  //   width: 1280,
-  //   height: 0,
-  // };
+  const alumniCount = points.features.map(
+    (point) => point.properties?.alumniCount
+  );
+  const alumniMin = min(alumniCount);
+  const alumniMax = max(alumniCount);
 
-  // const projection = geoBertin1953();
-  // dimension.height = getMapHeight(dimension.width, projection);
-
-  // const points: FeatureCollection<Point> = {
-  //   type: "FeatureCollection",
-  //   features: neCountriesGeoJson.features
-  //     .map((feature) => {
-  //       const staffCount = count.get(feature.properties?.ADM0_A3_NL)?.length;
-  //       const pointFeature: Feature<Point> = {
-  //         type: "Feature",
-  //         properties: {
-  //           staffCount,
-  //           ...feature.properties,
-  //         },
-  //         geometry: {
-  //           type: "Point",
-  //           coordinates: [
-  //             d3.geoCentroid(feature)[0],
-  //             d3.geoCentroid(feature)[1],
-  //           ],
-  //         },
-  //       };
-  //       return pointFeature;
-  //     })
-  //     .filter((feature: Feature) => feature.properties?.staffCount)
-  //     .sort((a: Feature, b: Feature) =>
-  //       d3.descending(a.properties?.staffCount, b.properties?.staffCount)
-  //     ),
-  // };
-
-  // const staffCount = points.features.map(
-  //   (point) => point.properties?.staffCount
-  // );
-  // const min = d3.min(staffCount);
-  // const max = d3.max(staffCount);
-
-  // const scale = d3
-  //   .scaleSqrt()
-  //   .domain([min, max])
-  //   .range([1, dimension.width / 15]);
+  const scale = scaleSqrt().domain([0, alumniMax]).range([0, 50]);
 
   return (
     <>
       <Head>
-        <title>ITC's staff origin</title>
+        <title>ITC's alumni origin</title>
         <meta name="description" content="Generated by create next app" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
       <main className={styles.main}>
         <Heading Tag={Headings.H1}>ITC's alumni origin</Heading>
-        {/* <svg width={dimension.width} height={dimension.height}>
+        <svg width={dimension.width} height={dimension.height}>
           <BaseLayer countries={neCountriesTopoJson} projection={projection} />
+          <g id="symbols">
+            {nePopulatedPlacesGeoJson.features.map((point) => (
+              <PointSymbol
+                key={nanoid()}
+                xy={projection(point.geometry.coordinates)}
+                radius={1}
+                style={{ strokeWidth: 0, fill: "darkgrey", fillOpacity: 1 }}
+              />
+            ))}
+          </g>
           <g id="symbols">
             {points.features.map((point) => (
               <PointSymbol
                 key={nanoid()}
                 xy={projection(point.geometry.coordinates)}
-                radius={scale(point.properties?.staffCount)}
+                radius={scale(point.properties?.alumniCount)}
+                style={{
+                  fill: "red",
+                  stroke: "red",
+                  strokeWidth: 0.5,
+                  fillOpacity: 0.1,
+                }}
               />
             ))}
           </g>
           <ProportionalSymbolLegend
             data={points.features.map(
-              (feature) => feature.properties?.staffCount
+              (feature) => feature.properties?.alumniCount
             )}
             scaleRadius={scale}
-            title={"Staff members per Country"}
-            unitLabel={"Staff member"}
+            title={"Graduates per City"}
+            unitLabel={"graduate"}
           />
-        </svg> */}
+        </svg>
       </main>
       <Footer />
     </>
@@ -161,7 +172,7 @@ const AlumniOrigin: NextPage<Props> = ({
 };
 
 export const getStaticProps: GetStaticProps<Props> = async () => {
-  const [alumni, populatedPlaces, neCountriesTopoJson] = await Promise.all([
+  const [alumni, nePopulatedPlaces, neCountriesTopoJson] = await Promise.all([
     getAlumni(),
     getPopulatedPlaces("10m"),
     getCountries(),
@@ -170,7 +181,7 @@ export const getStaticProps: GetStaticProps<Props> = async () => {
   return {
     props: {
       alumni,
-      populatedPlaces,
+      nePopulatedPlaces,
       neCountriesTopoJson,
     },
   };
