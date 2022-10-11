@@ -18,6 +18,7 @@ import getMapHeight from "../../lib/cartographic/getMapHeight";
 import { MapOptions } from "../../types/MapOptions";
 import { SharedPageProps } from "../../types/Props";
 import defaultTheme from "../../lib/styles/themes/defaultTheme";
+import { Vector2 } from "three";
 
 type Props = {
   odMatrix: ODMatrix;
@@ -101,11 +102,12 @@ const Flights: NextPage<Props> = ({ odMatrix, neCountriesTopoJson }) => {
             const labelPosition = flowPoints?.[1];
             return (
               labelPosition && (
-                <PointLabel key={nanoid()} xy={labelPosition}>
-                  <text>
-                    <tspan fontWeight="bold">{d.properties?.od}</tspan>(
-                    {d.properties?.value})
-                  </text>
+                <PointLabel
+                  key={nanoid()}
+                  position={new Vector2(labelPosition[0], labelPosition[1])}
+                >
+                  <tspan fontWeight="bold">{d.properties?.od}</tspan>(
+                  {d.properties?.value})
                 </PointLabel>
               )
             );

@@ -7,6 +7,7 @@ import PointSymbol from "./PointSymbol";
 import ArrowHead from "../defs/marker/ArrowHead";
 import { nanoid } from "nanoid";
 import defaultTheme from "../../lib/styles/themes/defaultTheme";
+import { Vector2 } from "three";
 
 const FlowLayer: FC<{
   data: ODMatrix;
@@ -35,7 +36,7 @@ const FlowLayer: FC<{
           position && (
             <PointSymbol
               key={nanoid()}
-              xy={position}
+              position={new Vector2(position[0], position[1])}
               radius={1}
               style={pointStyle}
             />

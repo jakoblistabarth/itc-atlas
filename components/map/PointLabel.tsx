@@ -1,23 +1,60 @@
-import { FC } from "react";
-import { Position } from "geojson";
-import { TextAppearance } from "../../types/Appearance";
+import type { FC } from "react";
+import type { TextAppearance } from "../../types/Appearance";
+import { LabelPlacement } from "../../types/LabelPlacement";
+import { Vector2 } from "three";
 
 type Props = React.PropsWithChildren<{
-  xy: Position;
-  offsetX?: number;
-  offsetY?: number;
+  position?: Vector2;
+  placement?: LabelPlacement;
   style?: TextAppearance & {
     fontSize: number;
   };
 }>;
 
 const PointLabel: FC<Props> = ({
-  xy,
-  offsetX = 10,
-  offsetY = 0,
+  position = new Vector2(0, 0),
+  placement = LabelPlacement.TOPRIGHT,
   style = { fontSize: 10 },
   children,
 }) => {
+  const dx =
+    placement === LabelPlacement.TOPRIGHT ||
+    placement === LabelPlacement.BOTTOMRIGHT ||
+    placement === LabelPlacement.RIGHT
+      ? style.fontSize * 0.5
+      : placement === LabelPlacement.BOTTOMLEFT ||
+        placement === LabelPlacement.TOPLEFT ||
+        placement === LabelPlacement.LEFT
+      ? style.fontSize * -0.5
+      : 0;
+  const dy =
+    placement === LabelPlacement.TOP
+      ? style.fontSize * -1
+      : placement === LabelPlacement.TOPLEFT ||
+        placement === LabelPlacement.TOPRIGHT
+      ? style.fontSize * -0.5
+      : placement === LabelPlacement.BOTTOMRIGHT ||
+        placement === LabelPlacement.BOTTOMLEFT
+      ? style.fontSize * 1.5
+      : placement === LabelPlacement.BOTTOM
+      ? style.fontSize * 2
+      : 0;
+  const textAnchor =
+    placement === LabelPlacement.TOP ||
+    placement === LabelPlacement.BOTTOM ||
+    placement === LabelPlacement.CENTER
+      ? "middle"
+      : placement === LabelPlacement.TOPLEFT ||
+        placement === LabelPlacement.BOTTOMLEFT ||
+        placement === LabelPlacement.LEFT
+      ? "end"
+      : "start";
+  const dominantBaseline =
+    placement === LabelPlacement.CENTER ||
+    placement === LabelPlacement.LEFT ||
+    placement === LabelPlacement.RIGHT
+      ? "middle"
+      : "auto";
   return (
     <g
       fontSize={style.fontSize}
@@ -26,11 +63,16 @@ const PointLabel: FC<Props> = ({
         textTransform: style.textTransform ?? "none",
         letterSpacing: style.letterSpacing,
       }}
-      transform={`translate(${xy[0] + offsetX}, ${
-        xy[1] - style.fontSize * 0.25 + offsetY
-      })`}
+      transform={`translate(${position.x}, ${position.y})`}
     >
-      {children}
+      <text
+        dx={dx}
+        dy={dy}
+        textAnchor={textAnchor}
+        dominantBaseline={dominantBaseline}
+      >
+        {children}
+      </text>
     </g>
   );
 };

@@ -1,9 +1,8 @@
 import { FC } from "react";
 import { Appearance } from "../../types/Appearance";
 import type { Position } from "geojson";
-import PointLabel from "./PointLabel";
 import IsoUnit from "./IsoUnit";
-import { range, scaleQuantize, scaleLinear, scaleThreshold } from "d3";
+import { range, scaleLinear } from "d3";
 import { nanoid } from "nanoid";
 
 type Props = {

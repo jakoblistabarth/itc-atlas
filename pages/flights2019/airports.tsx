@@ -13,6 +13,7 @@ import PointSymbol from "../../components/map/PointSymbol";
 import defaultTheme from "../../lib/styles/themes/defaultTheme";
 import { SharedPageProps } from "../../types/Props";
 import { nanoid } from "nanoid";
+import { Vector2 } from "three";
 
 type Props = {
   airports: FeatureCollection<Point>;
@@ -47,22 +48,31 @@ const Airports: NextPage<Props> = ({ airports, neCountriesTopoJson }) => {
         <Heading Tag={Headings.H1}>Airports</Heading>
         <svg width={1020} height={600}>
           <BaseLayer countries={neCountriesTopoJson} projection={projection} />
-          {airportsGeo.features.map((airport) => (
-            <PointSymbol
-              key={nanoid()}
-              style={defaultTheme.symbol}
-              xy={projection(airport.geometry.coordinates)}
-              radius={scale(airport.properties?.value)}
-            />
-          ))}
-          {airportsGeo.features.slice(0, 5).map((d) => (
-            <PointLabel key={nanoid()} xy={projection(d.geometry.coordinates)}>
-              <text>
-                <tspan fontWeight={"bold"}>{d.properties?.["iata_code"]}</tspan>
-                ({d.properties?.value})
-              </text>
-            </PointLabel>
-          ))}
+          {airportsGeo.features.map((airport) => {
+            const coords = projection(airport.geometry.coordinates);
+            return (
+              <PointSymbol
+                key={nanoid()}
+                style={defaultTheme.symbol}
+                position={new Vector2(coords[0], coords[1])}
+                radius={scale(airport.properties?.value)}
+              />
+            );
+          })}
+          {airportsGeo.features.slice(0, 5).map((airport) => {
+            const coords = projection(airport.geometry.coordinates);
+            return (
+              <PointLabel
+                key={nanoid()}
+                position={new Vector2(coords[0], coords[1])}
+              >
+                <tspan fontWeight={"bold"}>
+                  {airport.properties?.["iata_code"]}
+                </tspan>
+                ({airport.properties?.value})
+              </PointLabel>
+            );
+          })}
         </svg>
       </main>
     </>

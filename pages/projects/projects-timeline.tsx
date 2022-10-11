@@ -66,6 +66,10 @@ const projectsTimeline: NextPage<projectsTimelineProps> = ({ projects }) => {
               events={events}
               grid
             />
+                      <PointLabel placement={LabelPlacement.BOTTOMLEFT}>
+                        {labelText}
+                      </PointLabel>
+                    </EventPeriod>
           </svg>
         </div>
       </main>

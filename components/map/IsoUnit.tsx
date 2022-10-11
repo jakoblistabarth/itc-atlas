@@ -4,6 +4,8 @@ import PointLabel from "./PointLabel";
 import { ScaleLinear } from "d3";
 import { nanoid } from "nanoid";
 import defaultTheme from "../../lib/styles/themes/defaultTheme";
+import { Vector2 } from "three";
+import { LabelPlacement } from "../../types/LabelPlacement";
 
 const IsoUnit: FC<{
   xy: [number, number];
@@ -77,10 +79,11 @@ const IsoUnit: FC<{
         />
       ))}
       {label && (
-        <PointLabel xy={[0, 0]} offsetX={0} offsetY={15 + side / 2}>
-          <text textAnchor="middle" fontWeight={"bold"}>
-            {value}
-          </text>
+        <PointLabel
+          position={new Vector2(0, 15 + side / 2)}
+          placement={LabelPlacement.CENTER}
+        >
+          {value}
         </PointLabel>
       )}
     </g>
