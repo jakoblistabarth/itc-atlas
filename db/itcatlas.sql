@@ -1,4 +1,5 @@
-DROP TABLE IF EXISTS countries CASCADE;
+DROP SCHEMA IF EXISTS public CASCADE;
+CREATE SCHEMA public;
 CREATE TABLE countries (
   country_id SMALLSERIAL PRIMARY KEY,
   iso_numeric CHAR(3),
@@ -7,35 +8,29 @@ CREATE TABLE countries (
   name_en TEXT NOT NULL,
   name_long_en VARCHAR(300)
 );
-DROP TABLE IF EXISTS organizations_u CASCADE;
 CREATE TABLE organizations_u (
   organization_id SMALLSERIAL PRIMARY KEY,
   organization_name TEXT NOT NULL,
   country SMALLSERIAL REFERENCES countries(country_id),
   website TEXT
 );
-DROP TABLE IF EXISTS sponsorgroups CASCADE;
 CREATE TABLE sponsorgroups (
   sponsorgroup_id SMALLSERIAL PRIMARY KEY,
   sponsorgroup_name TEXT NOT NULL
 );
-DROP TABLE IF EXISTS sponsors_u CASCADE;
 CREATE TABLE sponsors_u (
   sponsor_id SERIAL PRIMARY KEY,
   organization SMALLINT NOT NULL REFERENCES organizations_u(organization_id),
   sponsorgroup SMALLINT NOT NULL REFERENCES sponsorgroups(sponsorgroup_id)
 );
-DROP TABLE IF EXISTS departments CASCADE;
 CREATE TABLE departments (
   department_id CHAR(3) PRIMARY KEY,
   department_name TEXT NOT NULL
 );
-DROP TABLE IF EXISTS programs CASCADE;
 CREATE TABLE programs (
   program_id VARCHAR(10) PRIMARY KEY,
   program_name TEXT NOT NULL
 );
-DROP TABLE IF EXISTS programs_departments CASCADE;
 CREATE TABLE programs_departments (
   program_id VARCHAR(10) NOT NULL REFERENCES programs(program_id),
   department_id CHAR(3) NOT NULL REFERENCES departments(department_id),
@@ -43,8 +38,6 @@ CREATE TABLE programs_departments (
   -- amount indicates which share possibly several department hold on a program
   PRIMARY KEY (program_id, department_id)
 );
-DROP TABLE IF EXISTS flights2019;
-DROP TABLE IF EXISTS publications_u;
 -- based on scopus export?
 CREATE TABLE publications_u (
   publication_id SMALLSERIAL PRIMARY KEY,
@@ -54,14 +47,12 @@ CREATE TABLE publications_u (
   -- REMOVE IF NOT UPDATED REGULARLY
   affiliations VARCHAR(500)
 );
-DROP TABLE IF EXISTS contacts_u CASCADE;
 CREATE TABLE contacts_u (
   contact_id CHAR(9) PRIMARY KEY,
   year_of_birth DATE,
   gender CHAR(1) CHECK (gender IN ('f', 'm', 'd')),
   nationality SMALLINT REFERENCES countries(country_id)
 );
-DROP TABLE IF EXISTS employees_u CASCADE;
 CREATE TABLE employees_u (
   m_id INTEGER PRIMARY KEY,
   contact_id CHAR(9) REFERENCES contacts_u(contact_id),
@@ -95,7 +86,6 @@ CREATE TABLE flights2019 (
   compensation MONEY
 );
 -- the students table also includes special type of students "alumni"
-DROP TABLE IF EXISTS students_u CASCADE;
 CREATE TABLE students_u (
   application_id VARCHAR(15) PRIMARY KEY,
   contact CHAR(9) REFERENCES contacts_u(contact_id),
@@ -126,7 +116,6 @@ CREATE TABLE students_u (
 -- Candidate > 07 - Candidate, 10 - Reserve Candidate, 13 -Admitted Candidate
 -- Cancelled/Rejected >  22 - Cancelled by Candidate, 34 - Cancelled by Student, 36 - Cancelled by ITC, 19 - Rejected by ITC, 16 - Rejected by Sponsor, 04 - Not accepted
 -- Student >  28 - Student Extramuraal, 27 - Student Intramuraal, 29 - Student Distance Education
-DROP TABLE IF EXISTS projects_u CASCADE;
 CREATE TABLE projects_u (
   project_id SERIAL PRIMARY KEY,
   project_name TEXT NOT NULL,
@@ -147,19 +136,16 @@ CREATE TABLE projects_u (
   proposal_pl INTEGER REFERENCES employees_u(m_id),
   proposal_pa INTEGER REFERENCES employees_u(m_id)
 );
-DROP TABLE IF EXISTS projects_organizations_u CASCADE;
 CREATE TABLE projects_organizations_u (
   project_id INTEGER NOT NULL REFERENCES projects_u(project_id),
   organization_id INTEGER NOT NULL REFERENCES organizations_u(organization_id),
   PRIMARY KEY (project_id, organization_id)
 );
-DROP TABLE IF EXISTS projects_countries_u CASCADE;
 CREATE TABLE projects_countries_u (
   project_id INTEGER NOT NULL REFERENCES projects_u(project_id),
   country_id INTEGER NOT NULL REFERENCES countries(country_id),
   PRIMARY KEY (project_id, country_id)
 );
-DROP TABLE IF EXISTS projects_departments_u;
 CREATE TABLE projects_departments_u (
   projects_departments_id SERIAL PRIMARY KEY,
   lead BOOLEAN NOT NULL,
@@ -167,7 +153,6 @@ CREATE TABLE projects_departments_u (
   project_id INTEGER NOT NULL REFERENCES projects_u(project_id),
   department_id CHAR(3) NOT NULL REFERENCES departments(department_id)
 );
-DROP TABLE IF EXISTS phdcandidates_u;
 CREATE TABLE phdcandidates_u (
   candidate_id SMALLSERIAL PRIMARY KEY,
   contact_id CHAR(9) REFERENCES contacts_u(contact_id),
@@ -179,7 +164,6 @@ CREATE TABLE phdcandidates_u (
   phd_start DATE,
   phd_end DATE
 );
-DROP TABLE IF EXISTS btors_u;
 --all travels regarding available back-to-office-reports 2000 until today
 CREATE TABLE btors_u (
   btor_id SMALLSERIAL PRIMARY KEY,
