@@ -22,9 +22,13 @@ const createCourseGenealogy = async () => {
   }));
 
   const findNextOccurence = (code: string, year: number) => {
-    const nextOccurence = forks
-      .filter((fork) => fork.in && fork.in.includes(code))
-      .reduce((min, fork) => (fork.year < min.year ? fork : min));
+    const nextOccurences = forks.filter(
+      (fork) => fork.in && fork.in.includes(code)
+    );
+    if (!nextOccurences.length) return;
+    const nextOccurence = nextOccurences.reduce((min, fork) =>
+      fork.year < min.year ? fork : min
+    );
     return nextOccurence.year;
   };
 
@@ -35,7 +39,7 @@ const createCourseGenealogy = async () => {
     return nextOccurence.year;
   };
 
-  const links = forks
+  const headTails = forks
     .map((fork) => {
       const type = !fork.in
         ? "start"
@@ -52,13 +56,13 @@ const createCourseGenealogy = async () => {
         type == "start"
           ? findNextOccurence(fork.out ? fork.out[0] : "", fork.year)
           : ["merge", "split"].includes(type)
-          ? fork.year + 1
+          ? fork.year - 1
           : fork.year;
       switch (type) {
         case "start":
           return {
             start,
-            end,
+            end: fork.year,
             source: fork.out ? fork.out[0] : "",
             target: fork.out ? fork.out[0] : "",
             type,
@@ -66,7 +70,7 @@ const createCourseGenealogy = async () => {
         case "end":
           return {
             start,
-            end,
+            end: fork.year,
             source: fork.in ? fork.in[0] : "",
             target: fork.in ? fork.in[0] : "",
             type,
@@ -74,7 +78,7 @@ const createCourseGenealogy = async () => {
         case "merge": {
           return fork.in?.map((forkIn) => ({
             start,
-            end,
+            end: fork.year,
             source: forkIn,
             target: fork.in ? fork.in[0] : "",
             type: "merge",
@@ -83,7 +87,7 @@ const createCourseGenealogy = async () => {
         case "split": {
           return fork.out?.map((forkOut) => ({
             start,
-            end,
+            end: fork.year,
             source: fork.in ? fork.in[0] : "",
             target: forkOut,
             type: "split",
@@ -92,6 +96,30 @@ const createCourseGenealogy = async () => {
       }
     })
     .flat();
+
+  const links = headTails
+    // .filter((l) => [l?.source, l?.target].includes("N.4.3"))
+    .flatMap((l) => {
+      const closed = l?.type === "end";
+      // console.log(l, closed);
+      if (closed) return [l];
+      // console.log(l.source, "->", l.target);
+      const target = findNextOccurence(l.target, l.end);
+      const l2: typeof l = {
+        start: l.start,
+        end: target,
+        source: l.target,
+        target: l.target,
+        type: "link",
+      };
+      // console.log("new!", l2);
+      return [l, l2];
+    });
+
+  // console.log(
+  //   headTails.filter((l) => [l?.source, l?.target].includes("N.4.3"))
+  // );
+  // console.log(links.filter((l) => [l?.source, l?.target].includes("N.4.3")));
 
   const nodes = nodesRaw.flatMap((course) => {
     const { code, description, ...rest } = course;
