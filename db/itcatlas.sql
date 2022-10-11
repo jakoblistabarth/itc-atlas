@@ -38,15 +38,6 @@ CREATE TABLE programs_departments (
   -- amount indicates which share possibly several department hold on a program
   PRIMARY KEY (program_id, department_id)
 );
--- based on scopus export?
-CREATE TABLE publications_u (
-  publication_id SMALLSERIAL PRIMARY KEY,
-  title VARCHAR(200) NOT NULL,
-  publicationName VARCHAR(200),
-  cited_by_count SMALLINT NOT NULL,
-  -- REMOVE IF NOT UPDATED REGULARLY
-  affiliations VARCHAR(500)
-);
 CREATE TABLE contacts_u (
   contact_id CHAR(9) PRIMARY KEY,
   year_of_birth DATE,
