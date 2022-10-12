@@ -21,10 +21,23 @@ import getDutchCabinets from "../../lib/data/getDutchCabinets";
 import { DutchCabinet } from "../../types/DutchCabinet";
 import getDutchForeignAffairsMinisters from "../../lib/data/getDutchForeignAffairsMinisters";
 import { Minister } from "../../types/Minister";
-import { ScaleOrdinal, scaleOrdinal } from "d3";
+import {
+  ascending,
+  ScaleOrdinal,
+  scaleOrdinal,
+  scalePoint,
+  scaleTime,
+} from "d3";
 import LocatorMap from "../../components/map/LocatorMap";
 import getCountries from "../../lib/data/getCountries";
 import { NeCountriesTopoJson } from "../../types/NeTopoJson";
+import { Vector2 } from "three";
+import TimelineGrid from "../../components/charts/timeline/TimelineGrid";
+import EventPoint from "../../components/charts/timeline/EventPoint";
+import EventPeriod from "../../components/charts/timeline/EventPeriod";
+import PointLabel from "../../components/map/PointLabel";
+import { LabelPlacement } from "../../types/LabelPlacement";
+import { nanoid } from "nanoid";
 
 type Props = {
   projects: Project[];
@@ -47,15 +60,17 @@ const IndonesiaTimeline: NextPage<Props> = ({
   ministers,
   neCountries,
 }) => {
-  const projectEvents: TimelineEvent[] = projects.flatMap((project) => {
-    if (!project.dateStart || !project.dateEnd) return [];
-    return {
-      name: project.projectName ?? "unnamed project",
-      yOffset: project.projectID ?? "",
-      dateStart: new Date(project.dateStart),
-      dateEnd: new Date(project.dateEnd),
-    };
-  });
+  const projectEvents: TimelineEvent[] = projects
+    .flatMap((project) => {
+      if (!project.dateStart || !project.dateEnd) return [];
+      return {
+        name: project.projectName ?? "unnamed project",
+        yOffset: project.projectID ?? "",
+        dateStart: new Date(project.dateStart),
+        dateEnd: new Date(project.dateEnd),
+      };
+    })
+    .sort((a, b) => ascending(a.dateStart, b.dateStart));
 
   const phdCandidateEvents: TimelineEvent[] = phdCandidates.flatMap((phd) => {
     if (!phd.dateStart || !phd.dateEnd) return [];
@@ -86,6 +101,7 @@ const IndonesiaTimeline: NextPage<Props> = ({
     yOffset: "",
     dateStart: new Date(cabinet.dateStart),
     dateEnd: cabinet.dateEnd ? new Date(cabinet.dateEnd) : new Date(),
+    fill: cabinet.name,
   }));
 
   const partyColors: ScaleOrdinal<string, string> = scaleOrdinal()
@@ -101,6 +117,19 @@ const IndonesiaTimeline: NextPage<Props> = ({
 
   const commonDomain = [new Date("1950"), new Date()] as [Date, Date];
 
+  const width = 1000;
+  const height = 800;
+  const margin = 40;
+
+  const xScale = scaleTime().domain(commonDomain).range([0, width]);
+
+  const yScaleProjects = scalePoint()
+    .domain(projectEvents.map((d) => d.yOffset))
+    .range([0, 400]);
+  const yScalePhDs = scalePoint()
+    .domain(phdCandidateEvents.map((d) => d.yOffset))
+    .range([0, 150]);
+
   return (
     <>
       <Head>
@@ -112,48 +141,92 @@ const IndonesiaTimeline: NextPage<Props> = ({
       <main className={styles.main}>
         <Heading Tag={Headings.H1}>ITC's Activities in Indonesia</Heading>
         <LocatorMap neCountriesTopoJson={neCountries} highlight={["IDN"]} />
-        <svg width={1000} height={800}>
-          <Timeline
-            position={[0, 0]}
-            width={1000}
-            height={50}
-            events={cabinetEvents}
-            domain={commonDomain}
-            grid
-          />
-          <Timeline
-            position={[0, 50]}
-            width={1000}
-            height={50}
-            events={ministerEvents}
-            domain={commonDomain}
-            grid
-          />
-          <Timeline
-            position={[0, 100]}
-            width={1000}
-            height={400}
-            events={projectEvents}
-            domain={commonDomain}
-            grid
-          />
-          <Timeline
-            position={[0, 500]}
-            width={1000}
-            height={200}
-            events={phdCandidateEvents}
-            domain={commonDomain}
-            grid
-          />
-          <Timeline
-            position={[0, 700]}
-            width={1000}
-            height={100}
-            events={examEvents}
-            domain={commonDomain}
-            scaled
-            grid
-          />
+        <svg width={width} height={height}>
+          <TimelineGrid scale={xScale} height={height} margin={margin} />
+          <g>
+            {cabinetEvents.map((ce) => (
+              <EventPeriod
+                key={nanoid()}
+                dateStart={ce.dateStart}
+                dateEnd={ce.dateEnd ?? new Date()}
+                xScale={xScale}
+                yOffset={50}
+                height={2}
+                fill={partyColors(ce.fill ?? "")}
+              >
+                <PointLabel
+                  position={new Vector2(xScale(ce.dateStart), 0)}
+                  placement={LabelPlacement.TOPRIGHT}
+                >
+                  {ce.name}
+                </PointLabel>
+              </EventPeriod>
+            ))}
+          </g>
+          <g>
+            {ministerEvents.map((ce) => (
+              <EventPoint
+                key={nanoid()}
+                position={new Vector2(xScale(ce.dateStart), 75)}
+              >
+                <PointLabel placement={LabelPlacement.BOTTOM}>
+                  {ce.name}
+                </PointLabel>
+              </EventPoint>
+            ))}
+          </g>
+          <g transform={"translate(0,125)"}>
+            {projectEvents.map((e) => (
+              <EventPeriod
+                key={nanoid()}
+                dateStart={e.dateStart}
+                dateEnd={e.dateEnd ?? new Date()}
+                xScale={xScale}
+                yOffset={yScaleProjects(e.yOffset) ?? 0}
+                height={2}
+                fill={"black"}
+              >
+                <PointLabel
+                  placement={LabelPlacement.LEFT}
+                  style={{ fill: "lightgrey", fontSize: 10 }}
+                >
+                  {e.name}
+                </PointLabel>
+              </EventPeriod>
+            ))}
+          </g>
+
+          <g transform={"translate(0,550)"}>
+            {phdCandidateEvents.map((e) => (
+              <EventPeriod
+                key={nanoid()}
+                dateStart={e.dateStart}
+                dateEnd={e.dateEnd ?? new Date()}
+                xScale={xScale}
+                yOffset={yScalePhDs(e.yOffset) ?? 0}
+                height={2}
+                fill={"green"}
+              >
+                <PointLabel
+                  placement={LabelPlacement.LEFT}
+                  style={{ fill: "lightgrey", fontSize: 10 }}
+                >
+                  {e.name}
+                </PointLabel>
+              </EventPeriod>
+            ))}
+          </g>
+          <g transform="translate(0,750)">
+            {examEvents.map((e) => (
+              <EventPoint
+                key={nanoid()}
+                position={new Vector2(xScale(e.dateStart), 0)}
+                radius={(e.size ?? 0) / 4}
+                fill={"grey"}
+                fillOpacity={0.5}
+              ></EventPoint>
+            ))}
+          </g>
         </svg>
         <SummaryTable title={"alumni"} data={new DataFrame(alumni)} />
         <SummaryTable title={"BTORS"} data={new DataFrame(btors)} />

@@ -47,8 +47,11 @@ const Template: ComponentStory<typeof PointLabel> = ({
   ...args
 }) => (
   <>
-    <PointSymbol position={args.position} style={args.style} />
-    <PointLabel {...args} placement={getPlacement(placement)}>
+    <PointSymbol
+      position={args.position ?? new Vector2(0, 0)}
+      style={args.style}
+    />
+    <PointLabel {...args} placement={getPlacement(placement ?? "Top right")}>
       {children}
     </PointLabel>
   </>

@@ -1,9 +1,15 @@
+import { ascending, max, min, scalePoint, scaleTime } from "d3";
+import { nanoid } from "nanoid";
 import type { NextPage } from "next";
 import Head from "next/head";
+import EventPeriod from "../../components/charts/timeline/EventPeriod";
 import Timeline from "../../components/charts/timeline/Timeline";
+import TimelineGrid from "../../components/charts/timeline/TimelineGrid";
 import Heading, { Headings } from "../../components/Heading";
+import PointLabel from "../../components/map/PointLabel";
 import getProjects from "../../lib/data/getProjects";
 import styles from "../../styles/home.module.css";
+import { LabelPlacement } from "../../types/LabelPlacement";
 import { Project } from "../../types/Project";
 import { TimelineEvent } from "../../types/TimelineEvent";
 
@@ -24,13 +30,15 @@ const projectsTimeline: NextPage<projectsTimelineProps> = ({ projects }) => {
     } => typeof row.dateStart === "string" && typeof row.dateEnd === "string"
   );
 
-  const events: TimelineEvent[] = projectsSelection.map((project) => ({
-    name: project.projectShortName ?? "Unnamed Project",
-    yOffset: project.projectID,
-    dateStart: new Date(project.dateStart),
-    dateEnd: new Date(project.dateEnd),
-    data: project,
-  }));
+  const events: TimelineEvent[] = projectsSelection
+    .map((project) => ({
+      name: project.projectShortName ?? "Unnamed Project",
+      yOffset: project.projectID,
+      dateStart: new Date(project.dateStart),
+      dateEnd: new Date(project.dateEnd),
+      data: project,
+    }))
+    .sort((a, b) => ascending(a.dateStart, b.dateStart));
 
   const wrapper = {
       width: 1280,
@@ -46,6 +54,16 @@ const projectsTimeline: NextPage<projectsTimelineProps> = ({ projects }) => {
       width: wrapper.width - margin.left - margin.right,
       height: wrapper.height - margin.top - margin.bottom,
     };
+  const xScale = scaleTime()
+    .domain([
+      min(events, (d) => d.dateStart) ?? new Date("1950"),
+      max(events, (d) => d.dateEnd) ?? new Date(),
+    ])
+    .range([0, bounds.width]);
+
+  const yScale = scalePoint()
+    .domain(events.map((d) => d.yOffset))
+    .range([0, bounds.height]);
 
   return (
     <>
@@ -59,17 +77,31 @@ const projectsTimeline: NextPage<projectsTimelineProps> = ({ projects }) => {
         <p>{projectsSelection.length} projects</p>
         <div style={{ overflowX: "scroll", maxHeight: "500px" }}>
           <svg width={wrapper.width} height={wrapper.height}>
-            <Timeline
-              position={[margin.left, margin.top]}
-              width={bounds.width}
-              height={bounds.height}
-              events={events}
-              grid
-            />
+            <Timeline position={[margin.left, margin.top]}>
+              <TimelineGrid scale={xScale} height={bounds.height} />
+              <g id="project-events">
+                {events.map((e) => {
+                  const labelText =
+                    e.name.length > 20 ? e.name.slice(0, 20) + "…" : e.name;
+
+                  return (
+                    <EventPeriod
+                      key={nanoid()}
+                      dateStart={e.dateStart}
+                      dateEnd={e.dateEnd ?? new Date()}
+                      xScale={xScale}
+                      yOffset={yScale(e.yOffset)}
+                      height={2}
+                      fill={"blue"}
+                    >
                       <PointLabel placement={LabelPlacement.BOTTOMLEFT}>
                         {labelText}
                       </PointLabel>
                     </EventPeriod>
+                  );
+                })}
+              </g>
+            </Timeline>
           </svg>
         </div>
       </main>

@@ -1,36 +1,39 @@
 import type { FC } from "react";
-import type { ScaleTime } from "d3";
+import { Vector2 } from "three";
 
-type Props = {
-  date: Date;
-  xScale: ScaleTime<number, number>;
-  yOffset: number;
-  title: string;
-  size?: number;
+type Props = React.PropsWithChildren<{
+  position: Vector2;
+  radius?: number;
   fill?: string;
-  transparent?: boolean;
-};
+  fillOpacity?: number;
+  stroke?: string;
+  strokeOpacity?: number;
+  strokeWidth?: number;
+}>;
+
+// TODO: Use date and xscale as prop as for EventPeriod
 
 const Event: FC<Props> = ({
-  date,
-  xScale,
-  yOffset,
-  title,
-  size,
-  fill,
-  transparent = false,
+  position,
+  radius = 2,
+  fill = "black",
+  fillOpacity = 1,
+  stroke = "none",
+  strokeOpacity = 1,
+  strokeWidth = 1,
+  children,
 }) => {
-  const displayTitle = title.length > 20 ? title.slice(0, 20) + "…" : title;
   return (
-    <g transform={`translate(${xScale(date)}, ${yOffset})`}>
-      <text fontSize={10} textAnchor="middle" dominantBaseline="central">
-        {displayTitle}
-      </text>
+    <g transform={`translate(${position.x}, ${position.y})`}>
       <circle
-        r={size}
-        fill={fill ?? "black"}
-        fillOpacity={transparent ? 0.2 : 1}
+        r={radius}
+        fill={fill}
+        fillOpacity={fillOpacity}
+        stroke={stroke}
+        strokeWidth={strokeWidth}
+        strokeOpacity={strokeOpacity}
       />
+      {children}
     </g>
   );
 };

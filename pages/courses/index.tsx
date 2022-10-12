@@ -1,53 +1,88 @@
 import type { GetStaticProps, NextPage } from "next";
 import Head from "next/head";
 import styles from "../../styles/home.module.css";
-import BackToHome from "../../components/BackToHome";
 import Footer from "../../components/Footer";
 import Heading, { Headings } from "../../components/Heading";
 import getCourseGenealogy from "../../lib/data/getCourseGenealogy";
-import { linkHorizontal, scaleTime, scalePoint, ascending, extent } from "d3";
+import {
+  linkHorizontal,
+  scaleTime,
+  scalePoint,
+  ascending,
+  max,
+  scaleOrdinal,
+  ScaleOrdinal,
+  descending,
+  scaleSqrt,
+} from "d3";
 import { nanoid } from "nanoid";
 import { CourseGenealogy } from "../../types/CourseGenealogy";
 import Timeline from "../../components/charts/timeline/Timeline";
+import TimelineGrid from "../../components/charts/timeline/TimelineGrid";
+import EventPoint from "../../components/charts/timeline/EventPoint";
+import PointLabel from "../../components/map/PointLabel";
+import { Vector2 } from "three";
+import { LabelPlacement } from "../../types/LabelPlacement";
+import ProportionalSymbolLegend from "../../components/map/ProportionalSymbolLegend";
+import { fDateYear } from "../../lib/utilities/formaters";
 
 type Props = {
   courseGenealogy: CourseGenealogy;
 };
 
 const CourseGenealogy: NextPage<Props> = ({ courseGenealogy }) => {
-  const source = [20, 100] as [number, number];
-  const target = [100, 150] as [number, number];
   const linkGenerator = linkHorizontal();
 
   courseGenealogy.nodes.forEach(
     (node) => (node.dateStart = new Date(node.dateStart))
   );
-  const nodes = courseGenealogy.nodes.filter(
-    (node) => node.size && node.size > 0
-  );
 
   courseGenealogy.links.forEach((link) => {
-    link.start = new Date(link.start + "");
-    link.end = new Date(link.end + "");
+    // const start =
+    //   link.start === link.end
+    //     ? new Date((parseInt(link.start) - 1).toString())
+    //     : new Date(link.start.toString());
+    // link.start = start;
+    link.start = new Date(link.start.toString());
+    link.end = new Date(link.end.toString());
   });
 
-  console.log(extent(courseGenealogy.links.map((link) => link.start)));
-  console.log(extent(courseGenealogy.links.map((link) => link.end)));
-
-  const width = 1080;
-  const height = 600;
-  const margin = 20;
+  const width = 1280;
+  const height = 800;
+  const margin = 40;
   const xScale = scaleTime()
-    .domain([new Date("1950"), new Date("2020")])
-    .range([margin, width - margin]);
-  // .nice();
+    .domain([new Date("1949"), new Date("2022")])
+    .range([margin, width - margin])
+    .nice();
   const yScale = scalePoint()
     .range([margin, height - margin])
     .domain(
-      courseGenealogy.nodes
-        .sort((a, b) => ascending(new Date(a.dateStart), new Date(b.dateStart)))
-        .map((d) => d.yOffset)
+      courseGenealogy.links
+        .sort((a, b) => descending(new Date(a.start), new Date(b.start)))
+        .sort((a, b) =>
+          ascending(parseInt(a.stem.toString()), parseInt(b.stem.toString()))
+        )
+        .flatMap((d) => [d.source, d.target])
     );
+  const rScale = scaleSqrt()
+    .domain([0, max(courseGenealogy.nodes, (d) => parseInt(d.size)) ?? 10])
+    .range([0, 20]);
+
+  const stems = courseGenealogy.links.reduce((stems, s) => {
+    if (!stems.includes(s.stem)) stems.push(s.stem);
+    return stems;
+  }, []);
+
+  const colorScale: ScaleOrdinal<string, string> = scaleOrdinal()
+    .domain(stems)
+    .range([
+      "orange",
+      "red",
+      "darkred",
+      "purple",
+      "cornflowerblue",
+      "darkslateblue",
+    ]);
 
   return (
     <>
@@ -59,68 +94,96 @@ const CourseGenealogy: NextPage<Props> = ({ courseGenealogy }) => {
 
       <main className={styles.main}>
         <Heading Tag={Headings.H1}>Course Genealogy</Heading>
-
-        <p className={styles.description}>Insights into ITC's courses.</p>
-
-        <BackToHome />
-
+        <Heading Tag={Headings.H2}>Graduates of M.Sc courses over time</Heading>
         <svg width={width} height={height}>
-          <Timeline
-            position={[0, 0]}
-            width={width}
-            height={height}
-            scaled={true}
-            events={nodes}
-            grid
-          />
-          {courseGenealogy.links.map((link) => {
-            const sourcePos = [xScale(link.start), yScale(link.source)] as [
-              number,
-              number
-            ];
-            const targetPos = [xScale(link.end), yScale(link.target)] as [
-              number,
-              number
-            ];
-            return (
-              <g key={nanoid()}>
-                <g transform={`translate(${sourcePos[0]}, ${sourcePos[1]})`}>
-                  {link.type == "start" && (
-                    <text
-                      x={-5}
-                      textAnchor={"end"}
-                      fill="red"
-                      fontSize={"7"}
-                      fontWeight="bold"
-                    >
-                      {link.source}
-                    </text>
-                  )}
-                </g>
-                <g>
-                  {[sourcePos, targetPos].map((p) => (
-                    <circle
+          <Timeline>
+            <TimelineGrid scale={xScale} height={height} margin={margin} />
+            <g id={"timeline-layer-1"}>
+              {courseGenealogy.nodes.map((node) => {
+                const pos = {
+                  x: xScale(node.dateStart),
+                  y: yScale(node.yOffset),
+                } as Vector2;
+                return node.data?.value === "-" ? (
+                  <PointLabel
+                    key={nanoid()}
+                    position={pos}
+                    placement={LabelPlacement.CENTER}
+                  >
+                    ?
+                  </PointLabel>
+                ) : (
+                  <EventPoint
+                    key={nanoid()}
+                    position={pos}
+                    radius={rScale(node.size ?? 1)}
+                    fillOpacity={0.4}
+                    fill={colorScale(node.fill ?? "")}
+                  ></EventPoint>
+                );
+              })}
+            </g>
+            <g id={"timeline-layer-2"}>
+              {courseGenealogy.links.map((link) => {
+                const sourcePos = new Vector2(
+                  xScale(link.start),
+                  yScale(link.source) ?? 1
+                );
+                const targetPos = new Vector2(
+                  xScale(link.end),
+                  yScale(link.target) ?? 1
+                );
+                const labelPos = sourcePos
+                  .clone()
+                  .add(targetPos.clone().sub(sourcePos).multiplyScalar(0.5))
+                  .add(new Vector2(0, 2.5));
+                return (
+                  <g key={nanoid()}>
+                    <path
                       key={nanoid()}
-                      cx={p[0]}
-                      cy={p[1]}
-                      r={2}
-                      fill={"red"}
+                      stroke={"black"}
+                      d={
+                        linkGenerator({
+                          source: [sourcePos.x, sourcePos.y],
+                          target: [targetPos.x, targetPos.y],
+                        }) || ""
+                      }
+                      fill={"none"}
                     />
-                  ))}
-                </g>
-                <path
-                  key={nanoid()}
-                  stroke={"red"}
-                  // d={linkGenerator({ sourcePos, targetPos }) || ""}
-                  d={
-                    linkGenerator({ source: sourcePos, target: targetPos }) ||
-                    ""
-                  }
-                  fill={"none"}
-                />
-              </g>
-            );
-          })}
+                    <g>
+                      {[sourcePos, targetPos].map((p) => (
+                        <EventPoint
+                          key={nanoid()}
+                          position={p}
+                          fill={"white"}
+                          stroke={"black"}
+                          radius={1.5}
+                        ></EventPoint>
+                      ))}
+                    </g>
+                    {link.source === link.target && (
+                      <PointLabel
+                        position={labelPos}
+                        placement={LabelPlacement.TOP}
+                        style={{ fontSize: 7, fill: "bold" }}
+                      >
+                        <tspan fontWeight={"bold"}>{link.source}</tspan>(
+                        {fDateYear(link.start)}–{fDateYear(link.end)})
+                      </PointLabel>
+                    )}
+                  </g>
+                );
+              })}
+            </g>
+          </Timeline>
+          <ProportionalSymbolLegend
+            x={margin}
+            y={height / 3}
+            data={courseGenealogy.nodes.map((n) => parseInt(n.size))}
+            scaleRadius={rScale}
+            title={"Graduates per course per year"}
+            unitLabel={"graduates"}
+          />
         </svg>
       </main>
 

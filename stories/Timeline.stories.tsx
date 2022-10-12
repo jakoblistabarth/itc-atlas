@@ -1,8 +1,15 @@
 import React from "react";
 import { ComponentStory, ComponentMeta } from "@storybook/react";
-
 import Timeline from "../components/charts/timeline/Timeline";
 import { TimelineEvent } from "../types/TimelineEvent";
+import PointLabel from "../components/map/PointLabel";
+import EventPoint from "../components/charts/timeline/EventPoint";
+import { nanoid } from "nanoid";
+import TimelineGrid from "../components/charts/timeline/TimelineGrid";
+import { extent, scalePoint, scaleTime } from "d3";
+import { Vector2 } from "three";
+import { LabelPlacement } from "../types/LabelPlacement";
+import { fDateShort } from "../lib/utilities/formaters";
 
 const events: TimelineEvent[] = [
   {
@@ -58,40 +65,73 @@ const eventsScaled: TimelineEvent[] = [
   },
 ];
 
+const width = 700;
+const height = 100;
+const margin = 40;
+
 export default {
   title: "Charts/Timeline",
   component: Timeline,
   decorators: [
     (Story) => (
-      <svg width={700} height={100}>
-        <Story />
+      <svg width={width} height={height}>
+        <Timeline {...defaultArgs}>
+          <TimelineGrid
+            scale={defaultArgs.xScale}
+            height={height}
+            margin={margin}
+          />
+          <Story />
+        </Timeline>
       </svg>
     ),
   ],
 } as ComponentMeta<typeof Timeline>;
 
-const Template: ComponentStory<typeof Timeline> = (args) => (
-  <Timeline {...args} />
-);
+const Template: ComponentStory<typeof EventPoint> = (args) =>
+  args.events.map((e) => {
+    //TODO: decide what to show here: either Timeline or EventPoint, should make typing easier
+    return (
+      <EventPoint
+        key={nanoid()}
+        position={
+          new Vector2(
+            defaultArgs.xScale(e.dateStart),
+            defaultArgs.yScale(e.yOffset)
+          )
+        }
+        radius={e.size}
+        fill={"grey"}
+      >
+        <PointLabel placement={LabelPlacement.TOP}>
+          {fDateShort(e.dateStart)}
+        </PointLabel>
+      </EventPoint>
+    );
+  });
 
 const defaultArgs = {
   events: events,
-  grid: true,
-  position: [0, 0] as [number, number],
+  xScale: scaleTime()
+    .domain([new Date("1990"), new Date("2022")])
+    .range([20, width - 20]),
+  yScale: scalePoint()
+    .domain(extent(events.map((e) => e.yOffset ?? "")))
+    .range([margin, height - margin]),
 };
 
 export const defaultTimeline = Template.bind({});
 defaultTimeline.args = {
   ...defaultArgs,
-  width: 700,
-  height: 100,
+  width: width,
+  height: height,
 };
 
-export const scaledTimeline = Template.bind({});
-scaledTimeline.args = {
+export const scaledPointTimeline = Template.bind({});
+scaledPointTimeline.args = {
   ...defaultArgs,
   events: eventsScaled,
-  width: 700,
-  height: 100,
+  width: width,
+  height: height,
   scaled: true,
 };

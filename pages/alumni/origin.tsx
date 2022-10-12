@@ -135,7 +135,7 @@ const AlumniOrigin: NextPage<Props> = ({
             {nePopulatedPlacesGeoJson.features.map((point) => (
               <PointSymbol
                 key={nanoid()}
-                xy={projection(point.geometry.coordinates)}
+                position={projection(point.geometry.coordinates)}
                 radius={1}
                 style={{ strokeWidth: 0, fill: "darkgrey", fillOpacity: 1 }}
               />
@@ -145,7 +145,7 @@ const AlumniOrigin: NextPage<Props> = ({
             {points.features.map((point) => (
               <PointSymbol
                 key={nanoid()}
-                xy={projection(point.geometry.coordinates)}
+                position={projection(point.geometry.coordinates)}
                 radius={scale(point.properties?.alumniCount)}
                 style={{
                   fill: "red",

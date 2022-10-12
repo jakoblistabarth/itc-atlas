@@ -21,6 +21,7 @@ import { NeCountriesGeoJson } from "../../types/NeCountriesGeoJson";
 import { SharedPageProps } from "../../types/Props";
 import defaultTheme from "../../lib/styles/themes/defaultTheme";
 import Footer from "../../components/Footer";
+import { Vector2 } from "three";
 
 type Props = {
   data: FeatureCollection<Point>;
@@ -76,14 +77,17 @@ const ProjectCountries: NextPage<Props> = ({
             ))}
           </g>
           <g className="symbolLayer">
-            {data.features.map((feature) => (
-              <PointSymbol
-                key={nanoid()}
-                xy={projection(feature.geometry.coordinates)}
-                radius={scale(feature.properties?.projectCount)}
-                style={theme.symbol}
-              />
-            ))}
+            {data.features.map((feature) => {
+              const pos = projection(feature.geometry.coordinates);
+              return (
+                <PointSymbol
+                  key={nanoid()}
+                  position={new Vector2(pos[0], pos[1])}
+                  radius={scale(feature.properties?.projectCount)}
+                  style={theme.symbol}
+                />
+              );
+            })}
           </g>
           <ProportionalSymbolLegend
             key={nanoid()}

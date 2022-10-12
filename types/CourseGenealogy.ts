@@ -1,14 +1,16 @@
 import { TimelineEvent } from "./TimelineEvent";
 
-export type Link = {
+export type Node = {
   code: string;
   description: string;
 };
 
-export type Fork = {
-  year: string;
+export type Link = {
+  start: string;
+  end: string;
   in: string;
   out: string;
+  stem: string;
 };
 
 export type CourseGenealogyItem = {
@@ -16,7 +18,7 @@ export type CourseGenealogyItem = {
   target: string;
   start: Date;
   end: Date;
-  type: "start" | "end" | "link";
+  stem: number;
 };
 
 export type CourseGenealogy = {

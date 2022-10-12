@@ -4,6 +4,7 @@ import type { Feature, FeatureCollection, Point } from "geojson";
 import { nanoid } from "nanoid";
 import type { GetStaticProps, NextPage } from "next";
 import Head from "next/head";
+import { Vector2 } from "three";
 import * as topojson from "topojson-client";
 import Footer from "../../components/Footer";
 import Heading, { Headings } from "../../components/Heading";
@@ -87,13 +88,16 @@ const StaffOrigin: NextPage<Props> = ({ staff, neCountriesTopoJson }) => {
         <svg width={dimension.width} height={dimension.height}>
           <BaseLayer countries={neCountriesTopoJson} projection={projection} />
           <g id="symbols">
-            {points.features.map((point) => (
-              <PointSymbol
-                key={nanoid()}
-                xy={projection(point.geometry.coordinates)}
-                radius={scale(point.properties?.staffCount)}
-              />
-            ))}
+            {points.features.map((point) => {
+              const pos = projection(point.geometry.coordinates);
+              return (
+                <PointSymbol
+                  key={nanoid()}
+                  position={new Vector2(pos[0], pos[1])}
+                  radius={scale(point.properties?.staffCount)}
+                />
+              );
+            })}
           </g>
           <ProportionalSymbolLegend
             data={points.features.map(

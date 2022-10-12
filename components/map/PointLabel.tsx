@@ -29,7 +29,7 @@ const PointLabel: FC<Props> = ({
       : 0;
   const dy =
     placement === LabelPlacement.TOP
-      ? style.fontSize * -1
+      ? style.fontSize * -0.75
       : placement === LabelPlacement.TOPLEFT ||
         placement === LabelPlacement.TOPRIGHT
       ? style.fontSize * -0.5
@@ -37,7 +37,7 @@ const PointLabel: FC<Props> = ({
         placement === LabelPlacement.BOTTOMLEFT
       ? style.fontSize * 1.5
       : placement === LabelPlacement.BOTTOM
-      ? style.fontSize * 2
+      ? style.fontSize * 1.75
       : 0;
   const textAnchor =
     placement === LabelPlacement.TOP ||
@@ -70,6 +70,7 @@ const PointLabel: FC<Props> = ({
         dy={dy}
         textAnchor={textAnchor}
         dominantBaseline={dominantBaseline}
+        fill={style.fill ?? "black"}
       >
         {children}
       </text>
