@@ -81,8 +81,13 @@ const createCourseGenealogy = async () => {
     links,
     nodes,
   };
+
+  const dirPath = "./data/itc";
+  if (!fs.existsSync(dirPath)) {
+    fs.mkdirSync(dirPath);
+  }
   fs.writeFileSync(
-    "./data/itc/courseGenealogy.json",
+    dirPath + "/courseGenealogy.json",
     JSON.stringify(genealogy)
   );
 };

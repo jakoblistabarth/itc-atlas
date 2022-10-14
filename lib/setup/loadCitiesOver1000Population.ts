@@ -10,7 +10,12 @@ const loadCities = () => {
     const body = await axios.get(url, {
       responseType: "arraybuffer",
     });
-    fs.writeFileSync("/data/topographic/cities.csv", body.data);
+
+    const dirPath = "./data/topographic";
+    if (!fs.existsSync(dirPath)) {
+      fs.mkdirSync(dirPath);
+    }
+    fs.writeFileSync(dirPath + "/cities.csv", body.data);
   };
 
   getFile(url);
