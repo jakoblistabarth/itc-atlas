@@ -104,7 +104,7 @@ const IndonesiaTimeline: NextPage<Props> = ({
     fill: cabinet.name,
   }));
 
-  const partyColors: ScaleOrdinal<string, string> = scaleOrdinal()
+  const partyColors = scaleOrdinal<string, string>()
     .domain(["CDA", "PvdA", "VVD", "D66"])
     .range(["lightgreen", "darkred", "orange", "darkgreen"]);
 

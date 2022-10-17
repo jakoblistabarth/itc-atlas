@@ -65,15 +65,15 @@ const CourseGenealogy: NextPage<Props> = ({ courseGenealogy }) => {
         .flatMap((d) => [d.source, d.target])
     );
   const rScale = scaleSqrt()
-    .domain([0, max(courseGenealogy.nodes, (d) => parseInt(d.size)) ?? 10])
+    .domain([0, max(courseGenealogy.nodes, (n) => n.size) ?? 0])
     .range([0, 20]);
 
   const stems = courseGenealogy.links.reduce((stems, s) => {
     if (!stems.includes(s.stem)) stems.push(s.stem);
     return stems;
-  }, []);
+  }, [] as string[]);
 
-  const colorScale: ScaleOrdinal<string, string> = scaleOrdinal()
+  const colorScale = scaleOrdinal<string, string>()
     .domain(stems)
     .range([
       "orange",
@@ -179,7 +179,7 @@ const CourseGenealogy: NextPage<Props> = ({ courseGenealogy }) => {
           <ProportionalSymbolLegend
             x={margin}
             y={height / 3}
-            data={courseGenealogy.nodes.map((n) => parseInt(n.size))}
+            data={courseGenealogy.nodes.map((n) => n.size ?? 0)}
             scaleRadius={rScale}
             title={"Graduates per course per year"}
             unitLabel={"graduates"}
