@@ -1,31 +1,33 @@
-import type { GetStaticProps, NextPage } from "next";
-import Head from "next/head";
-import styles from "../../styles/home.module.css";
-import Footer from "../../components/Footer";
-import Heading, { Headings } from "../../components/Heading";
-import getCourseGenealogy from "../../lib/data/getCourseGenealogy";
 import {
-  linkHorizontal,
-  scaleTime,
-  scalePoint,
   ascending,
-  max,
-  scaleOrdinal,
-  ScaleOrdinal,
   descending,
+  linkHorizontal,
+  max,
+  rollups,
+  scaleLinear,
+  scaleOrdinal,
+  scalePoint,
   scaleSqrt,
+  scaleTime,
+  sum,
 } from "d3";
 import { nanoid } from "nanoid";
-import { CourseGenealogy } from "../../types/CourseGenealogy";
+import type { GetStaticProps, NextPage } from "next";
+import Head from "next/head";
+import { Vector2 } from "three";
+import EventPoint from "../../components/charts/timeline/EventPoint";
 import Timeline from "../../components/charts/timeline/Timeline";
 import TimelineGrid from "../../components/charts/timeline/TimelineGrid";
-import EventPoint from "../../components/charts/timeline/EventPoint";
+import Footer from "../../components/Footer";
+import Heading, { Headings } from "../../components/Heading";
 import PointLabel from "../../components/map/PointLabel";
-import { Vector2 } from "three";
-import { LabelPlacement } from "../../types/LabelPlacement";
 import ProportionalSymbolLegend from "../../components/map/ProportionalSymbolLegend";
-import { fDateYear } from "../../lib/utilities/formaters";
 import Cross from "../../components/shapes/Cross";
+import getCourseGenealogy from "../../lib/data/getCourseGenealogy";
+import { fDateYear } from "../../lib/utilities/formaters";
+import styles from "../../styles/home.module.css";
+import { CourseGenealogy } from "../../types/CourseGenealogy";
+import { LabelPlacement } from "../../types/LabelPlacement";
 
 type Props = {
   courseGenealogy: CourseGenealogy;
@@ -49,15 +51,23 @@ const CourseGenealogy: NextPage<Props> = ({ courseGenealogy }) => {
     link.end = new Date(link.end.toString());
   });
 
+  const sumsPerYear = rollups(
+    courseGenealogy.nodes,
+    (v) => sum(v, (d) => d.size),
+    (d) => d.dateStart
+  );
+
+  const genealogyHeight = 800;
+  const barChartHeight = 100;
   const width = 1280;
-  const height = 800;
+  const height = genealogyHeight + barChartHeight;
   const margin = 40;
   const xScale = scaleTime()
     .domain([new Date("1949"), new Date("2022")])
     .range([margin, width - margin])
     .nice();
   const yScale = scalePoint()
-    .range([margin, height - margin])
+    .range([margin, genealogyHeight])
     .domain(
       courseGenealogy.links
         .sort((a, b) => descending(new Date(a.start), new Date(b.start)))
@@ -69,6 +79,9 @@ const CourseGenealogy: NextPage<Props> = ({ courseGenealogy }) => {
   const rScale = scaleSqrt()
     .domain([0, max(courseGenealogy.nodes, (n) => n.size) ?? 0])
     .range([0, 20]);
+  const yScaleSum = scaleLinear()
+    .domain([0, max(sumsPerYear, (d) => d[1]) ?? 1])
+    .range([barChartHeight - margin, 0]);
 
   const stems = courseGenealogy.links.reduce((stems, s) => {
     if (!stems.includes(s.stem)) stems.push(s.stem);
@@ -174,6 +187,19 @@ const CourseGenealogy: NextPage<Props> = ({ courseGenealogy }) => {
                     fillOpacity={0.4}
                     fill={colorScale(node.fill ?? "")}
                   ></EventPoint>
+                );
+              })}
+            </g>
+            <g id="sum-layer" transform={`translate(0, ${genealogyHeight})`}>
+              {sumsPerYear.map(([key, value]) => {
+                return (
+                  <rect
+                    key={nanoid()}
+                    x={xScale(new Date(key))}
+                    y={yScaleSum(value)}
+                    width={12}
+                    height={barChartHeight - margin - yScaleSum(value)}
+                  />
                 );
               })}
             </g>
