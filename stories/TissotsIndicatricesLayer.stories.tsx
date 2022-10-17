@@ -12,6 +12,9 @@ import MapBody from "../components/map/layout/MapBody";
 import TissotsIndicatricesLayer from "../components/map/TissotsIndicatricesLayer";
 import themes from "../lib/styles/themes";
 import getCountries from "../lib/data/getCountries";
+import projections, {
+  getProjectionNames,
+} from "../lib/utilities/getProjections";
 
 const countries = getCountries();
 
@@ -19,16 +22,32 @@ export default {
   title: "Cartographic/Layer/TissotsIndicatrices",
   component: TissotsIndicatricesLayer,
   argTypes: {
+    opacity: {
+      control: {
+        type: "range",
+        min: 0.1,
+        max: 1,
+        step: 0.01,
+      },
+    },
+    radius: {
+      control: {
+        type: "range",
+        min: 1,
+        max: 5,
+        step: 0.1,
+      },
+    },
     theme: {
-      options: Object.keys(themes),
-      mapping: Object.values(themes),
+      options: Array.from(themes.keys()),
+      mapping: Object.fromEntries(themes),
       control: {
         type: "select",
       },
     },
     projection: {
-      options: ["Bertin", "Interrupted Mollweide"], //TODO: fix projections in args menu
-      mapping: [geoBertin1953, geoInterruptedMollweide],
+      options: getProjectionNames(),
+      mapping: projections,
       control: {
         type: "select",
       },

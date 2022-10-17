@@ -2,6 +2,7 @@ import React from "react";
 import { ComponentStory, ComponentMeta } from "@storybook/react";
 import LocatorMap from "../components/map/LocatorMap";
 import getCountries from "../lib/data/getCountries";
+import themes from "../lib/styles/themes";
 
 const countries = getCountries();
 
@@ -9,6 +10,10 @@ export default {
   title: "Cartographic/Locator Map",
   component: LocatorMap,
   argTypes: {
+    theme: {
+      options: Array.from(themes.keys()),
+      mapping: Object.fromEntries(themes),
+    },
     highlight: {
       control: "select",
       options: [

@@ -18,17 +18,7 @@ export default {
   argTypes: {
     placement: {
       defaultValue: "Top Right",
-      options: [
-        "top right",
-        "right",
-        "bottom right",
-        "bottom",
-        "bottom left",
-        "left",
-        "top left",
-        "top",
-        "center",
-      ],
+      options: Object.values(LabelPlacement),
       control: { type: "radio" },
     },
   },
@@ -41,27 +31,12 @@ export default {
   ],
 } as ComponentMeta<typeof PointLabel>;
 
-const Template: ComponentStory<typeof PointLabel> = ({
-  placement,
-  children,
-  ...args
-}) => (
+const Template: ComponentStory<typeof PointLabel> = ({ children, ...args }) => (
   <>
-    <PointSymbol
-      position={args.position ?? new Vector2(0, 0)}
-      style={args.style}
-    />
-    <PointLabel {...args} placement={getPlacement(placement ?? "Top right")}>
-      {children}
-    </PointLabel>
+    <PointSymbol position={args.position ?? new Vector2(0, 0)} />
+    <PointLabel {...args}>{children}</PointLabel>
   </>
 );
-
-const getPlacement = (placementInput: string) => {
-  const searchStr = placementInput.toUpperCase().replace(" ", "");
-  const result = LabelPlacement[searchStr];
-  return result;
-};
 
 const defaultArgs = {
   position: position,

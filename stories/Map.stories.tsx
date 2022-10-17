@@ -7,12 +7,32 @@ import MapHeader from "../components/map/layout/MapHeader";
 import { geoBertin1953 } from "d3-geo-projection";
 import defaultTheme from "../lib/styles/themes/defaultTheme";
 import getCountries from "../lib/data/getCountries";
+import themes from "../lib/styles/themes";
+import projections, {
+  getProjectionNames,
+} from "../lib/utilities/getProjections";
 
 const countries = getCountries();
 
 export default {
   title: "Cartographic/Map",
   component: Map,
+  argTypes: {
+    theme: {
+      options: Array.from(themes.keys()),
+      mapping: Object.fromEntries(themes),
+      control: {
+        type: "select",
+      },
+    },
+    projection: {
+      options: getProjectionNames(),
+      mapping: projections,
+      control: {
+        type: "select",
+      },
+    },
+  },
 } as ComponentMeta<typeof Map>;
 
 const projection = geoBertin1953();
@@ -27,7 +47,7 @@ const Template: ComponentStory<typeof Map> = (args) => {
     <Map {...args}>
       <MapHeader bounds={args.bounds} title={"Map title"}></MapHeader>
       <MapBody bounds={args.bounds}>
-        <BaseLayer projection={projection} countries={countries}></BaseLayer>
+        <BaseLayer {...args} countries={countries}></BaseLayer>
       </MapBody>
     </Map>
   );

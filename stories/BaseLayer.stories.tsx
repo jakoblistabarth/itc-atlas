@@ -1,32 +1,34 @@
-import React from "react";
-import { ComponentStory, ComponentMeta } from "@storybook/react";
+import { ComponentMeta, ComponentStory } from "@storybook/react";
+import { geoBertin1953 } from "d3-geo-projection";
 import BaseLayer from "../components/map/BaseLayer";
-import { geoBertin1953, geoInterruptedMollweide } from "d3-geo-projection";
 import Map from "../components/map/layout/Map";
 import MapBody from "../components/map/layout/MapBody";
-import themes from "../lib/styles/themes";
 import getCountries from "../lib/data/getCountries";
 import getLakes from "../lib/data/getLakes";
 import getRivers from "../lib/data/getRivers";
+import themes from "../lib/styles/themes";
+import projections, {
+  getProjectionNames,
+} from "../lib/utilities/getProjections";
 
 const countries = getCountries();
 const lakes = getLakes();
 const rivers = getRivers();
 
 export default {
-  title: "Cartographic/Layer/BaseLayer",
+  title: "Cartographic/BaseLayer",
   component: BaseLayer,
   argTypes: {
     theme: {
-      options: Object.keys(themes),
-      mapping: Object.values(themes),
+      options: Array.from(themes.keys()),
+      mapping: Object.fromEntries(themes),
       control: {
         type: "select",
       },
     },
     projection: {
-      options: ["Bertin", "Interrupted Mollweide"], //TODO: fix projections in args menu
-      mapping: [geoBertin1953, geoInterruptedMollweide],
+      options: getProjectionNames(),
+      mapping: projections,
       control: {
         type: "select",
       },

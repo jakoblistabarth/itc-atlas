@@ -18,7 +18,7 @@ export type CourseGenealogyItem = {
   target: string;
   start: Date;
   end: Date;
-  stem: number;
+  stem: string;
 };
 
 export type CourseGenealogy = {
