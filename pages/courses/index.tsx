@@ -25,6 +25,7 @@ import { Vector2 } from "three";
 import { LabelPlacement } from "../../types/LabelPlacement";
 import ProportionalSymbolLegend from "../../components/map/ProportionalSymbolLegend";
 import { fDateYear } from "../../lib/utilities/formaters";
+import Cross from "../../components/shapes/Cross";
 
 type Props = {
   courseGenealogy: CourseGenealogy;
@@ -33,9 +34,10 @@ type Props = {
 const CourseGenealogy: NextPage<Props> = ({ courseGenealogy }) => {
   const linkGenerator = linkHorizontal();
 
-  courseGenealogy.nodes.forEach(
-    (node) => (node.dateStart = new Date(node.dateStart))
-  );
+  courseGenealogy.nodes.forEach((node) => {
+    node.dateStart = new Date(node.dateStart);
+    node.size = parseInt(node.size);
+  });
 
   courseGenealogy.links.forEach((link) => {
     // const start =
@@ -94,36 +96,13 @@ const CourseGenealogy: NextPage<Props> = ({ courseGenealogy }) => {
 
       <main className={styles.main}>
         <Heading Tag={Headings.H1}>Course Genealogy</Heading>
-        <Heading Tag={Headings.H2}>Graduates of M.Sc courses over time</Heading>
+        <Heading Tag={Headings.H2}>
+          Graduates of M.Sc. courses over time
+        </Heading>
         <svg width={width} height={height}>
           <Timeline>
             <TimelineGrid scale={xScale} height={height} margin={margin} />
             <g id={"timeline-layer-1"}>
-              {courseGenealogy.nodes.map((node) => {
-                const pos = {
-                  x: xScale(node.dateStart),
-                  y: yScale(node.yOffset),
-                } as Vector2;
-                return node.data?.value === "-" ? (
-                  <PointLabel
-                    key={nanoid()}
-                    position={pos}
-                    placement={LabelPlacement.CENTER}
-                  >
-                    ?
-                  </PointLabel>
-                ) : (
-                  <EventPoint
-                    key={nanoid()}
-                    position={pos}
-                    radius={rScale(node.size ?? 1)}
-                    fillOpacity={0.4}
-                    fill={colorScale(node.fill ?? "")}
-                  ></EventPoint>
-                );
-              })}
-            </g>
-            <g id={"timeline-layer-2"}>
               {courseGenealogy.links.map((link) => {
                 const sourcePos = new Vector2(
                   xScale(link.start),
@@ -167,11 +146,34 @@ const CourseGenealogy: NextPage<Props> = ({ courseGenealogy }) => {
                         placement={LabelPlacement.TOP}
                         style={{ fontSize: 7, fill: "bold" }}
                       >
-                        <tspan fontWeight={"bold"}>{link.source}</tspan>(
+                        <tspan fontWeight={"bold"}>{link.source}</tspan> (
                         {fDateYear(link.start)}–{fDateYear(link.end)})
                       </PointLabel>
                     )}
                   </g>
+                );
+              })}
+            </g>
+            <g id={"timeline-layer-2"}>
+              {courseGenealogy.nodes.map((node) => {
+                const pos = {
+                  x: xScale(node.dateStart),
+                  y: yScale(node.yOffset),
+                } as Vector2;
+                return node.data?.value === "-" ? (
+                  <Cross
+                    position={pos}
+                    length={2}
+                    halos={[{ size: 4, color: "white" }]}
+                  />
+                ) : (
+                  <EventPoint
+                    key={nanoid()}
+                    position={pos}
+                    radius={rScale(node.size ?? 1)}
+                    fillOpacity={0.4}
+                    fill={colorScale(node.fill ?? "")}
+                  ></EventPoint>
                 );
               })}
             </g>
