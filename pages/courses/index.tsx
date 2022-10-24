@@ -66,6 +66,7 @@ const CourseGenealogy: NextPage<Props> = ({ courseGenealogy }) => {
     .domain([new Date("1949"), new Date("2022")])
     .range([margin, width - margin])
     .nice();
+  const xScaleUnit = xScale(new Date("1")) - xScale(new Date("0"));
   const yScale = scalePoint()
     .range([margin, genealogyHeight])
     .domain(
@@ -76,9 +77,9 @@ const CourseGenealogy: NextPage<Props> = ({ courseGenealogy }) => {
         )
         .flatMap((d) => [d.source, d.target])
     );
-  const rScale = scaleSqrt()
+  const heightScale = scaleLinear()
     .domain([0, max(courseGenealogy.nodes, (n) => n.size) ?? 0])
-    .range([0, 20]);
+    .range([0, 25]);
   const yScaleSum = scaleLinear()
     .domain([0, max(sumsPerYear, (d) => d[1]) ?? 1])
     .range([barChartHeight - margin, 0]);
@@ -115,7 +116,33 @@ const CourseGenealogy: NextPage<Props> = ({ courseGenealogy }) => {
         <svg width={width} height={height}>
           <Timeline>
             <TimelineGrid scale={xScale} height={height} margin={margin} />
-            <g id={"timeline-layer-1"}>
+            <g id={"nodes"} opacity={0.8}>
+              {courseGenealogy.nodes.map((node) => {
+                const pos = {
+                  x: xScale(node.dateStart),
+                  y: yScale(node.yOffset),
+                } as Vector2;
+                const height = heightScale(node.size ?? 1) * 2;
+                const width = xScaleUnit;
+                return node.data?.value === "-" ? (
+                  <Cross
+                    position={pos}
+                    length={2}
+                    halos={[{ size: 4, color: "white" }]}
+                  />
+                ) : (
+                  <rect
+                    key={nanoid()}
+                    x={pos.x - width / 2}
+                    y={pos.y - height / 2}
+                    width={width}
+                    height={height}
+                    fill={colorScale(node.fill ?? "")}
+                  />
+                );
+              })}
+            </g>
+            <g id={"links"}>
               {courseGenealogy.links.map((link) => {
                 const sourcePos = new Vector2(
                   xScale(link.start),
@@ -167,29 +194,6 @@ const CourseGenealogy: NextPage<Props> = ({ courseGenealogy }) => {
                 );
               })}
             </g>
-            <g id={"timeline-layer-2"}>
-              {courseGenealogy.nodes.map((node) => {
-                const pos = {
-                  x: xScale(node.dateStart),
-                  y: yScale(node.yOffset),
-                } as Vector2;
-                return node.data?.value === "-" ? (
-                  <Cross
-                    position={pos}
-                    length={2}
-                    halos={[{ size: 4, color: "white" }]}
-                  />
-                ) : (
-                  <EventPoint
-                    key={nanoid()}
-                    position={pos}
-                    radius={rScale(node.size ?? 1)}
-                    fillOpacity={0.4}
-                    fill={colorScale(node.fill ?? "")}
-                  ></EventPoint>
-                );
-              })}
-            </g>
             <g id="sum-layer" transform={`translate(0, ${genealogyHeight})`}>
               {sumsPerYear.map(([key, value]) => {
                 return (
@@ -197,7 +201,7 @@ const CourseGenealogy: NextPage<Props> = ({ courseGenealogy }) => {
                     key={nanoid()}
                     x={xScale(new Date(key))}
                     y={yScaleSum(value)}
-                    width={12}
+                    width={xScaleUnit - 0.5}
                     height={barChartHeight - margin - yScaleSum(value)}
                   />
                 );
@@ -208,7 +212,7 @@ const CourseGenealogy: NextPage<Props> = ({ courseGenealogy }) => {
             x={margin}
             y={height / 3}
             data={courseGenealogy.nodes.map((n) => n.size ?? 0)}
-            scaleRadius={rScale}
+            scaleRadius={heightScale}
             title={"Graduates per course per year"}
             unitLabel={"graduates"}
           />
