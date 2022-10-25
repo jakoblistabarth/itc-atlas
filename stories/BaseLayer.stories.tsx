@@ -1,8 +1,8 @@
 import { ComponentMeta, ComponentStory } from "@storybook/react";
 import { geoBertin1953 } from "d3-geo-projection";
 import BaseLayer from "../components/map/BaseLayer";
-import Map from "../components/map/layout/Map";
-import MapBody from "../components/map/layout/MapBody";
+import MapLayout from "../components/map/layout/MapLayout";
+import MapLayoutBody from "../components/map/layout/MapLayoutBody";
 import getCountries from "../lib/data/getCountries";
 import getLakes from "../lib/data/getLakes";
 import getRivers from "../lib/data/getRivers";
@@ -16,7 +16,7 @@ const lakes = getLakes();
 const rivers = getRivers();
 
 export default {
-  title: "Cartographic/BaseLayer",
+  title: "Map Layers/BaseLayer",
   component: BaseLayer,
   argTypes: {
     theme: {
@@ -36,11 +36,14 @@ export default {
   },
   decorators: [
     (Story) => (
-      <Map projection={defaultArgs.projection} bounds={defaultArgs.bounds}>
-        <MapBody bounds={defaultArgs.bounds}>
+      <MapLayout
+        projection={defaultArgs.projection}
+        bounds={defaultArgs.bounds}
+      >
+        <MapLayoutBody bounds={defaultArgs.bounds}>
           <Story />
-        </MapBody>
-      </Map>
+        </MapLayoutBody>
+      </MapLayout>
     ),
   ],
 } as ComponentMeta<typeof BaseLayer>;

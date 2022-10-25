@@ -15,7 +15,7 @@ const stylesArr = Array.from(themes.entries()).map(([key, value]) => [
 const styles = Object.fromEntries(stylesArr);
 
 export default {
-  title: "Cartographic/Symbology/PointSymbol",
+  title: "Map Elements/Symbols/PointSymbol",
   component: PointSymbol,
   argTypes: {
     radius: { control: { type: "range", min: 1, max: 50, step: 1 } },

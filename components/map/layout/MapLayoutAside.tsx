@@ -5,7 +5,7 @@ type Props = React.PropsWithChildren<{
   yOffset?: number;
 }>;
 
-const MapAside: FC<Props> = ({ xOffset, yOffset, children }) => {
+const MapLayoutAside: FC<Props> = ({ xOffset, yOffset, children }) => {
   return (
     <g
       className="map-aside"
@@ -16,4 +16,4 @@ const MapAside: FC<Props> = ({ xOffset, yOffset, children }) => {
   );
 };
 
-export default MapAside;
+export default MapLayoutAside;

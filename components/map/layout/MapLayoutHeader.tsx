@@ -10,7 +10,7 @@ type Props = {
   subtitle?: string;
 };
 
-const MapHeader: FC<Props> = ({ bounds, theme, title, subtitle }) => {
+const MapLayoutHeader: FC<Props> = ({ bounds, theme, title, subtitle }) => {
   return (
     <g className="map-header" transform={`translate(${bounds.width / 2})`}>
       <text
@@ -30,4 +30,4 @@ const MapHeader: FC<Props> = ({ bounds, theme, title, subtitle }) => {
   );
 };
 
-export default MapHeader;
+export default MapLayoutHeader;

@@ -13,4 +13,17 @@ export const parameters = {
       excludeDecorators: true,
     },
   },
+  options: {
+    storySort: {
+      order: [
+        "Map Elements",
+        "Map Layers",
+        "Map Types",
+        "Charts",
+        "Shapes",
+        "SummaryTable",
+        "UI",
+      ],
+    },
+  },
 };

@@ -1,22 +1,12 @@
 import type { GetStaticProps, NextPage } from "next";
 import Head from "next/head";
-import Timeline from "../../components/charts/timeline/Timeline";
 import Footer from "../../components/Footer";
 import Heading, { Headings } from "../../components/Heading";
-import Map from "../../components/map/layout/Map";
 import SummaryTable from "../../components/SummaryTable";
 import getApplicantsByCountry from "../../lib/data/getApplicantsByCountry";
-import getBTORsByCountry from "../../lib/data/getBTORsByCountry";
-import getPhdCandidatesByCountry from "../../lib/data/getPhdCandidatesByCountry";
-import getProjectsByCountry from "../../lib/data/getProjectsByCountry";
-import getTravelsByCountry from "../../lib/data/getTravelsByCountry";
 import DataFrame from "../../lib/DataFrame/DataFrame";
 import styles from "../../styles/home.module.css";
 import { Applicant } from "../../types/Applicant";
-import { PhdCandidate } from "../../types/PhdCandidate";
-import { Project } from "../../types/Project";
-import { TimelineEvent } from "../../types/TimelineEvent";
-import { BTOR, Travel } from "../../types/Travels";
 
 type Props = {
   applicants: Applicant[];

@@ -19,7 +19,7 @@ const feature = featureCollection.features[5];
 const projection = geoRobinson().fitSize([width, height], feature);
 
 export default {
-  title: "Cartographic/Symbology/PolygonSymbol",
+  title: "Map Elements/Symbols/PolygonSymbol",
   component: PolygonSymbol,
   argTypes: {
     projection: { table: { disable: true } },

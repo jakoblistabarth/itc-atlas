@@ -5,10 +5,10 @@ import { nanoid } from "nanoid";
 import type { NextApiRequest, NextApiResponse } from "next";
 import ReactDOMServer from "react-dom/server";
 import BaseLayer from "../../../components/map/BaseLayer";
-import Map from "../../../components/map/layout/Map";
-import MapAside from "../../../components/map/layout/MapAside";
-import MapBody from "../../../components/map/layout/MapBody";
-import MapHeader from "../../../components/map/layout/MapHeader";
+import MapLayout from "../../../components/map/layout/MapLayout";
+import MapLayoutAside from "../../../components/map/layout/MapLayoutAside";
+import MapLayoutBody from "../../../components/map/layout/MapLayoutBody";
+import MapLayoutHeader from "../../../components/map/layout/MapLayoutHeader";
 import LegendTitle from "../../../components/map/LegendTitle";
 import NominalLegend from "../../../components/map/NominalLegend";
 import ScaledPie from "../../../components/map/ScaledPie";
@@ -55,18 +55,18 @@ export default async function handler(
   };
 
   const svg = ReactDOMServer.renderToStaticMarkup(
-    <Map
+    <MapLayout
       bounds={mapOptions.bounds}
       projection={mapOptions.projection}
       theme={theme}
     >
-      <MapHeader
+      <MapLayoutHeader
         bounds={mapOptions.bounds}
         title={"PhD candidates"}
         subtitle={"by ITC department"}
         theme={theme}
       />
-      <MapBody bounds={mapOptions.bounds}>
+      <MapLayoutBody bounds={mapOptions.bounds}>
         <BaseLayer
           countries={neCountriesTopoJson}
           projection={mapOptions.projection}
@@ -94,8 +94,8 @@ export default async function handler(
             );
           })}
         </g>
-      </MapBody>
-      <MapAside xOffset={0} yOffset={mapOptions.bounds?.frame?.top}>
+      </MapLayoutBody>
+      <MapLayoutAside xOffset={0} yOffset={mapOptions.bounds?.frame?.top}>
         <LegendTitle>Top 5 PhD countries</LegendTitle>
         {data.features.slice(0, 5).map((feature, index) => (
           <g
@@ -112,8 +112,8 @@ export default async function handler(
         <g transform={`translate(0,${mapOptions.bounds.height ?? 0 * 0.25})`}>
           <NominalLegend title={"Departments"} entries={legendEntries} />
         </g>
-      </MapAside>
-    </Map>
+      </MapLayoutAside>
+    </MapLayout>
   );
   res
     .status(200)

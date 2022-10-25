@@ -8,7 +8,7 @@ const width = 300;
 const height = 300;
 
 export default {
-  title: "Cartographic/Symbology/IsoUnit",
+  title: "Map Elements/Symbols/IsoUnit",
   component: IsoUnit,
   argTypes: {
     side: { control: { type: "range", min: 5, max: 50, step: 1 } },

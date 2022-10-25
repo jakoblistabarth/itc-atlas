@@ -6,12 +6,12 @@ import BaseLayer from "../../../components/map/BaseLayer";
 import { geoBertin1953 } from "d3-geo-projection";
 import themes, { ThemeNames } from "../../../lib/styles/themes";
 import FlowLayer from "../../../components/map/FlowLayer";
-import Map from "../../../components/map/layout/Map";
-import MapBody from "../../../components/map/layout/MapBody";
-import MapHeader from "../../../components/map/layout/MapHeader";
+import MapLayout from "../../../components/map/layout/MapLayout";
+import MapLayoutBody from "../../../components/map/layout/MapLayoutBody";
+import MapLayoutHeader from "../../../components/map/layout/MapLayoutHeader";
 import { MapOptions } from "../../../types/MapOptions";
 import FlowLegend from "../../../components/map/FlowLegend";
-import MapAside from "../../../components/map/layout/MapAside";
+import MapLayoutAside from "../../../components/map/layout/MapLayoutAside";
 import * as d3 from "d3";
 import defaultTheme from "../../../lib/styles/themes/defaultTheme";
 
@@ -60,18 +60,18 @@ export default async function handler(
   };
 
   const svg = ReactDOMServer.renderToStaticMarkup(
-    <Map
+    <MapLayout
       bounds={mapOptions.bounds}
       projection={mapOptions.projection}
       theme={theme}
     >
-      <MapHeader
+      <MapLayoutHeader
         bounds={mapOptions.bounds}
         title={"ITC's flight activities"}
         subtitle={"by staff for projects and examinations"}
         theme={theme}
       />
-      <MapAside xOffset={0} yOffset={mapOptions.bounds?.frame?.top}>
+      <MapLayoutAside xOffset={0} yOffset={mapOptions.bounds?.frame?.top}>
         <FlowLegend
           data={odMatrix.flows.features.map((flow) => flow.properties?.value)}
           scaleWidth={scale}
@@ -79,8 +79,8 @@ export default async function handler(
           unitLabel="flights"
           style={mapOptions.theme.flow}
         />
-      </MapAside>
-      <MapBody bounds={mapOptions.bounds}>
+      </MapLayoutAside>
+      <MapLayoutBody bounds={mapOptions.bounds}>
         <BaseLayer
           countries={neCountriesTopoJson}
           projection={mapOptions.projection}
@@ -93,8 +93,8 @@ export default async function handler(
           flowStyle={mapOptions.theme.flow}
           pointStyle={mapOptions.styles?.pointStyle}
         />
-      </MapBody>
-    </Map>
+      </MapLayoutBody>
+    </MapLayout>
   );
   res
     .status(200)

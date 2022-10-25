@@ -9,7 +9,7 @@ import getCountries from "../lib/data/getCountries";
 const countries = getCountries();
 
 export default {
-  title: "Cartographic/Globe",
+  title: "Map types/Globe",
   component: Globe,
   argTypes: {
     canvasRef: { table: { disable: true } },

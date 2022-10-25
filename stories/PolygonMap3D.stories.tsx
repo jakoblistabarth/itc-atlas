@@ -27,7 +27,7 @@ const projection = geoBertin1953().fitExtent(
 const svg = featureCollectionToSVG(fc, geoPath(projection));
 
 export default {
-  title: "Cartographic/3D/PolygonMap3D",
+  title: "Map Types/PolygonMap3D",
   component: PolygonMap3D,
   argTypes: {
     svg: { table: { disable: true } },

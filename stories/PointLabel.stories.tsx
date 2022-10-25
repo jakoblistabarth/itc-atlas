@@ -13,7 +13,7 @@ const height = 300;
 const position: Vector2 = new Vector2(width / 2, height / 2);
 
 export default {
-  title: "Cartographic/Labels/PointLabel",
+  title: "Map Elements/Labels/PointLabel",
   component: PointLabel,
   argTypes: {
     placement: {

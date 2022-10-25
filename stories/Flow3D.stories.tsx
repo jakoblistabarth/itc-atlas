@@ -7,7 +7,7 @@ import Globe from "../components/map-3d/Globe";
 import Flow3D from "../components/map-3d/Flow3D";
 
 export default {
-  title: "Cartographic/3D/Flow",
+  title: "Map Elements/Symbols/Flow3D",
   component: Flow3D,
   argTypes: {
     value: {

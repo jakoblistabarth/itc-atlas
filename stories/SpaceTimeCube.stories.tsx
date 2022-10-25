@@ -54,7 +54,7 @@ const events: SpaceTimeCubeEvent[] = [
 const countries = getCountries();
 
 export default {
-  title: "Cartographic/SpaceTimeCube",
+  title: "Map types/SpaceTimeCube",
   component: SpaceTimeCube,
   argTypes: {
     side: {
@@ -72,7 +72,7 @@ export default {
           <Canvas
             style={{ background: "black" }}
             orthographic
-            camera={{ position: [0, 0, 100], zoom: 100 }}
+            camera={{ position: [0, 0, 100], zoom: 250 }}
             shadows
           >
             <ambientLight args={[undefined, 0.1]} />

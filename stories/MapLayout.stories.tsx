@@ -1,9 +1,9 @@
 import React from "react";
 import { ComponentStory, ComponentMeta } from "@storybook/react";
-import Map from "../components/map/layout/Map";
+import MapLayout from "../components/map/layout/MapLayout";
 import BaseLayer from "../components/map/BaseLayer";
-import MapBody from "../components/map/layout/MapBody";
-import MapHeader from "../components/map/layout/MapHeader";
+import MapLayoutBody from "../components/map/layout/MapLayoutBody";
+import MapLayoutHeader from "../components/map/layout/MapLayoutHeader";
 import { geoBertin1953 } from "d3-geo-projection";
 import defaultTheme from "../lib/styles/themes/defaultTheme";
 import getCountries from "../lib/data/getCountries";
@@ -15,8 +15,8 @@ import projections, {
 const countries = getCountries();
 
 export default {
-  title: "Cartographic/Map",
-  component: Map,
+  title: "Map Elements/Layouts",
+  component: MapLayout,
   argTypes: {
     theme: {
       options: Array.from(themes.keys()),
@@ -33,7 +33,7 @@ export default {
       },
     },
   },
-} as ComponentMeta<typeof Map>;
+} as ComponentMeta<typeof MapLayout>;
 
 const projection = geoBertin1953();
 const bounds = {
@@ -42,14 +42,17 @@ const bounds = {
   frame: { top: 10, bottom: 10, left: 10, right: 10 },
 };
 
-const Template: ComponentStory<typeof Map> = (args) => {
+const Template: ComponentStory<typeof MapLayout> = (args) => {
   return (
-    <Map {...args}>
-      <MapHeader bounds={args.bounds} title={"Map title"}></MapHeader>
-      <MapBody bounds={args.bounds}>
+    <MapLayout {...args}>
+      <MapLayoutHeader
+        bounds={args.bounds}
+        title={"Map title"}
+      ></MapLayoutHeader>
+      <MapLayoutBody bounds={args.bounds}>
         <BaseLayer {...args} countries={countries}></BaseLayer>
-      </MapBody>
-    </Map>
+      </MapLayoutBody>
+    </MapLayout>
   );
 };
 

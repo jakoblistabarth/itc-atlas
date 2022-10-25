@@ -5,7 +5,7 @@ type Props = React.PropsWithChildren<{
   bounds: Bounds;
 }>;
 
-const MapBody: FC<Props> = ({ bounds, children }) => {
+const MapLayoutBody: FC<Props> = ({ bounds, children }) => {
   return (
     <g
       className="map-body"
@@ -16,4 +16,4 @@ const MapBody: FC<Props> = ({ bounds, children }) => {
   );
 };
 
-export default MapBody;
+export default MapLayoutBody;

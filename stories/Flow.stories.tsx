@@ -23,7 +23,7 @@ const getLineString = (value: number = 10): Feature<LineString> => ({
 });
 
 export default {
-  title: "Cartographic/Symbology/Flow",
+  title: "Map Elements/Symbols/Flow",
   component: Flow,
   argTypes: {
     bend: { control: { type: "range", min: -0.4, max: 0.4, step: 0.01 } },

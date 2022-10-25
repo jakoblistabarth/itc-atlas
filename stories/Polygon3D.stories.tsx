@@ -41,7 +41,7 @@ const countryShapePath = svgPath.paths[0];
 const countryPath = countryShapePath.toShapes(true)[0];
 
 export default {
-  title: "Cartographic/Symbology/3D/Polygon3D",
+  title: "Map Elements/Symbols/3D/Polygon3D",
   component: Polygon3D,
   argTypes: {
     fillOpacity: { control: { type: "range", min: 0, max: 1, step: 0.01 } },

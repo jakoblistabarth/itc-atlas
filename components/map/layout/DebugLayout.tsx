@@ -5,7 +5,7 @@ type Props = {
   bounds: Bounds;
 };
 
-const LayoutDebug: FC<Props> = ({ bounds }) => (
+const DebugLayout: FC<Props> = ({ bounds }) => (
   <g opacity={0.2}>
     {bounds.frame?.top && (
       <rect
@@ -59,4 +59,4 @@ const LayoutDebug: FC<Props> = ({ bounds }) => (
   </g>
 );
 
-export default LayoutDebug;
+export default DebugLayout;

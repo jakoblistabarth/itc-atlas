@@ -13,7 +13,7 @@ const testData = [
 ];
 
 export default {
-  title: "Cartographic/Legend/ProportionalSymbolLegend",
+  title: "Map Elements/Legends/ProportionalSymbolLegend",
   argTypes: {
     min: {
       control: { type: "range", min: 0, max: 100, step: 1 },

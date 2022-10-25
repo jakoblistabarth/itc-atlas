@@ -4,7 +4,7 @@ import { setMapBounds } from "../../../lib/cartographic/getMapHeight";
 import defaultTheme from "../../../lib/styles/themes/defaultTheme";
 import { Bounds } from "../../../types/MapOptions";
 import { MapTheme } from "../../../types/MapTheme";
-import LayoutDebug from "./LaoutDebug";
+import LayoutDebug from "./DebugLayout";
 
 type Props = React.PropsWithChildren<{
   bounds: Bounds;
@@ -13,7 +13,7 @@ type Props = React.PropsWithChildren<{
   debug?: boolean;
 }>;
 
-const Map: FC<Props> = ({
+const MapLayout: FC<Props> = ({
   bounds,
   projection,
   theme = defaultTheme,
@@ -34,4 +34,4 @@ const Map: FC<Props> = ({
   );
 };
 
-export default Map;
+export default MapLayout;

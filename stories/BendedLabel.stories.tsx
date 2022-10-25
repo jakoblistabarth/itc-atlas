@@ -10,7 +10,7 @@ const width = 600;
 const height = 300;
 
 export default {
-  title: "Cartographic/Labels/BendedLabel",
+  title: "Map Elements/Labels/BendedLabel",
   component: BendedLabel,
   argTypes: {
     degree: { control: { type: "range", min: -180, max: 180, step: 10 } },

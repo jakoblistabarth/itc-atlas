@@ -12,13 +12,13 @@ import themes, { ThemeNames } from "../../../lib/styles/themes";
 import { scaleSqrt } from "d3";
 import getCountriesByGroup from "../../../lib/data/getCountriesByGroup";
 import { UnGrouping } from "../../../types/UnsdCodes";
-import MapAside from "../../../components/map/layout/MapAside";
-import MapBody from "../../../components/map/layout/MapBody";
-import MapHeader from "../../../components/map/layout/MapHeader";
+import MapLayoutAside from "../../../components/map/layout/MapLayoutAside";
+import MapLayoutBody from "../../../components/map/layout/MapLayoutBody";
+import MapLayoutHeader from "../../../components/map/layout/MapLayoutHeader";
 import ReactDOMServer from "react-dom/server";
 import { MapOptions } from "../../../types/MapOptions";
 import defaultTheme from "../../../lib/styles/themes/defaultTheme";
-import Map from "../../../components/map/layout/Map";
+import MapLayout from "../../../components/map/layout/MapLayout";
 import { setMapBounds } from "../../../lib/cartographic/getMapHeight";
 
 export default async function handler(
@@ -58,18 +58,18 @@ export default async function handler(
   };
 
   const svg = ReactDOMServer.renderToStaticMarkup(
-    <Map
+    <MapLayout
       bounds={mapOptions.bounds}
       projection={mapOptions.projection}
       theme={theme}
     >
-      <MapHeader
+      <MapLayoutHeader
         bounds={mapOptions.bounds}
         title={"ITC's global project activity"}
         subtitle={"over 50 years"}
         theme={theme}
       />
-      <MapAside xOffset={0} yOffset={mapOptions.bounds?.frame?.top}>
+      <MapLayoutAside xOffset={0} yOffset={mapOptions.bounds?.frame?.top}>
         <ProportionalSymbolLegend
           key={nanoid()}
           data={data.features.map(
@@ -80,8 +80,8 @@ export default async function handler(
           unitLabel={"project"}
           style={theme?.symbol}
         />
-      </MapAside>
-      <MapBody bounds={mapOptions.bounds}>
+      </MapLayoutAside>
+      <MapLayoutBody bounds={mapOptions.bounds}>
         <BaseLayer
           countries={neCountriesTopoJson}
           projection={mapOptions.projection}
@@ -119,8 +119,8 @@ export default async function handler(
             );
           })}
         </g>
-      </MapBody>
-    </Map>
+      </MapLayoutBody>
+    </MapLayout>
   );
 
   res

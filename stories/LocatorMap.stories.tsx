@@ -7,7 +7,7 @@ import themes from "../lib/styles/themes";
 const countries = getCountries();
 
 export default {
-  title: "Cartographic/Locator Map",
+  title: "Map Types/Locator Map",
   component: LocatorMap,
   argTypes: {
     projection: {

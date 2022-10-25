@@ -7,7 +7,7 @@ const width = 300;
 const height = 300;
 
 export default {
-  title: "Cartographic/Symbology/IsoCube",
+  title: "Map Elements/Symbols/IsoCube",
   component: IsoCube,
   argTypes: {
     side: { control: { type: "range", min: 5, max: 50, step: 1 } },

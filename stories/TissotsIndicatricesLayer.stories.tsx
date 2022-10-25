@@ -7,8 +7,8 @@ import {
   geoBaker,
 } from "d3-geo-projection";
 import { geoMercator } from "d3-geo";
-import Map from "../components/map/layout/Map";
-import MapBody from "../components/map/layout/MapBody";
+import MapLayout from "../components/map/layout/MapLayout";
+import MapLayoutBody from "../components/map/layout/MapLayoutBody";
 import TissotsIndicatricesLayer from "../components/map/TissotsIndicatricesLayer";
 import themes from "../lib/styles/themes";
 import getCountries from "../lib/data/getCountries";
@@ -19,7 +19,7 @@ import projections, {
 const countries = getCountries();
 
 export default {
-  title: "Cartographic/Layer/TissotsIndicatrices",
+  title: "Map Layers/TissotsIndicatrices",
   component: TissotsIndicatricesLayer,
   argTypes: {
     opacity: {
@@ -61,13 +61,13 @@ const Template: ComponentStory<
   typeof TissotsIndicatricesLayer | typeof BaseLayer
 > = (args) => {
   return (
-    <Map projection={args.projection} bounds={bounds}>
-      <MapBody bounds={bounds}>
+    <MapLayout projection={args.projection} bounds={bounds}>
+      <MapLayoutBody bounds={bounds}>
         <BaseLayer {...args} countries={countries} />
         {/* @ts-expect-error */}
         <TissotsIndicatricesLayer {...args} />
-      </MapBody>
-    </Map>
+      </MapLayoutBody>
+    </MapLayout>
   );
 };
 
