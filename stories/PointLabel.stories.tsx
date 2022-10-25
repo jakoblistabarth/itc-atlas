@@ -41,7 +41,7 @@ const Template: ComponentStory<typeof PointLabel> = ({ children, ...args }) => (
 const defaultArgs = {
   position: position,
   children: "Enschede",
-  style: eth.label,
+  style: { ...eth.label, fontSize: 10 },
 };
 
 export const defaultLabel = Template.bind({});
