@@ -1,5 +1,4 @@
 import { FC, useState } from "react";
-import { Row } from "../../lib/DataFrame/DataFrame";
 import type { Position } from "geojson";
 import lonLatToXYZ from "../../lib/cartographic/lonLatToXYZ";
 import Point3D from "./Point3D";

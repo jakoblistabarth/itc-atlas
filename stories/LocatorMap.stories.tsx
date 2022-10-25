@@ -10,6 +10,16 @@ export default {
   title: "Cartographic/Locator Map",
   component: LocatorMap,
   argTypes: {
+    projection: {
+      table: {
+        disable: true,
+      },
+    },
+    neCountriesTopoJson: {
+      table: {
+        disable: true,
+      },
+    },
     theme: {
       options: Array.from(themes.keys()),
       mapping: Object.fromEntries(themes),
@@ -28,13 +38,7 @@ export default {
       ],
     },
   },
-  args: {
-    projection: {
-      table: {
-        disable: true,
-      },
-    },
-  },
+  args: {},
 } as ComponentMeta<typeof LocatorMap>;
 
 const Template: ComponentStory<typeof LocatorMap> = (args) => {
