@@ -42,11 +42,6 @@ const CourseGenealogy: NextPage<Props> = ({ courseGenealogy }) => {
   });
 
   courseGenealogy.links.forEach((link) => {
-    // const start =
-    //   link.start === link.end
-    //     ? new Date((parseInt(link.start) - 1).toString())
-    //     : new Date(link.start.toString());
-    // link.start = start;
     link.start = new Date(link.start.toString());
     link.end = new Date(link.end.toString());
   });
