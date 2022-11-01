@@ -209,7 +209,7 @@ const CourseGenealogy: NextPage<Props> = ({ courseGenealogy }) => {
             data={courseGenealogy.nodes.map((n) => n.size ?? 0)}
             scaleRadius={heightScale}
             title={"Graduates per course per year"}
-            unitLabel={"graduates"}
+            unitLabel={"graduate"}
           />
         </svg>
       </main>

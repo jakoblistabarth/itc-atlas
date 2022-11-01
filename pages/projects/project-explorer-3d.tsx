@@ -77,7 +77,6 @@ const ProjectExplorer3D: NextPage<Props> = ({ neCountriesTopoJson }) => {
 
 export const getStaticProps: GetStaticProps<Props> = async () => {
   const neCountriesTopoJson = getCountries();
-  const [airports] = await Promise.all([getAirports().json]);
 
   return {
     props: {

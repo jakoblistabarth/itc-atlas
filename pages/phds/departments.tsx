@@ -83,7 +83,7 @@ const PhdDepartments: NextPage<Props> = ({
                 key={nanoid()}
               >
                 <text>
-                  {feature.properties?.name}
+                  {feature.properties?.NAME_EN}
                   <tspan> ({feature.properties?.totalPhdCount})</tspan>
                 </text>
               </g>

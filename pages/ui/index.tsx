@@ -10,7 +10,6 @@ import { offset } from "@floating-ui/dom";
 import type { NextPage } from "next";
 import Head from "next/head";
 import { useState } from "react";
-import BackToHome from "../../components/BackToHome";
 import Button from "../../components/Button";
 import Footer from "../../components/Footer";
 import Heading, { Headings } from "../../components/Heading";
