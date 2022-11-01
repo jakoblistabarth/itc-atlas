@@ -1,6 +1,5 @@
 import type { GetStaticProps, NextPage } from "next";
 import Head from "next/head";
-import BackToHome from "../../components/BackToHome";
 import Footer from "../../components/Footer";
 import Heading, { Headings } from "../../components/Heading";
 import getNfpCountries from "../../lib/data/getNfpCountries";
@@ -47,9 +46,6 @@ const NfpCountries: NextPage<Props> = ({ nfps }) => {
         <Heading Tag={Headings.H1}>NFP Countries</Heading>
 
         <p className={styles.description}>Insights into NFP Countries.</p>
-        <p>
-          <BackToHome />
-        </p>
         <svg width={width} height={200}>
           <g transform={`translate(${margin}, ${margin})`}>
             {d3

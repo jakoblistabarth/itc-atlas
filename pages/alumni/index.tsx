@@ -1,6 +1,5 @@
 import type { GetStaticProps, NextPage } from "next";
 import Head from "next/head";
-import BackToHome from "../../components/BackToHome";
 import Footer from "../../components/Footer";
 import Heading, { Headings } from "../../components/Heading";
 import SummaryTable from "../../components/SummaryTable";
@@ -27,10 +26,6 @@ const AlumniOverview: NextPage<Props> = ({ Alumni }) => {
         <Heading Tag={Headings.H1}>ITC's Alumni</Heading>
 
         <p className={styles.description}>Insights into ITC's Alumni.</p>
-
-        <p>
-          <BackToHome />
-        </p>
         <SummaryTable data={AlumniDf} />
       </main>
 

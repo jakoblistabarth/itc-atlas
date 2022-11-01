@@ -1,6 +1,5 @@
 import type { GetStaticProps, NextPage } from "next";
 import Head from "next/head";
-import BackToHome from "../../components/BackToHome";
 import Footer from "../../components/Footer";
 import Heading, { Headings } from "../../components/Heading";
 import SummaryTable from "../../components/SummaryTable";
@@ -25,12 +24,7 @@ const ApplicantsOverview: NextPage<Props> = ({ applicants }) => {
 
       <main className={styles.main}>
         <Heading Tag={Headings.H1}>ITC's applicants</Heading>
-
         <p className={styles.description}>Insights into ITC's applicants.</p>
-
-        <p>
-          <BackToHome />
-        </p>
         <SummaryTable data={applicantsDf} />
       </main>
 

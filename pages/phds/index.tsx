@@ -1,7 +1,5 @@
 import type { GetStaticProps, NextPage } from "next";
 import Head from "next/head";
-import Link from "next/link";
-import { MdOutlineArrowRightAlt } from "react-icons/md";
 import BackToHome from "../../components/BackToHome";
 import Footer from "../../components/Footer";
 import Heading, { Headings } from "../../components/Heading";
@@ -10,6 +8,7 @@ import DataFrame from "../../lib/DataFrame/DataFrame";
 import getPhdCandidates from "../../lib/data/getPhdCandidates";
 import styles from "../../styles/home.module.css";
 import { PhdCandidate } from "../../types/PhdCandidate";
+import LinkFramed from "../../components/LinkFramed";
 
 type Props = {
   phdCandidates: PhdCandidate[];
@@ -33,13 +32,10 @@ const PhdOverview: NextPage<Props> = ({ phdCandidates }) => {
         </p>
 
         <div className={styles.grid}>
-          <Link href="/phds/departments">
-            <a className={styles.card}>
-              <h2>
-                Origin Per Country and Department <MdOutlineArrowRightAlt />
-              </h2>
-            </a>
-          </Link>
+          <LinkFramed href="/phds/departments">
+            Origin Per Country and Department
+          </LinkFramed>
+          <LinkFramed href="/phds/spiral-timeline">Spiral Timeline</LinkFramed>
         </div>
         <p>
           <BackToHome />

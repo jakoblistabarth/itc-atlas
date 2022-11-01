@@ -1,8 +1,6 @@
 import type { NextPage } from "next";
 import Head from "next/head";
 import styles from "../../styles/home.module.css";
-import { MdOutlineArrowRightAlt } from "react-icons/md";
-import Link from "next/link";
 import BackToHome from "../../components/BackToHome";
 import SummaryTable from "../../components/SummaryTable";
 import { Project } from "../../types/Project";
@@ -10,12 +8,40 @@ import getProjects from "../../lib/data/getProjects";
 import Footer from "../../components/Footer";
 import DataFrame from "../../lib/DataFrame/DataFrame";
 import Heading, { Headings } from "../../components/Heading";
+import LinkFramed from "../../components/LinkFramed";
+import { nanoid } from "nanoid";
 
 type Props = React.PropsWithChildren<{
   projects: Project[];
 }>;
 
 const Travels: NextPage<Props> = ({ projects }) => {
+  const links = [
+    {
+      href: "/projects/projects-timeline",
+      children: "Timline",
+    },
+    {
+      href: "/projects/projectcountries",
+      children: "Projects by Country",
+    },
+    {
+      href: "/projects/projectsafrica",
+      children: "Sub-Saharan Africa",
+    },
+    {
+      href: "/projects/naivasha",
+      children: "Naivasha Region",
+    },
+    {
+      href: "/projects/projects-spacetimecube",
+      children: "Projects Space Time Cube",
+    },
+    {
+      href: "/projects/indonesia",
+      children: "Indonesia",
+    },
+  ];
   const projectsDf = new DataFrame(projects);
   const duplicates = projectsDf.findDuplicates("projectShortName");
   const sum = duplicates.reduce((acc, [key, rows]) => {
@@ -39,49 +65,11 @@ const Travels: NextPage<Props> = ({ projects }) => {
         </p>
 
         <div className={styles.grid}>
-          <Link href="/projects/projects-timeline">
-            <a className={styles.card}>
-              <h2>
-                Timeline <MdOutlineArrowRightAlt />
-              </h2>
-            </a>
-          </Link>
-
-          <Link href="/projects/projectcountries">
-            <a className={styles.card}>
-              <h2>
-                by Country <MdOutlineArrowRightAlt />
-              </h2>
-            </a>
-          </Link>
-          <Link href="/projects/projectsafrica">
-            <a className={styles.card}>
-              <h2>
-                Sub-Saharan Africa <MdOutlineArrowRightAlt />
-              </h2>
-            </a>
-          </Link>
-          <Link href="/projects/naivasha">
-            <a className={styles.card}>
-              <h2>
-                Naivasha Region <MdOutlineArrowRightAlt />
-              </h2>
-            </a>
-          </Link>
-          <Link href="/projects/projects-spacetimecube">
-            <a className={styles.card}>
-              <h2>
-                Projects Space Time Cube <MdOutlineArrowRightAlt />
-              </h2>
-            </a>
-          </Link>
-          <Link href="/projects/indonesia">
-            <a className={styles.card}>
-              <h2>
-                Indonesia <MdOutlineArrowRightAlt />
-              </h2>
-            </a>
-          </Link>
+          {links.map((l) => (
+            <LinkFramed key={nanoid()} href={l.href}>
+              {l.children}
+            </LinkFramed>
+          ))}
         </div>
         <p>
           <BackToHome />

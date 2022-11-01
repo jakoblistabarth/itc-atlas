@@ -1,15 +1,13 @@
 import type { NextPage } from "next";
 import Head from "next/head";
 import styles from "../../styles/home.module.css";
-import BackToHome from "../../components/BackToHome";
 import SummaryTable from "../../components/SummaryTable";
 import Footer from "../../components/Footer";
 import getStaff from "../../lib/data/getStaff";
 import Heading, { Headings } from "../../components/Heading";
 import { Staff } from "../../types/Staff";
 import DataFrame from "../../lib/DataFrame/DataFrame";
-import { MdOutlineArrowRightAlt } from "react-icons/md";
-import Link from "next/link";
+import LinkFramed from "../../components/LinkFramed";
 
 type Props = React.PropsWithChildren<{
   staff: Staff[];
@@ -28,18 +26,9 @@ const Staff: NextPage<Props> = ({ staff }) => {
       <main className={styles.main}>
         <Heading Tag={Headings.H1}>Staff</Heading>
         <p className={styles.description}>Insights into ITC's staff members.</p>
-        <p>
-          <BackToHome />
-        </p>
 
         <div className={styles.grid}>
-          <Link href="/staff/origin">
-            <a className={styles.card}>
-              <h2>
-                Origin <MdOutlineArrowRightAlt />
-              </h2>
-            </a>
-          </Link>
+          <LinkFramed href="/staff/origin">Origin</LinkFramed>
         </div>
 
         <SummaryTable data={staffDf} />
