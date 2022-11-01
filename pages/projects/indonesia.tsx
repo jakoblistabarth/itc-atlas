@@ -1,13 +1,12 @@
 import type { GetStaticProps, NextPage } from "next";
 import Head from "next/head";
-import Timeline from "../../components/charts/timeline/Timeline";
 import Footer from "../../components/Footer";
 import Heading, { Headings } from "../../components/Heading";
 import SummaryTable from "../../components/SummaryTable";
 import getAlumniByCountry from "../../lib/data/getAlumniByCountry";
 import getBTORsByCountry from "../../lib/data/getBTORsByCountry";
 import getPhdCandidatesByCountry from "../../lib/data/getPhdCandidatesByCountry";
-import getProjectsByCountry from "../../lib/data/getProjectsByCountry";
+import getProjectsIn from "../../lib/data/getProjectsIn";
 import getTravelsByCountry from "../../lib/data/getTravelsByCountry";
 import DataFrame from "../../lib/DataFrame/DataFrame";
 import styles from "../../styles/home.module.css";
@@ -248,7 +247,7 @@ export const getStaticProps: GetStaticProps<Props> = async () => {
     ministers,
     neCountries,
   ] = await Promise.all([
-    getProjectsByCountry("IDN"),
+    getProjectsIn("IDN"),
     getPhdCandidatesByCountry("IDN"),
     getTravelsByCountry("Indonesia"),
     getBTORsByCountry("Indonesia"),

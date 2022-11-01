@@ -39,7 +39,7 @@ const ProjectCountries: NextPage<Props> = ({
     width: 1280,
     height: 0,
   };
-  const theme = themes.get(ThemeNames.ETH) ?? defaultTheme; // Question: this seems strange, I know that such theme exists, that's the point of the enum
+  const theme = themes.get(ThemeNames.BAYER) ?? defaultTheme; // Question: this seems strange, I know that such theme exists, that's the point of the enum
   const projection = geoBertin1953();
   dimension.height = getMapHeight(dimension.width, projection);
   const scale = scaleSqrt().domain(domain).range([2, 40]);
@@ -78,11 +78,12 @@ const ProjectCountries: NextPage<Props> = ({
           </g>
           <g className="symbolLayer">
             {data.features.map((feature) => {
-              const pos = projection(feature.geometry.coordinates);
+              const coordinates = projection(feature.geometry.coordinates);
+              const position = new Vector2(coordinates[0], coordinates[1]);
               return (
                 <PointSymbol
                   key={nanoid()}
-                  position={new Vector2(pos[0], pos[1])}
+                  position={position}
                   radius={scale(feature.properties?.projectCount)}
                   style={theme.symbol}
                 />

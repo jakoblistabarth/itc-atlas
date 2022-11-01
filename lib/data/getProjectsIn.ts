@@ -1,8 +1,7 @@
-import * as d3 from "d3";
 import getProjects from "./getProjects";
 import type { Project } from "../../types/Project";
 
-const getProjectsPerCountry = async (country: string) => {
+const getProjectsIn = async (country: string) => {
   const [allProjects] = await Promise.all([getProjects()]);
 
   const projects = allProjects.filter((row): row is Omit<
@@ -12,9 +11,9 @@ const getProjectsPerCountry = async (country: string) => {
     dateStart: string;
     dateEnd: string;
     projectID: string;
-  } => row.countries.includes(country));
+  } => row.countries.includes(country)); // TODO: use allCountries instead?
 
   return projects;
 };
 
-export default getProjectsPerCountry;
+export default getProjectsIn;

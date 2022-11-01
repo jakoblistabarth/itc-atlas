@@ -35,7 +35,7 @@ const SpaceTimeCube: FC<PropTypes> = ({
     .nice();
 
   const eventSide = height / timeScale.ticks().length;
-  const fontSize = eventSide * 0.5;
+  const fontSize = eventSide / 5;
   const projection = geoBertin1953().fitExtent(
     [
       [-side / 2, -side / 2],
@@ -55,7 +55,6 @@ const SpaceTimeCube: FC<PropTypes> = ({
 
   return (
     <>
-      <axesHelper></axesHelper>
       {/* <mesh castShadow receiveShadow>
         <boxGeometry args={[side, height, side]} />
         <meshStandardMaterial opacity={0} transparent />
@@ -63,13 +62,12 @@ const SpaceTimeCube: FC<PropTypes> = ({
       </mesh> */}
       {timeScale.ticks().map((t) => {
         return (
-          <>
+          <group key={nanoid()}>
             {/* <mesh
               receiveShadow
               castShadow
-              key={nanoid()}
               position={[0, timeScale(t), 0]}
-              rotation={new Euler(-Math.PI / 2, 0, 0)}
+              rotation={[-Math.PI / 2, 0, 0]}
             >
               <planeBufferGeometry args={[side, side]} />
               <meshStandardMaterial transparent opacity={0} />
@@ -79,7 +77,6 @@ const SpaceTimeCube: FC<PropTypes> = ({
               <Text3D
                 receiveShadow
                 castShadow
-                key={nanoid()}
                 font={InterRegular}
                 position={[-side / 2, timeScale(t) - fontSize / 2, side * 0.52]}
                 size={fontSize}
@@ -90,10 +87,10 @@ const SpaceTimeCube: FC<PropTypes> = ({
                 curveSegments={2}
               >
                 {fDateYear(t)}
-                <meshStandardMaterial color={"white"} />
+                <meshStandardMaterial key={nanoid()} color={"white"} />
               </Text3D>
             </mesh>
-          </>
+          </group>
         );
       })}
       {events.map((e) => {
@@ -106,9 +103,9 @@ const SpaceTimeCube: FC<PropTypes> = ({
         return (
           <mesh key={nanoid()} position={pos}>
             <boxBufferGeometry
-              args={[(e.size ?? 1) / 200, eventSide, (e.size ?? 1) / 200]}
+              args={[(e.size ?? 1) / 200, eventSide / 5, (e.size ?? 1) / 200]}
             />
-            <meshPhongMaterial color={"white"} />
+            <meshPhongMaterial color={"red"} />
           </mesh>
         );
       })}

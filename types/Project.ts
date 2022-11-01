@@ -4,6 +4,7 @@ export type Project = {
   projectShortName: string | null;
   remarks: string | null;
   countries: string[];
+  allCountries: string[];
   type: ProjectType | null;
   status: ProjectStatus | null;
   dateStart: string | null;
