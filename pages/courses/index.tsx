@@ -179,10 +179,14 @@ const CourseGenealogy: NextPage<Props> = ({ courseGenealogy }) => {
                       <PointLabel
                         position={labelPos}
                         placement={LabelPlacement.TOP}
-                        style={{ fontSize: 7, fill: "bold" }}
+                        style={{
+                          fontSize: 7,
+                          fill: "black",
+                          stroke: "white",
+                          strokeWidth: 2,
+                        }}
                       >
-                        <tspan fontWeight={"bold"}>{link.source}</tspan> (
-                        {fDateYear(link.start)}–{fDateYear(link.end)})
+                        <tspan fontWeight={"bold"}>{link.source}</tspan>
                       </PointLabel>
                     )}
                   </g>

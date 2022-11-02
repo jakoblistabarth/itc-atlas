@@ -70,7 +70,11 @@ const PointLabel: FC<Props> = ({
         dy={dy}
         textAnchor={textAnchor}
         dominantBaseline={dominantBaseline}
-        fill={style.fill ?? "black"}
+        fill={style.fill}
+        stroke={style.stroke}
+        strokeWidth={style.strokeWidth}
+        strokeLinejoin={"round"}
+        style={{ paintOrder: "stroke fill" }}
       >
         {children}
       </text>
