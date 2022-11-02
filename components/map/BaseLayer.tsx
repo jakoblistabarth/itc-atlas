@@ -8,7 +8,6 @@ import type {
 } from "topojson-specification";
 import type { MapTheme } from "../../types/MapTheme";
 import GraticuleLabelLayer from "./GraticuleLabelLayer";
-import geoEquator from "../../lib/cartographic/geoEquator";
 import geoCirclesLat from "../../lib/cartographic/geoCirclesLat";
 import ShadowLayer from "./ShadowLayer";
 import BendedLabel from "./BendedLabel";
@@ -23,6 +22,7 @@ import {
   NeRivers,
 } from "../../types/NeTopoJson";
 import PolygonSymbol from "./PolygonSymbol";
+import Graticules from "./Graticules";
 
 type Props = {
   countries: NeCountriesTopoJson;
@@ -50,10 +50,6 @@ const BaseLayer: FC<Props> = ({
   const path = geoPath(projection);
   const sphere: GeoSphere = { type: "Sphere" };
   const pathSphere = path(sphere);
-  const graticule = d3.geoGraticule10();
-  const graticulePath = path(graticule);
-  const equatorPath = path(geoEquator);
-  const circlesPath = path(geoCirclesLat);
   const land = topojson.merge(
     countries,
     countries.objects.ne_admin_0_countries.geometries as Array<
@@ -122,35 +118,7 @@ const BaseLayer: FC<Props> = ({
           />
         )}
 
-        {graticulePath && (
-          <g className="graticule">
-            <path
-              d={graticulePath}
-              fill="none"
-              stroke={theme.graticule.stroke}
-              strokeWidth={theme.graticule.strokeWidth}
-              strokeOpacity={theme.graticule.strokeOpacity}
-            />
-            {equatorPath && (
-              <path
-                d={equatorPath}
-                fill={"none"}
-                stroke={theme.graticule.stroke}
-                strokeWidth={(theme.graticule.strokeWidth ?? 0.5) * 2}
-              />
-            )}
-          </g>
-        )}
-
-        {circlesPath && (
-          <path
-            d={circlesPath}
-            fill={"none"}
-            stroke={theme.graticule.stroke}
-            strokeDasharray="4, 2, 1, 2"
-            strokeWidth={(theme.graticule.strokeWidth ?? 0.5) * 2}
-          />
-        )}
+        <Graticules projection={projection} />
 
         {landPath && (
           <g className="countries">
