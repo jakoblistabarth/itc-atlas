@@ -5,14 +5,23 @@ import Heading, { Headings } from "../../components/Heading";
 import getNfpCountries from "../../lib/data/getNfpCountries";
 import styles from "../../styles/home.module.css";
 import * as d3 from "d3";
+import { geoBertin1953 } from "d3-geo-projection";
 import { NfpCountry } from "../../types/NfpCountry";
 import { nanoid } from "nanoid";
+import MapLayout from "../../components/map/layout/MapLayout";
+import MapLayoutBody from "../../components/map/layout/MapLayoutBody";
+import BaseLayer from "../../components/map/BaseLayer";
+import getCountries from "../../lib/data/getCountries";
+import { SharedPageProps } from "../../types/Props";
+import { feature } from "topojson-client";
+import { object } from "prop-types";
+import PolygonSymbol from "../../components/map/PolygonSymbol";
 
 type Props = {
   nfps: NfpCountry[];
-};
+} & SharedPageProps;
 
-const NfpCountries: NextPage<Props> = ({ nfps }) => {
+const NfpCountries: NextPage<Props> = ({ nfps, neCountriesTopoJson }) => {
   const width = 900;
   const margin = 20;
   const maxSize = 50;
@@ -33,6 +42,10 @@ const NfpCountries: NextPage<Props> = ({ nfps }) => {
     .scaleTime()
     .domain([yearDomain[0] ?? new Date("1900"), yearDomain[1] ?? new Date()])
     .range([0, width - margin * 2 - maxSize * 2]);
+
+  const selectedYears = [2000, 2005, 2009, 2013, 2022];
+  const selection = selectedYears.map((y) => perYear.get(y));
+  console.log(selection);
 
   return (
     <>
@@ -91,6 +104,53 @@ const NfpCountries: NextPage<Props> = ({ nfps }) => {
               })}
           </g>
         </svg>
+
+        {selection.map((selectedYear) => {
+          const nfpCountryCodes = selectedYear?.map((d) => d.countryISO);
+          const polygons = feature(
+            neCountriesTopoJson,
+            neCountriesTopoJson.objects.ne_admin_0_countries
+          ).features.filter((f) =>
+            nfpCountryCodes?.includes(f.properties.ADM0_A3_NL)
+          );
+
+          const projection = geoBertin1953();
+          return (
+            <MapLayout
+              key={nanoid()}
+              bounds={{
+                width: 450,
+                height: 250,
+                frame: undefined,
+                mapBody: undefined,
+              }}
+              projection={projection}
+            >
+              <MapLayoutBody
+                bounds={{
+                  width: 200,
+                  height: 500,
+                  frame: undefined,
+                  mapBody: undefined,
+                }}
+              >
+                <BaseLayer
+                  countries={neCountriesTopoJson}
+                  projection={projection}
+                />
+                <g>
+                  {polygons.map((p) => (
+                    <PolygonSymbol
+                      feature={p}
+                      projection={projection}
+                      style={{ fill: "black" }}
+                    />
+                  ))}
+                </g>
+              </MapLayoutBody>
+            </MapLayout>
+          );
+        })}
       </main>
 
       <Footer />
@@ -100,9 +160,11 @@ const NfpCountries: NextPage<Props> = ({ nfps }) => {
 
 export const getStaticProps: GetStaticProps<Props> = async () => {
   const nfps = getNfpCountries();
+  const neCountriesTopoJson = getCountries();
   return {
     props: {
       nfps,
+      neCountriesTopoJson,
     },
   };
 };
