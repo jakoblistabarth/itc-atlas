@@ -1,14 +1,16 @@
-import { descending, max, min, rollup, rollups, scaleSqrt, sum } from "d3";
+import { descending, max, rollup, rollups, scaleSqrt, sum } from "d3";
 import { geoBertin1953 } from "d3-geo-projection";
 import Fuse from "fuse.js";
 import type { Feature, FeatureCollection, Point } from "geojson";
 import { nanoid } from "nanoid";
 import type { GetStaticProps, NextPage } from "next";
 import Head from "next/head";
+import { Vector2 } from "three";
 import * as topojson from "topojson-client";
 import Footer from "../../components/Footer";
 import Heading, { Headings } from "../../components/Heading";
 import BaseLayer from "../../components/map/BaseLayer";
+import PointLabel from "../../components/map/PointLabel";
 import PointSymbol from "../../components/map/PointSymbol";
 import ProportionalSymbolLegend from "../../components/map/ProportionalSymbolLegend";
 import getMapHeight from "../../lib/cartographic/getMapHeight";
@@ -17,6 +19,7 @@ import getCountries from "../../lib/data/getCountries";
 import getPopulatedPlaces from "../../lib/data/getPopulatedPlaces";
 import styles from "../../styles/home.module.css";
 import { Alumni } from "../../types/Alumni";
+import { LabelPlacement } from "../../types/LabelPlacement";
 import { NePopulatedPlaces } from "../../types/NeTopoJson";
 import { SharedPageProps } from "../../types/Props";
 
@@ -35,8 +38,9 @@ const AlumniOrigin: NextPage<Props> = ({
     nePopulatedPlaces.objects.ne_populated_places
   ) as FeatureCollection<Point>;
 
+  const mscs = alumni.filter((d) => d.level === "MSC");
   const count = rollups(
-    alumni,
+    mscs,
     (d) => d.length,
     (v) => v.city
   )
@@ -114,7 +118,6 @@ const AlumniOrigin: NextPage<Props> = ({
   const alumniCount = points.features.map(
     (point) => point.properties?.alumniCount
   );
-  const alumniMin = min(alumniCount);
   const alumniMax = max(alumniCount);
 
   const scale = scaleSqrt().domain([0, alumniMax]).range([0, 50]);
@@ -128,24 +131,28 @@ const AlumniOrigin: NextPage<Props> = ({
       </Head>
 
       <main className={styles.main}>
-        <Heading Tag={Headings.H1}>ITC's alumni origin</Heading>
+        <Heading Tag={Headings.H1}>ITC's MSc alumni origin</Heading>
         <svg width={dimension.width} height={dimension.height}>
           <BaseLayer countries={neCountriesTopoJson} projection={projection} />
-          <g id="symbols">
+          <g id="populated-places-symbols">
             {nePopulatedPlacesGeoJson.features.map((point) => (
               <PointSymbol
                 key={nanoid()}
-                position={projection(point.geometry.coordinates)}
+                position={
+                  new Vector2(...projection(point.geometry.coordinates))
+                }
                 radius={1}
                 style={{ strokeWidth: 0, fill: "darkgrey", fillOpacity: 1 }}
               />
             ))}
           </g>
-          <g id="symbols">
+          <g id="alumni-cities-symbols">
             {points.features.map((point) => (
               <PointSymbol
                 key={nanoid()}
-                position={projection(point.geometry.coordinates)}
+                position={
+                  new Vector2(...projection(point.geometry.coordinates))
+                }
                 radius={scale(point.properties?.alumniCount)}
                 style={{
                   fill: "red",
@@ -155,6 +162,29 @@ const AlumniOrigin: NextPage<Props> = ({
                 }}
               />
             ))}
+          </g>
+          <g id="alumni-cities-labels">
+            {points.features.slice(0, 10).map((point) => {
+              const pos = new Vector2(
+                ...projection(point.geometry.coordinates)
+              );
+              return (
+                <>
+                  <PointSymbol
+                    key={nanoid()}
+                    position={pos}
+                    style={{ strokeWidth: 0, fill: "black", fillOpacity: 1 }}
+                  />
+                  <PointLabel
+                    key={nanoid()}
+                    position={pos}
+                    placement={LabelPlacement.BOTTOM}
+                  >
+                    {point.properties?.name}
+                  </PointLabel>
+                </>
+              );
+            })}
           </g>
           <ProportionalSymbolLegend
             data={points.features.map(

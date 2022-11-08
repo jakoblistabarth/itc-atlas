@@ -3,4 +3,5 @@ export type Alumni = {
   examYear: string;
   country: string;
   city: string;
+  level: string;
 };

@@ -5,13 +5,14 @@ const cleanAlumni = (data: any) => {
   const df = new DataFrame(data)
     .renameColumn({ City: "city" })
     .renameColumn({ "No.": "contactNo" })
+    .renameColumn({ Level: "level" })
     .renameColumn({ Country: "country" })
     .mutate("examYear", (row) => {
       const value = row["Exam Year"];
       if (!value || !Number.isInteger(value)) return null;
       return new Date(value + "").toISOString();
     })
-    .select(["contactNo", "examYear", "city", "country"]);
+    .select(["contactNo", "examYear", "city", "country", "level"]);
 
   return df.toArray() as Alumni[];
 };
