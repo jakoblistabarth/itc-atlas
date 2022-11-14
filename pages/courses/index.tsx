@@ -5,6 +5,7 @@ import {
   linkHorizontal,
   max,
   path,
+  range,
   rollups,
   scaleBand,
   scaleLinear,
@@ -15,7 +16,6 @@ import {
   sum,
   timeYear,
 } from "d3";
-import { range } from "lodash";
 import { nanoid } from "nanoid";
 import type { GetStaticProps, NextPage } from "next";
 import Head from "next/head";
@@ -78,9 +78,10 @@ const CourseGenealogy: NextPage<Props> = ({ courseGenealogy }) => {
   });
 
   const genealogyHeight = 400;
-  const barChartHeight = 100;
-  const width = 450;
-  const height = genealogyHeight + barChartHeight;
+  const barChartHeight = 75;
+  const gap = 25;
+  const width = 600;
+  const height = genealogyHeight + gap + barChartHeight;
   const margin = {
     x: 25,
     t: 50,
@@ -93,7 +94,7 @@ const CourseGenealogy: NextPage<Props> = ({ courseGenealogy }) => {
   const xScale2 = scaleBand()
     .domain(tSeq.map((d) => d.toISOString()))
     .range(xRange)
-    .paddingInner(0.15);
+    .paddingInner(0.2);
   const yScale = scalePoint()
     .range([margin.t, genealogyHeight])
     .domain(
@@ -192,7 +193,8 @@ const CourseGenealogy: NextPage<Props> = ({ courseGenealogy }) => {
                   y: yScale(node.yOffset),
                 } as Vector2;
                 const height = heightScale(node.size ?? 1) * 2;
-                const connectionWidth = xScale2.bandwidth() * 0.25;
+                // const connectionWidth = xScale2.bandwidth() * 0.25;
+                const connectionWidth = 0;
                 const width = xScale2.bandwidth() - 2 * connectionWidth;
                 const prevYear = year - 1;
                 const prevNode = courseGenealogy.nodes.find((n) => {
@@ -208,21 +210,22 @@ const CourseGenealogy: NextPage<Props> = ({ courseGenealogy }) => {
                 );
                 return node.data?.value === "-" ? (
                   <Cross
+                    key={nanoid()}
                     position={pos}
                     length={2}
                     halos={[{ size: 4, color: "white" }]}
                   />
                 ) : (
                   <g key={nanoid()} fill={colorScale(node.fill ?? "")}>
-                    <path
+                    {/* <path
                       d={connectionPath.toString()}
                       //TODO: add end shape if a stream ands + handle merges
-                    />
+                    /> */}
                     <rect
                       key={nanoid()}
-                      x={pos.x - width / 2}
+                      x={pos.x - xScale2.bandwidth() / 2}
                       y={pos.y - height / 2}
-                      width={width}
+                      width={xScale2.bandwidth()}
                       height={height}
                     />
                   </g>
@@ -239,10 +242,6 @@ const CourseGenealogy: NextPage<Props> = ({ courseGenealogy }) => {
                   xScale(link.end),
                   yScale(link.target) ?? 1
                 );
-                const labelPos = sourcePos
-                  .clone()
-                  .add(targetPos.clone().sub(sourcePos).multiplyScalar(0.5))
-                  .add(new Vector2(0, 2.5));
                 return (
                   <g key={nanoid()}>
                     <path
@@ -264,14 +263,15 @@ const CourseGenealogy: NextPage<Props> = ({ courseGenealogy }) => {
                           position={p}
                           fill={"white"}
                           stroke={"black"}
-                          radius={1.5}
+                          radius={0.5}
                         ></EventPoint>
                       ))}
                     </g>
                     {link.source === link.target && (
                       <PointLabel
-                        position={labelPos}
-                        placement={LabelPlacement.TOP}
+                        position={sourcePos}
+                        placement={LabelPlacement.LEFT}
+                        key={nanoid()}
                         style={{
                           fontSize: 7,
                           fill: "black",
@@ -286,24 +286,19 @@ const CourseGenealogy: NextPage<Props> = ({ courseGenealogy }) => {
                 );
               })}
             </g>
-            <g id="sum-layer" transform={`translate(0, ${genealogyHeight})`}>
-              <g id="bars">
-                {graduatesStack.map((s) => {
-                  const stem = s.key;
-                  return s.map((y) => (
-                    <rect
-                      key={nanoid()}
-                      fill={colorScale(stem)}
-                      x={
-                        xScale(new Date(y.data.year, 0, 1)) -
-                        xScale2.bandwidth() / 2
-                      }
-                      y={yScaleSum(y[1])}
-                      height={Math.abs(yScaleSum(y[0]) - yScaleSum(y[1]))}
-                      width={xScale2.bandwidth() - 0.5}
-                    />
-                  ));
-                })}
+            <g
+              id="sum-layer"
+              transform={`translate(0, ${genealogyHeight + gap})`}
+            >
+              <g id={"seperator"}>
+                <line
+                  x1={0}
+                  x2={width}
+                  y1={-gap / 2}
+                  y2={-gap / 2}
+                  stroke="white"
+                  strokeWidth={2}
+                />
               </g>
               <g id="axis">
                 {yScaleSum.ticks().map((tick) => (
@@ -317,17 +312,47 @@ const CourseGenealogy: NextPage<Props> = ({ courseGenealogy }) => {
                       x2={width - margin.x + 3}
                     />
                     {tick % 50 === 0 && (
-                      <PointLabel
-                        position={
-                          new Vector2(width - margin.x, yScaleSum(tick))
-                        }
-                        placement={LabelPlacement.RIGHT}
-                      >
-                        {tick}
-                      </PointLabel>
+                      <>
+                        <PointLabel
+                          position={
+                            new Vector2(width - margin.x, yScaleSum(tick))
+                          }
+                          placement={LabelPlacement.RIGHT}
+                          key={nanoid()}
+                        >
+                          {tick}
+                        </PointLabel>
+                        <line
+                          key={nanoid()}
+                          stroke={"lightgrey"}
+                          strokeWidth={0.5}
+                          y1={yScaleSum(tick)}
+                          y2={yScaleSum(tick)}
+                          x1={margin.x}
+                          x2={width - margin.x}
+                        />
+                      </>
                     )}
                   </>
                 ))}
+              </g>
+              <g id="bars">
+                {graduatesStack.map((s) => {
+                  const stem = s.key;
+                  return s.map((y) => (
+                    <rect
+                      key={nanoid()}
+                      fill={colorScale(stem)}
+                      x={
+                        xScale(new Date(y.data.year, 0, 1)) -
+                        xScale2.bandwidth() / 2
+                      }
+                      y={yScaleSum(y[1])}
+                      height={Math.abs(yScaleSum(y[0]) - yScaleSum(y[1]))}
+                      width={xScale2.bandwidth()}
+                    />
+                  ));
+                })}
               </g>
             </g>
           </Timeline>
@@ -338,6 +363,7 @@ const CourseGenealogy: NextPage<Props> = ({ courseGenealogy }) => {
             scaleRadius={heightScale}
             title={"Graduates per course per year"}
             unitLabel={"graduate"}
+            showFunction={false}
           />
         </svg>
       </main>
