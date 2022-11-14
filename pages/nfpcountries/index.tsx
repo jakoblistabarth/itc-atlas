@@ -45,7 +45,6 @@ const NfpCountries: NextPage<Props> = ({ nfps, neCountriesTopoJson }) => {
 
   const selectedYears = [2000, 2005, 2009, 2013, 2022];
   const selection = selectedYears.map((y) => perYear.get(y));
-  console.log(selection);
 
   return (
     <>
@@ -126,6 +125,7 @@ const NfpCountries: NextPage<Props> = ({ nfps, neCountriesTopoJson }) => {
               }}
               projection={projection}
             >
+              {/* TODO: add year name to map title */}
               <MapLayoutBody
                 bounds={{
                   width: 200,

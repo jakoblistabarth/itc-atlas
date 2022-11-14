@@ -4,12 +4,9 @@ import type { GetStaticProps, NextPage } from "next";
 import Head from "next/head";
 import Footer from "../../components/Footer";
 import Heading, { Headings } from "../../components/Heading";
-import getAirports from "../../lib/data/getAirports";
 import getCountries from "../../lib/data/getCountries";
 import styles from "../../styles/home.module.css";
 import { SharedPageProps } from "../../types/Props";
-import * as topojson from "topojson-client";
-import { geoCentroid } from "d3-geo";
 import React, { useRef } from "react";
 import { group, rollup, scaleLinear } from "d3";
 import SpaceTimeCube from "../../components/map-3d/SpaceTimeCube";
@@ -17,7 +14,6 @@ import { Project } from "../../types/Project";
 import getProjects from "../../lib/data/getProjects";
 import { SpaceTimeCubeEvent } from "../../types/SpaceTimeCubeEvent";
 import getCentroidByIsoCode from "../../lib/data/getCentroidByIsoCode";
-import { filter } from "lodash";
 
 type Props = SharedPageProps & {
   projects: Project[];
