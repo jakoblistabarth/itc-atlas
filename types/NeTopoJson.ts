@@ -30,6 +30,7 @@ export type NePopulatedPlacesProperties = {
   NAME_NL: string;
   NAMEPAR: string;
   ISO_A2: string;
+  ADM0_A3: string;
   LATITUDE: number;
   LONGITUDE: number;
 };

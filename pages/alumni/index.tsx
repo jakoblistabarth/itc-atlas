@@ -8,12 +8,24 @@ import getAlumni from "../../lib/data/getAlumni";
 import styles from "../../styles/home.module.css";
 import { Alumni } from "../../types/Alumni";
 
+import React, { useState } from "react";
+import { AgGridColumn, AgGridReact } from "ag-grid-react"; // the AG Grid React Component
+
+import "ag-grid-community/styles/ag-grid.css"; // Core grid CSS, always needed
+import "ag-grid-community/styles/ag-theme-material.css"; // Optional theme CSS
+
 type Props = {
-  Alumni: Alumni[];
+  alumni: Alumni[];
 };
 
-const AlumniOverview: NextPage<Props> = ({ Alumni }) => {
-  const AlumniDf = new DataFrame(Alumni);
+const AlumniOverview: NextPage<Props> = ({ alumni }) => {
+  const AlumniDf = new DataFrame(alumni);
+
+  const defaultColDef = {
+    filter: true,
+    sortable: true,
+  };
+
   return (
     <>
       <Head>
@@ -27,6 +39,29 @@ const AlumniOverview: NextPage<Props> = ({ Alumni }) => {
 
         <p className={styles.description}>Insights into ITC's Alumni.</p>
         <SummaryTable data={AlumniDf} />
+
+        <h2>Data Table</h2>
+        <div className="ag-theme-material" style={{ width: 1280, height: 500 }}>
+          <AgGridReact
+            rowData={alumni} // Row Data for Rows
+            // columnDefs={columnDefs} // Column Defs for Columns
+            defaultColDef={defaultColDef} // Default Column Properties
+            pagination={true}
+            paginationAutoPageSize={true}
+          >
+            <AgGridColumn field="contactNo" />
+            <AgGridColumn
+              field="examYear2"
+              headerName="Exam Year"
+              filter="agDateColumnFilter"
+            />
+            <AgGridColumn field="city" />
+            <AgGridColumn field="populatedPlaceNE" />
+            <AgGridColumn field="country" />
+            <AgGridColumn field="countryISO3" />
+            <AgGridColumn field="level" />
+          </AgGridReact>
+        </div>
       </main>
 
       <Footer />
@@ -35,10 +70,10 @@ const AlumniOverview: NextPage<Props> = ({ Alumni }) => {
 };
 
 export const getStaticProps: GetStaticProps<Props> = async () => {
-  const Alumni = await getAlumni();
+  const alumni = await getAlumni();
   return {
     props: {
-      Alumni,
+      alumni,
     },
   };
 };

@@ -1,12 +1,10 @@
-import ne_10m_populated_places from "../../data/topographic/ne_10m_populated_places.json";
-import ne_110m_populated_places from "../../data/topographic/ne_110m_populated_places.json";
 import { NePopulatedPlaces, NeScales } from "../../types/NeTopoJson";
+import fs from "fs";
 
 export default function getRivers(scale?: NeScales): NePopulatedPlaces {
-  switch (scale) {
-    case "10m":
-      return ne_10m_populated_places as unknown as NePopulatedPlaces;
-    default:
-      return ne_110m_populated_places as unknown as NePopulatedPlaces;
-  }
+  const scaleStr = scale === "10m" ? scale : "110m";
+  const filePath = `./data/topographic/ne_${scaleStr}_populated_places.json`;
+  const rawdata = fs.readFileSync(filePath);
+  const data = JSON.parse(rawdata.toString());
+  return data;
 }
