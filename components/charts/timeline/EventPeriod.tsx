@@ -8,6 +8,7 @@ type Props = React.PropsWithChildren<{
   yOffset: number;
   height: number;
   fill?: string;
+  roundedCorners?: boolean;
 }>;
 
 const Event: FC<Props> = ({
@@ -17,12 +18,18 @@ const Event: FC<Props> = ({
   height,
   yOffset,
   fill,
+  roundedCorners = true,
   children,
 }) => {
   const width = dateEnd ? xScale(dateEnd) - xScale(dateStart) : 3;
   return (
     <g transform={`translate(${xScale(dateStart)}, ${yOffset})`}>
-      <rect width={width} height={height} fill={fill ?? "black"} rx={2} />
+      <rect
+        width={width}
+        height={height}
+        fill={fill ?? "black"}
+        rx={roundedCorners ? 2 : 0}
+      />
       {children}
     </g>
   );

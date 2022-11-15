@@ -14,7 +14,7 @@ type Props = React.PropsWithChildren<{
 const PointLabel: FC<Props> = ({
   position = new Vector2(0, 0),
   placement = LabelPlacement.TOPRIGHT,
-  style = { fontSize: 10 },
+  style = { fontSize: 6 },
   children,
 }) => {
   const dx =

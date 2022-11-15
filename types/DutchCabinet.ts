@@ -3,4 +3,5 @@ export type DutchCabinet = {
   dateStart: Date;
   dateEnd: Date;
   orientation: string;
+  topics: string[];
 };

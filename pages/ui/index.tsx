@@ -53,7 +53,6 @@ const UITest: NextPage = () => {
 
       <main className={styles.main}>
         <Heading Tag={Headings.H1}>Floating UI Test</Heading>
-
         <Placeholder />
         <Button
           {...getReferenceProps({

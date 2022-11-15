@@ -1,30 +1,30 @@
-name,orientation,dateStart,dateEnd
-Drees–Van Schaik,Centrist,1948-08-07,1951-03-15
-Drees I,Centrist,1951-03-15,1952-02-09
-Drees II,Centrist,1952-02-09,1956-10-13
-Drees III,Centrist,1956-10-13,1958-12-22
-Beel II,Centre-right,1958-12-22,1959-05-19
-De Quay,Centre-right,1959-05-19,1963-07-24
-Marijnen,Centre-right,1963-07-24,1965-04-14
-Cals,Centrist,1965-04-14,1966-11-22
-Zijlstra,Centre-right,1966-11-22,1967-04-05
-De Jong,Centre-right,1967-04-05,1971-07-06
-Biesheuvel I,Centrist,1971-07-06,1972-08-09
-Biesheuvel II,Centre-right,1972-08-09,1973-05-11
-Den Uyl,Centre-left,1973-05-11,1977-12-19
-Van Agt I,Centre-right,1977-12-19,1981-09-11
-Van Agt II,Centrist,1981-09-11,1982-05-29
-Van Agt III,Centrist,1982-05-29,1982-11-04
-Lubbers I,Centre-right,1982-11-04,1986-07-14
-Lubbers II,Centre-right,1986-07-14,1989-11-07
-Lubbers III,Centrist,1989-11-07,1994-08-22
-Kok I,Centrist,1994-08-22,1998-08-03
-Kok II,Centrist,1998-08-03,2002-06-22
-Balkenende I,Right-wing,2002-06-22,2003-05-27
-Balkenende II,Centre-Right,2003-05-27,2006-07-07
-Balkenende III,Centre-Right,2006-07-07,2007-02-22
-Balkenende IV,Centrist,2007-02-22,2010-10-14
-Rutte I,Right-wing,2010-10-14,2012-11-05
-Rutte II,Centrist,2012-11-05,2017-10-26
-Rutte III,Centre-right,2017-10-26,2022-01-10
-Rutte IV,Centre-right,2022-01-10,
+name,orientation,dateStart,dateEnd,topics
+Drees–Van Schaik,Centrist,1948-08-07,1951-03-15,
+Drees I,Centrist,1951-03-15,1952-02-09,
+Drees II,Centrist,1952-02-09,1956-10-13,
+Drees III,Centrist,1956-10-13,1958-12-22,
+Beel II,Centre-right,1958-12-22,1959-05-19,
+De Quay,Centre-right,1959-05-19,1963-07-24,
+Marijnen,Centre-right,1963-07-24,1965-04-14,
+Cals,Centrist,1965-04-14,1966-11-22,
+Zijlstra,Centre-right,1966-11-22,1967-04-05,
+De Jong,Centre-right,1967-04-05,1971-07-06,
+Biesheuvel I,Centrist,1971-07-06,1972-08-09,
+Biesheuvel II,Centre-right,1972-08-09,1973-05-11,
+Den Uyl,Centre-left,1973-05-11,1977-12-19,
+Van Agt I,Centre-right,1977-12-19,1981-09-11,
+Van Agt II,Centrist,1981-09-11,1982-05-29,
+Van Agt III,Centrist,1982-05-29,1982-11-04,
+Lubbers I,Centre-right,1982-11-04,1986-07-14,
+Lubbers II,Centre-right,1986-07-14,1989-11-07,
+Lubbers III,Centrist,1989-11-07,1994-08-22,
+Kok I,Centrist,1994-08-22,1998-08-03,
+Kok II,Centrist,1998-08-03,2002-06-22,
+Balkenende I,Right-wing,2002-06-22,2003-05-27,"Water|Food|Health"
+Balkenende II,Centre-Right,2003-05-27,2006-07-07,"Water|Food|Health"
+Balkenende III,Centre-Right,2006-07-07,2007-02-22,"Water|Food|Health"
+Balkenende IV,Centrist,2007-02-22,2010-10-14,"Health|Climate"
+Rutte I,Right-wing,2010-10-14,2012-11-05,"Water|Health"
+Rutte II,Centrist,2012-11-05,2017-10-26,"Water|Food|Health|Climate"
+Rutte III,Centre-right,2017-10-26,2022-01-10,"Water|Food|Health|Climate"
+Rutte IV,Centre-right,2022-01-10,,"Water|Food|Health|Climate"
