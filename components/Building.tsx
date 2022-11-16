@@ -5,7 +5,6 @@ import Delft2 from "/public/images/building-kanaalweg4.svg";
 import Enschede1 from "/public/images/building-boulevard1945.svg";
 import Enschede2 from "/public/images/building-hengelosestraat.svg";
 import Enschede3 from "/public/images/building-langezijds.svg";
-import { number } from "prop-types";
 
 export enum ITCLocationName {
   DELFT1 = "Kanaalweg",
@@ -14,12 +13,6 @@ export enum ITCLocationName {
   ENSCHEDE2 = "Hengelosestraat 99",
   ENSCHEDE3 = "Langezidjs",
 }
-
-type Location = {
-  name: ITCLocationName;
-  moveInDate: string;
-  city: string;
-};
 
 export const ITClocations = new Map([
   [
@@ -73,7 +66,18 @@ const Building: FC<Props> = ({
 }) => {
   return (
     <g transform={`translate(${position.x - width / 2} ${position.y})`}>
-      <svg width={width} height={width / 2}>
+      <svg className="building" width={width} height={width / 2}>
+        <style>
+          {`
+          svg.building g,
+          svg.building path[stroke="#000"]  {
+                stroke: ${color};
+            }
+            svg.building svg > path[opacity="0.1"] {
+                fill: ${color};
+            }
+            `}
+        </style>
         {location == ITCLocationName.DELFT1 && <Delft1 />}
         {location == ITCLocationName.DELFT2 && <Delft2 />}
         {location == ITCLocationName.ENSCHEDE1 && <Enschede1 />}

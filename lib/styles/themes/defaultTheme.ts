@@ -1,7 +1,7 @@
 import { MapTheme } from "../../../types/MapTheme";
 
-const lightgrey = "#E7E7E7";
-const darkgrey = "#c5c5c5";
+const lightgrey = "#f0f0f0";
+const darkgrey = "#dcdcdc";
 const red = "#f00";
 
 const defaultTheme: MapTheme = {

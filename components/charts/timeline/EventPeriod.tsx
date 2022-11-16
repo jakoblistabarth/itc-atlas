@@ -1,5 +1,6 @@
 import type { FC } from "react";
 import type { ScaleTime } from "d3";
+import { nanoid } from "nanoid";
 
 type Props = React.PropsWithChildren<{
   dateStart: Date;
@@ -23,12 +24,12 @@ const Event: FC<Props> = ({
 }) => {
   const width = dateEnd ? xScale(dateEnd) - xScale(dateStart) : 3;
   return (
-    <g transform={`translate(${xScale(dateStart)}, ${yOffset})`}>
+    <g key={nanoid()} transform={`translate(${xScale(dateStart)}, ${yOffset})`}>
       <rect
         width={width}
         height={height}
         fill={fill ?? "black"}
-        rx={roundedCorners ? 2 : 0}
+        rx={roundedCorners ? 1 : 0}
       />
       {children}
     </g>

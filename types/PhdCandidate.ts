@@ -6,6 +6,6 @@ export type PhdCandidate = {
   sponsor: string | null;
   graduated: string | null;
   dateStart: string | null;
-  dateEnd: string | null;
+  dateGraduated: string | null;
   thesisTitle: string | null;
 };

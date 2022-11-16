@@ -60,7 +60,7 @@ const ProportionalSymbolLegend: FC<{
               [maxRadius, maxRadius - 2 * entryRadius],
               [maxRadius * 2, maxRadius - 2 * entryRadius],
             ]);
-            if (!linePath) return <></>;
+            if (!linePath) return null;
             return (
               <g key={nanoid()}>
                 <circle
