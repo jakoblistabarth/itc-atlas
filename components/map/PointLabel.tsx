@@ -72,6 +72,7 @@ const PointLabel: FC<Props> = ({
         dominantBaseline={dominantBaseline}
         fill={style.fill}
         stroke={style.stroke}
+        paintOrder={"stroke"}
         strokeWidth={style.strokeWidth}
         strokeLinejoin={"round"}
         style={{ paintOrder: "stroke fill" }}

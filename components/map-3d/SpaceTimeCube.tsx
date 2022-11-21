@@ -105,7 +105,7 @@ const SpaceTimeCube: FC<PropTypes> = ({
             <boxBufferGeometry
               args={[(e.size ?? 1) / 200, eventSide / 5, (e.size ?? 1) / 200]}
             />
-            <meshPhongMaterial color={"red"} />
+            <meshPhongMaterial color={"teal"} />
           </mesh>
         );
       })}

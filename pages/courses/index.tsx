@@ -84,8 +84,8 @@ const CourseGenealogy: NextPage<Props> = ({ courseGenealogy }) => {
   const height = genealogyHeight + gap + barChartHeight;
   const margin = {
     x: 25,
-    t: 50,
-    b: 30,
+    t: 35,
+    b: 25,
   };
   const tDomain = [new Date(1949, 0, 1), new Date(2020, 0, 1)];
   const tSeq = timeYear.range(tDomain[0], tDomain[1]);
@@ -244,19 +244,19 @@ const CourseGenealogy: NextPage<Props> = ({ courseGenealogy }) => {
                 );
                 return (
                   <g key={nanoid()}>
-                    <path
-                      key={nanoid()}
-                      stroke={"black"}
-                      strokeWidth={0.5}
-                      d={
-                        linkGenerator({
-                          source: [sourcePos.x, sourcePos.y],
-                          target: [targetPos.x, targetPos.y],
-                        }) || ""
-                      }
-                      fill={"none"}
-                    />
-                    <g>
+                    <g opacity={0.25}>
+                      <path
+                        key={nanoid()}
+                        stroke={"black"}
+                        strokeWidth={0.5}
+                        d={
+                          linkGenerator({
+                            source: [sourcePos.x, sourcePos.y],
+                            target: [targetPos.x, targetPos.y],
+                          }) || ""
+                        }
+                        fill={"none"}
+                      />
                       {[sourcePos, targetPos].map((p) => (
                         <EventPoint
                           key={nanoid()}
@@ -273,7 +273,8 @@ const CourseGenealogy: NextPage<Props> = ({ courseGenealogy }) => {
                         placement={LabelPlacement.LEFT}
                         key={nanoid()}
                         style={{
-                          fontSize: 7,
+                          fontSize: 6,
+                          fontFamily: "Fraunces",
                           fill: "black",
                           stroke: "white",
                           strokeWidth: 2,
@@ -309,13 +310,13 @@ const CourseGenealogy: NextPage<Props> = ({ courseGenealogy }) => {
                       y1={yScaleSum(tick)}
                       y2={yScaleSum(tick)}
                       x1={width - margin.x}
-                      x2={width - margin.x + 3}
+                      x2={width - margin.x + 2 + +(+(tick % 50 === 0)) * 2}
                     />
                     {tick % 50 === 0 && (
                       <>
                         <PointLabel
                           position={
-                            new Vector2(width - margin.x, yScaleSum(tick))
+                            new Vector2(width - margin.x + 2, yScaleSum(tick))
                           }
                           placement={LabelPlacement.RIGHT}
                           key={nanoid()}

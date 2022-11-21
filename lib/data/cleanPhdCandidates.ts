@@ -24,6 +24,9 @@ export async function cleanPhdCandiates(phdCandidates: Data) {
     .mutate("dateGraduated", (row) =>
       row.SISGraduated ? row.SISGraduated.toISOString() : null
     )
+    .mutate("datePromotion", (row) =>
+      row.Promotion ? new Date(row.Promotion + "GMT").toISOString() : null
+    )
     .mutate("dateEnd", (row) => (row.PhDEnd ? row.PhDEnd.toISOString() : null))
     .mutate("country", (row) => {
       const clean = row.Country ? mapCountries(row.Country) : null;
@@ -77,6 +80,7 @@ export async function cleanPhdCandiates(phdCandidates: Data) {
         graduated: row.graduated,
         dateStart: row.dateStart,
         dateGraduated: row.dateGraduated,
+        datePromotion: row.datePromotion,
         thesisTitle: row.thesisTitle,
       } as PhdCandidate) //QUESTION: typing okay?
   );

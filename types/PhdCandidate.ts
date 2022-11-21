@@ -7,5 +7,6 @@ export type PhdCandidate = {
   graduated: string | null;
   dateStart: string | null;
   dateGraduated: string | null;
+  datePromotion: string | null;
   thesisTitle: string | null;
 };

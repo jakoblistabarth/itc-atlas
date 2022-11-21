@@ -73,7 +73,7 @@ const ProjectExplorer3D: NextPage<Props> = ({
         <Heading Tag={Headings.H1}>Projects Space Time Cube</Heading>
         <div style={{ width: "100%", height: "500px" }}>
           <Canvas
-            style={{ background: "black" }}
+            style={{ background: "white" }}
             orthographic
             camera={{ position: [0, 0, 100], zoom: 300 }}
             shadows

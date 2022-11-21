@@ -26,6 +26,7 @@ const Event: FC<Props> = ({
   return (
     <g key={nanoid()} transform={`translate(${xScale(dateStart)}, ${yOffset})`}>
       <rect
+        transform={`translate(0 ${height / -2})`}
         width={width}
         height={height}
         fill={fill ?? "black"}

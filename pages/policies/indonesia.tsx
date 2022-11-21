@@ -22,7 +22,6 @@ import {
   scaleOrdinal,
   scalePoint,
   scaleTime,
-  schemeGreys,
   sum,
 } from "d3";
 import LocatorMap from "../../components/map/LocatorMap";
@@ -38,6 +37,7 @@ import Building, { ITClocations } from "../../components/Building";
 import PointSymbol from "../../components/map/PointSymbol";
 import { BiCoin, BiFirstAid, BiRestaurant, BiWater } from "react-icons/bi";
 import { WiThermometer } from "react-icons/Wi";
+import Star from "../../components/shapes/Star";
 
 type Props = {
   projects: Project[];
@@ -170,21 +170,10 @@ const IndonesiaTimeline: NextPage<Props> = ({
     };
   });
 
-  const phdCandidateEvents: TimelineEvent[] = phdCandidates
-    .filter((d) => d.dateGraduated)
-    .map((phd) => {
-      return {
-        name: phd.thesisTitle ?? "Unnamed Thesis",
-        yOffset: phd.thesisTitle ?? "",
-        dateStart: new Date(phd.dateGraduated ?? ""),
-      };
-    })
-    .sort((a, b) => ascending(a.dateStart, b.dateStart));
-
   const phdGraduatesPerYear = rollups(
-    phdCandidates.filter((d) => d.dateGraduated),
+    phdCandidates.filter((d) => d.datePromotion),
     (v) => v.length,
-    (d) => new Date(d.dateGraduated).getFullYear()
+    (d) => new Date(d.datePromotion).getFullYear()
   );
 
   const alumniPerYear = rollups(
@@ -203,14 +192,6 @@ const IndonesiaTimeline: NextPage<Props> = ({
       };
     });
 
-  const parties = ["CDA", "PvdA", "VVD", "D66"];
-  const greyPartyColors = schemeGreys[parties.length];
-  const originalPartyColors = ["lightgreen", "darkred", "orange", "darkgreen"];
-
-  const partyColorScale = scaleOrdinal<string, string>()
-    .domain(parties)
-    .range(greyPartyColors);
-
   const ministerEvents: TimelineEvent[] = ministers.map((minister, idx) => {
     const next = ministers[idx + 1];
     const dateEnd = next ? new Date(next.dateStart + "GMT") : new Date();
@@ -219,13 +200,64 @@ const IndonesiaTimeline: NextPage<Props> = ({
       yOffset: "",
       dateStart: new Date(minister.dateStart),
       dateEnd: new Date(dateEnd),
-      fill: partyColorScale(minister.party),
+      fill: "black",
+      data: { party: minister.party },
     };
   });
+  const parties = Array.from(new Set(ministers.map((d) => d.party)));
+  const renderPartySymbol = (party: string) => {
+    const size = 6;
+    const w = size * 0.75;
+    const oR = size / 2;
+    const iR = oR / 2;
+    const style = {
+      fill: "white",
+      stroke: "black",
+      strokeLinejoin: "round" as const, //QUESTION: good practice?
+    };
+    console.log(party);
+    switch (party) {
+      case parties[0]:
+        return <Star {...style} innerRadius={iR} outerRadius={oR} />;
+      case parties[1]:
+        return (
+          <Star
+            {...style}
+            transform="rotate(45)"
+            innerRadius={iR}
+            outerRadius={oR}
+          />
+        );
+      case parties[2]:
+        return (
+          <rect
+            {...style}
+            width={w}
+            height={w}
+            transform={`translate(${-w / 2} ${-w / 2})`}
+          />
+        );
+      default:
+        return (
+          <rect
+            {...style}
+            width={w}
+            height={w}
+            transform={`rotate(45) translate(${-w / 2} ${-w / 2})`}
+          />
+        );
+    }
+  };
 
   const TimelineHeader = ({ color = "black", children }) => {
     return (
-      <text fill={color} dy={-10} fontFamily="Fraunces" fontSize={12}>
+      <text
+        fill={color}
+        dy={-5}
+        fontFamily="Fraunces"
+        fontWeight={"bold"}
+        fontSize={9}
+      >
         {children}
       </text>
     );
@@ -238,7 +270,7 @@ const IndonesiaTimeline: NextPage<Props> = ({
         y1={y - 30}
         y2={y - 30}
         stroke="white"
-        strokeWidth={5}
+        strokeWidth={10}
         fill="none"
       />
     );
@@ -298,38 +330,46 @@ const IndonesiaTimeline: NextPage<Props> = ({
           /> */}
           <TimelineGrid scale={xScale} height={height} margin={margin} />
           <g id="itcContextEvents" transform={`translate(0 ${margin})`}>
-            <TimelineHeader color={itcGreen}>Name changes</TimelineHeader>
+            <TimelineHeader>Name changes</TimelineHeader>
             <g id="nameChanges">
-              {renamingEvents.map((ne, idx) => (
-                <EventPeriod
-                  key={nanoid()}
-                  dateStart={ne.dateStart}
-                  dateEnd={ne.dateEnd ?? new Date()}
-                  xScale={xScale}
-                  yOffset={0}
-                  height={2}
-                  fill={itcGreen}
-                >
-                  <PointLabel
-                    placement={
-                      idx % 2
-                        ? LabelPlacement.TOPRIGHT
-                        : LabelPlacement.BOTTOMRIGHT
-                    }
-                    style={{ fill: itcGreen, fontSize: 6 }}
+              {renamingEvents.map((ne, idx) => {
+                const isEven = idx % 2 === 0;
+                return (
+                  <EventPeriod
+                    key={nanoid()}
+                    dateStart={ne.dateStart}
+                    dateEnd={ne.dateEnd ?? new Date()}
+                    xScale={xScale}
+                    yOffset={0}
+                    height={1}
+                    fill={itcGreen}
                   >
-                    {ne.name}
-                  </PointLabel>
-                  <PointSymbol
-                    position={new Vector2(0, 1)}
-                    radius={2}
-                    style={{ stroke: itcGreen, fill: "white", fillOpacity: 1 }}
-                  />
-                </EventPeriod>
-              ))}
+                    <PointLabel
+                      placement={
+                        isEven
+                          ? LabelPlacement.BOTTOMRIGHT
+                          : LabelPlacement.TOPRIGHT
+                      }
+                      style={{ fill: itcGreen, fontSize: 6 }}
+                    >
+                      {ne.name}
+                    </PointLabel>
+                    <line y2={10 * (isEven ? 1 : -1)} stroke={itcGreen} />
+                    <PointSymbol
+                      position={new Vector2()}
+                      radius={2}
+                      style={{
+                        stroke: itcGreen,
+                        fill: "white",
+                        fillOpacity: 1,
+                      }}
+                    />
+                  </EventPeriod>
+                );
+              })}
             </g>
             <g id="moves" transform="translate(0 25)">
-              <TimelineHeader color={itcGreen}>Moves</TimelineHeader>
+              <TimelineHeader>Moves</TimelineHeader>
               {Array.from(ITClocations.keys()).map((d, idx) => {
                 const currentLocation = ITClocations.get(d);
                 if (!currentLocation) return <></>;
@@ -343,14 +383,13 @@ const IndonesiaTimeline: NextPage<Props> = ({
                     <rect
                       key={nanoid()}
                       x={xScale(new Date(currentLocation.moveInDate))}
-                      y={width / 2}
+                      y={width / 2 - 1}
                       width={
                         xScale(new Date(dateEnd)) -
                         xScale(new Date(currentLocation.moveInDate))
                       }
-                      height={2}
-                      fill={"none"}
-                      stroke={itcGreen}
+                      height={1}
+                      fill={itcGreen}
                     />
                     <g
                       key={nanoid()}
@@ -358,15 +397,20 @@ const IndonesiaTimeline: NextPage<Props> = ({
                         new Date(currentLocation.moveInDate)
                       )} 0)`}
                     >
+                      <line
+                        y1={width / 2}
+                        y2={width / 2 + 5}
+                        stroke={itcGreen}
+                      />
                       <Building color={itcGreen} width={width} location={d} />
-                      {/* <PointSymbol
+                      <PointSymbol
                         position={new Vector2(0, width / 2)}
                         style={{
                           fillOpacity: 1,
                           fill: "white",
                           stroke: itcGreen,
                         }}
-                      /> */}
+                      />
                       <PointLabel
                         position={new Vector2(0, width / 2)}
                         placement={LabelPlacement.BOTTOM}
@@ -400,19 +444,17 @@ const IndonesiaTimeline: NextPage<Props> = ({
                   xScale={xScale}
                   yOffset={0}
                   fill={ce.fill}
-                  height={2}
-                  // roundedCorners={false}
+                  height={1}
+                  roundedCorners={false}
                 >
-                  <g transform="rotate(-45)">
+                  <g transform="rotate(-45) translate(2 0)">
                     <PointLabel placement={LabelPlacement.RIGHT}>
                       {ce.name}
                     </PointLabel>
                   </g>
-                  <PointSymbol
-                    position={new Vector2(0, 1)}
-                    radius={2}
-                    style={{ stroke: ce.fill, fill: "white", fillOpacity: 1 }}
-                  />
+                  {ce.data?.party &&
+                    renderPartySymbol(ce.data?.party as string)}
+                  {/* TODO: fix typing? */}
                 </EventPeriod>
               ))}
             </g>
@@ -460,7 +502,7 @@ const IndonesiaTimeline: NextPage<Props> = ({
                   xScale={xScale}
                   yOffset={projectsYScale(e.yOffset) ?? 0}
                   height={2}
-                  fill={"black"}
+                  fill={itcGreen}
                 />
               ))}
             </g>
@@ -475,7 +517,7 @@ const IndonesiaTimeline: NextPage<Props> = ({
                   xScale={xScale}
                   yOffset={0}
                   height={2}
-                  fill={"black"}
+                  fill={itcGreen}
                   roundedCorners={false}
                 />
               ))}
@@ -494,7 +536,7 @@ const IndonesiaTimeline: NextPage<Props> = ({
                     x={xScale(e.dateStart) - width / 2}
                     y={height / -2}
                     rx={1}
-                    fill={"lightgrey"}
+                    fill={itcGreen}
                   />
                 );
               })}
@@ -508,7 +550,7 @@ const IndonesiaTimeline: NextPage<Props> = ({
                       cx={xScale(new Date(year + "GMT"))}
                       cy={idx * gap}
                       r={r}
-                      fill={"black"}
+                      fill={"white"}
                     />
                   </g>
                 ));
