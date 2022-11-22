@@ -6,7 +6,7 @@ import Head from "next/head";
 import PatternLines from "../../components/defs/patterns/PatternLines";
 import Heading, { Headings } from "../../components/Heading";
 import BaseLayer from "../../components/map/BaseLayer";
-import ChoroplethSymbol from "../../components/map/PolygonSymbol";
+import PolygonSymbol from "../../components/map/PolygonSymbol";
 import PointSymbol from "../../components/map/PointSymbol";
 import ProportionalSymbolLegend from "../../components/map/ProportionalSymbolLegend";
 import getMapHeight from "../../lib/cartographic/getMapHeight";
@@ -57,8 +57,11 @@ const ProjectCountries: NextPage<Props> = ({
         <svg width={dimension.width} height={dimension.height}>
           <defs>
             <PatternLines
-              style={theme.choropleth?.pattern}
-              angle={20}
+              angle={45}
+              spacing={10}
+              strokeWidth={0.5}
+              stroke={theme.choropleth?.pattern?.stroke}
+              name={theme.choropleth?.pattern?.id}
             ></PatternLines>
           </defs>
           <BaseLayer
@@ -68,11 +71,11 @@ const ProjectCountries: NextPage<Props> = ({
           />
           <g className="choroplethLayer">
             {highlightCountries.features.map((feature) => (
-              <ChoroplethSymbol
+              <PolygonSymbol
                 key={nanoid()}
                 projection={projection}
                 feature={feature}
-                style={theme.choropleth}
+                fill={`url(#${theme.choropleth?.pattern?.id})`}
               />
             ))}
           </g>

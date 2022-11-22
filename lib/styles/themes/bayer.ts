@@ -34,6 +34,12 @@ const bayer: MapTheme = {
     stroke: blue,
     strokeWidth: 1,
   },
+  choropleth: {
+    pattern: {
+      id: "bayerLines",
+      stroke: "lightgrey",
+    },
+  },
   label: {
     fontFamily: "Inter",
     fontSize: 8,

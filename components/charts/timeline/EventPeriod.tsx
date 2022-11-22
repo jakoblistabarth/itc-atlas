@@ -1,36 +1,32 @@
-import type { FC } from "react";
+import type { FC, SVGProps } from "react";
 import type { ScaleTime } from "d3";
-import { nanoid } from "nanoid";
 
 type Props = React.PropsWithChildren<{
   dateStart: Date;
   dateEnd: Date;
   xScale: ScaleTime<number, number>;
-  yOffset: number;
   height: number;
-  fill?: string;
-  roundedCorners?: boolean;
-}>;
+  yOffset: number;
+}> &
+  Omit<SVGProps<SVGRectElement>, "width" | "x" | "y">;
 
 const Event: FC<Props> = ({
   dateStart,
   dateEnd,
   xScale,
-  height,
   yOffset,
-  fill,
-  roundedCorners = true,
   children,
+  height = 1,
+  ...rest
 }) => {
   const width = dateEnd ? xScale(dateEnd) - xScale(dateStart) : 3;
   return (
-    <g key={nanoid()} transform={`translate(${xScale(dateStart)}, ${yOffset})`}>
+    <g transform={`translate(${xScale(dateStart)}, ${yOffset})`}>
       <rect
         transform={`translate(0 ${height / -2})`}
         width={width}
         height={height}
-        fill={fill ?? "black"}
-        rx={roundedCorners ? 1 : 0}
+        {...rest}
       />
       {children}
     </g>

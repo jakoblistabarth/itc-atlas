@@ -90,7 +90,7 @@ const projectsTimeline: NextPage<projectsTimelineProps> = ({ projects }) => {
                       dateStart={e.dateStart}
                       dateEnd={e.dateEnd ?? new Date()}
                       xScale={xScale}
-                      yOffset={yScale(e.yOffset)}
+                      yOffset={yScale(e.yOffset) ?? 0}
                       height={2}
                       fill={"blue"}
                     >

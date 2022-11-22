@@ -20,6 +20,7 @@ import { MapOptions } from "../../../types/MapOptions";
 import defaultTheme from "../../../lib/styles/themes/defaultTheme";
 import MapLayout from "../../../components/map/layout/MapLayout";
 import { setMapBounds } from "../../../lib/cartographic/getMapHeight";
+import { Vector2 } from "three";
 
 export default async function handler(
   req: NextApiRequest,
@@ -90,7 +91,8 @@ export default async function handler(
         <g className="choroplethLayer">
           <defs>
             <PatternLines
-              style={theme?.choropleth?.pattern}
+              stroke={theme?.choropleth?.pattern?.color}
+              name={theme?.choropleth?.pattern?.id}
               angle={20}
             ></PatternLines>
           </defs>
@@ -111,7 +113,7 @@ export default async function handler(
               xy && (
                 <PointSymbol
                   key={nanoid()}
-                  xy={xy}
+                  position={new Vector2(xy[0], xy[1])}
                   radius={scale(feature.properties?.projectCount)}
                   style={theme?.symbol}
                 />

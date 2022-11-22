@@ -467,7 +467,6 @@ const IndonesiaTimeline: NextPage<Props> = ({
                   yOffset={0}
                   fill={ce.fill}
                   height={1}
-                  roundedCorners={false}
                 >
                   <g transform="rotate(-45) translate(2 0)">
                     <PointLabel placement={LabelPlacement.RIGHT}>
@@ -491,7 +490,10 @@ const IndonesiaTimeline: NextPage<Props> = ({
                     xScale={xScale}
                     yOffset={topicYScale(topic.name) ?? 0}
                     height={topicYScale.bandwidth()}
-                    fill={topicColorScale(topic.name)}
+                    stroke="black"
+                    strokeWidth={0.5}
+                    rx={1}
+                    fill={`url(#${topicPatternScale(topic.name)})`}
                   />
                   <g transform={`translate(0 ${topicYScale(topic.name)})`}>
                     {renderTopicIcon(topic.name)}
