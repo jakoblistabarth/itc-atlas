@@ -19,6 +19,7 @@ export const parameters = {
         "Map Elements",
         "Map Layers",
         "Map Types",
+        "Annotations",
         "Charts",
         "Shapes",
         "SummaryTable",

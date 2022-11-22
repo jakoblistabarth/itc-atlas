@@ -38,12 +38,16 @@ import PointSymbol from "../../components/map/PointSymbol";
 import { BiCoin, BiFirstAid, BiRestaurant, BiWater } from "react-icons/bi";
 import { WiThermometer } from "react-icons/Wi";
 import Star from "../../components/shapes/Star";
+import getLongTermMissions from "../../lib/data/getLongTermMissions";
+import { LongTermMission } from "../../types/LongTermMission";
+import LeaderLine from "../../components/LeaderLine";
 
 type Props = {
   projects: Project[];
   phdCandidates: PhdCandidate[];
   alumni: Alumni[];
   btors: BTOR[];
+  longTermMissions: LongTermMission[];
   ministers: Minister[];
   neCountries: NeCountriesTopoJson;
 };
@@ -53,6 +57,7 @@ const IndonesiaTimeline: NextPage<Props> = ({
   phdCandidates,
   alumni,
   btors,
+  longTermMissions,
   ministers,
   neCountries,
 }) => {
@@ -67,6 +72,7 @@ const IndonesiaTimeline: NextPage<Props> = ({
   const margin = 40;
   const height = sum([...Object.values(tlHeights)]) + margin * 2;
   const itcGreen = "teal";
+  const indonesiaColor = "red";
   const xScale = scaleTime().domain(commonDomain).range([0, width]);
 
   const projectEvents: TimelineEvent[] = projects
@@ -164,11 +170,24 @@ const IndonesiaTimeline: NextPage<Props> = ({
     if (!btor.dateStart || !btor.dateEnd) return [];
     return {
       name: btor.destination,
-      yOffset: btor.department,
+      yOffset: "",
       dateStart: new Date(btor.dateStart),
       dateEnd: new Date(btor.dateEnd),
     };
   });
+  const LongTermMissionEvents: TimelineEvent[] = longTermMissions.flatMap(
+    (ltm) => {
+      if (!ltm.dateStart || !ltm.dateEnd) return [];
+      return {
+        name: ltm.projectName,
+        yOffset: "",
+        dateStart: new Date(ltm.dateStart),
+        dateEnd: new Date(ltm.dateEnd),
+      };
+    }
+  );
+
+  const travels = btorEvents.concat(LongTermMissionEvents);
 
   const phdGraduatesPerYear = rollups(
     phdCandidates.filter((d) => d.datePromotion),
@@ -215,7 +234,6 @@ const IndonesiaTimeline: NextPage<Props> = ({
       stroke: "black",
       strokeLinejoin: "round" as const, //QUESTION: good practice?
     };
-    console.log(party);
     switch (party) {
       case parties[0]:
         return <Star {...style} innerRadius={iR} outerRadius={oR} />;
@@ -354,7 +372,11 @@ const IndonesiaTimeline: NextPage<Props> = ({
                     >
                       {ne.name}
                     </PointLabel>
-                    <line y2={10 * (isEven ? 1 : -1)} stroke={itcGreen} />
+                    <line
+                      y2={10 * (isEven ? 1 : -1)}
+                      stroke={itcGreen}
+                      strokeWidth={0.5}
+                    />
                     <PointSymbol
                       position={new Vector2()}
                       radius={2}
@@ -502,14 +524,14 @@ const IndonesiaTimeline: NextPage<Props> = ({
                   xScale={xScale}
                   yOffset={projectsYScale(e.yOffset) ?? 0}
                   height={2}
-                  fill={itcGreen}
+                  fill={indonesiaColor}
                 />
               ))}
             </g>
 
             <g transform={`translate(0 130)`}>
               <TimelineHeader>Staff travels</TimelineHeader>
-              {btorEvents.map((e) => (
+              {travels.map((e) => (
                 <EventPeriod
                   key={nanoid()}
                   dateStart={e.dateStart}
@@ -517,8 +539,8 @@ const IndonesiaTimeline: NextPage<Props> = ({
                   xScale={xScale}
                   yOffset={0}
                   height={2}
-                  fill={itcGreen}
-                  roundedCorners={false}
+                  fill={indonesiaColor}
+                  fillOpacity={0.2}
                 />
               ))}
             </g>
@@ -536,7 +558,7 @@ const IndonesiaTimeline: NextPage<Props> = ({
                     x={xScale(e.dateStart) - width / 2}
                     y={height / -2}
                     rx={1}
-                    fill={itcGreen}
+                    fill={indonesiaColor}
                   />
                 );
               })}
@@ -557,6 +579,36 @@ const IndonesiaTimeline: NextPage<Props> = ({
               })}
             </g>
           </g>
+          <g id="annotations">
+            <g id="annotation-travels">
+              <text
+                textAnchor="center"
+                transform={`translate(${width / 2}, 350)`}
+              >
+                <tspan fontFamily="Fraunces" fontWeight={"bold"}>
+                  Travels over time
+                </tspan>
+                <tspan x={0} dy={7}>
+                  The travels where comparatively long in the beginning
+                </tspan>
+                <tspan x={0} dy={7}>
+                  and got much shorter in the 90s.
+                </tspan>
+              </text>
+              <LeaderLine
+                sourcePos={new Vector2(width / 2 + 30, 370)}
+                targetPos={new Vector2(width / 2, 405)}
+                stroke="black"
+                strokeWidth={0.5}
+              />
+              <LeaderLine
+                sourcePos={new Vector2(width / 2 + 100, 370)}
+                targetPos={new Vector2(width / 2 + 200, 405)}
+                stroke="black"
+                strokeWidth={0.5}
+              />
+            </g>
+          </g>
         </svg>
         <h2>Indonesia</h2>
         <LocatorMap neCountriesTopoJson={neCountries} highlight={["IDN"]} />
@@ -567,21 +619,30 @@ const IndonesiaTimeline: NextPage<Props> = ({
 };
 
 export const getStaticProps: GetStaticProps<Props> = async () => {
-  const [projects, phdCandidates, btors, alumni, ministers, neCountries] =
-    await Promise.all([
-      getProjectsIn("IDN"),
-      getPhdCandidatesByCountry("IDN"),
-      getBTORsByCountry("Indonesia"),
-      getAlumniByCountry("IDN"),
-      getDutchForeignAffairsMinisters(),
-      getCountries(),
-    ]);
+  const [
+    projects,
+    phdCandidates,
+    btors,
+    longTermMissions,
+    alumni,
+    ministers,
+    neCountries,
+  ] = await Promise.all([
+    getProjectsIn("IDN"),
+    getPhdCandidatesByCountry("IDN"),
+    getBTORsByCountry("Indonesia"),
+    getLongTermMissions(),
+    getAlumniByCountry("IDN"),
+    getDutchForeignAffairsMinisters(),
+    getCountries(),
+  ]);
 
   return {
     props: {
       projects,
       phdCandidates,
       btors,
+      longTermMissions,
       alumni,
       ministers,
       neCountries,
