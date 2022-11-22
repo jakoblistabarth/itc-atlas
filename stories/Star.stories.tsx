@@ -36,6 +36,8 @@ const Template: ComponentStory<typeof Star> = (args) => {
 };
 
 const defaultArgs = {
+  innerRadius: side / 6,
+  outerRadius: side / 3,
   transform: `translate(${side / 2} ${side / 2})`,
   fill: "teal",
   fillOpacity: 0.2,

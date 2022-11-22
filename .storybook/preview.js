@@ -22,6 +22,7 @@ export const parameters = {
         "Annotations",
         "Charts",
         "Shapes",
+        "Patterns",
         "SummaryTable",
         "UI",
       ],

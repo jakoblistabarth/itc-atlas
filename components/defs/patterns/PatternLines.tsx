@@ -1,28 +1,35 @@
-import { FC } from "react";
-import { PatternAppearance } from "../../../types/Appearance";
+import { FC, SVGProps } from "react";
 
-const PatternLines: FC<{ style?: PatternAppearance; angle?: number }> = ({
-  style,
+type Props = {
+  name?: string;
+  strokeWidth?: number;
+  angle?: number;
+  spacing?: number;
+} & Omit<SVGProps<SVGLineElement>, "x1" | "x2" | "y1" | "y2">;
+
+const PatternLines: FC<Props> = ({
+  name = "Lines",
   angle = 0,
+  spacing = 1,
+  strokeWidth = 1,
+  ...rest
 }) => {
-  const size = 2;
+  const size = strokeWidth + strokeWidth * spacing;
   return (
     <pattern
-      id="Lines"
+      id={name}
       width={size}
       height={size}
-      patternTransform={`rotate(${
-        style?.patternTransform?.angle ?? angle
-      } 0 0)`}
+      patternTransform={`rotate(${angle} ${size / 2} ${size / 2})`}
       patternUnits="userSpaceOnUse"
     >
       <line
-        x1="0"
+        x1={size / 2}
         y1="0"
-        x2="0"
+        x2={size / 2}
         y2={size}
-        stroke={style?.color ?? "black"}
-        strokeWidth="1"
+        strokeWidth={strokeWidth}
+        {...rest}
       />
     </pattern>
   );

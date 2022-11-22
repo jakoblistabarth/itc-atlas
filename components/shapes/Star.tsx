@@ -3,16 +3,11 @@ import { FC, SVGProps } from "react";
 
 type Props = {
   rays?: number;
-  innerRadius?: number;
-  outerRadius?: number;
+  innerRadius: number;
+  outerRadius: number;
 } & SVGProps<SVGPolygonElement>;
 
-const Star: FC<Props> = ({
-  rays = 4,
-  innerRadius = 5,
-  outerRadius = 10,
-  ...rest
-}) => {
+const Star: FC<Props> = ({ rays = 5, innerRadius, outerRadius, ...rest }) => {
   const stepSize = (2 * Math.PI) / rays;
   const offset = Math.PI / -2;
   const points = range(0, rays)

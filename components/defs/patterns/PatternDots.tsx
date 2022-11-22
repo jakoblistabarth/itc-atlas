@@ -1,27 +1,38 @@
-import { FC } from "react";
-import { PatternAppearance } from "../../../types/Appearance";
+import { FC, SVGProps } from "react";
 
-const PatternDots: FC<{ style?: PatternAppearance; angle?: number }> = ({
-  style,
+type Props = {
+  name?: string;
+  angle?: number;
+  dotSize?: number;
+  spacing?: number;
+} & Omit<SVGProps<SVGCircleElement>, "cx" | "cy" | "r">;
+
+const PatternDots: FC<Props> = ({
   angle = 0,
+  name = "Dots",
+  dotSize = 2,
+  spacing = 0.25,
+  ...rest
 }) => {
-  const size = 2;
+  const strokeWidth = rest.strokeWidth
+    ? parseFloat(rest.strokeWidth + "" ?? "0")
+    : 0;
+  const patternSize = dotSize * (1 + spacing) + strokeWidth;
   return (
     <pattern
-      id="Dots"
-      width={size}
-      height={size}
-      patternTransform={`rotate(${
-        style?.patternTransform?.angle ?? angle
-      } 0 0)`}
+      id={name}
+      width={patternSize}
+      height={patternSize}
+      patternTransform={`rotate(${angle} ${patternSize / 2} ${
+        patternSize / 2
+      })`}
       patternUnits="userSpaceOnUse"
     >
       <circle
-        cx={size / 2}
-        cy={size / 2}
-        r={size * 0.3}
-        fill={style?.color ?? "black"}
-        stroke="none"
+        cx={patternSize / 2}
+        cy={patternSize / 2}
+        r={dotSize * 0.5}
+        {...rest}
       />
     </pattern>
   );

@@ -41,6 +41,9 @@ import Star from "../../components/shapes/Star";
 import getLongTermMissions from "../../lib/data/getLongTermMissions";
 import { LongTermMission } from "../../types/LongTermMission";
 import LeaderLine from "../../components/LeaderLine";
+import NsidedPolygon from "../../components/shapes/NsidedPolygon";
+import PatternShapes from "../../components/defs/patterns/PatternShapes";
+import PatternLines from "../../components/defs/patterns/PatternLines";
 
 type Props = {
   projects: Project[];
@@ -166,6 +169,35 @@ const IndonesiaTimeline: NextPage<Props> = ({
       "darkred",
       "purple",
     ]);
+  const topicPatternScale = scaleOrdinal<string, string>()
+    .domain(topics.map((d) => d.name))
+    .range(["A", "B", "C", "D", "E"]);
+
+  const TopicPatterns = () => {
+    const s = 3;
+    const commonPatternProps = {
+      spacing: 0.25,
+      angle: 45,
+    };
+    return (
+      <defs>
+        <PatternShapes name="A" size={s}>
+          <NsidedPolygon {...commonPatternProps} sides={3} radius={s / 2} />
+        </PatternShapes>
+        <PatternShapes {...commonPatternProps} name="B" size={s}>
+          <rect width={s} height={s} />
+        </PatternShapes>
+        <PatternShapes {...commonPatternProps} name="C" size={s}>
+          <Star rays={5} innerRadius={s / 5} outerRadius={s / 2} />
+        </PatternShapes>
+        <PatternShapes {...commonPatternProps} name="D" size={s}>
+          <circle r={s / 3} />
+        </PatternShapes>
+        <PatternLines name="E" spacing={1.5} angle={45} stroke="black" />
+      </defs>
+    );
+  };
+
   const btorEvents: TimelineEvent[] = btors.flatMap((btor) => {
     if (!btor.dateStart || !btor.dateEnd) return [];
     return {
@@ -238,32 +270,18 @@ const IndonesiaTimeline: NextPage<Props> = ({
       case parties[0]:
         return <Star {...style} innerRadius={iR} outerRadius={oR} />;
       case parties[1]:
-        return (
-          <Star
-            {...style}
-            transform="rotate(45)"
-            innerRadius={iR}
-            outerRadius={oR}
-          />
-        );
+        return <NsidedPolygon sides={4} radius={size / 2} {...style} />;
       case parties[2]:
         return (
-          <rect
+          <NsidedPolygon
+            sides={4}
+            radius={size / 2}
+            transform="rotate(45)"
             {...style}
-            width={w}
-            height={w}
-            transform={`translate(${-w / 2} ${-w / 2})`}
           />
         );
       default:
-        return (
-          <rect
-            {...style}
-            width={w}
-            height={w}
-            transform={`rotate(45) translate(${-w / 2} ${-w / 2})`}
-          />
-        );
+        return <NsidedPolygon sides={3} radius={size / 2} {...style} />;
     }
   };
 
@@ -298,15 +316,15 @@ const IndonesiaTimeline: NextPage<Props> = ({
     const size = "1.5em";
     switch (topic) {
       case "poverty reduction":
-        return <BiCoin size={size} color={topicColorScale(topic)} />;
+        return <BiCoin size={size} color={"black"} />;
       case "water":
-        return <BiWater size={size} color={topicColorScale(topic)} />;
+        return <BiWater size={size} color={"black"} />;
       case "food":
-        return <BiRestaurant size={size} color={topicColorScale(topic)} />;
+        return <BiRestaurant size={size} color={"black"} />;
       case "health":
-        return <BiFirstAid size={size} color={topicColorScale(topic)} />;
+        return <BiFirstAid size={size} color={"black"} />;
       case "climate":
-        return <WiThermometer size={size} color={topicColorScale(topic)} />;
+        return <WiThermometer size={size} color={"black"} />;
     }
   };
 
@@ -481,6 +499,7 @@ const IndonesiaTimeline: NextPage<Props> = ({
             </g>
             <g id="topics" transform="translate(0, 30)">
               <TimelineHeader>Development aid priorities</TimelineHeader>
+              <TopicPatterns />
               {topics.map((topic) => (
                 <>
                   <EventPeriod
@@ -500,7 +519,6 @@ const IndonesiaTimeline: NextPage<Props> = ({
                     <PointLabel
                       position={new Vector2(10, topicYScale.bandwidth() / 2)}
                       placement={LabelPlacement.RIGHT}
-                      style={{ fill: topicColorScale(topic.name), fontSize: 6 }}
                     >
                       {topic.name}
                     </PointLabel>
