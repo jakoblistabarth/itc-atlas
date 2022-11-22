@@ -8,7 +8,7 @@ import getAlumni from "../../lib/data/getAlumni";
 import styles from "../../styles/home.module.css";
 import { Alumni } from "../../types/Alumni";
 
-import React, { useState } from "react";
+import React from "react";
 import { AgGridColumn, AgGridReact } from "ag-grid-react"; // the AG Grid React Component
 
 import "ag-grid-community/styles/ag-grid.css"; // Core grid CSS, always needed

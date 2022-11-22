@@ -11,6 +11,11 @@ import Heading, { Headings } from "../../components/Heading";
 import LinkFramed from "../../components/LinkFramed";
 import { nanoid } from "nanoid";
 
+import { AgGridColumn, AgGridReact } from "ag-grid-react";
+
+import "ag-grid-community/styles/ag-grid.css";
+import "ag-grid-community/styles/ag-theme-material.css";
+
 type Props = React.PropsWithChildren<{
   projects: Project[];
 }>;
@@ -49,6 +54,11 @@ const Travels: NextPage<Props> = ({ projects }) => {
     return acc;
   }, 0);
   console.log(duplicates, sum);
+
+  const defaultColDef = {
+    filter: true,
+    sortable: true,
+  };
   return (
     <>
       <Head>
@@ -75,7 +85,23 @@ const Travels: NextPage<Props> = ({ projects }) => {
           <BackToHome />
         </p>
 
-        <SummaryTable data={projectsDf} />
+        {/* <SummaryTable data={projectsDf} /> */}
+        <div className="ag-theme-material" style={{ width: 1280, height: 500 }}>
+          <AgGridReact
+            rowData={projects} // Row Data for Rows
+            defaultColDef={defaultColDef} // Default Column Properties
+            pagination={true}
+            paginationAutoPageSize={true}
+          >
+            <AgGridColumn field="projectID" />
+            <AgGridColumn field="projectName" />
+            <AgGridColumn field="allCountries" />
+            <AgGridColumn field="populatedPlaceNE" />
+            <AgGridColumn field="type" />
+            <AgGridColumn field="dateStart" filter="agDateColumnFilter" />
+            <AgGridColumn field="datEnd" filter="agDateColumnFilter" />
+          </AgGridReact>
+        </div>
       </main>
 
       <Footer />
