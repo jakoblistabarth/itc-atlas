@@ -66,15 +66,40 @@ const IndonesiaTimeline: NextPage<Props> = ({
 }) => {
   const commonDomain = [new Date("1945"), new Date(2028, 0, 1)] as [Date, Date];
 
-  const tlHeights = {
-    itcContext: 120,
-    policy: 120,
-    itc: 165,
-  };
   const width = 900;
-  const margin = 40;
-  const height = sum([...Object.values(tlHeights)]) + margin * 2;
+  const margin = 20;
+  const sectionHeaderHeight = 12;
+  const rowHeaderHeight = 9;
+  const separatorHeight = 10;
+  const tlHeights = {
+    itcContext: [25, 70],
+    policy: [20, 45],
+    itc: [130, 20, 30],
+  };
+  const getSectionHeight = (idx: number) => {
+    const section = Object.values(tlHeights)[idx];
+    return sum([
+      ...section,
+      sectionHeaderHeight,
+      rowHeaderHeight * section.length,
+      separatorHeight,
+    ]);
+  };
+  const getSectionY = (idx: number) => {
+    const sections = Object.values(tlHeights).slice(0, idx + 1);
+    return sum([...sections.map((_, idx) => getSectionHeight(idx)), margin]);
+  };
+  const getRowY = (sectionIdx: number, rowIdx: number) => {
+    const section = Object.values(tlHeights)[sectionIdx];
+    const rows = Object.values(section).slice(0, rowIdx);
+    return sum([...rows, sectionHeaderHeight, rowHeaderHeight * rows.length]);
+  };
+  const height = sum([
+    ...range(0, 3).map((idx) => getSectionHeight(idx)),
+    margin * 2,
+  ]);
   const itcGreen = "teal";
+  const itcBlue = "rgb(0, 35, 149)";
   const indonesiaColor = "red";
   const xScale = scaleTime().domain(commonDomain).range([0, width]);
 
@@ -157,18 +182,8 @@ const IndonesiaTimeline: NextPage<Props> = ({
 
   const topicYScale = scaleBand()
     .domain(topics.map((d) => d.name))
-    .range([0, 40])
+    .range([0, tlHeights.policy[1] - 10])
     .paddingInner(0.15);
-  const topicColorScale = scaleOrdinal<string, string>()
-    .domain(topics.map((d) => d.name))
-    .range([
-      "orange",
-      "cornflowerblue",
-      "darkslateblue",
-      "red",
-      "darkred",
-      "purple",
-    ]);
   const topicPatternScale = scaleOrdinal<string, string>()
     .domain(topics.map((d) => d.name))
     .range(["A", "B", "C", "D", "E"]);
@@ -337,271 +352,348 @@ const IndonesiaTimeline: NextPage<Props> = ({
       <main className={styles.main}>
         <Heading Tag={Headings.H1}>ITC's Activities in Indonesia</Heading>
         <svg width={width} height={height} fontSize="6" fontFamily="Inter">
-          {/* <rect width="100%" height={margin} fill="blue" />
-          <rect
-            width="100%"
-            height={tlHeights.itcContext}
-            y={margin}
-            fill="pink"
-          />
-          <rect
-            width="100%"
-            height={tlHeights.policy}
-            y={margin + tlHeights.itcContext}
-            fill="lightblue"
-          />
-          <rect
-            width="100%"
-            height={tlHeights.itc}
-            y={margin + tlHeights.itcContext + tlHeights.policy}
-            fill="pink"
-          />
-          <rect
-            width="100%"
-            height={margin}
-            y={margin + tlHeights.itcContext + tlHeights.policy + tlHeights.itc}
-            fill="blue"
-          /> */}
+          {/* <g id="grid-debugger" opacity={0.2}>
+            <rect width="100%" height={margin} fill="blue" />
+            <rect
+              width="100%"
+              height={getSectionHeight(0)}
+              y={margin}
+              fill="red"
+            />
+            <rect
+              width="100%"
+              height={getSectionHeight(1)}
+              y={getSectionY(0)}
+              fill="orange"
+            />
+            <rect
+              width="100%"
+              height={getSectionHeight(2)}
+              y={getSectionY(1)}
+              fill="red"
+            />
+            <rect width="100%" height={margin} y={getSectionY(2)} fill="blue" />
+          </g> */}
           <TimelineGrid scale={xScale} height={height} margin={margin} />
+
+          <TimelineSeparator y={getSectionY(0)} />
+          <TimelineSeparator y={getSectionY(1)} />
+
           <g id="itcContextEvents" transform={`translate(0 ${margin})`}>
-            <TimelineHeader>Name changes</TimelineHeader>
-            <g id="nameChanges">
-              {renamingEvents.map((ne, idx) => {
-                const isEven = idx % 2 === 0;
-                return (
-                  <EventPeriod
-                    key={nanoid()}
-                    dateStart={ne.dateStart}
-                    dateEnd={ne.dateEnd ?? new Date()}
-                    xScale={xScale}
-                    yOffset={0}
-                    height={1}
-                    fill={itcGreen}
-                  >
-                    <PointLabel
-                      placement={
-                        isEven
-                          ? LabelPlacement.BOTTOMRIGHT
-                          : LabelPlacement.TOPRIGHT
-                      }
-                      style={{ fill: itcGreen, fontSize: 6 }}
-                    >
-                      {ne.name}
-                    </PointLabel>
-                    <line
-                      y2={10 * (isEven ? 1 : -1)}
-                      stroke={itcGreen}
-                      strokeWidth={0.5}
-                    />
-                    <PointSymbol
-                      position={new Vector2()}
-                      radius={2}
-                      style={{
-                        stroke: itcGreen,
-                        fill: "white",
-                        fillOpacity: 1,
-                      }}
-                    />
-                  </EventPeriod>
-                );
-              })}
-            </g>
-            <g id="moves" transform="translate(0 25)">
-              <TimelineHeader>Moves</TimelineHeader>
-              {Array.from(ITClocations.keys()).map((d, idx) => {
-                const currentLocation = ITClocations.get(d);
-                if (!currentLocation) return <></>;
-                const width = 70;
-                const next = Array.from(ITClocations.entries())[idx + 1];
-                const dateEnd = next
-                  ? next[1].moveInDate
-                  : new Date(2050, 0, 1);
-                return (
-                  <>
-                    <rect
-                      key={nanoid()}
-                      x={xScale(new Date(currentLocation.moveInDate))}
-                      y={width / 2 - 1}
-                      width={
-                        xScale(new Date(dateEnd)) -
-                        xScale(new Date(currentLocation.moveInDate))
-                      }
-                      height={1}
-                      fill={itcGreen}
-                    />
-                    <g
-                      key={nanoid()}
-                      transform={`translate(${xScale(
-                        new Date(currentLocation.moveInDate)
-                      )} 0)`}
-                    >
-                      <line
-                        y1={width / 2}
-                        y2={width / 2 + 5}
-                        stroke={itcGreen}
-                      />
-                      <Building color={itcGreen} width={width} location={d} />
-                      <PointSymbol
-                        position={new Vector2(0, width / 2)}
-                        style={{
-                          fillOpacity: 1,
-                          fill: "white",
-                          stroke: itcGreen,
-                        }}
-                      />
-                      <PointLabel
-                        position={new Vector2(0, width / 2)}
-                        placement={LabelPlacement.BOTTOM}
-                        style={{ fill: itcGreen, fontSize: 6 }}
+            <SectionContent>
+              <TimelineHeader color={itcGreen} size={sectionHeaderHeight}>
+                ITC History
+              </TimelineHeader>
+              <g id="nameChanges" transform={`translate(0 ${getRowY(0, 0)})`}>
+                <TimelineHeader
+                  color={itcGreen}
+                  fontWeight={"bold"}
+                  size={rowHeaderHeight}
+                >
+                  Name changes
+                </TimelineHeader>
+                <RowContent>
+                  {renamingEvents.map((ne, idx) => {
+                    const isEven = idx % 2 === 0;
+                    return (
+                      <EventPeriod
+                        key={nanoid()}
+                        dateStart={ne.dateStart}
+                        dateEnd={ne.dateEnd ?? new Date()}
+                        xScale={xScale}
+                        yOffset={0}
+                        height={1}
+                        fill={itcGreen}
                       >
-                        <tspan fontWeight={"bold"} fontFamily={"Fraunces"}>
-                          {d}
-                        </tspan>
-                        <tspan x="0" dy="7">
-                          {currentLocation.city}
-                        </tspan>
-                      </PointLabel>
-                    </g>
-                  </>
-                );
-              })}
-            </g>
-            <TimelineSeparator y={tlHeights.itcContext} />
+                        <PointLabel
+                          placement={
+                            isEven
+                              ? LabelPlacement.BOTTOMRIGHT
+                              : LabelPlacement.TOPRIGHT
+                          }
+                          style={{ fill: itcGreen, fontSize: 6 }}
+                        >
+                          {ne.name}
+                        </PointLabel>
+                        <line
+                          y2={10 * (isEven ? 1 : -1)}
+                          stroke={itcGreen}
+                          strokeWidth={0.5}
+                        />
+                        <PointSymbol
+                          position={new Vector2()}
+                          radius={2}
+                          style={{
+                            stroke: itcGreen,
+                            fill: "white",
+                            fillOpacity: 1,
+                          }}
+                        />
+                      </EventPeriod>
+                    );
+                  })}
+                </RowContent>
+              </g>
+              <g id="moves" transform={`translate(0 ${getRowY(0, 1)})`}>
+                <TimelineHeader
+                  color={itcGreen}
+                  fontWeight={"bold"}
+                  size={rowHeaderHeight}
+                >
+                  Moves
+                </TimelineHeader>
+                <RowContent>
+                  {Array.from(ITClocations.keys()).map((d, idx) => {
+                    const currentLocation = ITClocations.get(d);
+                    if (!currentLocation) return <></>;
+                    const width = 70;
+                    const next = Array.from(ITClocations.entries())[idx + 1];
+                    const dateEnd = next
+                      ? next[1].moveInDate
+                      : new Date(2050, 0, 1);
+                    return (
+                      <>
+                        <rect
+                          key={nanoid()}
+                          x={xScale(new Date(currentLocation.moveInDate))}
+                          y={width / 2 - 1}
+                          width={
+                            xScale(new Date(dateEnd)) -
+                            xScale(new Date(currentLocation.moveInDate))
+                          }
+                          height={1}
+                          fill={itcGreen}
+                        />
+                        <g
+                          key={nanoid()}
+                          transform={`translate(${xScale(
+                            new Date(currentLocation.moveInDate)
+                          )} 0)`}
+                        >
+                          <line
+                            y1={width / 2}
+                            y2={width / 2 + 5}
+                            stroke={itcGreen}
+                          />
+                          <Building
+                            color={itcGreen}
+                            width={width}
+                            location={d}
+                          />
+                          <PointSymbol
+                            position={new Vector2(0, width / 2)}
+                            style={{
+                              fillOpacity: 1,
+                              fill: "white",
+                              stroke: itcGreen,
+                            }}
+                          />
+                          <PointLabel
+                            position={new Vector2(0, width / 2)}
+                            placement={LabelPlacement.BOTTOM}
+                            style={{ fill: itcGreen, fontSize: 6 }}
+                          >
+                            <tspan fontWeight={"bold"} fontFamily={"Fraunces"}>
+                              {d}
+                            </tspan>
+                            <tspan x="0" dy="7">
+                              {currentLocation.city}
+                            </tspan>
+                          </PointLabel>
+                        </g>
+                      </>
+                    );
+                  })}
+                </RowContent>
+              </g>
+            </SectionContent>
           </g>
           <g
             id="policyEvents"
-            transform={`translate(0 ${margin + tlHeights.itcContext})`}
+            fill={itcBlue}
+            transform={`translate(0 ${getSectionY(0)})`}
           >
-            <g id="ministers">
-              <TimelineHeader>Ministers in charge</TimelineHeader>
-              {ministerEvents.map((ce) => (
-                <EventPeriod
-                  key={nanoid()}
-                  dateStart={ce.dateStart}
-                  dateEnd={ce.dateEnd ?? new Date()}
-                  xScale={xScale}
-                  yOffset={0}
-                  fill={ce.fill}
-                  height={1}
+            <SectionContent>
+              <TimelineHeader color={itcBlue} size={sectionHeaderHeight}>
+                Government Context
+              </TimelineHeader>
+              <g id="ministers" transform={`translate(0 ${getRowY(1, 0)})`}>
+                <TimelineHeader
+                  color={itcBlue}
+                  fontWeight={"bold"}
+                  size={rowHeaderHeight}
                 >
-                  <g transform="rotate(-45) translate(2 0)">
-                    <PointLabel placement={LabelPlacement.RIGHT}>
-                      {ce.name}
-                    </PointLabel>
-                  </g>
-                  {ce.data?.party &&
-                    renderPartySymbol(ce.data?.party as string)}
-                  {/* TODO: fix typing? */}
-                </EventPeriod>
-              ))}
-            </g>
-            <g id="topics" transform="translate(0, 30)">
-              <TimelineHeader>Development aid priorities</TimelineHeader>
-              <TopicPatterns />
-              {topics.map((topic) => (
-                <>
-                  <EventPeriod
-                    key={nanoid()}
-                    dateStart={new Date(topic.dateStart)}
-                    dateEnd={new Date(topic.dateEnd)}
-                    xScale={xScale}
-                    yOffset={topicYScale(topic.name) ?? 0}
-                    height={topicYScale.bandwidth()}
-                    stroke="black"
-                    strokeWidth={0.5}
-                    rx={1}
-                    fill={`url(#${topicPatternScale(topic.name)})`}
-                  />
-                  <g transform={`translate(0 ${topicYScale(topic.name)})`}>
-                    {renderTopicIcon(topic.name)}
-                    <PointLabel
-                      position={new Vector2(10, topicYScale.bandwidth() / 2)}
-                      placement={LabelPlacement.RIGHT}
+                  Ministers in charge
+                </TimelineHeader>
+                <RowContent>
+                  {ministerEvents.map((ce) => (
+                    <EventPeriod
+                      key={nanoid()}
+                      dateStart={ce.dateStart}
+                      dateEnd={ce.dateEnd ?? new Date()}
+                      xScale={xScale}
+                      yOffset={0}
+                      height={1}
                     >
-                      {topic.name}
-                    </PointLabel>
-                  </g>
-                </>
-              ))}
-            </g>
-            <TimelineSeparator y={tlHeights.policy} />
+                      <g transform="rotate(-45) translate(2 0)">
+                        <PointLabel placement={LabelPlacement.RIGHT}>
+                          {ce.name}
+                        </PointLabel>
+                      </g>
+                      {ce.data?.party &&
+                        renderPartySymbol(ce.data?.party as string)}
+                      {/* TODO: fix typing? */}
+                    </EventPeriod>
+                  ))}
+                </RowContent>
+              </g>
+              <g id="topics" transform={`translate(0, ${getRowY(1, 1)})`}>
+                <TimelineHeader
+                  color={itcBlue}
+                  fontWeight={"bold"}
+                  size={rowHeaderHeight}
+                >
+                  Development aid priorities
+                </TimelineHeader>
+                <RowContent>
+                  <TopicPatterns />
+                  {topics.map((topic) => (
+                    <>
+                      <EventPeriod
+                        key={nanoid()}
+                        dateStart={new Date(topic.dateStart)}
+                        dateEnd={new Date(topic.dateEnd)}
+                        xScale={xScale}
+                        yOffset={topicYScale(topic.name) ?? 0}
+                        height={topicYScale.bandwidth()}
+                        stroke="black"
+                        strokeWidth={0.5}
+                        rx={1}
+                        fill={`url(#${topicPatternScale(topic.name)})`}
+                      />
+                      <g
+                        transform={`translate(${xScale(
+                          new Date(topic.dateStart)
+                        )} ${topicYScale(topic.name)})`}
+                      >
+                        <PointLabel
+                          position={new Vector2(0, topicYScale.bandwidth() / 8)}
+                          placement={LabelPlacement.LEFT}
+                        >
+                          {topic.name}
+                        </PointLabel>
+                      </g>
+                    </>
+                  ))}
+                </RowContent>
+              </g>
+            </SectionContent>
           </g>
-          <g
-            id="itcEvents"
-            transform={`translate(0 ${
-              margin + tlHeights.itcContext + tlHeights.policy
-            })`}
-          >
-            <g>
-              <TimelineHeader>Projects</TimelineHeader>
-              {projectEvents.map((e) => (
-                <EventPeriod
-                  key={nanoid()}
-                  dateStart={e.dateStart}
-                  dateEnd={e.dateEnd ?? new Date()}
-                  xScale={xScale}
-                  yOffset={projectsYScale(e.yOffset) ?? 0}
-                  height={2}
-                  fill={indonesiaColor}
-                />
-              ))}
-            </g>
-
-            <g transform={`translate(0 130)`}>
-              <TimelineHeader>Staff travels</TimelineHeader>
-              {travels.map((e) => (
-                <EventPeriod
-                  key={nanoid()}
-                  dateStart={e.dateStart}
-                  dateEnd={e.dateEnd ?? new Date()}
-                  xScale={xScale}
-                  yOffset={0}
-                  height={2}
-                  fill={indonesiaColor}
-                  fillOpacity={0.2}
-                />
-              ))}
-            </g>
-
-            <g transform="translate(0 160)">
-              <TimelineHeader>Graduates & PhDs</TimelineHeader>
-              {examEvents.map((e) => {
-                const width = 9;
-                const height = (e.size ?? 0) / 2;
-                return (
-                  <rect
-                    key={nanoid()}
-                    width={width}
-                    height={height}
-                    x={xScale(e.dateStart) - width / 2}
-                    y={height / -2}
-                    rx={1}
-                    fill={indonesiaColor}
-                  />
-                );
-              })}
-              {phdGraduatesPerYear.map(([year, count]) => {
-                const r = 1;
-                const gap = r * 3;
-                const height = (count - 1) * gap + count * r * 2;
-                return range(0, count).map((_, idx) => (
-                  <g key={nanoid()} transform={`translate(0 ${-height / 4})`}>
-                    <circle
-                      cx={xScale(new Date(year + "GMT"))}
-                      cy={idx * gap}
-                      r={r}
-                      fill={"white"}
+          <g id="itcEvents" transform={`translate(0 ${getSectionY(1)})`}>
+            <SectionContent>
+              <TimelineHeader color={indonesiaColor} size={sectionHeaderHeight}>
+                Activities in Indonesia
+              </TimelineHeader>
+              <g transform={`translate(0,${getRowY(2, 0)})`}>
+                <TimelineHeader
+                  color={indonesiaColor}
+                  fontWeight={"bold"}
+                  size={rowHeaderHeight}
+                >
+                  Projects
+                </TimelineHeader>
+                <RowContent>
+                  {projectEvents.map((e) => (
+                    <EventPeriod
+                      key={nanoid()}
+                      dateStart={e.dateStart}
+                      dateEnd={e.dateEnd ?? new Date()}
+                      xScale={xScale}
+                      yOffset={projectsYScale(e.yOffset) ?? 0}
+                      height={2}
+                      fill={indonesiaColor}
                     />
-                  </g>
-                ));
-              })}
-            </g>
+                  ))}
+                </RowContent>
+              </g>
+
+              <g transform={`translate(0 ${getRowY(2, 1)})`}>
+                <TimelineHeader
+                  color={indonesiaColor}
+                  fontWeight={"bold"}
+                  size={rowHeaderHeight}
+                >
+                  Staff travels
+                </TimelineHeader>
+                <RowContent>
+                  {travels.map((e) => (
+                    <EventPeriod
+                      key={nanoid()}
+                      dateStart={e.dateStart}
+                      dateEnd={e.dateEnd ?? new Date()}
+                      xScale={xScale}
+                      yOffset={0}
+                      height={2}
+                      fill={indonesiaColor}
+                      fillOpacity={0.2}
+                    />
+                  ))}
+                </RowContent>
+              </g>
+
+              <g transform={`translate(0 ${getRowY(2, 2)})`}>
+                <TimelineHeader
+                  color={indonesiaColor}
+                  fontWeight={"bold"}
+                  size={rowHeaderHeight}
+                >
+                  Graduates & PhDs
+                </TimelineHeader>
+                <RowContent>
+                  {examEvents.map((e) => {
+                    const width = 9;
+                    const height = (e.size ?? 0) / 3;
+                    return (
+                      <rect
+                        key={nanoid()}
+                        width={width}
+                        height={height}
+                        x={xScale(e.dateStart) - width / 2}
+                        y={height / -2}
+                        rx={1}
+                        fill={indonesiaColor}
+                      />
+                    );
+                  })}
+                  {phdGraduatesPerYear.map(([year, count]) => {
+                    const r = 2;
+                    const gap = r * 3;
+                    const height = (count - 1) * gap + count * r * 2;
+                    return range(0, count).map((_, idx) => (
+                      <g
+                        key={nanoid()}
+                        transform={`translate(0 ${-height / 4})`}
+                      >
+                        <circle
+                          cx={xScale(new Date(year + "GMT"))}
+                          cy={r + idx * gap}
+                          r={r}
+                          stroke={indonesiaColor}
+                          strokeWidth={0.5}
+                          fill={"white"}
+                        />
+                      </g>
+                    ));
+                  })}
+                </RowContent>
+              </g>
+            </SectionContent>
           </g>
           <g id="annotations">
             <g id="annotation-travels">
               <text
                 textAnchor="center"
-                transform={`translate(${width / 2}, 350)`}
+                transform={`translate(${width / 2}, 380)`}
               >
                 <tspan fontFamily="Fraunces" fontWeight={"bold"}>
                   Travels over time
@@ -614,14 +706,14 @@ const IndonesiaTimeline: NextPage<Props> = ({
                 </tspan>
               </text>
               <LeaderLine
-                sourcePos={new Vector2(width / 2 + 30, 370)}
-                targetPos={new Vector2(width / 2, 405)}
+                sourcePos={new Vector2(width / 2 + 30, 400)}
+                targetPos={new Vector2(width / 2, 425)}
                 stroke="black"
                 strokeWidth={0.5}
               />
               <LeaderLine
-                sourcePos={new Vector2(width / 2 + 100, 370)}
-                targetPos={new Vector2(width / 2 + 200, 405)}
+                sourcePos={new Vector2(width / 2 + 100, 400)}
+                targetPos={new Vector2(width / 2 + 200, 425)}
                 stroke="black"
                 strokeWidth={0.5}
               />
