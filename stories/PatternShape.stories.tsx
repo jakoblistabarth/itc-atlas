@@ -41,14 +41,7 @@ const Template: ComponentStory<typeof PatternShapes> = (args) => {
 const defaultArgs = {
   size: 20,
   name: "pattern",
-  children: (
-    <Star
-      transform={`translate(10 10)`}
-      rays={5}
-      innerRadius={4}
-      outerRadius={10}
-    />
-  ),
+  children: <Star rays={5} innerRadius={4} outerRadius={10} />,
 };
 
 export const Default = Template.bind({});
@@ -59,7 +52,5 @@ Default.args = {
 export const Pentagon = Template.bind({});
 Pentagon.args = {
   ...defaultArgs,
-  children: (
-    <NsidedPolygon sides={5} radius={10} transform={`translate(10 10)`} />
-  ),
+  children: <NsidedPolygon sides={5} radius={10} />,
 };
