@@ -57,3 +57,13 @@ RotatedColor.args = {
   strokeWidth: 5,
   strokeOpacity: 0.75,
 };
+export const dashed = Template.bind({});
+dashed.args = {
+  ...defaultArgs,
+  spacing: 2,
+  stroke: "black",
+  strokeWidth: 5,
+  strokeDasharray: "2%",
+  strokeDashoffset: "1%",
+  strokeOpacity: 0.75,
+};

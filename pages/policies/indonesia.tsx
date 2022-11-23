@@ -35,8 +35,6 @@ import { LabelPlacement } from "../../types/LabelPlacement";
 import { nanoid } from "nanoid";
 import Building, { ITClocations } from "../../components/Building";
 import PointSymbol from "../../components/map/PointSymbol";
-import { BiCoin, BiFirstAid, BiRestaurant, BiWater } from "react-icons/bi";
-import { WiThermometer } from "react-icons/Wi";
 import Star from "../../components/shapes/Star";
 import getLongTermMissions from "../../lib/data/getLongTermMissions";
 import { LongTermMission } from "../../types/LongTermMission";
@@ -44,6 +42,8 @@ import LeaderLine from "../../components/LeaderLine";
 import NsidedPolygon from "../../components/shapes/NsidedPolygon";
 import PatternShapes from "../../components/defs/patterns/PatternShapes";
 import PatternLines from "../../components/defs/patterns/PatternLines";
+import { FC, PropsWithChildren, SVGProps } from "react";
+import Wave from "../../components/shapes/Wave";
 
 type Props = {
   projects: Project[];
@@ -196,17 +196,46 @@ const IndonesiaTimeline: NextPage<Props> = ({
     };
     return (
       <defs>
-        <PatternLines name="A" spacing={2} stroke={itcBlue} />
-        <PatternShapes spacing={0} name="B" width={3} height={5}>
-          <line y1={-5} y2={5} stroke={itcBlue} />
+        <PatternLines
+          name="A"
+          spacing={2.5}
+          stroke={itcBlue}
+          strokeWidth={0.5}
+        />
+        <PatternShapes spacing={0} name="B" angle={0} width={6} height={2}>
+          <Wave
+            transform="translate(-3 0)"
+            width={6}
+            height={1.5}
+            fill="none"
+            stroke={itcBlue}
+            strokeWidth={0.5}
+          />
         </PatternShapes>
         <PatternShapes {...commonPatternProps} name="C" width={s} height={s}>
-          <Star rays={5} innerRadius={s / 5} outerRadius={s / 2} />
+          <rect
+            width={s / 2}
+            height={s / 2}
+            strokeWidth={0.5}
+            stroke={itcBlue}
+            fill={"none"}
+          />
         </PatternShapes>
-        <PatternShapes {...commonPatternProps} name="D" width={s} height={s}>
-          <circle r={s / 3} />
+        <PatternShapes {...commonPatternProps} name="E" width={s} height={s}>
+          <circle
+            r={s / 2.5}
+            fill={"none"}
+            strokeWidth={0.5}
+            stroke={itcBlue}
+          />
         </PatternShapes>
-        <PatternLines name="E" spacing={1.5} angle={45} stroke="black" />
+        <PatternLines
+          name="D"
+          {...commonPatternProps}
+          spacing={2}
+          stroke={itcBlue}
+          strokeWidth={0.5}
+        />
       </defs>
     );
   };
@@ -271,12 +300,11 @@ const IndonesiaTimeline: NextPage<Props> = ({
   const parties = Array.from(new Set(ministers.map((d) => d.party)));
   const renderPartySymbol = (party: string) => {
     const size = 6;
-    const w = size * 0.75;
     const oR = size / 2;
     const iR = oR / 2;
     const style = {
       fill: "white",
-      stroke: "black",
+      stroke: itcBlue,
       strokeLinejoin: "round" as const, //QUESTION: good practice?
     };
     switch (party) {
@@ -298,47 +326,37 @@ const IndonesiaTimeline: NextPage<Props> = ({
     }
   };
 
-  const TimelineHeader = ({ color = "black", children }) => {
+  const SectionContent: FC<PropsWithChildren<{}>> = ({ children }) => (
+    <g transform={`translate(0, ${sectionHeaderHeight})`}>{children}</g>
+  );
+  const RowContent: FC<PropsWithChildren<{}>> = ({ children }) => (
+    <g transform={`translate(0, ${rowHeaderHeight})`}>{children}</g>
+  );
+
+  const TimelineHeader: FC<
+    PropsWithChildren<
+      { color?: string; size: number } & SVGProps<SVGTextElement>
+    >
+  > = ({ color = "black", size, children, ...rest }) => {
     return (
-      <text
-        fill={color}
-        dy={-5}
-        fontFamily="Fraunces"
-        fontWeight={"bold"}
-        fontSize={9}
-      >
+      <text fill={color} fontFamily="Fraunces" fontSize={size} {...rest}>
         {children}
       </text>
     );
   };
+
   const TimelineSeparator = ({ y = 0 }) => {
     return (
       <line
         x1="0"
         x2={width}
-        y1={y - 30}
-        y2={y - 30}
+        y1={y}
+        y2={y}
         stroke="white"
-        strokeWidth={10}
+        strokeWidth={separatorHeight}
         fill="none"
       />
     );
-  };
-
-  const renderTopicIcon = (topic: string) => {
-    const size = "1.5em";
-    switch (topic) {
-      case "poverty reduction":
-        return <BiCoin size={size} color={"black"} />;
-      case "water":
-        return <BiWater size={size} color={"black"} />;
-      case "food":
-        return <BiRestaurant size={size} color={"black"} />;
-      case "health":
-        return <BiFirstAid size={size} color={"black"} />;
-      case "climate":
-        return <WiThermometer size={size} color={"black"} />;
-    }
   };
 
   return (
