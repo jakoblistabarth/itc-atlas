@@ -12,7 +12,7 @@ export default {
   title: "Patterns/PatternShapes",
   component: PatternShapes,
   argTypes: {
-    size: { control: { type: "range", min: 0, max: 50, step: 1 } },
+    spacing: { control: { type: "range", min: 0, max: 2, step: 0.01 } },
     angle: { control: { type: "range", min: -90, max: 90, step: 0.1 } },
     name: {
       table: {
@@ -39,18 +39,53 @@ const Template: ComponentStory<typeof PatternShapes> = (args) => {
 };
 
 const defaultArgs = {
-  size: 20,
+  width: 20,
+  height: 20,
   name: "pattern",
   children: <Star rays={5} innerRadius={4} outerRadius={10} />,
 };
 
-export const Default = Template.bind({});
-Default.args = {
+export const Stars = Template.bind({});
+Stars.args = {
   ...defaultArgs,
 };
 
-export const Pentagon = Template.bind({});
-Pentagon.args = {
+export const Pentagons = Template.bind({});
+Pentagons.args = {
   ...defaultArgs,
   children: <NsidedPolygon sides={5} radius={10} />,
+};
+
+export const IrregularDecorative = Template.bind({});
+IrregularDecorative.args = {
+  ...defaultArgs,
+  height: 20,
+  width: 10,
+  children: (
+    <>
+      <rect
+        transform="translate(-4, -9)"
+        width={8}
+        height={18}
+        rx={5}
+        fill={"none"}
+        stroke={"lightgrey"}
+      />
+      <Star rays={6} innerRadius={2} outerRadius={4} fill={"teal"} />
+      <Star
+        transform="translate(0 -6)"
+        rays={4}
+        innerRadius={1}
+        outerRadius={2}
+        fill={"blue"}
+      />
+      <Star
+        transform="translate(0 6)"
+        rays={4}
+        innerRadius={1}
+        outerRadius={2}
+        fill={"blue"}
+      />
+    </>
+  ),
 };

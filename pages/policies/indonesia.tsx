@@ -181,16 +181,14 @@ const IndonesiaTimeline: NextPage<Props> = ({
     };
     return (
       <defs>
-        <PatternShapes name="A" size={s}>
-          <NsidedPolygon {...commonPatternProps} sides={3} radius={s / 2} />
+        <PatternLines name="A" spacing={2} stroke={itcBlue} />
+        <PatternShapes spacing={0} name="B" width={3} height={5}>
+          <line y1={-5} y2={5} stroke={itcBlue} />
         </PatternShapes>
-        <PatternShapes {...commonPatternProps} name="B" size={s}>
-          <rect width={s} height={s} />
-        </PatternShapes>
-        <PatternShapes {...commonPatternProps} name="C" size={s}>
+        <PatternShapes {...commonPatternProps} name="C" width={s} height={s}>
           <Star rays={5} innerRadius={s / 5} outerRadius={s / 2} />
         </PatternShapes>
-        <PatternShapes {...commonPatternProps} name="D" size={s}>
+        <PatternShapes {...commonPatternProps} name="D" width={s} height={s}>
           <circle r={s / 3} />
         </PatternShapes>
         <PatternLines name="E" spacing={1.5} angle={45} stroke="black" />
