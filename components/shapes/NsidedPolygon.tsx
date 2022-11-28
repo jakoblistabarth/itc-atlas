@@ -6,7 +6,7 @@ type Props = {
   sides: number;
 } & SVGProps<SVGPolygonElement>;
 
-const Star: FC<Props> = ({ sides, radius, ...rest }) => {
+const NsidedPolygon: FC<Props> = ({ sides, radius, ...rest }) => {
   const stepSize = (2 * Math.PI) / sides;
   const offset = Math.PI / -2;
   const points = range(0, sides)
@@ -20,4 +20,4 @@ const Star: FC<Props> = ({ sides, radius, ...rest }) => {
   return <polygon {...rest} points={points} {...rest} />;
 };
 
-export default Star;
+export default NsidedPolygon;

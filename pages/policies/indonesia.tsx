@@ -45,6 +45,7 @@ import { FC, PropsWithChildren, SVGProps } from "react";
 import { FaCarrot, FaMoneyBill } from "react-icons/fa";
 import { GiWaterDrop, GiHeartPlus } from "react-icons/gi";
 import { RiLeafFill } from "react-icons/ri";
+import NominalLegend from "../../components/map/NominalLegend";
 
 type Props = {
   projects: Project[];
@@ -533,6 +534,15 @@ const IndonesiaTimeline: NextPage<Props> = ({
                   Ministers in charge
                 </TimelineHeader>
                 <RowContent>
+                  <NominalLegend
+                    entries={parties.map((d) => ({
+                      label: d,
+                      color: itcBlue,
+                      symbol: renderPartySymbol(d),
+                    }))}
+                    columns={4}
+                    columnWidth={35}
+                  />
                   {ministerEvents.map((ce) => (
                     <EventPeriod
                       key={nanoid()}
@@ -577,11 +587,12 @@ const IndonesiaTimeline: NextPage<Props> = ({
                   ))}
                   {firstTopicOccurences.map((topic) => (
                     <PointLabel
+                      key={nanoid()}
                       placement={LabelPlacement.LEFT}
                       position={
                         new Vector2(
                           xScale(topic?.dateStart ?? 0),
-                          topicYScale(topic?.name)
+                          topicYScale(topic?.name ?? "")
                         )
                       }
                     >

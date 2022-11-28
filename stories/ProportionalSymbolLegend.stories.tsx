@@ -44,6 +44,7 @@ const defaultArgs = {
   unitLabel: "fruit",
   scaleRadius: scaleSqrt().domain([0, 200]).range([5, 30]),
   title: "Apples per tree",
+  showFunction: false,
 };
 
 export const simpleLegend = Template.bind({});
@@ -51,8 +52,15 @@ simpleLegend.args = {
   ...defaultArgs,
 };
 
+export const legendWithDistribution = Template.bind({});
+legendWithDistribution.args = {
+  ...defaultArgs,
+  showFunction: true,
+};
+
 export const largeRadius = Template.bind({});
 largeRadius.args = {
   ...defaultArgs,
+  showFunction: true,
   scaleRadius: scaleSqrt().domain([0, 200]).range([5, 100]),
 };
