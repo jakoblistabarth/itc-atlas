@@ -686,22 +686,22 @@ const IndonesiaTimeline: NextPage<Props> = ({
                   {phdGraduatesPerYear.map(([year, count]) => {
                     const r = 2;
                     const gap = r * 3;
-                    const height = (count - 1) * gap + count * r * 2;
-                    return range(0, count).map((_, idx) => (
-                      <g
-                        key={nanoid()}
-                        transform={`translate(0 ${-height / 4})`}
-                      >
+                    return range(0, count).map((_, idx) => {
+                      const hasEvenChilds = count % 2 === 0;
+                      const offset = hasEvenChilds ? gap / -2 : 0;
+                      const direction = idx % 2 ? 1 : -1;
+                      return (
                         <circle
-                          cx={xScale(new Date(year + "GMT"))}
-                          cy={r + idx * gap}
+                          key={nanoid()}
                           r={r}
-                          stroke={indonesiaColor}
-                          strokeWidth={0.5}
+                          cx={xScale(new Date(year + "GMT"))}
+                          cy={offset + Math.ceil(idx / 2) * gap * direction}
+                          stroke={"black"}
+                          strokeWidth={1}
                           fill={"white"}
                         />
-                      </g>
-                    ));
+                      );
+                    });
                   })}
                 </RowContent>
               </g>
