@@ -5,6 +5,8 @@ import PatternShapes from "../components/defs/patterns/PatternShapes";
 import Star from "../components/shapes/Star";
 import NsidedPolygon from "../components/shapes/NsidedPolygon";
 
+import { MdWaterDrop } from "react-icons/md";
+
 const width = 300;
 const height = 300;
 
@@ -88,4 +90,13 @@ IrregularDecorative.args = {
       />
     </>
   ),
+};
+
+export const Isotype = Template.bind({});
+Isotype.args = {
+  ...defaultArgs,
+  height: 16,
+  width: 16,
+  spacing: 0,
+  children: <MdWaterDrop color="SkyBlue" x={16 / -2} y={16 / -2} />,
 };

@@ -41,9 +41,10 @@ import { LongTermMission } from "../../types/LongTermMission";
 import LeaderLine from "../../components/LeaderLine";
 import NsidedPolygon from "../../components/shapes/NsidedPolygon";
 import PatternShapes from "../../components/defs/patterns/PatternShapes";
-import PatternLines from "../../components/defs/patterns/PatternLines";
 import { FC, PropsWithChildren, SVGProps } from "react";
-import Wave from "../../components/shapes/Wave";
+import { FaCarrot, FaMoneyBill } from "react-icons/fa";
+import { GiWaterDrop, GiHeartPlus } from "react-icons/gi";
+import { RiLeafFill } from "react-icons/ri";
 
 type Props = {
   projects: Project[];
@@ -170,15 +171,17 @@ const IndonesiaTimeline: NextPage<Props> = ({
     { name: "climate", dateStart: 2007, dateEnd: 2010 },
     { name: "climate", dateStart: 2012, dateEnd: 2023 },
   ];
-  const topics = topicsRaw.map((d) => {
-    const start = new Date(d.dateStart + "GMT");
-    const end = new Date(d.dateEnd + "GMT");
-    return {
-      name: d.name,
-      dateStart: start,
-      dateEnd: end,
-    };
-  });
+  const topics = topicsRaw
+    .map((d) => {
+      const start = new Date(d.dateStart + "GMT");
+      const end = new Date(d.dateEnd + "GMT");
+      return {
+        name: d.name,
+        dateStart: start,
+        dateEnd: end,
+      };
+    })
+    .sort((a, b) => ascending(a.dateStart, b.dateStart));
 
   const topicYScale = scaleBand()
     .domain(topics.map((d) => d.name))
@@ -188,54 +191,40 @@ const IndonesiaTimeline: NextPage<Props> = ({
     .domain(topics.map((d) => d.name))
     .range(["A", "B", "C", "D", "E"]);
 
+  const firstTopicOccurences = topicPatternScale
+    .domain()
+    .map((topic) => topics.find((t) => t.name === topic));
+
   const TopicPatterns = () => {
-    const s = 3;
-    const commonPatternProps = {
-      spacing: 0.25,
-      angle: 45,
+    const s = 16;
+    const patternProps = {
+      spacing: 0,
+      width: s / 2,
+      height: s,
+    };
+    const shapeProps = {
+      x: s / -4,
+      y: s / -2,
+      color: itcBlue,
     };
     return (
       <defs>
-        <PatternLines
-          name="A"
-          spacing={2.5}
-          stroke={itcBlue}
-          strokeWidth={0.5}
-        />
-        <PatternShapes spacing={0} name="B" angle={0} width={6} height={2}>
-          <Wave
-            transform="translate(-3 0)"
-            width={6}
-            height={1.5}
-            fill="none"
-            stroke={itcBlue}
-            strokeWidth={0.5}
-          />
+        <PatternShapes name="A" {...patternProps}>
+          <FaMoneyBill {...shapeProps} />
         </PatternShapes>
-        <PatternShapes {...commonPatternProps} name="C" width={s} height={s}>
-          <rect
-            width={s / 2}
-            height={s / 2}
-            strokeWidth={0.5}
-            stroke={itcBlue}
-            fill={"none"}
-          />
+        <PatternShapes name="B" {...patternProps}>
+          /react-icons/search
+          <GiWaterDrop {...shapeProps} />
         </PatternShapes>
-        <PatternShapes {...commonPatternProps} name="E" width={s} height={s}>
-          <circle
-            r={s / 2.5}
-            fill={"none"}
-            strokeWidth={0.5}
-            stroke={itcBlue}
-          />
+        <PatternShapes name="C" {...patternProps}>
+          <FaCarrot {...shapeProps} />
         </PatternShapes>
-        <PatternLines
-          name="D"
-          {...commonPatternProps}
-          spacing={2}
-          stroke={itcBlue}
-          strokeWidth={0.5}
-        />
+        <PatternShapes name="D" {...patternProps}>
+          <GiHeartPlus {...shapeProps} />
+        </PatternShapes>
+        <PatternShapes name="E" {...patternProps}>
+          <RiLeafFill {...shapeProps} />
+        </PatternShapes>
       </defs>
     );
   };
@@ -576,32 +565,28 @@ const IndonesiaTimeline: NextPage<Props> = ({
                 <RowContent>
                   <TopicPatterns />
                   {topics.map((topic) => (
-                    <>
-                      <EventPeriod
-                        key={nanoid()}
-                        dateStart={new Date(topic.dateStart)}
-                        dateEnd={new Date(topic.dateEnd)}
-                        xScale={xScale}
-                        yOffset={topicYScale(topic.name) ?? 0}
-                        height={topicYScale.bandwidth()}
-                        stroke="black"
-                        strokeWidth={0.5}
-                        rx={1}
-                        fill={`url(#${topicPatternScale(topic.name)})`}
-                      />
-                      <g
-                        transform={`translate(${xScale(
-                          new Date(topic.dateStart)
-                        )} ${topicYScale(topic.name)})`}
-                      >
-                        <PointLabel
-                          position={new Vector2(0, topicYScale.bandwidth() / 8)}
-                          placement={LabelPlacement.LEFT}
-                        >
-                          {topic.name}
-                        </PointLabel>
-                      </g>
-                    </>
+                    <EventPeriod
+                      key={nanoid()}
+                      dateStart={new Date(topic.dateStart)}
+                      dateEnd={new Date(topic.dateEnd)}
+                      xScale={xScale}
+                      yOffset={topicYScale(topic.name) ?? 0}
+                      height={topicYScale.bandwidth()}
+                      fill={`url(#${topicPatternScale(topic.name)})`}
+                    />
+                  ))}
+                  {firstTopicOccurences.map((topic) => (
+                    <PointLabel
+                      placement={LabelPlacement.LEFT}
+                      position={
+                        new Vector2(
+                          xScale(topic?.dateStart ?? 0),
+                          topicYScale(topic?.name)
+                        )
+                      }
+                    >
+                      {topic?.name}
+                    </PointLabel>
                   ))}
                 </RowContent>
               </g>
