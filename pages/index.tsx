@@ -24,6 +24,11 @@ const Home: NextPage = () => {
       description: "Insight into ITC's activity throughout the decades.",
     },
     {
+      href: "/policies/indonesia",
+      children: "Policies",
+      description: "Policy changes framing ITC's work.",
+    },
+    {
       href: "/staff",
       children: "Staff",
       description: "Insights into ITC's staff composition.",
