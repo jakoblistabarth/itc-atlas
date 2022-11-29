@@ -32,7 +32,12 @@ type Props = {
 } & SharedPageProps;
 
 const AlumniOrigin: NextPage<Props> = ({ alumni, neCountriesTopoJson }) => {
-  const mscs = alumni.filter((d) => d.level === "MSC");
+  const mscs = alumni
+    .filter((d) => d.level === "MSC")
+    .filter((d) => {
+      //filter out some of the land administration alumni 🤷
+      return !d.courseCode.match(".*LS/.*");
+    });
   const count = new Map(
     rollups(
       mscs,

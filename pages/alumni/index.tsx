@@ -59,6 +59,7 @@ const AlumniOverview: NextPage<Props> = ({ alumni }) => {
             <AgGridColumn field="populatedPlaceNE" />
             <AgGridColumn field="country" />
             <AgGridColumn field="countryISO3" />
+            <AgGridColumn field="courseCode" />
             <AgGridColumn field="level" />
           </AgGridReact>
         </div>

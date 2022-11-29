@@ -4,5 +4,8 @@ export type Alumni = {
   country: string;
   countryISO3: string;
   city: string;
-  level: string;
+  populatedPlaceNE: string;
+  level?: string;
+  courseCode: string;
+  description: string;
 };

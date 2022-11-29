@@ -39,6 +39,8 @@ const cleanAlumni = async () => {
       Level: "level",
       Country: "country",
       "Exam Year": "examYear",
+      "ITC code": "courseCode",
+      Description: "description",
     })
     .derive({
       examYear2: aq.escape((d) => {
@@ -47,9 +49,20 @@ const cleanAlumni = async () => {
       }),
     })
     .derive({
+      country: aq.escape((d) => {
+        // Correct erroneously assigned country "Heard Island and McDonald Islands" instead of "Honduras" (HMD vs HND)
+        if (typeof d.city !== "string") return d.country;
+        if (d.city.match("^Tegu[c|e]igalpa.*")) return "Honduras";
+        if (d.country === "Palestinian Territories")
+          return "State of Palestine";
+        return d.country;
+      }),
+    })
+    .derive({
       countryISO3: aq.escape((d) => {
         if (!d.country) return null;
-        const result = fuseCountries.search(d.country)[0];
+        const results = fuseCountries.search(d.country);
+        const result = results[0];
         if (!result) return null;
         return result.item["ISO-alpha3 Code"];
       }),
@@ -78,7 +91,9 @@ const cleanAlumni = async () => {
       "populatedPlaceNE",
       "country",
       "countryISO3",
-      "level"
+      "level",
+      "courseCode",
+      "description"
     );
 
   fs.writeFileSync("./data/itc" + "/alumni.json", JSON.stringify(tb.objects()));
