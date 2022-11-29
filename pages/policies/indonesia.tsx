@@ -5,7 +5,6 @@ import Heading, { Headings } from "../../components/Heading";
 import getAlumniByCountry from "../../lib/data/getAlumniByCountry";
 import getBTORsByCountry from "../../lib/data/getBTORsByCountry";
 import getPhdCandidatesByCountry from "../../lib/data/getPhdCandidatesByCountry";
-import getProjectsIn from "../../lib/data/getProjectsIn";
 import styles from "../../styles/home.module.css";
 import { Alumni } from "../../types/Alumni";
 import { PhdCandidate } from "../../types/PhdCandidate";
@@ -46,6 +45,7 @@ import { FaCarrot, FaMoneyBill } from "react-icons/fa";
 import { GiWaterDrop, GiHeartPlus } from "react-icons/gi";
 import { RiLeafFill } from "react-icons/ri";
 import NominalLegend from "../../components/map/NominalLegend";
+import getProjectsIndonesia from "../../lib/data/getProjectsIndonesia";
 
 type Props = {
   projects: Project[];
@@ -752,7 +752,7 @@ export const getStaticProps: GetStaticProps<Props> = async () => {
     ministers,
     neCountries,
   ] = await Promise.all([
-    getProjectsIn("IDN"),
+    getProjectsIndonesia(),
     getPhdCandidatesByCountry("IDN"),
     getBTORsByCountry("Indonesia"),
     getLongTermMissions(),
