@@ -77,10 +77,10 @@ const CourseGenealogy: NextPage<Props> = ({ courseGenealogy }) => {
     });
   });
 
-  const genealogyHeight = 400;
+  const genealogyHeight = 350;
   const barChartHeight = 75;
   const gap = 25;
-  const width = 600;
+  const width = 550;
   const height = genealogyHeight + gap + barChartHeight;
   const margin = {
     x: 25,
@@ -107,7 +107,7 @@ const CourseGenealogy: NextPage<Props> = ({ courseGenealogy }) => {
     );
   const heightScale = scaleLinear()
     .domain([0, max(courseGenealogy.nodes, (n) => n.size) ?? 0])
-    .range([0, 25]);
+    .range([0, 18]);
   const yScaleSum = scaleLinear()
     .domain([0, max(sumsPerYear, (d) => d[1]) ?? 1])
     .range([barChartHeight - margin.b, 0]);
