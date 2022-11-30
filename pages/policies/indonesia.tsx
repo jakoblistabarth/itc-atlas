@@ -239,19 +239,20 @@ const IndonesiaTimeline: NextPage<Props> = ({
       dateEnd: new Date(btor.dateEnd),
     };
   });
-  const LongTermMissionEvents: TimelineEvent[] = longTermMissions.flatMap(
+  const longTermMissionEvents: TimelineEvent[] = longTermMissions.flatMap(
     (ltm) => {
       if (!ltm.dateStart || !ltm.dateEnd) return [];
       return {
-        name: ltm.projectName,
-        yOffset: "",
+        name: ltm.project,
+        yOffset: ltm.project,
         dateStart: new Date(ltm.dateStart),
         dateEnd: new Date(ltm.dateEnd),
       };
     }
   );
-
-  const travels = btorEvents.concat(LongTermMissionEvents);
+  const ltmYScale = scaleBand()
+    .domain(longTermMissions.map((d) => d.project))
+    .range([0, tlHeights.itc[1]]);
 
   const phdGraduatesPerYear = rollups(
     phdCandidates.filter((d) => d.datePromotion),
@@ -640,7 +641,7 @@ const IndonesiaTimeline: NextPage<Props> = ({
                   Staff travels
                 </TimelineHeader>
                 <RowContent>
-                  {travels.map((e) => (
+                  {btorEvents.map((e) => (
                     <EventPeriod
                       key={nanoid()}
                       dateStart={e.dateStart}
@@ -652,6 +653,20 @@ const IndonesiaTimeline: NextPage<Props> = ({
                       fillOpacity={0.2}
                     />
                   ))}
+                  <g transform={`translate(0 ${tlHeights.itc[1] / -2} )`}>
+                    {longTermMissionEvents.map((e) => (
+                      <EventPeriod
+                        key={nanoid()}
+                        dateStart={e.dateStart}
+                        dateEnd={e.dateEnd ?? new Date()}
+                        xScale={xScale}
+                        yOffset={ltmYScale(e.yOffset) ?? 0}
+                        height={2}
+                        fill={indonesiaColor}
+                        fillOpacity={0.2}
+                      />
+                    ))}
+                  </g>
                 </RowContent>
               </g>
 
@@ -713,15 +728,18 @@ const IndonesiaTimeline: NextPage<Props> = ({
                   Travels over time
                 </tspan>
                 <tspan x={0} dy={7}>
-                  The travels where comparatively long in the beginning
+                  The travels were comparatively long in the beginning and
                 </tspan>
                 <tspan x={0} dy={7}>
-                  and got much shorter in the 90s.
+                  got much shorter in the 90s. Darker shades of red indicate
+                </tspan>
+                <tspan x={0} dy={7}>
+                  overlapping travels.
                 </tspan>
               </text>
               <LeaderLine
-                sourcePos={new Vector2(width / 2 + 30, 400)}
-                targetPos={new Vector2(width / 2, 425)}
+                sourcePos={new Vector2(width / 2 + 90, 400)}
+                targetPos={new Vector2(width / 2 + 30, 418)}
                 stroke="black"
                 strokeWidth={0.5}
               />

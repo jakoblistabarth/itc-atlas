@@ -1,5 +1,5 @@
 export type LongTermMission = {
-  projectName: string;
+  project: string;
   id: string;
   name: string;
   dateStart: Date;
