@@ -1,5 +1,5 @@
 export type NfpCountry = {
-  year: Date;
+  year: number;
   countryName: string;
   countryISO: string;
 };

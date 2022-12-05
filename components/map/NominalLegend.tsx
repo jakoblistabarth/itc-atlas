@@ -6,7 +6,7 @@ import LegendTitle from "./LegendTitle";
 const NominalLegend: FC<{
   entries: { label: string; color: string; symbol?: SVGElement }[];
   title?: string;
-  columns: number;
+  columns?: number;
   columnWidth?: number;
 }> = ({ entries, title, columns = 1, columnWidth = 100 }) => {
   const fontSize = 6;

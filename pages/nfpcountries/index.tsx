@@ -14,7 +14,6 @@ import BaseLayer from "../../components/map/BaseLayer";
 import getCountries from "../../lib/data/getCountries";
 import { SharedPageProps } from "../../types/Props";
 import { feature } from "topojson-client";
-import { object } from "prop-types";
 import PolygonSymbol from "../../components/map/PolygonSymbol";
 
 type Props = {

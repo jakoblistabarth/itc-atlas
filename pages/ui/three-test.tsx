@@ -1,16 +1,12 @@
 import type { NextPage } from "next";
 import Head from "next/head";
-import { useMemo, useState } from "react";
 import Footer from "../../components/Footer";
 import Heading, { Headings } from "../../components/Heading";
 import styles from "../../styles/home.module.css";
 import { Canvas } from "@react-three/fiber";
 import { OrbitControls } from "@react-three/drei";
-import { DodecahedronBufferGeometry } from "three";
 
 const ThreeTest: NextPage = () => {
-  // const box = <boxGeometry args={[2, 2, 2]} />;
-  const geom = useMemo(() => new DodecahedronBufferGeometry(1, 1));
   return (
     <>
       <Head>

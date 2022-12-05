@@ -42,7 +42,7 @@ const CourseGenealogy: NextPage<Props> = ({ courseGenealogy }) => {
 
   courseGenealogy.nodes.forEach((node) => {
     node.dateStart = new Date(node.dateStart);
-    node.size = parseInt(node.size);
+    node.size = node.size ?? 0;
   });
 
   courseGenealogy.links.forEach((link) => {

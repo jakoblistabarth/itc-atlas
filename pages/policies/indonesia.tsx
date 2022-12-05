@@ -105,7 +105,7 @@ const IndonesiaTimeline: NextPage<Props> = ({
   const indonesiaColor = "red";
   const xScale = scaleTime().domain(commonDomain).range([0, width]);
 
-  const partnersScale = scaleOrdinal()
+  const partnersScale = scaleOrdinal<string, string>()
     .domain([
       "BIG",
       "Ministry of environment and Forestry",
@@ -266,7 +266,7 @@ const IndonesiaTimeline: NextPage<Props> = ({
   const phdGraduatesPerYear = rollups(
     phdCandidates.filter((d) => d.datePromotion),
     (v) => v.length,
-    (d) => new Date(d.datePromotion).getFullYear()
+    (d) => new Date(d.datePromotion ?? "").getFullYear()
   );
 
   const alumniPerYear = rollups(

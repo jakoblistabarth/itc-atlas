@@ -1,5 +1,8 @@
 import csv from "csvtojson";
-import { LongTermMission } from "../../types/LongTermMission";
+import {
+  LongTermMission,
+  LongTermMissionRaw,
+} from "../../types/LongTermMission";
 import * as aq from "arquero";
 
 export default async function getLongTermMissions() {
@@ -7,8 +10,12 @@ export default async function getLongTermMissions() {
   const data = await csv({ checkType: true }).fromFile(csvFilePath);
 
   const tb = aq.from(data).derive({
-    dateStart: aq.escape((d) => new Date(d?.dateStart + "GMT").toISOString()),
-    dateEnd: aq.escape((d) => new Date(d?.dateEnd + "GMT").toISOString()),
+    dateStart: aq.escape((d: LongTermMissionRaw) =>
+      new Date(d?.dateStart + "GMT").toISOString()
+    ),
+    dateEnd: aq.escape((d: LongTermMissionRaw) =>
+      new Date(d?.dateEnd + "GMT").toISOString()
+    ),
   });
 
   return tb.objects() as LongTermMission[];
