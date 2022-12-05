@@ -2,9 +2,11 @@ import { ascending, max, min, scalePoint, scaleTime } from "d3";
 import { nanoid } from "nanoid";
 import type { NextPage } from "next";
 import Head from "next/head";
+import { Vector2 } from "three";
 import EventPeriod from "../../components/charts/timeline/EventPeriod";
 import Timeline from "../../components/charts/timeline/Timeline";
 import TimelineGrid from "../../components/charts/timeline/TimelineGrid";
+import Footer from "../../components/Footer";
 import Heading, { Headings } from "../../components/Heading";
 import PointLabel from "../../components/map/PointLabel";
 import getProjects from "../../lib/data/getProjects";
@@ -63,7 +65,7 @@ const projectsTimeline: NextPage<projectsTimelineProps> = ({ projects }) => {
 
   const yScale = scalePoint()
     .domain(events.map((d) => d.yOffset))
-    .range([0, bounds.height]);
+    .range([margin.top, bounds.height - margin.bottom]);
 
   return (
     <>
@@ -77,8 +79,12 @@ const projectsTimeline: NextPage<projectsTimelineProps> = ({ projects }) => {
         <p>{projectsSelection.length} projects</p>
         <div style={{ overflowX: "scroll", maxHeight: "500px" }}>
           <svg width={wrapper.width} height={wrapper.height}>
-            <Timeline position={[margin.left, margin.top]}>
-              <TimelineGrid scale={xScale} height={bounds.height} />
+            <Timeline position={new Vector2(margin.left, 0)}>
+              <TimelineGrid
+                scale={xScale}
+                height={bounds.height}
+                margin={margin.top}
+              />
               <g id="project-events">
                 {events.map((e) => {
                   const labelText =
@@ -105,6 +111,7 @@ const projectsTimeline: NextPage<projectsTimelineProps> = ({ projects }) => {
           </svg>
         </div>
       </main>
+      <Footer />
     </>
   );
 };

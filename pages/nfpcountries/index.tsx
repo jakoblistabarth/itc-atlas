@@ -15,6 +15,7 @@ import getCountries from "../../lib/data/getCountries";
 import { SharedPageProps } from "../../types/Props";
 import { feature } from "topojson-client";
 import PolygonSymbol from "../../components/map/PolygonSymbol";
+import MapLayoutHeader from "../../components/map/layout/MapLayoutHeader";
 
 type Props = {
   nfps: NfpCountry[];
@@ -103,53 +104,53 @@ const NfpCountries: NextPage<Props> = ({ nfps, neCountriesTopoJson }) => {
           </g>
         </svg>
 
-        {selection.map((selectedYear) => {
-          const nfpCountryCodes = selectedYear?.map((d) => d.countryISO);
-          const polygons = feature(
-            neCountriesTopoJson,
-            neCountriesTopoJson.objects.ne_admin_0_countries
-          ).features.filter((f) =>
-            nfpCountryCodes?.includes(f.properties.ADM0_A3_NL)
-          );
+        <div
+          style={{
+            display: "grid",
+            gridTemplateColumns: "1fr 1fr 1fr",
+            gap: "1em 1em",
+          }}
+        >
+          {selection.map((selectedYear) => {
+            const nfpCountryCodes = selectedYear?.map((d) => d.countryISO);
+            const polygons = feature(
+              neCountriesTopoJson,
+              neCountriesTopoJson.objects.ne_admin_0_countries
+            ).features.filter((f) =>
+              nfpCountryCodes?.includes(f.properties.ADM0_A3_NL)
+            );
 
-          const projection = geoBertin1953();
-          return (
-            <MapLayout
-              key={nanoid()}
-              bounds={{
-                width: 450,
-                height: 250,
-                frame: undefined,
-                mapBody: undefined,
-              }}
-              projection={projection}
-            >
-              {/* TODO: add year name to map title */}
-              <MapLayoutBody
-                bounds={{
-                  width: 200,
-                  height: 500,
-                  frame: undefined,
-                  mapBody: undefined,
-                }}
-              >
-                <BaseLayer
-                  countries={neCountriesTopoJson}
-                  projection={projection}
+            const projection = geoBertin1953();
+            const bounds = {
+              width: 300,
+              height: 275,
+              frame: { top: 0 },
+            };
+            return (
+              <MapLayout key={nanoid()} bounds={bounds} projection={projection}>
+                <MapLayoutHeader
+                  bounds={bounds}
+                  title={selectedYear ? selectedYear[0]?.year.toString() : " "}
                 />
-                <g>
-                  {polygons.map((p) => (
-                    <PolygonSymbol
-                      feature={p}
-                      projection={projection}
-                      style={{ fill: "black" }}
-                    />
-                  ))}
-                </g>
-              </MapLayoutBody>
-            </MapLayout>
-          );
-        })}
+                <MapLayoutBody bounds={bounds}>
+                  <BaseLayer
+                    countries={neCountriesTopoJson}
+                    projection={projection}
+                  />
+                  <g>
+                    {polygons.map((p) => (
+                      <PolygonSymbol
+                        feature={p}
+                        projection={projection}
+                        style={{ fill: "black" }}
+                      />
+                    ))}
+                  </g>
+                </MapLayoutBody>
+              </MapLayout>
+            );
+          })}
+        </div>
       </main>
 
       <Footer />
