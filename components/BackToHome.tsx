@@ -5,9 +5,9 @@ import { MdArrowBack } from "react-icons/md";
 const BackToHome: FC = () => {
   return (
     <Link href="/">
-      <a>
+      <span>
         <MdArrowBack /> Back to home
-      </a>
+      </span>
     </Link>
   );
 };

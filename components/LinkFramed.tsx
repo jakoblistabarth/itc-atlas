@@ -11,12 +11,12 @@ type Props = React.PropsWithChildren<{
 const LinkFramed: FC<Props> = ({ href, description, children }) => {
   return (
     <Link href={href}>
-      <a className={styles.card}>
+      <div className={styles.card}>
         <h2>
           {children} <MdOutlineArrowRightAlt />
         </h2>
         {description && <p>{description}</p>}
-      </a>
+      </div>
     </Link>
   );
 };
