@@ -1,38 +1,29 @@
-import type { FC } from "react";
-import { Vector2 } from "three";
+import { ScaleTime } from "d3";
+import type { FC, SVGProps } from "react";
 
-type Props = React.PropsWithChildren<{
-  position: Vector2;
-  radius?: number;
-  fill?: string;
-  fillOpacity?: number;
-  stroke?: string;
-  strokeOpacity?: number;
-  strokeWidth?: number;
-}>;
-
-// TODO: Use date and xscale as prop as for EventPeriod
+type Props = React.PropsWithChildren<
+  {
+    date: Date;
+    xScale: ScaleTime<number, number>;
+    y?: number;
+    radius: number;
+    drawCenter: boolean;
+  } & Omit<SVGProps<SVGCircleElement>, "cx" | "cy" | "r">
+>;
 
 const Event: FC<Props> = ({
-  position,
-  radius = 2,
-  fill = "black",
-  fillOpacity = 1,
-  stroke = "none",
-  strokeOpacity = 1,
-  strokeWidth = 1,
+  date,
+  xScale,
+  y = 0,
+  radius = 2.5,
   children,
+  drawCenter = false,
+  ...rest
 }) => {
   return (
-    <g transform={`translate(${position.x}, ${position.y})`}>
-      <circle
-        r={radius}
-        fill={fill}
-        fillOpacity={fillOpacity}
-        stroke={stroke}
-        strokeWidth={strokeWidth}
-        strokeOpacity={strokeOpacity}
-      />
+    <g transform={`translate(${xScale(date)}, ${y})`}>
+      <circle r={radius} {...rest} />
+      {drawCenter && <circle r={0.5} {...rest} />}
       {children}
     </g>
   );

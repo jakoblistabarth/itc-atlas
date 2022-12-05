@@ -20,7 +20,6 @@ import { nanoid } from "nanoid";
 import type { GetStaticProps, NextPage } from "next";
 import Head from "next/head";
 import { Vector2 } from "three";
-import EventPoint from "../../components/charts/timeline/EventPoint";
 import Timeline from "../../components/charts/timeline/Timeline";
 import TimelineGrid from "../../components/charts/timeline/TimelineGrid";
 import Footer from "../../components/Footer";
@@ -258,13 +257,14 @@ const CourseGenealogy: NextPage<Props> = ({ courseGenealogy }) => {
                         fill={"none"}
                       />
                       {[sourcePos, targetPos].map((p) => (
-                        <EventPoint
+                        <circle
                           key={nanoid()}
-                          position={p}
-                          fill={"white"}
-                          stroke={"black"}
-                          radius={0.5}
-                        ></EventPoint>
+                          cx={p.x}
+                          cy={p.y}
+                          fill={"black"}
+                          // stroke={"black"}
+                          r={1}
+                        ></circle>
                       ))}
                     </g>
                     {link.source === link.target && (
