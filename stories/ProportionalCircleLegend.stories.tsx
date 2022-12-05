@@ -2,7 +2,7 @@ import React from "react";
 import { ComponentStory, ComponentMeta } from "@storybook/react";
 import { scaleSqrt } from "d3";
 
-import ProportionalSymbolLegend from "../components/map/ProportionalSymbolLegend";
+import ProportionalCircleLegend from "../components/map/ProportionalCircleLegend";
 
 const width = 600;
 const height = 600;
@@ -13,13 +13,13 @@ const testData = [
 ];
 
 export default {
-  title: "Map Elements/Legends/ProportionalSymbolLegend",
+  title: "Map Elements/Legends/ProportionalCircleLegend",
   argTypes: {
     min: {
       control: { type: "range", min: 0, max: 100, step: 1 },
     },
   },
-  component: ProportionalSymbolLegend,
+  component: ProportionalCircleLegend,
   decorators: [
     (Story) => (
       <svg width={width} height={height}>
@@ -27,12 +27,12 @@ export default {
       </svg>
     ),
   ],
-} as ComponentMeta<typeof ProportionalSymbolLegend>;
+} as ComponentMeta<typeof ProportionalCircleLegend>;
 
-const Template: ComponentStory<typeof ProportionalSymbolLegend> = (args) => {
+const Template: ComponentStory<typeof ProportionalCircleLegend> = (args) => {
   return (
     <>
-      <ProportionalSymbolLegend {...args} />
+      <ProportionalCircleLegend {...args} />
     </>
   );
 };

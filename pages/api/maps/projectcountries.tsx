@@ -5,7 +5,7 @@ import PatternLines from "../../../components/defs/patterns/PatternLines";
 import BaseLayer from "../../../components/map/BaseLayer";
 import ChoroplethSymbol from "../../../components/map/PolygonSymbol";
 import PointSymbol from "../../../components/map/PointSymbol";
-import ProportionalSymbolLegend from "../../../components/map/ProportionalSymbolLegend";
+import ProportionalCircleLegend from "../../../components/map/ProportionalCircleLegend";
 import getCountries from "../../../lib/data/getCountries";
 import getProjectsPerCountry from "../../../lib/data/getProjectsPerCountry";
 import themes, { ThemeNames } from "../../../lib/styles/themes";
@@ -71,7 +71,7 @@ export default async function handler(
         theme={theme}
       />
       <MapLayoutAside xOffset={0} yOffset={mapOptions.bounds?.frame?.top}>
-        <ProportionalSymbolLegend
+        <ProportionalCircleLegend
           key={nanoid()}
           data={data.features.map(
             (feature) => feature.properties?.projectCount ?? 0

@@ -722,30 +722,32 @@ const IndonesiaTimeline: NextPage<Props> = ({
             <g id="annotation-travels">
               <text
                 textAnchor="center"
-                transform={`translate(${width / 2}, 380)`}
+                transform={`translate(${width / 2 + 30}, 370)`}
               >
                 <tspan fontFamily="Fraunces" fontWeight={"bold"}>
                   Travels over time
                 </tspan>
                 <tspan x={0} dy={7}>
-                  The travels were comparatively long in the beginning and
+                  The travels were comparatively long in the beginning
                 </tspan>
                 <tspan x={0} dy={7}>
-                  got much shorter in the 90s. Darker shades of red indicate
+                  and got much shorter in the current century.
                 </tspan>
                 <tspan x={0} dy={7}>
-                  overlapping travels.
+                  Darker shades of red indicate overlapping travels.
                 </tspan>
               </text>
               <LeaderLine
                 sourcePos={new Vector2(width / 2 + 90, 400)}
                 targetPos={new Vector2(width / 2 + 30, 418)}
+                orientation="vertical"
                 stroke="black"
                 strokeWidth={0.5}
               />
               <LeaderLine
                 sourcePos={new Vector2(width / 2 + 100, 400)}
                 targetPos={new Vector2(width / 2 + 200, 425)}
+                orientation="vertical"
                 stroke="black"
                 strokeWidth={0.5}
               />

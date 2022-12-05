@@ -1,10 +1,17 @@
-import { FC } from "react";
+import { FC, SVGProps } from "react";
 
-type Props = React.PropsWithChildren<{}>;
+type Props = React.PropsWithChildren<
+  { fontSize?: number } & Omit<SVGProps<SVGTextElement>, "dy" | "fontSize">
+>;
 
-const LegendTitle: FC<Props> = ({ children }) => {
+const LegendTitle: FC<Props> = ({ fontSize = 9, children, ...rest }) => {
   return (
-    <text dominantBaseline={"hanging"} fontWeight={"bold"}>
+    <text
+      fontFamily="Fraunces"
+      fontWeight={"bold"}
+      fontSize={fontSize}
+      dy={fontSize}
+    >
       {children}
     </text>
   );

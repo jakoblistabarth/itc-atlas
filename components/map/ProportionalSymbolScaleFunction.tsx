@@ -57,7 +57,7 @@ const ProportionalSymbolScaleFunction: FC<{
         />
         <g transform={`translate(${xScale(curve.length)},0)`}>
           <circle r={1} />
-          <text dx={6} fontSize={10} dominantBaseline={"middle"}>
+          <text dx={6} fontSize={6} dominantBaseline={"middle"}>
             radius
           </text>
         </g>
@@ -77,7 +77,7 @@ const ProportionalSymbolScaleFunction: FC<{
             x={xScale(val)}
             y={scaleRadius(maxData) + 10}
             textAnchor={idx < 1 ? "start" : "end"}
-            fontSize={10}
+            fontSize={6}
           >
             {val}
           </text>

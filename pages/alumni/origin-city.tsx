@@ -12,7 +12,7 @@ import Heading, { Headings } from "../../components/Heading";
 import BaseLayer from "../../components/map/BaseLayer";
 import PointLabel from "../../components/map/PointLabel";
 import PointSymbol from "../../components/map/PointSymbol";
-import ProportionalSymbolLegend from "../../components/map/ProportionalSymbolLegend";
+import ProportionalCircleLegend from "../../components/map/ProportionalCircleLegend";
 import getMapHeight from "../../lib/cartographic/getMapHeight";
 import getAlumni from "../../lib/data/getAlumni";
 import getCountries from "../../lib/data/getCountries";
@@ -186,7 +186,7 @@ const AlumniOrigin: NextPage<Props> = ({
               );
             })}
           </g>
-          <ProportionalSymbolLegend
+          <ProportionalCircleLegend
             data={points.features.map(
               (feature) => feature.properties?.alumniCount
             )}

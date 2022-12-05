@@ -6,12 +6,14 @@ import LegendTitle from "./LegendTitle";
 import { nanoid } from "nanoid";
 import ProportionalSymbolScaleFunction from "./ProportionalSymbolScaleFunction";
 
-const ProportionalSymbolLegend: FC<{
+const ProportionalCircleLegend: FC<{
   x?: number;
   y?: number;
   data: number[];
   scaleRadius: ScalePower<number, number>;
   title: string;
+  titleFontSize?: number;
+  entryFontSize?: number;
   unitLabel: string;
   style?: Appearance;
   showFunction?: boolean;
@@ -21,6 +23,8 @@ const ProportionalSymbolLegend: FC<{
   data,
   scaleRadius,
   title,
+  titleFontSize = 9,
+  entryFontSize = 6,
   unitLabel,
   style,
   showFunction = true,
@@ -44,15 +48,15 @@ const ProportionalSymbolLegend: FC<{
     .x((d) => d[0])
     .y((d) => d[1]);
 
-  const diameter = scaleRadius(maxData) * 2;
+  const maxRadius = scaleRadius(maxData);
+  const maxDiameter = maxRadius * 2;
 
   return (
     <g id="legend" transform={`translate(${x}, ${y})`}>
-      <LegendTitle>{title}</LegendTitle>
-      <g transform={`translate(1, ${20 + 20 + diameter / 2})`}>
+      <LegendTitle fontSize={titleFontSize}>{title}</LegendTitle>
+      <g transform={`translate(1, ${titleFontSize * 2 + maxDiameter / 2})`}>
         <g id="legendEntries">
           {entries.map((entry) => {
-            const maxRadius = scaleRadius(maxData);
             const entryRadius = scaleRadius(entry);
             const suffix = entry > 1 ? "s" : "";
             const label = fInt(entry) + " " + unitLabel + suffix;
@@ -78,7 +82,7 @@ const ProportionalSymbolLegend: FC<{
                   d={linePath}
                 />
                 <text
-                  fontSize={10}
+                  fontSize={entryFontSize}
                   x={maxRadius * 2 + labelOffset}
                   y={maxRadius - entryRadius * 2} //TODO: prevent overlaps
                 >
@@ -88,7 +92,7 @@ const ProportionalSymbolLegend: FC<{
             );
           })}
         </g>
-        <g transform={`translate(0,${diameter / 2 + 20})`}>
+        <g transform={`translate(0,${maxDiameter / 2 + 20})`}>
           {showFunction && (
             <ProportionalSymbolScaleFunction
               data={data}
@@ -101,4 +105,4 @@ const ProportionalSymbolLegend: FC<{
   );
 };
 
-export default ProportionalSymbolLegend;
+export default ProportionalCircleLegend;
