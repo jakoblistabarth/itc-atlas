@@ -46,8 +46,8 @@ const defaultArgs = {
   position: new Vector2(width / 2, height / 2),
 };
 
-export const defaultCross = Template.bind({});
-defaultCross.args = {
+export const DefaultCross = Template.bind({});
+DefaultCross.args = {
   ...defaultArgs,
 };
 

@@ -52,7 +52,7 @@ const Template: ComponentStory<typeof Graticules> = (args) => {
   return <Graticules {...args} />;
 };
 
-export const Default = Template.bind({});
-Default.args = {
+export const DefaultGraticules = Template.bind({});
+DefaultGraticules.args = {
   projection: geoBertin1953(),
 };

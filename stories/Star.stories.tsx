@@ -35,7 +35,8 @@ const Template: ComponentStory<typeof Star> = (args) => {
   );
 };
 
-const defaultArgs = {
+export const DefaultStar = Template.bind({});
+DefaultStar.args = {
   innerRadius: side / 6,
   outerRadius: side / 3,
   transform: `translate(${side / 2} ${side / 2})`,
@@ -43,9 +44,4 @@ const defaultArgs = {
   fillOpacity: 0.2,
   stroke: "teal",
   strokeWidth: 2,
-};
-
-export const defaultStar = Template.bind({});
-defaultStar.args = {
-  ...defaultArgs,
 };

@@ -19,15 +19,11 @@ const Template: ComponentStory<typeof SnapshotCell> = (args) => (
   <SnapshotCell {...args} />
 );
 
-const defaultArgs = {
+export const DefaultSnapshotCell = Template.bind({});
+DefaultSnapshotCell.args = {
   x: 1,
   y: 1,
   width: 198,
   height: 28,
   fill: "lightgrey",
-};
-
-export const defaultSnapShotCell = Template.bind({});
-defaultSnapShotCell.args = {
-  ...defaultArgs,
 };

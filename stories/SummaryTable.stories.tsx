@@ -18,13 +18,9 @@ const Template: ComponentStory<typeof SummaryTable> = (args) => (
   <SummaryTable {...args} />
 );
 
-const defaultArgs = {
-  data: df,
-};
-
 export const DefaultSummaryTable = Template.bind({});
 DefaultSummaryTable.args = {
-  ...defaultArgs,
+  data: df,
 };
 
 export const SummaryTableWithTitle = Template.bind({});

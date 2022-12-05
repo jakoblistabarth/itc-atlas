@@ -28,12 +28,8 @@ const Template: ComponentStory<typeof Building> = (args) => {
   );
 };
 
-const defaultArgs = {
+export const DefaultBuilding = Template.bind({});
+DefaultBuilding.args = {
   location: ITCLocationName.DELFT1,
   position: new Vector2(width / 2, height / 2),
-};
-
-export const defaultBuilding = Template.bind({});
-defaultBuilding.args = {
-  ...defaultArgs,
 };

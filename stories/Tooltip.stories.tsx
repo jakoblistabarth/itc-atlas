@@ -22,14 +22,14 @@ const defaultArgs: React.ComponentProps<typeof Tooltip> = {
   raised: false,
 };
 
-export const defaultTooltip = Template.bind({});
-defaultTooltip.args = {
+export const DefaultTooltip = Template.bind({});
+DefaultTooltip.args = {
   ...defaultArgs,
   children: children,
 };
 
-export const tooltipRaised = Template.bind({});
-tooltipRaised.args = {
+export const RaisedTooltip = Template.bind({});
+RaisedTooltip.args = {
   ...defaultArgs,
   raised: true,
   children: children,

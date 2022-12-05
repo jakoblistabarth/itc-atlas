@@ -45,8 +45,8 @@ const Template: ComponentStory<typeof LocatorMap> = (args) => {
   return <LocatorMap {...args} />;
 };
 
-export const Simple = Template.bind({});
-Simple.args = {
+export const DefaultLocatorMap = Template.bind({});
+DefaultLocatorMap.args = {
   ...Template.args,
   neCountriesTopoJson: countries,
   highlight: ["NLD"],
@@ -54,18 +54,18 @@ Simple.args = {
 
 export const MultipleHighlights = Template.bind({});
 MultipleHighlights.args = {
-  ...Simple.args,
+  ...DefaultLocatorMap.args,
   highlight: ["NLD", "AUT"],
 };
 
 export const NoHightlight = Template.bind({});
 NoHightlight.args = {
-  ...Simple.args,
+  ...DefaultLocatorMap.args,
   highlight: [],
 };
 
 export const DifferentHemispheres = Template.bind({});
 DifferentHemispheres.args = {
-  ...Simple.args,
+  ...DefaultLocatorMap.args,
   highlight: ["LAO", "CHL"],
 };

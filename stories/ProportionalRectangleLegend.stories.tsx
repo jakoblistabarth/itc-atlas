@@ -37,7 +37,8 @@ const Template: ComponentStory<typeof ProportionalRectangleLegend> = (args) => {
   );
 };
 
-const defaultArgs = {
+export const Default = Template.bind({});
+Default.args = {
   x: 0,
   y: 0,
   data: data,
@@ -48,14 +49,9 @@ const defaultArgs = {
   title: "Apples per tree",
 };
 
-export const simpleLegend = Template.bind({});
-simpleLegend.args = {
-  ...defaultArgs,
-};
-
-export const stretchedLegend = Template.bind({});
-stretchedLegend.args = {
-  ...defaultArgs,
+export const StretchedLegend = Template.bind({});
+StretchedLegend.args = {
+  ...Default.args,
   scaleHeight: scaleLinear()
     .domain([0, max(data) ?? 1])
     .range([0, 200]),

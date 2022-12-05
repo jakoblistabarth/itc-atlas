@@ -14,8 +14,8 @@ const defaultArgs: React.ComponentProps<typeof Button> = {
   outline: false,
 };
 
-export const defaultButton = Template.bind({});
-defaultButton.args = {
+export const DefaultButton = Template.bind({});
+DefaultButton.args = {
   ...defaultArgs,
   children: "Default Text",
 };

@@ -37,20 +37,16 @@ const Template: ComponentStory<typeof PatternLines> = (args) => {
   );
 };
 
-const defaultArgs = {
+export const Default = Template.bind({});
+Default.args = {
   angle: 0,
   name: "pattern",
   fill: "none",
   stroke: "black",
 };
-
-export const Default = Template.bind({});
-Default.args = {
-  ...defaultArgs,
-};
 export const RotatedColor = Template.bind({});
 RotatedColor.args = {
-  ...defaultArgs,
+  ...Default.args,
   spacing: 2,
   angle: 45,
   stroke: "red",
@@ -59,7 +55,7 @@ RotatedColor.args = {
 };
 export const dashed = Template.bind({});
 dashed.args = {
-  ...defaultArgs,
+  ...Default.args,
   spacing: 2,
   stroke: "black",
   strokeWidth: 5,

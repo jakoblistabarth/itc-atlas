@@ -71,8 +71,8 @@ const Template: ComponentStory<
   );
 };
 
-export const Basic = Template.bind({});
-Basic.args = {
+export const Default = Template.bind({});
+Default.args = {
   ...Template.args,
   projection: geoBertin1953(),
   drawGraticuleLabels: false,
@@ -84,7 +84,7 @@ Basic.args = {
 
 export const Clipped = Template.bind({});
 Clipped.args = {
-  ...Basic.args,
+  ...Default.args,
   radius: 10,
   step: 40,
   projection: geoInterruptedMollweide(),
@@ -92,7 +92,7 @@ Clipped.args = {
 
 export const Baker = Template.bind({});
 Baker.args = {
-  ...Basic.args,
+  ...Default.args,
   radius: 2.5,
   step: 10,
   fillColor: "red",
@@ -101,7 +101,7 @@ Baker.args = {
 
 export const Mercator = Template.bind({});
 Mercator.args = {
-  ...Basic.args,
+  ...Default.args,
   fillColor: "blue",
   opacity: 0.8,
   projection: geoMercator(),

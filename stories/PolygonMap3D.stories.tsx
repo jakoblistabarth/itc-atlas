@@ -62,11 +62,7 @@ const Template: ComponentStory<typeof PolygonMap3D> = (args) => {
   return <PolygonMap3D {...args} />;
 };
 
-const DefaultArgs = {
+export const DefaultPolygonMap3D = Template.bind({});
+DefaultPolygonMap3D.args = {
   svg: svg,
-};
-
-export const Default = Template.bind({});
-Default.args = {
-  ...DefaultArgs,
 };

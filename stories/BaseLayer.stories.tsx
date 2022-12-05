@@ -59,8 +59,8 @@ const Template: ComponentStory<typeof BaseLayer> = (args) => {
   return <BaseLayer {...args} />;
 };
 
-export const Simple = Template.bind({});
-Simple.args = {
+export const DefaultBaseLayer = Template.bind({});
+DefaultBaseLayer.args = {
   ...Template.args,
   projection: geoBertin1953(),
   countries: countries,
@@ -68,7 +68,7 @@ Simple.args = {
 
 export const Elaborate = Template.bind({});
 Elaborate.args = {
-  ...Simple.args,
+  ...DefaultBaseLayer.args,
   lakes: lakes,
   rivers: rivers,
   drawGraticuleLabels: true,

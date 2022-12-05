@@ -32,7 +32,8 @@ const Template: ComponentStory<typeof NsidedPolygon> = (args) => {
   );
 };
 
-const defaultArgs = {
+export const DefaultNsidedPolygon = Template.bind({});
+DefaultNsidedPolygon.args = {
   radius: side / 4,
   sides: 3,
   transform: `translate(${side / 2} ${side / 2})`,
@@ -40,9 +41,4 @@ const defaultArgs = {
   fillOpacity: 0.2,
   stroke: "teal",
   strokeWidth: 2,
-};
-
-export const defaultNsidedPolygon = Template.bind({});
-defaultNsidedPolygon.args = {
-  ...defaultArgs,
 };

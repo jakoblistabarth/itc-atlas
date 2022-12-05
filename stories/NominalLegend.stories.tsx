@@ -41,20 +41,20 @@ const defaultArgs = {
   title: "Parties",
 };
 
-export const simpleLegend = Template.bind({});
-simpleLegend.args = {
+export const DefaultNominalLegend = Template.bind({});
+DefaultNominalLegend.args = {
   ...defaultArgs,
 };
 
-export const multicolummnLegend = Template.bind({});
-multicolummnLegend.args = {
+export const MulticolummnLegend = Template.bind({});
+MulticolummnLegend.args = {
   ...defaultArgs,
   columns: 4,
   columnWidth: 30,
 };
 
-export const customSymbol = Template.bind({});
-customSymbol.args = {
+export const CustomSymbol = Template.bind({});
+CustomSymbol.args = {
   ...defaultArgs,
   entries: [
     {

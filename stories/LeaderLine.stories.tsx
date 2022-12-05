@@ -48,12 +48,12 @@ const defaultArgs = {
   strokeWidth: "1",
 };
 
-export const verticalLeaderLine = Template.bind({});
-verticalLeaderLine.args = {
+export const VerticalLeaderLine = Template.bind({});
+VerticalLeaderLine.args = {
   ...defaultArgs,
 };
-export const horizontalLeaderLine = Template.bind({});
-horizontalLeaderLine.args = {
+export const HorizontalLeaderLine = Template.bind({});
+HorizontalLeaderLine.args = {
   ...defaultArgs,
   sourcePos: new Vector2(side / 2 - 75, side / 2 - 25),
   targetPos: new Vector2(side / 2 + 75, side / 2 + 25),

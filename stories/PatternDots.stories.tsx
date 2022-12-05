@@ -38,18 +38,14 @@ const Template: ComponentStory<typeof PatternDots> = (args) => {
   );
 };
 
-const defaultArgs = {
+export const Default = Template.bind({});
+Default.args = {
   angle: 0,
   name: "pattern",
 };
-
-export const Default = Template.bind({});
-Default.args = {
-  ...defaultArgs,
-};
 export const RotatedMulticolor = Template.bind({});
 RotatedMulticolor.args = {
-  ...defaultArgs,
+  ...Default.args,
   angle: 45,
   dotSize: 15,
   spacing: 0.5,

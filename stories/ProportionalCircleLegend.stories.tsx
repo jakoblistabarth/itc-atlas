@@ -37,7 +37,8 @@ const Template: ComponentStory<typeof ProportionalCircleLegend> = (args) => {
   );
 };
 
-const defaultArgs = {
+export const Default = Template.bind({});
+Default.args = {
   x: 0,
   y: 0,
   data: testData,
@@ -47,20 +48,15 @@ const defaultArgs = {
   showFunction: false,
 };
 
-export const simpleLegend = Template.bind({});
-simpleLegend.args = {
-  ...defaultArgs,
-};
-
-export const legendWithDistribution = Template.bind({});
-legendWithDistribution.args = {
-  ...defaultArgs,
+export const LegendWithDistribution = Template.bind({});
+LegendWithDistribution.args = {
+  ...Default.args,
   showFunction: true,
 };
 
-export const largeRadius = Template.bind({});
-largeRadius.args = {
-  ...defaultArgs,
+export const LargeRadius = Template.bind({});
+LargeRadius.args = {
+  ...Default.args,
   showFunction: true,
   scaleRadius: scaleSqrt().domain([0, 200]).range([5, 100]),
 };

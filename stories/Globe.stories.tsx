@@ -60,32 +60,32 @@ const Template: ComponentStory<typeof Globe> = (args) => {
   );
 };
 
-export const Default = Template.bind({});
-Default.args = {
+export const DefaultGlobe = Template.bind({});
+DefaultGlobe.args = {
   ...Template.args,
   texture: "day",
 };
 
-export const Night = Template.bind({});
-Night.args = {
+export const NightGlobe = Template.bind({});
+NightGlobe.args = {
   ...Template.args,
   texture: "night",
 };
 
-export const Explorer = Template.bind({});
-Explorer.args = {
+export const ExplorerGlobe = Template.bind({});
+ExplorerGlobe.args = {
   ...Template.args,
   texture: "explorer",
 };
 
-export const CanvasTexture = Template.bind({});
-CanvasTexture.args = {
+export const CanvasTextureGlobe = Template.bind({});
+CanvasTextureGlobe.args = {
   ...Template.args,
   canvasTexture: true,
 };
 
-export const HoloTexture = Template.bind({});
-HoloTexture.args = {
+export const HoloTextureGlobe = Template.bind({});
+HoloTextureGlobe.args = {
   ...Template.args,
   canvasTexture: true,
   transparent: true,

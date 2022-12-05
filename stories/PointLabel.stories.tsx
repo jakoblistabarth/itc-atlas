@@ -38,20 +38,16 @@ const Template: ComponentStory<typeof PointLabel> = ({ children, ...args }) => (
   </>
 );
 
-const defaultArgs = {
+export const DefaultPointLabel = Template.bind({});
+DefaultPointLabel.args = {
   position: position,
   children: "Enschede",
   style: { ...eth.label, fontSize: 10 },
 };
 
-export const defaultLabel = Template.bind({});
-defaultLabel.args = {
-  ...defaultArgs,
-};
-
-export const boldLabel = Template.bind({});
-boldLabel.args = {
-  ...defaultArgs,
+export const BoldLabel = Template.bind({});
+BoldLabel.args = {
+  ...DefaultPointLabel.args,
   children: (
     <>
       Enschede <tspan fontWeight={"bold"}>(NLD)</tspan>

@@ -94,12 +94,8 @@ const Template: ComponentStory<typeof SpaceTimeCube> = (args) => {
   return <SpaceTimeCube {...args} />;
 };
 
-const DefaultArgs = {
+export const DefaultSpaceTimeCube = Template.bind({});
+DefaultSpaceTimeCube.args = {
   events,
   geoData: countries,
-};
-
-export const Default = Template.bind({});
-Default.args = {
-  ...DefaultArgs,
 };
