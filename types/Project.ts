@@ -47,3 +47,7 @@ export enum ProjectType {
   Other = "Other",
   Research = "Research",
 }
+
+export type ProjectIndonesia = Project & {
+  projectPartner?: string;
+};

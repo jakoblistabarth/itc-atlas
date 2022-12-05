@@ -8,7 +8,7 @@ import getPhdCandidatesByCountry from "../../lib/data/getPhdCandidatesByCountry"
 import styles from "../../styles/home.module.css";
 import { Alumni } from "../../types/Alumni";
 import { PhdCandidate } from "../../types/PhdCandidate";
-import { Project } from "../../types/Project";
+import { ProjectIndonesia } from "../../types/Project";
 import { TimelineEvent } from "../../types/TimelineEvent";
 import { BTOR } from "../../types/Travels";
 import { rollups } from "d3-array";
@@ -48,7 +48,7 @@ import NominalLegend from "../../components/map/NominalLegend";
 import getProjectsIndonesia from "../../lib/data/getProjectsIndonesia";
 
 type Props = {
-  projects: Project[];
+  projects: ProjectIndonesia[];
   phdCandidates: PhdCandidate[];
   alumni: Alumni[];
   btors: BTOR[];
@@ -113,6 +113,7 @@ const IndonesiaTimeline: NextPage<Props> = ({
         yOffset: project.projectID ?? "",
         dateStart: new Date(project.dateStart),
         dateEnd: new Date(project.dateEnd),
+        data: project,
       };
     })
     .sort((a, b) => ascending(a.dateStart, b.dateStart));
