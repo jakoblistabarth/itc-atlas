@@ -105,6 +105,14 @@ const IndonesiaTimeline: NextPage<Props> = ({
   const indonesiaColor = "red";
   const xScale = scaleTime().domain(commonDomain).range([0, width]);
 
+  const partnersScale = scaleOrdinal()
+    .domain([
+      "BIG",
+      "Ministry of environment and Forestry",
+      "Gadjah Mada Univesity",
+    ])
+    .range(["A", "B", "C"]);
+
   const projectEvents: TimelineEvent[] = projects
     .flatMap((project) => {
       if (!project.dateStart || !project.dateEnd) return [];
@@ -628,7 +636,23 @@ const IndonesiaTimeline: NextPage<Props> = ({
                       yOffset={projectsYScale(e.yOffset) ?? 0}
                       height={2}
                       fill={indonesiaColor}
-                    />
+                    >
+                      {e.data?.projectPartner && (
+                        <g transform="translate(-6 0)">
+                          <circle r={4} fill={indonesiaColor} />
+                          <text
+                            textAnchor="middle"
+                            dy={6 / 2.5}
+                            fontWeight={"bold"}
+                            fill={"white"}
+                          >
+                            {partnersScale(
+                              (e.data?.projectPartner as string) ?? ""
+                            )}
+                          </text>
+                        </g>
+                      )}
+                    </EventPeriod>
                   ))}
                 </RowContent>
               </g>
