@@ -1,4 +1,4 @@
-import type { FC } from "react";
+import type { FC, SVGProps } from "react";
 import { Vector2 } from "three";
 import Delft1 from "/public/images/building-kanaalweg.svg";
 import Delft2 from "/public/images/building-kanaalweg4.svg";
@@ -55,26 +55,35 @@ type Props = {
   position?: Vector2;
   color?: string;
   shadow?: boolean;
-};
+} & Omit<SVGProps<SVGGElement>, "fill" | "stroke">;
 
 const Building: FC<Props> = ({
+  position = new Vector2(0, 0),
   location,
   width,
-  position = new Vector2(0, 0),
   color = "black",
   shadow = true,
+  ...rest
 }) => {
+  const height = width / 2;
   return (
-    <g transform={`translate(${position.x - width / 2} ${position.y})`}>
-      <svg className="building" width={width} height={width / 2}>
+    <g
+      transform={`translate(${position.x - width / 2} ${
+        position.y - height / 2
+      })`}
+      {...rest}
+    >
+      <svg className="building" width={width} height={height}>
         <style>
           {`
           svg.building g,
           svg.building path[stroke="#000"]  {
                 stroke: ${color};
             }
-            svg.building svg > path[opacity="0.1"] {
+            svg.building svg path[opacity="0.1"],
+            svg.building g[opacity="0.1"] {
                 fill: ${color};
+                display: ${shadow ? "block" : "none"}
             }
             `}
         </style>

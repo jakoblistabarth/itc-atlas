@@ -20,7 +20,7 @@
     "@react-spring/three": "^9.4.5",
     "@react-three/drei": "^9.7.1",
     "@react-three/fiber": "^8.0.13",
-    "@svgr/webpack": "^6.5.1",
+    "@svgr/webpack": "^5.4.0",
     "@types/adm-zip": "^0.5.0",
     "adm-zip": "^0.5.9",
     "ag-grid-community": "^28.2.1",
