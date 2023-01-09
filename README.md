@@ -39,7 +39,7 @@ npx prisma db seed
 
 To push the state of the Prisma schema file to the database without using migrations. To be used during prototyping and local development.
 ```bash
-npx prisma db push
+npx dotenv -e .env.local -- npx prisma db push
 ```
 
 ### 4. Starting the next.js app

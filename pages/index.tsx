@@ -44,6 +44,11 @@ const Home: NextPage = () => {
       description: "ITC's alumni.",
     },
     {
+      href: "/phds",
+      children: "PhDs",
+      description: "ITC's PhDs and PhD candidates.",
+    },
+    {
       href: "/nfpcountries",
       children: "NFP Countries",
       description: "Policy changes over time.",

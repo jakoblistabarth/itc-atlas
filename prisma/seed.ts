@@ -48,14 +48,16 @@ async function main() {
   });
 
   phds.forEach(async (d, idx) => {
-    const country = await prisma.country.findFirst({
-      select: { id: true },
-      where: {
-        IsoAlpha3: {
-          equals: d.country ?? undefined,
-        },
-      },
-    });
+    const country = d.country
+      ? await prisma.country.findFirst({
+          select: { id: true },
+          where: {
+            IsoAlpha3: {
+              equals: d.country ?? undefined,
+            },
+          },
+        })
+      : null;
 
     const upsertArgs: Prisma.PhdCandidateUpsertArgs = {
       where: { id: idx },

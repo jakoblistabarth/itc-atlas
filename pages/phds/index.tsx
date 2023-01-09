@@ -5,10 +5,9 @@ import Footer from "../../components/Footer";
 import Heading, { Headings } from "../../components/Heading";
 import SummaryTable from "../../components/SummaryTable";
 import DataFrame from "../../lib/DataFrame/DataFrame";
-import getPhdCandidates from "../../lib/data/getPhdCandidates";
 import styles from "../../styles/home.module.css";
-import { PhdCandidate } from "../../types/PhdCandidate";
 import LinkFramed from "../../components/LinkFramed";
+import { PhdCandidate, PrismaClient } from "@prisma/client";
 
 type Props = {
   phdCandidates: PhdCandidate[];
@@ -49,7 +48,8 @@ const PhdOverview: NextPage<Props> = ({ phdCandidates }) => {
 };
 
 export const getStaticProps: GetStaticProps<Props> = async () => {
-  const phdCandidates = await getPhdCandidates();
+  const prisma = new PrismaClient();
+  const phdCandidates = await prisma.phdCandidate.findMany();
   return {
     props: {
       phdCandidates,
