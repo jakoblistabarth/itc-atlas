@@ -1,0 +1,50 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Department {
+  code                   String         @id
+  name                   String
+  PhdCandidatesMain      PhdCandidate[] @relation("DepartmentMain")
+  PhdCandidatesSecondary PhdCandidate[] @relation("DepartmentSecondary")
+}
+
+model PhdCandidate {
+  id                      Int         @id @default(autoincrement())
+  contactId               String?
+  departmentMainCode      String?
+  departmentMain          Department? @relation("DepartmentMain", fields: [departmentMainCode], references: [code])
+  departmentSecondaryCode String?
+  departmentSecondary     Department? @relation("DepartmentSecondary", fields: [departmentSecondaryCode], references: [code])
+  thesisTitle             String?
+  graduated               Boolean?
+  start                   DateTime?   @db.Date
+  graduation              DateTime?   @db.Date
+  promotion               DateTime?   @db.Date
+  country                 Country?    @relation("PhdCountry", fields: [countryId], references: [id])
+  countryId               Int?
+}
+
+model Country {
+  id                       Int            @id @default(autoincrement())
+  IsoAlpha2                String         @db.Char(2)
+  IsoAlpha3                String         @db.Char(3)
+  IsoNum3                  String?        @db.Char(3)
+  NameEn                   String?
+  NameLongEn               String         @db.Text
+  UnRegionCode             String         @db.Char(3)
+  UnSubRegionCode          String         @db.Char(3)
+  UnIntermediateRegionCode String?        @db.Char(3)
+  Ldc                      Boolean
+  Lldc                     Boolean
+  Sids                     Boolean
+  PhdCandidates            PhdCandidate[] @relation("PhdCountry")
+}

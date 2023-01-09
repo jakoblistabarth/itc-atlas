@@ -19,7 +19,9 @@ export const departmentColors = {
   null: "#aaaaaa",
 };
 
-export enum DepartmentMap {
-  RES = Department.ALL,
-  ESA = Department.AES,
-}
+export const departmentMap = new Map([
+  ["RES", Department.ALL],
+  ["ESA", Department.AES],
+  ["BMS", Department.ALL], // TODO: check with Menno-Jan how to proceed with department mapping
+  ["CTW", Department.ALL],
+]);

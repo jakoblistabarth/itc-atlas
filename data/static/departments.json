@@ -1,0 +1,30 @@
+[
+  {
+    "code": "EOS",
+    "name": "Department of Earth Observation Science"
+  },
+  {
+    "code": "AES",
+    "name": "Department of Applied Earth Sciences"
+  },
+  {
+    "code": "GIP",
+    "name": "Department of Geo-Information Processing"
+  },
+  {
+    "code": "NRS",
+    "name": "Department of Natural Resources"
+  },
+  {
+    "code": "PGM",
+    "name": "Department of Urban and Regional Planning and Geo-information Management"
+  },
+  {
+    "code": "WRS",
+    "name": "Department of Water Resources"
+  },
+  {
+    "code": "ALL",
+    "name": "Multiple ITC Departments"
+  }
+]

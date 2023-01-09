@@ -20,9 +20,29 @@ Create the required static data sets with
 npm run setup-data
 ```
 
-This command is also meant to create fake itc data if the original data is not available. (temporary work-around)
+This command also creates fake ITC data if the original data is not available. (temporary work-around).
 
-### 3. Starting the next.js app
+### 3. The database
+
+The website uses a PostgreSQL database via [prisma](https://prisma.io/).
+The schema names follow the [prisma naming conventions](https://www.prisma.io/docs/reference/api-reference/prisma-schema-reference#naming-conventions): mainly, *singular form* and *PascalCase* for models and *camelCase* for fields.
+
+To run single queries (a module as .ts file) enter
+```bash
+npx dotenv -e .env.local -- npx ts-node --compiler-options {\"module\":\"commonjs\"} <pathToQueryFile>
+```
+
+To seed db manually
+```bash
+npx prisma db seed
+```
+
+To push the state of the Prisma schema file to the database without using migrations. To be used during prototyping and local development.
+```bash
+npx prisma db push
+```
+
+### 4. Starting the next.js app
 
 Then run the development server (to check out the current state or start developing):
 
