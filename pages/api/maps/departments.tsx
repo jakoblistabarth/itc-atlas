@@ -1,21 +1,20 @@
 import * as d3 from "d3";
 import { geoInterruptedMollweide } from "d3-geo-projection";
-import type { Feature, Point } from "geojson";
 import { nanoid } from "nanoid";
 import type { NextApiRequest, NextApiResponse } from "next";
 import ReactDOMServer from "react-dom/server";
+import { Vector2 } from "three";
 import BaseLayer from "../../../components/map/BaseLayer";
 import MapLayout from "../../../components/map/layout/MapLayout";
 import MapLayoutAside from "../../../components/map/layout/MapLayoutAside";
 import MapLayoutBody from "../../../components/map/layout/MapLayoutBody";
 import MapLayoutHeader from "../../../components/map/layout/MapLayoutHeader";
-import LegendTitle from "../../../components/map/LegendTitle";
 import NominalLegend from "../../../components/map/NominalLegend";
 import ScaledPie from "../../../components/map/ScaledPie";
 import { setMapBounds } from "../../../lib/cartographic/getMapHeight";
 import getCountries from "../../../lib/data/getCountries";
 import getPhdCandidatesByCountryByDepartment from "../../../lib/data/getPhdCandidatesByCountryByDepartment";
-import { departmentColors } from "../../../lib/mappings/departments";
+import { getDepartmentColorScale } from "../../../lib/mappings/departments";
 import themes, { ThemeNames } from "../../../lib/styles/themes";
 import defaultTheme from "../../../lib/styles/themes/defaultTheme";
 import { MapOptions } from "../../../types/MapOptions";
@@ -30,11 +29,18 @@ export default async function handler(
     res.status(400).json({ error: "invalid theme name" });
   }
   const neCountriesTopoJson = getCountries();
-  const [{ data, domain, legendEntries }] = await Promise.all([
-    getPhdCandidatesByCountryByDepartment(),
-  ]);
+  const data = await getPhdCandidatesByCountryByDepartment(null);
 
-  const scale = d3.scaleSqrt().domain(domain).range([1, 75]);
+  const min = d3.min(data.map((d) => d.totalCount)) ?? 0;
+  const max = d3.max(data.map((d) => d.totalCount)) ?? 1;
+  const scale = d3.scaleSqrt().domain([min, max]).range([2, 50]);
+
+  const colorScale = getDepartmentColorScale();
+
+  const legendEntries = colorScale.domain().map((d) => ({
+    label: d,
+    color: colorScale(d),
+  }));
 
   const mapOptions: MapOptions = {
     bounds: {
@@ -51,7 +57,6 @@ export default async function handler(
       return setMapBounds(this.bounds, geoInterruptedMollweide());
     },
     theme: theme ?? defaultTheme,
-    scales: { scale },
   };
 
   const svg = ReactDOMServer.renderToStaticMarkup(
@@ -73,48 +78,39 @@ export default async function handler(
           theme={theme}
         />
         <g id="symbols">
-          {data.features.map((feature: Feature<Point>) => {
-            if (!feature.properties?.departments) return;
+          {data.map((d) => {
             const projection = mapOptions.projection;
-            const xy = projection(
-              feature.geometry.coordinates as [number, number]
-            );
+            const xy = projection(d.coordinates as [number, number]);
+            const position = new Vector2(xy[0], xy[1]);
             return (
-              xy && (
-                <ScaledPie
-                  key={nanoid()}
-                  xy={xy}
-                  scale={scale}
-                  colorScheme={Object.values(departmentColors)}
-                  pieSize={feature.properties?.totalPhdCount}
-                  data={feature.properties?.departments}
-                  style={theme?.scaledPie}
-                />
-              )
+              <ScaledPie
+                key={nanoid()}
+                position={position}
+                radius={scale(d.totalCount)}
+                color={colorScale}
+                data={d.departments}
+                style={theme?.scaledPie}
+              />
             );
           })}
         </g>
       </MapLayoutBody>
       <MapLayoutAside xOffset={0} yOffset={mapOptions.bounds?.frame?.top}>
-        <LegendTitle>Top 5 PhD countries</LegendTitle>
-        {data.features.slice(0, 5).map((feature, index) => (
-          <g
-            fontSize={10}
-            transform={`translate(0, ${40 + index * 15})`}
-            key={nanoid()}
-          >
-            <text>
-              {feature.properties?.NAME_EN}
-              <tspan> ({feature.properties?.totalPhdCount})</tspan>
-            </text>
-          </g>
-        ))}
-        <g transform={`translate(0,${mapOptions.bounds.height ?? 0 * 0.25})`}>
-          <NominalLegend title={"Departments"} entries={legendEntries} />
+        <NominalLegend title={"Departments"} entries={legendEntries} />
+        <g transform={`translate(0,120)`}>
+          <NominalLegend
+            title={"Top 5 PhD countries"}
+            entries={data.slice(0, 5).map((d) => ({
+              label: `${d.countryName} (${d.totalCount})`,
+              color: "none",
+              symbol: <g></g>,
+            }))}
+          />
         </g>
       </MapLayoutAside>
     </MapLayout>
   );
+
   res
     .status(200)
     .setHeader("Content-Type", "text/html; charset=utf-8;")

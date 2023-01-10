@@ -23,7 +23,7 @@ const NominalLegend: FC<{
             <g
               key={nanoid()}
               transform={`translate(0, ${
-                (title ? fontSize * 2.5 : 0) + index * fontSize * 1.75
+                (title ? fontSize * 4 : 0) + index * fontSize * 1.75
               })`}
             >
               <g transform={`translate(${symbolSize / 2} 0)`}>

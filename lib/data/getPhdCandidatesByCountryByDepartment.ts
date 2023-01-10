@@ -1,88 +1,83 @@
-import { group, geoCentroid, descending, min, max } from "d3";
+import { group, geoCentroid, descending } from "d3";
 import getCountries from "./getCountries";
-import getPhdCandidates from "./getPhdCandidates";
-import type { FeatureCollection, Feature, Point } from "geojson";
 import * as topojson from "topojson-client";
-import { Department, departmentColors } from "../mappings/departments";
 import { pieDatum } from "../../components/map/ScaledPie";
+import { PrismaClient } from "@prisma/client";
 
-const getPhdCandidatesByCountryByDepartment = async () => {
+export type phdPerCountryDepartment = {
+  countryId: number;
+  departmentMainCode: string;
+  count: number;
+};
+
+const getPhdCandidatesByCountryByDepartment = async (
+  filter: any // TODO: implement filter on phdcandidates, e.g. only graduated ones
+) => {
+  const prisma = new PrismaClient();
+  const phdsGrouped = await prisma.phdCandidate.groupBy({
+    by: ["countryId", "departmentMainCode"],
+    _count: {
+      _all: true,
+    },
+    orderBy: { countryId: "asc" },
+  });
+  const countries = await prisma.country.findMany();
+
+  const phdCandidateCount = phdsGrouped.map((d) => {
+    const c = countries.find((c) => c.id == d.countryId);
+    return {
+      countryIsoAlpha3: c?.IsoAlpha3,
+      countryName: c?.NameLongEn,
+      departmentMainCode: d.departmentMainCode,
+      count: d._count._all,
+    };
+  });
+  const count = group(phdCandidateCount, (d) => d.countryIsoAlpha3);
+
+  // TODO: replace by getCountriesCentroids()
   const neCountriesTopojson = getCountries();
-  const [phdCandidates] = await Promise.all([getPhdCandidates()]);
-
   const neCountriesGeoJson = topojson.feature(
     neCountriesTopojson,
     neCountriesTopojson.objects.ne_admin_0_countries
   );
 
-  const count = group(
-    phdCandidates,
-    (d) => d.country,
-    (d) => d.department1
-  );
+  const countriesWithDepartments = neCountriesGeoJson.features
+    .reduce(
+      (
+        acc: {
+          isoAlpha3: string;
+          countryName: string;
+          departments: pieDatum[];
+          totalCount: number;
+          coordinates: number[];
+        }[],
+        feature
+      ) => {
+        const departmentCount = count.get(feature.properties?.ADM0_A3_NL);
+        if (!departmentCount) return acc;
+        const departments = departmentCount.map((d) => {
+          return {
+            label: d.departmentMainCode ?? "NA",
+            value: d.count,
+          };
+        });
+        const totalCount = departmentCount.reduce((sum, d) => sum + d.count, 0);
+        const c = geoCentroid(feature);
+        const coordinates = [c[0], c[1]];
+        acc.push({
+          isoAlpha3: feature.properties?.ADM0_A3_NL,
+          countryName: departmentCount[0].countryName ?? "",
+          departments,
+          totalCount,
+          coordinates,
+        });
+        return acc;
+      },
+      []
+    )
+    .sort((a, b) => descending(a.totalCount ?? 0, b.totalCount ?? 0));
 
-  const data: FeatureCollection<Point> = {
-    type: "FeatureCollection",
-    features: neCountriesGeoJson.features
-      .map((feature) => {
-        const departments = count.get(feature.properties?.ADM0_A3_NL);
-        const departmentCount = departments
-          ? Array.from(departments?.entries()).map(([key, value]) => {
-              return {
-                label: key,
-                value: value.length,
-              };
-            })
-          : null;
-        const totalCount = departments
-          ? Array.from(departments.values()).reduce(
-              (sum, d) => sum + d.length,
-              0
-            )
-          : null;
-        const pointFeature: Feature<Point> = {
-          type: "Feature",
-          properties: {
-            totalPhdCount: totalCount,
-            departments: departmentCount,
-            ...feature.properties,
-          },
-          geometry: {
-            type: "Point",
-            coordinates: [geoCentroid(feature)[0], geoCentroid(feature)[1]],
-          },
-        };
-        return pointFeature;
-      })
-      .filter((feature: Feature) => feature.properties?.totalPhdCount)
-      .sort((a: Feature, b: Feature) =>
-        descending(a.properties?.totalPhdCount, b.properties?.totalPhdCount)
-      ),
-  };
-
-  const legendEntries = data.features
-    .reduce((acc: Department[], point) => {
-      point.properties?.departments.forEach((department: pieDatum) => {
-        if (!acc.includes(department.label as Department))
-          acc.push(department.label as Department);
-      });
-      return acc;
-    }, [])
-    .map((department) => {
-      return {
-        label: department,
-        color: departmentColors[department],
-      };
-    });
-
-  const phdCount = Array.from(count.values()).map((d) =>
-    Array.from(d.values()).reduce((sum, d) => sum + d.length, 0)
-  );
-  const minCount = min(phdCount) ?? 0;
-  const maxCount = max(phdCount) ?? 10;
-  const domain: [number, number] = [minCount, maxCount];
-
-  return { data, domain, legendEntries };
+  return countriesWithDepartments;
 };
 
 export default getPhdCandidatesByCountryByDepartment;
