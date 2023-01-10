@@ -1,34 +1,45 @@
-import { scaleSqrt } from "d3";
+import { Country, PrismaClient } from "@prisma/client";
+import {
+  descending,
+  geoCentroid,
+  group,
+  max,
+  min,
+  scaleOrdinal,
+  scaleSqrt,
+} from "d3";
 import { geoInterruptedMollweide } from "d3-geo-projection";
-import type { FeatureCollection, Point } from "geojson";
 import { nanoid } from "nanoid";
 import type { GetStaticProps, NextPage } from "next";
 import Head from "next/head";
+import { Vector2 } from "three";
+import * as topojson from "topojson-client";
 import Footer from "../../components/Footer";
 import Heading, { Headings } from "../../components/Heading";
 import BaseLayer from "../../components/map/BaseLayer";
 import LegendTitle from "../../components/map/LegendTitle";
 import NominalLegend from "../../components/map/NominalLegend";
-import ScaledPie from "../../components/map/ScaledPie";
+import ScaledPie, { pieDatum } from "../../components/map/ScaledPie";
 import getMapHeight from "../../lib/cartographic/getMapHeight";
 import getCountries from "../../lib/data/getCountries";
-import getPhdCandidatesByCountryByDepartment from "../../lib/data/getPhdCandidatesByCountryByDepartment";
-import { departmentColors } from "../../lib/mappings/departments";
+import { Department, departmentColors } from "../../lib/mappings/departments";
 import defaultTheme from "../../lib/styles/themes/defaultTheme";
 import styles from "../../styles/home.module.css";
 import { SharedPageProps } from "../../types/Props";
 
 type Props = {
-  data: FeatureCollection<Point>;
-  legendEntries: any;
-  domain: [number, number];
+  phdCandidateCount: {
+    countryIsoAlpha3: string | undefined;
+    departmentMainCode: string | null;
+    count: number;
+  }[];
+  countries: Country[];
 } & SharedPageProps;
 
 const PhdDepartments: NextPage<Props> = ({
   neCountriesTopoJson,
-  data,
-  legendEntries,
-  domain,
+  phdCandidateCount,
+  countries,
 }) => {
   const dimension = {
     width: 1280,
@@ -39,7 +50,81 @@ const PhdDepartments: NextPage<Props> = ({
   const projection = geoInterruptedMollweide();
   dimension.height = getMapHeight(dimension.width, projection);
 
-  const scale = scaleSqrt().domain(domain).range([1, 100]);
+  const count = group(phdCandidateCount, (d) => d.countryIsoAlpha3);
+
+  const neCountriesGeoJson = topojson.feature(
+    neCountriesTopoJson,
+    neCountriesTopoJson.objects.ne_admin_0_countries
+  );
+
+  const countriesWithDepartments = neCountriesGeoJson.features
+    .reduce(
+      (
+        acc: {
+          isoAlpha3: string;
+          departmentCount: pieDatum[];
+          totalCount: number;
+          coordinates: number[];
+        }[],
+        feature
+      ) => {
+        const departments = count.get(feature.properties?.ADM0_A3_NL);
+        if (!departments) return acc;
+        const departmentCount = departments.map((d) => {
+          return {
+            label: d.departmentMainCode ?? "NA",
+            value: d.count,
+          };
+        });
+        const totalCount = departments.reduce((sum, d) => sum + d.count, 0);
+        const c = geoCentroid(feature);
+        const coordinates = [c[0], c[1]];
+        acc.push({
+          isoAlpha3: feature.properties?.ADM0_A3_NL,
+          departmentCount,
+          totalCount,
+          coordinates,
+        });
+        return acc;
+      },
+      []
+    )
+    .sort((a, b) => descending(a.totalCount ?? 0, b.totalCount ?? 0));
+
+  const legendEntries = countriesWithDepartments
+    .reduce((acc: Department[], country) => {
+      if (!country.departmentCount) return acc;
+      country.departmentCount.forEach((department: pieDatum) => {
+        if (!acc.includes(department.label as Department))
+          acc.push(department.label as Department);
+      });
+      return acc;
+    }, [])
+    .map((department) => {
+      return {
+        label: department,
+        color: departmentColors[department],
+      };
+    });
+
+  const { colorDomain, colorRange } = Object.entries(departmentColors).reduce(
+    (acc: { colorDomain: string[]; colorRange: string[] }, [label, color]) => {
+      acc.colorDomain.push(label);
+      acc.colorRange.push(color);
+      return acc;
+    },
+    { colorDomain: [], colorRange: [] }
+  );
+  const colorScale = scaleOrdinal<string, string>()
+    .domain(colorDomain)
+    .range(colorRange);
+
+  const phdCount = countriesWithDepartments.map((d) => d.totalCount, 0);
+  const minCount = min(phdCount) ?? 0;
+  const maxCount = max(phdCount) ?? 10;
+  const domain: [number, number] = [minCount, maxCount];
+
+  const scale = scaleSqrt().domain(domain).range([5, 50]);
 
   return (
     <>
@@ -58,16 +143,16 @@ const PhdDepartments: NextPage<Props> = ({
             theme={theme}
           />
           <g id="symbols">
-            {data.features.map((point) => {
-              if (!point.properties?.departments) return;
+            {countriesWithDepartments.map((country) => {
+              if (!country.departmentCount) return;
+              const pos = projection(country.coordinates);
               return (
                 <ScaledPie
                   key={nanoid()}
-                  xy={projection(point.geometry.coordinates)}
-                  scale={scale}
-                  colorScheme={Object.values(departmentColors)}
-                  pieSize={point.properties?.totalPhdCount}
-                  data={point.properties?.departments}
+                  position={new Vector2(pos[0], pos[1])}
+                  radius={scale(country.totalCount)}
+                  color={colorScale}
+                  data={country.departmentCount}
                   style={theme.scaledPie}
                 />
               );
@@ -76,15 +161,18 @@ const PhdDepartments: NextPage<Props> = ({
           <NominalLegend title={"ITC's departments"} entries={legendEntries} />
           <g transform={`translate(${dimension.width - 170},0)`}>
             <LegendTitle>Top 5 PhD countries</LegendTitle>
-            {data.features.slice(0, 5).map((feature, index) => (
+            {countriesWithDepartments.slice(0, 5).map((country, index) => (
               <g
                 fontSize={10}
                 transform={`translate(0, ${40 + index * 15})`}
                 key={nanoid()}
               >
                 <text>
-                  {feature.properties?.NAME_EN}
-                  <tspan> ({feature.properties?.totalPhdCount})</tspan>
+                  {
+                    countries.find((c) => c.IsoAlpha3 === country.isoAlpha3)
+                      ?.NameLongEn
+                  }
+                  <tspan> ({country.totalCount})</tspan>
                 </text>
               </g>
             ))}
@@ -98,15 +186,28 @@ const PhdDepartments: NextPage<Props> = ({
 
 export const getStaticProps: GetStaticProps<Props> = async () => {
   const neCountriesTopoJson = getCountries();
-  const [{ data, domain, legendEntries }] = await Promise.all([
-    getPhdCandidatesByCountryByDepartment(),
+  const prisma = new PrismaClient();
+  const [countries, res] = await Promise.all([
+    prisma.country.findMany(),
+    prisma.phdCandidate.groupBy({
+      by: ["countryId", "departmentMainCode"],
+      _count: {
+        _all: true,
+      },
+      orderBy: { countryId: "asc" },
+    }),
   ]);
+
+  const phdCandidateCount = res.map((d) => ({
+    countryIsoAlpha3: countries.find((c) => c.id == d.countryId)?.IsoAlpha3,
+    departmentMainCode: d.departmentMainCode,
+    count: d._count._all,
+  }));
 
   return {
     props: {
-      data,
-      domain,
-      legendEntries,
+      countries,
+      phdCandidateCount,
       neCountriesTopoJson,
     },
   };

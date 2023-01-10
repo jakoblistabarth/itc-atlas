@@ -16,7 +16,7 @@ export const departmentColors = {
   [Department.PGM]: "#ffc61e",
   [Department.WRS]: "#f28522",
   [Department.ALL]: "#000000",
-  null: "#aaaaaa",
+  NA: "#aaaaaa",
 };
 
 export const departmentMap = new Map([
