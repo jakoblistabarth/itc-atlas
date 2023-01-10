@@ -10,7 +10,7 @@ export default async function handler(
   console.log(level);
   const levelStr = Array.isArray(level) ? level.toString() : level;
   if (!(levelStr in UnLevel)) {
-    res.status(500).json({ error: "invalid level" });
+    res.status(400).json({ error: "invalid level" });
   } else {
     const levelStrEnum = levelStr as unknown as UnLevel;
     res.status(200).json(await getUnsdCodes(levelStrEnum));

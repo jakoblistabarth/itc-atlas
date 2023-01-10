@@ -27,7 +27,7 @@ export default async function handler(
   const themeReq = req.query.theme?.toString() as ThemeNames;
   const theme = !themeReq ? defaultTheme : themes.get(themeReq);
   if (!theme) {
-    res.status(500).json({ error: "invalid theme name" });
+    res.status(400).json({ error: "invalid theme name" });
   }
   const neCountriesTopoJson = getCountries();
   const [{ data, domain, legendEntries }] = await Promise.all([
