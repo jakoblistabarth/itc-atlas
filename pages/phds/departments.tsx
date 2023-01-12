@@ -1,10 +1,11 @@
-import { Country, PrismaClient } from "@prisma/client";
+import { PrismaClient } from "@prisma/client";
 import { max, min, scaleSqrt } from "d3";
 import { geoInterruptedMollweide } from "d3-geo-projection";
 import { nanoid } from "nanoid";
 import type { GetStaticProps, NextPage } from "next";
 import Head from "next/head";
 import { Vector2 } from "three";
+import { departmentColorScale } from "../../lib/styles/departmentColorScale";
 import Footer from "../../components/Footer";
 import Heading, { Headings } from "../../components/Heading";
 import BaseLayer from "../../components/map/BaseLayer";
@@ -13,7 +14,6 @@ import ScaledPie from "../../components/map/ScaledPie";
 import getMapHeight from "../../lib/cartographic/getMapHeight";
 import getCountries from "../../lib/data/getCountries";
 import getPhdCandidatesByCountryByDepartment from "../../lib/data/getPhdCandidatesByCountryByDepartment";
-import { getDepartmentColorScale } from "../../lib/mappings/departments";
 import defaultTheme from "../../lib/styles/themes/defaultTheme";
 import styles from "../../styles/home.module.css";
 import { SharedPageProps } from "../../types/Props";
@@ -27,7 +27,6 @@ type Props = {
 const PhdDepartments: NextPage<Props> = ({
   neCountriesTopoJson,
   phdsByCountryByDepartment,
-  countries,
 }) => {
   const dimension = {
     width: 1280,
@@ -43,12 +42,10 @@ const PhdDepartments: NextPage<Props> = ({
   const maxCount = max(phdCount) ?? 10;
   const scale = scaleSqrt().domain([minCount, maxCount]).range([5, 50]);
 
-  const colorScale = getDepartmentColorScale();
-
-  const legendEntries = colorScale.domain().map((d) => {
+  const legendEntries = departmentColorScale.domain().map((d) => {
     return {
       label: d,
-      color: colorScale(d),
+      color: departmentColorScale(d),
     };
   });
 
@@ -77,7 +74,7 @@ const PhdDepartments: NextPage<Props> = ({
                   key={nanoid()}
                   position={new Vector2(pos[0], pos[1])}
                   radius={scale(country.totalCount)}
-                  color={colorScale}
+                  color={departmentColorScale}
                   data={country.departments}
                   style={theme.scaledPie}
                 />

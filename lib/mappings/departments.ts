@@ -1,5 +1,3 @@
-import { scaleOrdinal } from "d3";
-
 export enum Department {
   EOS = "EOS", // "Department of Earth Observation Science",
   AES = "AES", // "Department of Applied Earth Sciences",
@@ -27,15 +25,3 @@ export const departmentMap = new Map([
   ["BMS", Department.ALL], // TODO: check with Menno-Jan how to proceed with department mapping
   ["CTW", Department.ALL],
 ]);
-
-export const getDepartmentColorScale = () => {
-  const { colorDomain, colorRange } = Object.entries(departmentColors).reduce(
-    (acc: { colorDomain: string[]; colorRange: string[] }, [label, color]) => {
-      acc.colorDomain.push(label);
-      acc.colorRange.push(color);
-      return acc;
-    },
-    { colorDomain: [], colorRange: [] }
-  );
-  return scaleOrdinal<string, string>().domain(colorDomain).range(colorRange);
-};

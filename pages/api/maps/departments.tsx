@@ -14,7 +14,7 @@ import ScaledPie from "../../../components/map/ScaledPie";
 import { setMapBounds } from "../../../lib/cartographic/getMapHeight";
 import getCountries from "../../../lib/data/getCountries";
 import getPhdCandidatesByCountryByDepartment from "../../../lib/data/getPhdCandidatesByCountryByDepartment";
-import { getDepartmentColorScale } from "../../../lib/mappings/departments";
+import { departmentColorScale } from "../../../lib/styles/departmentColorScale";
 import themes, { ThemeNames } from "../../../lib/styles/themes";
 import defaultTheme from "../../../lib/styles/themes/defaultTheme";
 import { MapOptions } from "../../../types/MapOptions";
@@ -35,11 +35,9 @@ export default async function handler(
   const max = d3.max(data.map((d) => d.totalCount)) ?? 1;
   const scale = d3.scaleSqrt().domain([min, max]).range([2, 50]);
 
-  const colorScale = getDepartmentColorScale();
-
-  const legendEntries = colorScale.domain().map((d) => ({
+  const legendEntries = departmentColorScale.domain().map((d) => ({
     label: d,
-    color: colorScale(d),
+    color: departmentColorScale(d),
   }));
 
   const mapOptions: MapOptions = {
@@ -87,7 +85,7 @@ export default async function handler(
                 key={nanoid()}
                 position={position}
                 radius={scale(d.totalCount)}
-                color={colorScale}
+                color={departmentColorScale}
                 data={d.departments}
                 style={theme?.scaledPie}
               />
