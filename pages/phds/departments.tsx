@@ -17,6 +17,8 @@ import getPhdCandidatesByCountryByDepartment from "../../lib/data/getPhdCandidat
 import defaultTheme from "../../lib/styles/themes/defaultTheme";
 import styles from "../../styles/home.module.css";
 import { SharedPageProps } from "../../types/Props";
+import useSWR from "swr";
+import { useState } from "react";
 
 type Props = {
   phdsByCountryByDepartment: Awaited<
@@ -28,6 +30,26 @@ const PhdDepartments: NextPage<Props> = ({
   neCountriesTopoJson,
   phdsByCountryByDepartment,
 }) => {
+  const [isChecked, setIsChecked] = useState(false);
+
+  const handleOnChange = () => {
+    setIsChecked(!isChecked);
+  };
+
+  const filter = isChecked ? "?graduated=true" : "";
+
+  const fetcher = (...args) => fetch(...args).then((res) => res.json());
+
+  const { data, error, isLoading } = useSWR(
+    "/api/data/phdcandidatesByCountry" + filter,
+    fetcher
+  );
+
+  if (error) return <div>failed to load</div>;
+  // if (isLoading) return <div>Loading</div>;
+
+  const mapData = data ?? phdsByCountryByDepartment;
+
   const dimension = {
     width: 1280,
     height: 0,
@@ -37,7 +59,7 @@ const PhdDepartments: NextPage<Props> = ({
   const projection = geoInterruptedMollweide();
   dimension.height = getMapHeight(dimension.width, projection);
 
-  const phdCount = phdsByCountryByDepartment.map((d) => d.totalCount, 0);
+  const phdCount = mapData.map((d) => d.totalCount, 0);
   const minCount = min(phdCount) ?? 0;
   const maxCount = max(phdCount) ?? 10;
   const scale = scaleSqrt().domain([minCount, maxCount]).range([5, 50]);
@@ -59,33 +81,46 @@ const PhdDepartments: NextPage<Props> = ({
 
       <main className={styles.main}>
         <Heading Tag={Headings.H1}>ITC's PhD candidates</Heading>
+        <div>
+          <input
+            type="checkbox"
+            id="filter"
+            // name="filter"
+            // value="filter"
+            checked={isChecked}
+            onChange={handleOnChange}
+          />
+          <label htmlFor="filter">Show only graduates</label>
+        </div>
         <svg width={dimension.width} height={dimension.height}>
           <BaseLayer
             countries={neCountriesTopoJson}
             projection={projection}
             theme={theme}
           />
-          <g id="symbols">
-            {phdsByCountryByDepartment.map((country) => {
-              if (!country.departments) return;
-              const pos = projection(country.coordinates);
-              return (
-                <ScaledPie
-                  key={nanoid()}
-                  position={new Vector2(pos[0], pos[1])}
-                  radius={scale(country.totalCount)}
-                  color={departmentColorScale}
-                  data={country.departments}
-                  style={theme.scaledPie}
-                />
-              );
-            })}
-          </g>
+          {!isLoading && (
+            <g id="symbols">
+              {mapData.map((country) => {
+                if (!country.departments) return;
+                const pos = projection(country.coordinates);
+                return (
+                  <ScaledPie
+                    key={nanoid()}
+                    position={new Vector2(pos[0], pos[1])}
+                    radius={scale(country.totalCount)}
+                    color={departmentColorScale}
+                    data={country.departments}
+                    style={theme.scaledPie}
+                  />
+                );
+              })}
+            </g>
+          )}
           <NominalLegend title={"ITC's departments"} entries={legendEntries} />
           <g transform={`translate(${dimension.width - 170},0)`}>
             <NominalLegend
               title={"Top 5 PhD countries"}
-              entries={phdsByCountryByDepartment.slice(0, 5).map((d) => ({
+              entries={mapData.slice(0, 5).map((d) => ({
                 label: `${d.countryName} (${d.totalCount})`,
                 color: "none",
                 symbol: <g></g>,
@@ -104,7 +139,7 @@ export const getStaticProps: GetStaticProps<Props> = async () => {
   const prisma = new PrismaClient();
   const [countries, phdsByCountryByDepartment] = await Promise.all([
     prisma.country.findMany(),
-    getPhdCandidatesByCountryByDepartment(null),
+    getPhdCandidatesByCountryByDepartment(),
   ]);
 
   return {

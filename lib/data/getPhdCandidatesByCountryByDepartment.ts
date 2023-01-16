@@ -11,14 +11,17 @@ export type phdPerCountryDepartment = {
 };
 
 const getPhdCandidatesByCountryByDepartment = async (
-  filter: any // TODO: implement filter on phdcandidates, e.g. only graduated ones
+  onlyGraduates?: Boolean // TODO: refactor
 ) => {
   const prisma = new PrismaClient();
+
+  const filter = onlyGraduates ? { graduated: true } : {};
   const phdsGrouped = await prisma.phdCandidate.groupBy({
     by: ["countryId", "departmentMainCode"],
     _count: {
       _all: true,
     },
+    where: filter,
     orderBy: { countryId: "asc" },
   });
   const countries = await prisma.country.findMany();

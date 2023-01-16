@@ -50,6 +50,7 @@
     "react-popper-tooltip": "^4.4.2",
     "storybook-css-modules-preset": "^1.1.1",
     "superjson": "^1.12.1",
+    "swr": "^2.0.0",
     "three": "^0.140.2",
     "topojson-client": "^3.1.0",
     "topojson-simplify": "^3.0.3",

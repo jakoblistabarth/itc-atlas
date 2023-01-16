@@ -29,7 +29,7 @@ export default async function handler(
     res.status(400).json({ error: "invalid theme name" });
   }
   const neCountriesTopoJson = getCountries();
-  const data = await getPhdCandidatesByCountryByDepartment(null);
+  const data = await getPhdCandidatesByCountryByDepartment();
 
   const min = d3.min(data.map((d) => d.totalCount)) ?? 0;
   const max = d3.max(data.map((d) => d.totalCount)) ?? 1;
