@@ -6,6 +6,7 @@ import type { FeatureCollection, Polygon, MultiPolygon } from "geojson";
 
 import PolygonSymbol from "../components/map/PolygonSymbol";
 import getCountries from "../lib/data/getCountries";
+import PatternLines from "../components/defs/patterns/PatternLines";
 
 const width = 600;
 const height = 300;
@@ -27,6 +28,9 @@ export default {
   decorators: [
     (Story) => (
       <svg width={width} height={height}>
+        <defs>
+          <PatternLines stroke="blue" spacing={5} angle={45} />
+        </defs>
         <Story />
       </svg>
     ),
@@ -41,17 +45,16 @@ const Template: ComponentStory<typeof PolygonSymbol> = (args) => {
   );
 };
 
-const defaultArgs = {
-  style: { fill: "none", stroke: "black" },
-};
-
-export const SolidFill = Template.bind({});
-SolidFill.args = {
-  ...defaultArgs,
+export const Default = Template.bind({});
+Default.args = {
+  fill: "lightgrey",
+  stroke: "grey",
 };
 
 export const Patternfill = Template.bind({});
 Patternfill.args = {
-  ...defaultArgs,
-  style: { fill: "url(#Lines) blue", stroke: "red", opacity: 0.5 },
+  ...Default.args,
+  fill: "url(#Lines) blue",
+  stroke: "red",
+  opacity: 0.5,
 };
