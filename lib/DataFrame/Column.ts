@@ -27,7 +27,10 @@ class Column {
       if (value == null) continue;
       if (typeof value === "number") return ColumnType.Continuous;
       if (Array.isArray(value)) return ColumnType.Array;
-      if (typeof value === "string" && Date.parse(value))
+      if (
+        (typeof value === "object" || typeof value === "string") &&
+        Date.parse(value)
+      )
         return ColumnType.Date;
       return ColumnType.Ordinal;
     }
