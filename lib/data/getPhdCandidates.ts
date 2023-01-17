@@ -44,7 +44,7 @@ export default async function getPhdCandidates() {
   });
   const data = xlsx.utils.sheet_to_json(file.Sheets[file.SheetNames[0]], {
     defval: null,
-  }) as phdCandidateRaw;
+  }) as phdCandidateRaw[];
 
   const cleaned = cleanPhdCandiates(data);
 

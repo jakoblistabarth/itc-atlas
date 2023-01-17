@@ -6,7 +6,7 @@ import { departmentMap } from "../mappings/departments";
 import { phdCandidateRaw } from "./getPhdCandidates";
 import getUnsdCountries from "./getUnsdCountries";
 
-export async function cleanPhdCandiates(data: phdCandidateRaw) {
+export async function cleanPhdCandiates(data: phdCandidateRaw[]) {
   const unsdCodes = await getUnsdCountries();
 
   const fuseOptions = {
