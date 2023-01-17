@@ -24,7 +24,7 @@ This command also creates fake ITC data if the original data is not available. (
 
 ### 3. The database
 
-The website uses a PostgreSQL database via [prisma](https://prisma.io/).
+The website uses a `PostgreSQL` database via [prisma](https://prisma.io/).
 The schema names follow the [prisma naming conventions](https://www.prisma.io/docs/reference/api-reference/prisma-schema-reference#naming-conventions): mainly, *singular form* and *PascalCase* for models and *camelCase* for fields.
 
 To run single queries (a module as .ts file) enter
@@ -37,9 +37,14 @@ To seed db manually
 npx prisma db seed
 ```
 
-To push the state of the Prisma schema file to the database without using migrations. To be used during prototyping and local development.
+To push the state of the *Prisma* schema file to the database without using migrations. Usually used during prototyping and local development.
 ```bash
 npx dotenv -e .env.local -- npx prisma db push
+```
+
+To open up *Prisma Studio* to visually inspect and edit the data in the database run
+```bash
+ npx prisma studio
 ```
 
 ### 4. Starting the next.js app

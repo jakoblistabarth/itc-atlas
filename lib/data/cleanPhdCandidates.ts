@@ -19,7 +19,7 @@ export async function cleanPhdCandiates(data: phdCandidateRaw[]) {
   const tb = aq
     .from(data)
     .derive({
-      studentId: aq.escape((d: phdCandidateRaw) =>
+      itcStudentId: aq.escape((d: phdCandidateRaw) =>
         d.ITCStudentNo ? d.ITCStudentNo + "" : null
       ),
       dateStart: aq.escape((d: phdCandidateRaw) =>
@@ -66,7 +66,7 @@ export async function cleanPhdCandiates(data: phdCandidateRaw[]) {
       Sponsor: "sponsor",
     })
     .select(
-      "studentId",
+      "itcStudentId",
       "country",
       "department1",
       "department2",

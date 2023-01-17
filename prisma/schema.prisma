@@ -17,9 +17,20 @@ model Department {
   PhdCandidatesSecondary PhdCandidate[] @relation("DepartmentSecondary")
 }
 
+model Contact {
+  id           String         @id
+  itcStudentId String?        @unique
+  gender       String?
+  dateOfBirth  DateTime?      @db.Date
+  countryId    Int?
+  country      Country?       @relation("ContactNationality", fields: [countryId], references: [id])
+  phd          PhdCandidate[] @relation("ContactPhd")
+}
+
 model PhdCandidate {
   id                      Int         @id @default(autoincrement())
-  contactId               String?
+  itcStudentId            String?
+  Contact                 Contact?    @relation("ContactPhd", fields: [itcStudentId], references: [itcStudentId])
   departmentMainCode      String?
   departmentMain          Department? @relation("DepartmentMain", fields: [departmentMainCode], references: [code])
   departmentSecondaryCode String?
@@ -47,4 +58,5 @@ model Country {
   Lldc                     Boolean
   Sids                     Boolean
   PhdCandidates            PhdCandidate[] @relation("PhdCountry")
+  Contacts                 Contact[]      @relation("ContactNationality")
 }
