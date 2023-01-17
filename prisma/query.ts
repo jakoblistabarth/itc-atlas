@@ -3,7 +3,7 @@ import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
 
 async function main() {
-  const allPhDCandidates = await prisma.phdCandidate.findMany({
+  const res = await prisma.phdCandidate.findMany({
     where: {
       departmentMain: {
         is: {
@@ -27,7 +27,7 @@ async function main() {
     },
     take: 2,
   });
-  console.log(allPhDCandidates);
+  console.log(res);
 }
 
 main()

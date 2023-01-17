@@ -1,8 +1,4 @@
 export function ddmmyyyyToDate(str: string) {
-  const splits = str.split("-");
-  return new Date(
-    parseInt(splits[2], 10),
-    parseInt(splits[1], 10) - 1,
-    parseInt(splits[0], 10)
-  );
+  const [d, m, y] = str.split("-");
+  return new Date(parseInt(d, 10), parseInt(m, 10) - 1, parseInt(y, 10));
 }

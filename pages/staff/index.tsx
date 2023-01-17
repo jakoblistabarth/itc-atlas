@@ -13,7 +13,7 @@ type Props = React.PropsWithChildren<{
   staff: Staff[];
 }>;
 
-const Staff: NextPage<Props> = ({ staff }) => {
+const StaffPage: NextPage<Props> = ({ staff }) => {
   const staffDf = new DataFrame(staff);
   return (
     <>
@@ -48,4 +48,4 @@ export async function getStaticProps() {
   };
 }
 
-export default Staff;
+export default StaffPage;
