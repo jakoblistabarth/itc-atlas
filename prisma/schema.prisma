@@ -13,8 +13,9 @@ datasource db {
 model Department {
   code                   String         @id
   name                   String
-  PhdCandidatesMain      PhdCandidate[] @relation("DepartmentMain")
-  PhdCandidatesSecondary PhdCandidate[] @relation("DepartmentSecondary")
+  PhdCandidatesMain      PhdCandidate[] @relation("DepartmentPhdMain")
+  PhdCandidatesSecondary PhdCandidate[] @relation("DepartmentPhdSecondary")
+  Employee               Employee[]     @relation("DepartmentEmployee")
 }
 
 model Contact {
@@ -25,6 +26,7 @@ model Contact {
   countryId    Int?
   country      Country?       @relation("ContactNationality", fields: [countryId], references: [id])
   phd          PhdCandidate[] @relation("ContactPhd")
+  Employee     Employee[]     @relation("ContactEmployee")
 }
 
 model PhdCandidate {
@@ -32,9 +34,9 @@ model PhdCandidate {
   itcStudentId            String?
   Contact                 Contact?    @relation("ContactPhd", fields: [itcStudentId], references: [itcStudentId])
   departmentMainCode      String?
-  departmentMain          Department? @relation("DepartmentMain", fields: [departmentMainCode], references: [code])
+  departmentMain          Department? @relation("DepartmentPhdMain", fields: [departmentMainCode], references: [code])
   departmentSecondaryCode String?
-  departmentSecondary     Department? @relation("DepartmentSecondary", fields: [departmentSecondaryCode], references: [code])
+  departmentSecondary     Department? @relation("DepartmentPhdSecondary", fields: [departmentSecondaryCode], references: [code])
   thesisTitle             String?
   graduated               Boolean?
   start                   DateTime?   @db.Date
@@ -42,6 +44,19 @@ model PhdCandidate {
   promotion               DateTime?   @db.Date
   country                 Country?    @relation("PhdCountry", fields: [countryId], references: [id])
   countryId               Int?
+}
+
+model Employee {
+  id             Int         @id
+  start          DateTime?   @db.Date
+  end            DateTime?   @db.Date
+  departmentCode String?
+  department     Department? @relation("DepartmentEmployee", fields: [departmentCode], references: [code])
+  contactId      String?
+  Contact        Contact?    @relation("ContactEmployee", fields: [contactId], references: [id])
+  dateOfBirth    DateTime?   @db.Date
+  countryId      Int?
+  country        Country?    @relation("EmployeeCountry", fields: [countryId], references: [id])
 }
 
 model Country {
@@ -59,4 +74,5 @@ model Country {
   Sids                     Boolean
   PhdCandidates            PhdCandidate[] @relation("PhdCountry")
   Contacts                 Contact[]      @relation("ContactNationality")
+  Employee                 Employee[]     @relation("EmployeeCountry")
 }

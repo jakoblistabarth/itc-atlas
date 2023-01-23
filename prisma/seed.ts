@@ -3,6 +3,7 @@ import getDepartments from "../lib/data/getDepartments";
 import getPhdCandidates from "../lib/data/getPhdCandidates";
 import getUnsdCountries from "../lib/data/getUnsdCountries";
 import getContacts from "../lib/data/getContacts";
+import getStaff from "../lib/data/getStaff";
 
 const prisma = new PrismaClient();
 
@@ -11,15 +12,20 @@ async function main() {
   await prisma.contact.deleteMany({});
   await prisma.department.deleteMany({});
   await prisma.country.deleteMany({});
+  await prisma.employee.deleteMany({});
+  await prisma.$queryRaw`ALTER SEQUENCE IF EXISTS "Employee_id_seq" RESTART WITH 1;`;
   await prisma.$queryRaw`ALTER SEQUENCE IF EXISTS "PhdCandidate_id_seq" RESTART WITH 1;`;
   await prisma.$queryRaw`ALTER SEQUENCE IF EXISTS "Country_id_seq" RESTART WITH 1;`;
 
-  const [departments, countries, phds, contacts] = await Promise.all([
-    getDepartments(),
-    getUnsdCountries(),
-    getPhdCandidates(),
-    getContacts(),
-  ]);
+  const [departments, countries, phds, contacts, employees] = await Promise.all(
+    [
+      getDepartments(),
+      getUnsdCountries(),
+      getPhdCandidates(),
+      getContacts(),
+      getStaff(),
+    ]
+  );
 
   await Promise.all(
     departments.map(async (d) => {
@@ -96,7 +102,7 @@ async function main() {
             select: { id: true },
             where: {
               IsoAlpha3: {
-                equals: d.country ?? undefined,
+                equals: d.country,
               },
             },
           })
@@ -123,6 +129,64 @@ async function main() {
         },
       };
       return await prisma.phdCandidate.create(createArgs);
+    })
+  );
+
+  await Promise.all(
+    employees.map(async (d, idx) => {
+      const country = d.nationality
+        ? await prisma.country.findFirst({
+            select: { id: true },
+            where: {
+              IsoAlpha3: {
+                equals: d.nationality,
+              },
+            },
+          })
+        : null;
+
+      const department = d.department
+        ? await prisma.department.findFirst({
+            select: { code: true },
+            where: {
+              code: {
+                equals: d.department,
+              },
+            },
+          })
+        : null;
+
+      const contact =
+        d.dateOfBirth && d.gender && country?.id
+          ? await prisma.contact.findFirst({
+              select: { id: true },
+              where: {
+                dateOfBirth: {
+                  equals: d.dateOfBirth,
+                },
+                gender: {
+                  equals: d.gender,
+                },
+                countryId: {
+                  equals: country?.id,
+                },
+              },
+            })
+          : null;
+
+      // TODO: add unit end?
+      const createArgs: Prisma.EmployeeCreateArgs = {
+        data: {
+          id: d.mId,
+          start: d.employmentStart,
+          end: d.employmentEnd,
+          departmentCode: department?.code,
+          contactId: contact?.id,
+          dateOfBirth: d.dateOfBirth,
+          countryId: country?.id,
+        },
+      };
+      return await prisma.employee.create(createArgs);
     })
   );
 }

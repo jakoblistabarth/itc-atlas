@@ -44,7 +44,7 @@ export type ContactClean = {
   contactId: string;
   itcStudentId?: string;
   gender: string;
-  dateOfBirth: string;
+  dateOfBirth?: Date;
   countryIsoAlpha3: string;
 };
 
@@ -65,13 +65,17 @@ export default async function getApplicants() {
           ? null
           : d["ITC Student No."]
       ),
-      dateOfBirth: aq.escape((d: ContactRaw) =>
-        d["Date of Birth"] ? ddmmyyyyToDate(d["Date of Birth"]) : null
+      dateOfBirth: aq.escape((d: ContactRaw) => {
+        if (!d["Date of Birth"]) return null;
+        if (d["Date of Birth"] === "01-01-1990") return null;
+        return ddmmyyyyToDate(d["Date of Birth"]);
+      }),
+      gender: aq.escape((d: ContactRaw) =>
+        d.Gender === "Male" ? "m" : d.Gender === "Female" ? "f" : null
       ),
     })
     .rename({
       ContactNo: "contactId",
-      Gender: "gender",
       "Date of Birth": "dateOfBirth",
       ISONationality: "countryIsoAlpha3",
     })
