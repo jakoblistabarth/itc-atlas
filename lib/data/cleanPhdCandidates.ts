@@ -3,10 +3,10 @@ import Fuse from "fuse.js";
 import { PhdCandidate } from "../../types/PhdCandidate";
 import { mapCountries } from "../mappings/country.name.EN";
 import { departmentMap } from "../mappings/departments";
-import { phdCandidateRaw } from "./getPhdCandidates";
+import { PhdCandidateRaw } from "./getPhdCandidates";
 import getUnsdCountries from "./getUnsdCountries";
 
-export async function cleanPhdCandiates(data: phdCandidateRaw[]) {
+export async function cleanPhdCandiates(data: PhdCandidateRaw[]) {
   const unsdCodes = await getUnsdCountries();
 
   const fuseOptions = {
@@ -19,41 +19,41 @@ export async function cleanPhdCandiates(data: phdCandidateRaw[]) {
   const tb = aq
     .from(data)
     .derive({
-      itcStudentId: aq.escape((d: phdCandidateRaw) =>
+      itcStudentId: aq.escape((d: PhdCandidateRaw) =>
         d.ITCStudentNo ? d.ITCStudentNo + "" : null
       ),
-      dateStart: aq.escape((d: phdCandidateRaw) =>
+      dateStart: aq.escape((d: PhdCandidateRaw) =>
         d?.PhDStart ? d.PhDStart.toISOString() : null
       ),
-      dateGraduation: aq.escape((d: phdCandidateRaw) =>
+      dateGraduation: aq.escape((d: PhdCandidateRaw) =>
         d?.SISGraduated ? d.SISGraduated.toISOString() : null
       ),
-      datePromotion: aq.escape((d: phdCandidateRaw) =>
+      datePromotion: aq.escape((d: PhdCandidateRaw) =>
         d?.Promotion ? new Date(d.Promotion + "GMT").toISOString() : null
       ),
-      dateEnd: aq.escape((d: phdCandidateRaw) =>
+      dateEnd: aq.escape((d: PhdCandidateRaw) =>
         d?.PhDEnd ? d.PhDEnd.toISOString() : null
       ),
-      country: aq.escape((d: phdCandidateRaw) => {
+      country: aq.escape((d: PhdCandidateRaw) => {
         const clean = d?.Country ? mapCountries(d.Country) : null;
         if (!clean) return null;
         const result = fuse.search(clean)[0];
         if (!result) return null;
         return result.item["ISO-alpha3 Code"];
       }),
-      department1: aq.escape((d: phdCandidateRaw) => {
+      department1: aq.escape((d: PhdCandidateRaw) => {
         const department = d.Department ?? null;
         if (!department) return null;
         const departmentMapped = departmentMap.get(department);
         return departmentMapped ?? department;
       }),
-      department2: aq.escape((d: phdCandidateRaw) => {
+      department2: aq.escape((d: PhdCandidateRaw) => {
         const department = d.DepartmentSecond ?? null;
         if (!department) return null;
         const departmentMapped = departmentMap.get(department);
         return departmentMapped ?? department;
       }),
-      graduated: aq.escape((d: phdCandidateRaw) => {
+      graduated: aq.escape((d: PhdCandidateRaw) => {
         if (d.Graduated === null) return null;
         return d.Graduated === 0 ? false : true;
       }),

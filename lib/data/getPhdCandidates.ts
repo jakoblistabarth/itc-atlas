@@ -1,7 +1,7 @@
 import xlsx from "xlsx";
 import { cleanPhdCandiates } from "./cleanPhdCandidates";
 
-export type phdCandidateRaw = {
+export type PhdCandidateRaw = {
   ITCStudentNo?: number;
   mnumber?: number;
   Surname?: string;
@@ -44,7 +44,7 @@ export default async function getPhdCandidates() {
   });
   const data = xlsx.utils.sheet_to_json(file.Sheets[file.SheetNames[0]], {
     defval: null,
-  }) as phdCandidateRaw[];
+  }) as PhdCandidateRaw[];
 
   const cleaned = cleanPhdCandiates(data);
 
