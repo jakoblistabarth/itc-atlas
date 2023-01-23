@@ -11,11 +11,11 @@ datasource db {
 }
 
 model Department {
-  code                   String         @id
+  id                     String         @id
   name                   String
-  PhdCandidatesMain      PhdCandidate[] @relation("DepartmentPhdMain")
-  PhdCandidatesSecondary PhdCandidate[] @relation("DepartmentPhdSecondary")
-  Employee               Employee[]     @relation("DepartmentEmployee")
+  phdCandidatesMain      PhdCandidate[] @relation("DepartmentPhdMain")
+  phdCandidatesSecondary PhdCandidate[] @relation("DepartmentPhdSecondary")
+  employment             Employment[]   @relation("DepartmentEmployment")
 }
 
 model Contact {
@@ -26,53 +26,60 @@ model Contact {
   countryId    Int?
   country      Country?       @relation("ContactNationality", fields: [countryId], references: [id])
   phd          PhdCandidate[] @relation("ContactPhd")
-  Employee     Employee[]     @relation("ContactEmployee")
+  employee     Employee[]     @relation("ContactEmployee")
 }
 
 model PhdCandidate {
-  id                      Int         @id @default(autoincrement())
-  itcStudentId            String?
-  Contact                 Contact?    @relation("ContactPhd", fields: [itcStudentId], references: [itcStudentId])
-  departmentMainCode      String?
-  departmentMain          Department? @relation("DepartmentPhdMain", fields: [departmentMainCode], references: [code])
-  departmentSecondaryCode String?
-  departmentSecondary     Department? @relation("DepartmentPhdSecondary", fields: [departmentSecondaryCode], references: [code])
-  thesisTitle             String?
-  graduated               Boolean?
-  start                   DateTime?   @db.Date
-  graduation              DateTime?   @db.Date
-  promotion               DateTime?   @db.Date
-  country                 Country?    @relation("PhdCountry", fields: [countryId], references: [id])
-  countryId               Int?
+  id                    Int         @id @default(autoincrement())
+  itcStudentId          String?
+  contact               Contact?    @relation("ContactPhd", fields: [itcStudentId], references: [itcStudentId])
+  departmentMainId      String?
+  departmentMain        Department? @relation("DepartmentPhdMain", fields: [departmentMainId], references: [id])
+  departmentSecondaryId String?
+  departmentSecondary   Department? @relation("DepartmentPhdSecondary", fields: [departmentSecondaryId], references: [id])
+  thesisTitle           String?
+  graduated             Boolean?
+  start                 DateTime?   @db.Date
+  graduation            DateTime?   @db.Date
+  promotion             DateTime?   @db.Date
+  country               Country?    @relation("PhdCountry", fields: [countryId], references: [id])
+  countryId             Int?
 }
 
 model Employee {
-  id             Int         @id
-  start          DateTime?   @db.Date
-  end            DateTime?   @db.Date
-  departmentCode String?
-  department     Department? @relation("DepartmentEmployee", fields: [departmentCode], references: [code])
-  contactId      String?
-  Contact        Contact?    @relation("ContactEmployee", fields: [contactId], references: [id])
-  dateOfBirth    DateTime?   @db.Date
-  countryId      Int?
-  country        Country?    @relation("EmployeeCountry", fields: [countryId], references: [id])
+  id          Int          @id
+  contactId   String?
+  contact     Contact?     @relation("ContactEmployee", fields: [contactId], references: [id])
+  dateOfBirth DateTime?    @db.Date
+  countryId   Int?
+  country     Country?     @relation("EmployeeCountry", fields: [countryId], references: [id])
+  employment  Employment[]
+}
+
+model Employment {
+  id           Int         @id
+  start        DateTime?   @db.Date
+  end          DateTime?   @db.Date
+  employeeId   Int
+  employee     Employee    @relation(fields: [employeeId], references: [id])
+  departmentId String?
+  department   Department? @relation("DepartmentEmployment", fields: [departmentId], references: [id])
 }
 
 model Country {
   id                       Int            @id @default(autoincrement())
-  IsoAlpha2                String         @db.Char(2)
-  IsoAlpha3                String         @db.Char(3)
-  IsoNum3                  String?        @db.Char(3)
-  NameEn                   String?
-  NameLongEn               String         @db.Text
-  UnRegionCode             String         @db.Char(3)
-  UnSubRegionCode          String         @db.Char(3)
-  UnIntermediateRegionCode String?        @db.Char(3)
-  Ldc                      Boolean
-  Lldc                     Boolean
-  Sids                     Boolean
-  PhdCandidates            PhdCandidate[] @relation("PhdCountry")
-  Contacts                 Contact[]      @relation("ContactNationality")
-  Employee                 Employee[]     @relation("EmployeeCountry")
+  isoAlpha2                String         @db.Char(2)
+  isoAlpha3                String         @db.Char(3)
+  isoNum3                  String?        @db.Char(3)
+  nameEn                   String?
+  nameLongEn               String         @db.Text
+  unRegionCode             String         @db.Char(3)
+  unSubRegionCode          String         @db.Char(3)
+  unIntermediateRegionCode String?        @db.Char(3)
+  ldc                      Boolean
+  lldc                     Boolean
+  sids                     Boolean
+  phdCandidates            PhdCandidate[] @relation("PhdCountry")
+  contacts                 Contact[]      @relation("ContactNationality")
+  employee                 Employee[]     @relation("EmployeeCountry")
 }

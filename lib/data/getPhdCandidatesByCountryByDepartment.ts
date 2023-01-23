@@ -17,7 +17,7 @@ const getPhdCandidatesByCountryByDepartment = async (
 
   const filter = onlyGraduates ? { graduated: true } : {};
   const phdsGrouped = await prisma.phdCandidate.groupBy({
-    by: ["countryId", "departmentMainCode"],
+    by: ["countryId", "departmentMainId"],
     _count: {
       _all: true,
     },
@@ -29,9 +29,9 @@ const getPhdCandidatesByCountryByDepartment = async (
   const phdCandidateCount = phdsGrouped.map((d) => {
     const c = countries.find((c) => c.id == d.countryId);
     return {
-      countryIsoAlpha3: c?.IsoAlpha3,
-      countryName: c?.NameLongEn,
-      departmentMainCode: d.departmentMainCode,
+      countryIsoAlpha3: c?.isoAlpha3,
+      countryName: c?.nameLongEn,
+      departmentMainCode: d.departmentMainId,
       count: d._count._all,
     };
   });

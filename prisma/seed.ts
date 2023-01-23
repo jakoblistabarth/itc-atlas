@@ -3,7 +3,8 @@ import getDepartments from "../lib/data/getDepartments";
 import getPhdCandidates from "../lib/data/getPhdCandidates";
 import getUnsdCountries from "../lib/data/getUnsdCountries";
 import getContacts from "../lib/data/getContacts";
-import getStaff from "../lib/data/getStaff";
+import getEmployees from "../lib/data/getEmployees";
+import getEmployments from "../lib/data/getEmployments";
 
 const prisma = new PrismaClient();
 
@@ -12,26 +13,26 @@ async function main() {
   await prisma.contact.deleteMany({});
   await prisma.department.deleteMany({});
   await prisma.country.deleteMany({});
+  await prisma.employment.deleteMany({});
   await prisma.employee.deleteMany({});
-  await prisma.$queryRaw`ALTER SEQUENCE IF EXISTS "Employee_id_seq" RESTART WITH 1;`;
   await prisma.$queryRaw`ALTER SEQUENCE IF EXISTS "PhdCandidate_id_seq" RESTART WITH 1;`;
   await prisma.$queryRaw`ALTER SEQUENCE IF EXISTS "Country_id_seq" RESTART WITH 1;`;
 
-  const [departments, countries, phds, contacts, employees] = await Promise.all(
-    [
+  const [departments, countries, phds, contacts, employees, employments] =
+    await Promise.all([
       getDepartments(),
       getUnsdCountries(),
       getPhdCandidates(),
       getContacts(),
-      getStaff(),
-    ]
-  );
+      getEmployees(),
+      getEmployments(),
+    ]);
 
   await Promise.all(
     departments.map(async (d) => {
       const createArgs: Prisma.DepartmentCreateArgs = {
         data: {
-          code: d.code,
+          id: d.code,
           name: d.name,
         },
       };
@@ -43,19 +44,19 @@ async function main() {
     countries.map(async (d, idx) => {
       const createArgs: Prisma.CountryCreateArgs = {
         data: {
-          IsoAlpha2: d["ISO-alpha2 Code"],
-          IsoAlpha3: d["ISO-alpha3 Code"],
-          IsoNum3: d["M49 Code"],
-          NameEn: undefined,
-          NameLongEn: d["Country or Area"],
-          UnRegionCode: d["Region Code"],
-          UnSubRegionCode: d["Sub-region Code"],
-          UnIntermediateRegionCode: d["Intermediate Region Code"]
+          isoAlpha2: d["ISO-alpha2 Code"],
+          isoAlpha3: d["ISO-alpha3 Code"],
+          isoNum3: d["M49 Code"],
+          nameEn: undefined,
+          nameLongEn: d["Country or Area"],
+          unRegionCode: d["Region Code"],
+          unSubRegionCode: d["Sub-region Code"],
+          unIntermediateRegionCode: d["Intermediate Region Code"]
             ? d["Intermediate Region Code"]
             : undefined,
-          Ldc: d["Least Developed Countries (LDC)"] ? true : false,
-          Lldc: d["Land Locked Developing Countries (LLDC)"] ? true : false,
-          Sids: d["Small Island Developing States (SIDS)"] ? true : false,
+          ldc: d["Least Developed Countries (LDC)"] ? true : false,
+          lldc: d["Land Locked Developing Countries (LLDC)"] ? true : false,
+          sids: d["Small Island Developing States (SIDS)"] ? true : false,
         },
       };
       return await prisma.country.create(createArgs);
@@ -69,7 +70,7 @@ async function main() {
             //TODO: it's probably very ineffcient to query db for every upsert
             select: { id: true },
             where: {
-              IsoAlpha3: {
+              isoAlpha3: {
                 equals: d.countryIsoAlpha3 ?? undefined,
               },
             },
@@ -101,7 +102,7 @@ async function main() {
         ? await prisma.country.findFirst({
             select: { id: true },
             where: {
-              IsoAlpha3: {
+              isoAlpha3: {
                 equals: d.country,
               },
             },
@@ -118,8 +119,8 @@ async function main() {
         data: {
           id: idx,
           itcStudentId: itcStudentId,
-          departmentMainCode: d.department1,
-          departmentSecondaryCode: d.department2,
+          departmentMainId: d.department1,
+          departmentSecondaryId: d.department2,
           thesisTitle: d.thesisTitle,
           graduated: d.graduated,
           start: d.dateStart,
@@ -138,19 +139,8 @@ async function main() {
         ? await prisma.country.findFirst({
             select: { id: true },
             where: {
-              IsoAlpha3: {
+              isoAlpha3: {
                 equals: d.nationality,
-              },
-            },
-          })
-        : null;
-
-      const department = d.department
-        ? await prisma.department.findFirst({
-            select: { code: true },
-            where: {
-              code: {
-                equals: d.department,
               },
             },
           })
@@ -178,15 +168,39 @@ async function main() {
       const createArgs: Prisma.EmployeeCreateArgs = {
         data: {
           id: d.mId,
-          start: d.employmentStart,
-          end: d.employmentEnd,
-          departmentCode: department?.code,
           contactId: contact?.id,
           dateOfBirth: d.dateOfBirth,
           countryId: country?.id,
         },
       };
       return await prisma.employee.create(createArgs);
+    })
+  );
+
+  await Promise.all(
+    employments.map(async (d, idx) => {
+      const department = d.department
+        ? await prisma.department.findFirst({
+            select: { id: true },
+            where: {
+              id: {
+                equals: d.department,
+              },
+            },
+          })
+        : null;
+
+      // TODO: add unit end?
+      const createArgs: Prisma.EmploymentCreateArgs = {
+        data: {
+          id: idx,
+          employeeId: d.mId,
+          start: d.employmentStart,
+          end: d.employmentEnd,
+          departmentId: department?.id,
+        },
+      };
+      return await prisma.employment.create(createArgs);
     })
   );
 }

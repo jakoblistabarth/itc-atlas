@@ -1,5 +1,4 @@
 import xlsx from "xlsx";
-import cleanStaff from "./cleanStaff";
 
 export type StaffRaw = {
   "M-Nr": number;
@@ -28,20 +27,6 @@ export type StaffRaw = {
   "Aantal Tenure tracks": number;
 };
 
-export type StaffClean = {
-  mId: number;
-  dateOfBirth?: Date;
-  employmentStart: Date;
-  employmentEnd: Date;
-  employmentUnitEnd: Date;
-  gender: string;
-  nationality?: string;
-  organisation?: string;
-  department?: string;
-  type?: string;
-  description?: string;
-};
-
 export default async function getStaff() {
   const filePath = "./data/itc/ITCHRDWH.xlsx";
   const file = xlsx.readFile(filePath, {
@@ -51,5 +36,5 @@ export default async function getStaff() {
     defval: null,
   }) as StaffRaw[];
 
-  return await cleanStaff(data);
+  return data;
 }

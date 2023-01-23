@@ -2,9 +2,10 @@ import * as aq from "arquero";
 import Fuse from "fuse.js";
 import { countryMapNE } from "../mappings/country.name.NL";
 import getUnsdCountries from "./getUnsdCountries";
-import { StaffClean, StaffRaw } from "./getStaff";
+import { StaffRaw } from "./getStaff";
+import { EmployeeClean } from "../../types/EmployeeClean";
 
-const cleanStaff = async (staff: StaffRaw[]) => {
+const cleanEmployees = async (staff: StaffRaw[]) => {
   const unsdCodes = await getUnsdCountries();
   const options = {
     includeScore: true,
@@ -59,7 +60,7 @@ const cleanStaff = async (staff: StaffRaw[]) => {
       "description"
     );
 
-  return tb.objects() as StaffClean[];
+  return tb.objects() as EmployeeClean[];
 };
 
-export default cleanStaff;
+export default cleanEmployees;
