@@ -1,10 +1,10 @@
-import { Staff } from "../../types/Staff";
-import DataFrame from "../DataFrame/DataFrame";
+import * as aq from "arquero";
 import Fuse from "fuse.js";
 import { countryMapNE } from "../mappings/country.name.NL";
 import getUnsdCountries from "./getUnsdCountries";
+import { StaffClean, StaffRaw } from "./getStaff";
 
-const cleanStaff = async (staff: any): Promise<Staff[]> => {
+const cleanStaff = async (staff: StaffRaw[]) => {
   const unsdCodes = await getUnsdCountries();
   const options = {
     includeScore: true,
@@ -13,51 +13,40 @@ const cleanStaff = async (staff: any): Promise<Staff[]> => {
   };
   const fuse = new Fuse(unsdCodes, options);
 
-  const df = new DataFrame(staff)
-    .mutate("dateOfBirth", (row) =>
-      row["Geboortedatum"] ? row["Geboortedatum"].toISOString() : null
-    )
-    .mutate("employmentStart", (row) =>
-      row["Begin Datum Aanstelling"]
-        ? row["Begin Datum Aanstelling"].toISOString()
-        : null
-    )
-    .mutate("employmentEnd", (row) =>
-      row["Einddatum Aanstelling"]
-        ? row["Einddatum Aanstelling"].toISOString()
-        : null
-    )
-    .mutate("employmentUnitEnd", (row) =>
-      row["Datum Einde dienstverband Eenheid"]
-        ? row["Datum Einde dienstverband Eenheid"].toISOString()
-        : null
-    )
-    .mutate("gender", (row) => {
-      if (!row["Geslacht"]) return null;
-      return row["Geslacht"] === "M" ? "m" : "f";
+  const tb = aq
+    .from(staff)
+    .dedupe("Medewerker")
+    .derive({
+      mId: aq.escape((d: StaffRaw) => parseInt(d["Medewerker"], 10)),
+      gender: aq.escape((d: StaffRaw) => (d["Geslacht"] === "M" ? "m" : "f")),
+      nationality: aq.escape((d: StaffRaw) => {
+        const countryString = d["Nationaliteit"];
+        if (!countryString) return null;
+        const searchString = countryMapNE[countryString] ?? null;
+        if (!searchString) return null;
+        const result = fuse.search(searchString)[0];
+        if (!result) {
+          return null;
+        }
+        return result.item["ISO-alpha3 Code"];
+      }),
+      organisation: aq.escape((d: StaffRaw) =>
+        d["Organisatiecode"] ? d["Organisatiecode"].replace(/ITC-*/, "") : null
+      ),
+      department: aq.escape((d: StaffRaw) =>
+        d["Organisatiecode"] ? d["Organisatiecode"].replace(/ITC-*/, "") : null
+      ),
     })
-    .mutate("nationality", (row) => {
-      const countryString = row["Nationaliteit"];
-      if (!countryString) return null;
-      const searchString = countryMapNE[countryString] ?? null;
-      if (!searchString) return null;
-      const result = fuse.search(searchString)[0];
-      if (!result) {
-        return null;
-      }
-      return result.item["ISO-alpha3 Code"];
+    .rename({
+      Geboortedatum: "dateOfBirth",
+      "Soort Medewerker": "type",
+      "Functieprofiel Omschrijving": "description",
+      "Begin Datum Aanstelling": "employmentStart",
+      "Einddatum Aanstelling": "employmentEnd",
+      "Datum Einde dienstverband Eenheid": "employmentUnitEnd",
     })
-    .mutate(
-      "organisation",
-      (row) => row["Organisatiecode"].replace(/ITC-*/, "") ?? null
-    )
-    .mutate("department", (row) => {
-      const department = row["Leerstoel / afdeling"];
-      return department ? department.replace(/ITC-*/, "") : null;
-    })
-    .renameColumn({ "Soort Medewerker": "type" })
-    .renameColumn({ "Functieprofiel Omschrijving": "description" })
-    .select([
+    .select(
+      "mId",
       "dateOfBirth",
       "employmentStart",
       "employmentEnd",
@@ -67,10 +56,10 @@ const cleanStaff = async (staff: any): Promise<Staff[]> => {
       "organisation",
       "department",
       "type",
-      "description",
-    ]);
+      "description"
+    );
 
-  return df.toArray() as Staff[]; //TODO: use explicit map
+  return tb.objects() as StaffClean[];
 };
 
 export default cleanStaff;

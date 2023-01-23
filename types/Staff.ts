@@ -1,4 +1,5 @@
 export type Staff = {
+  mId: string;
   dateOfBirth: string | null;
   employmentStart: string | null;
   employmentEnd: string | null;
