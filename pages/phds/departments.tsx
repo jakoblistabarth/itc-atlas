@@ -30,18 +30,18 @@ const PhdDepartments: NextPage<Props> = ({
   neCountriesTopoJson,
   phdsByCountryByDepartment,
 }) => {
-  const [isChecked, setIsChecked] = useState(false);
+  const [isChecked, setIsChecked] = useState(false); //TODO: use more specific name "isFiltered"
 
   const handleOnChange = () => {
     setIsChecked(!isChecked);
   };
 
-  const filter = isChecked ? "?graduated=true" : "";
+  const filter = isChecked ? "?graduated=true" : ""; //TODO: switch only true/false no separate variable?
 
   const fetcher = (...args) => fetch(...args).then((res) => res.json());
 
   const { data, error, isLoading } = useSWR(
-    "/api/data/phdcandidatesByCountry" + filter,
+    "/api/data/phdcandidatesByCountry" + filter, // TODO: use own endpoint phds/
     fetcher
   );
 
