@@ -34,6 +34,10 @@ const defaultTheme: MapTheme = {
     fill: "none",
     stroke: darkgrey,
     strokeWidth: 1,
+    pattern: {
+      id: "Lines",
+      color: darkgrey,
+    },
   },
 };
 

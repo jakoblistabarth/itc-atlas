@@ -101,6 +101,7 @@ export default async function handler(
               key={nanoid()}
               projection={mapOptions.projection}
               feature={feature}
+              fill={"url(#Lines)"}
             />
           ))}
         </g>
