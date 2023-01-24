@@ -5,6 +5,7 @@ export enum Department {
   NRS = "NRS", // "Department of Natural Resources",
   PGM = "PGM", // "Department of Urban and Regional Planning and Geo-information Management",
   WRS = "WRS", // "Department of Water Resources",
+  SUP = "SUP", // "Non-scientific support departments",
   ALL = "ALL", // "ITC", //TODO: map to existing department?
 }
 

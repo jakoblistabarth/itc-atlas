@@ -1,38 +1,52 @@
 import { Prisma, PrismaClient } from "@prisma/client";
-import getDepartments from "../lib/data/getDepartments";
+import loadDepartments from "../lib/data/loadDepartments";
 import getPhdCandidates from "../lib/data/getPhdCandidates";
 import getUnsdCountries from "../lib/data/getUnsdCountries";
-import getContacts from "../lib/data/getContacts";
+import loadApplicants from "../lib/data/loadApplicants";
+import loadApplications from "../lib/data/loadApplications";
 import getEmployees from "../lib/data/getEmployees";
 import getEmployments from "../lib/data/getEmployments";
+import loadStatus from "../lib/data/loadStatus";
 
 const prisma = new PrismaClient();
 
 async function main() {
   await prisma.phdCandidate.deleteMany({});
-  await prisma.contact.deleteMany({});
   await prisma.department.deleteMany({});
-  await prisma.country.deleteMany({});
   await prisma.employment.deleteMany({});
   await prisma.employee.deleteMany({});
+  await prisma.application.deleteMany({});
+  await prisma.applicant.deleteMany({});
+  await prisma.status.deleteMany({});
+  await prisma.country.deleteMany({});
   await prisma.$queryRaw`ALTER SEQUENCE IF EXISTS "PhdCandidate_id_seq" RESTART WITH 1;`;
   await prisma.$queryRaw`ALTER SEQUENCE IF EXISTS "Country_id_seq" RESTART WITH 1;`;
 
-  const [departments, countries, phds, contacts, employees, employments] =
-    await Promise.all([
-      getDepartments(),
-      getUnsdCountries(),
-      getPhdCandidates(),
-      getContacts(),
-      getEmployees(),
-      getEmployments(),
-    ]);
+  const [
+    departments,
+    status,
+    countries,
+    phds,
+    applicants,
+    applications,
+    employees,
+    employments,
+  ] = await Promise.all([
+    loadDepartments(),
+    loadStatus(),
+    getUnsdCountries(),
+    getPhdCandidates(),
+    loadApplicants(),
+    loadApplications(),
+    getEmployees(),
+    getEmployments(),
+  ]);
 
   await Promise.all(
     departments.map(async (d) => {
       const createArgs: Prisma.DepartmentCreateArgs = {
         data: {
-          id: d.code,
+          id: d.id,
           name: d.name,
         },
       };
@@ -41,7 +55,19 @@ async function main() {
   );
 
   await Promise.all(
-    countries.map(async (d, idx) => {
+    status.map(async (d) => {
+      const createArgs: Prisma.StatusCreateArgs = {
+        data: {
+          id: d.id,
+          label: d.label,
+        },
+      };
+      return await prisma.status.create(createArgs);
+    })
+  );
+
+  await Promise.all(
+    countries.map(async (d) => {
       const createArgs: Prisma.CountryCreateArgs = {
         data: {
           isoAlpha2: d["ISO-alpha2 Code"],
@@ -63,34 +89,49 @@ async function main() {
     })
   );
 
-  await Promise.all(
-    contacts.map(async (d, idx) => {
-      const country = d.countryIsoAlpha3
-        ? await prisma.country.findFirst({
-            //TODO: it's probably very ineffcient to query db for every upsert
-            select: { id: true },
-            where: {
-              isoAlpha3: {
-                equals: d.countryIsoAlpha3 ?? undefined,
-              },
-            },
-          })
-        : null;
+  const countriesDB = await prisma.country.findMany();
 
-      const createArgs: Prisma.ContactCreateArgs = {
+  await Promise.all(
+    applicants.map(async (d) => {
+      const country = countriesDB.find(
+        (c) => c.isoAlpha3 === d.countryIsoAlpha3
+      );
+
+      const createArgs: Prisma.ApplicantCreateArgs = {
         data: {
-          id: d.contactId,
+          id: d.applicantId,
           gender: d.gender,
           itcStudentId: d.itcStudentId,
           countryId: country?.id,
           dateOfBirth: d.dateOfBirth,
         },
       };
-      return await prisma.contact.create(createArgs);
+      return await prisma.applicant.create(createArgs);
     })
   );
 
-  const itcIdsInContacts = await prisma.contact.findMany({
+  await Promise.all(
+    applications.map(async (d) => {
+      const createArgs: Prisma.ApplicationCreateArgs = {
+        data: {
+          id: d.id,
+          applicantId: d.applicantId,
+          level: d.level,
+          programmId: d.programmId,
+          statusId: d.statusId,
+          courseId: d.courseId,
+          enrollmentStart: d.enrollmentStart,
+          enrollmentEnd: d.enrollmentEnd,
+          certificationDate: d.certificationDate,
+          sponsor: d.sponsor,
+          certificateType: d.certificateType,
+        },
+      };
+      return await prisma.application.create(createArgs);
+    })
+  );
+
+  const itcIdsInContacts = await prisma.applicant.findMany({
     select: {
       itcStudentId: true,
     },
@@ -98,22 +139,13 @@ async function main() {
 
   await Promise.all(
     phds.map(async (d, idx) => {
-      const country = d.country
-        ? await prisma.country.findFirst({
-            select: { id: true },
-            where: {
-              isoAlpha3: {
-                equals: d.country,
-              },
-            },
-          })
-        : null;
-
       const itcStudentId = itcIdsInContacts
         .map((d) => d.itcStudentId)
         .includes(d.itcStudentId)
         ? d.itcStudentId
         : null;
+
+      const country = countriesDB.find((c) => c.isoAlpha3 === d.country);
 
       const createArgs: Prisma.PhdCandidateCreateArgs = {
         data: {
@@ -134,21 +166,12 @@ async function main() {
   );
 
   await Promise.all(
-    employees.map(async (d, idx) => {
-      const country = d.nationality
-        ? await prisma.country.findFirst({
-            select: { id: true },
-            where: {
-              isoAlpha3: {
-                equals: d.nationality,
-              },
-            },
-          })
-        : null;
+    employees.map(async (d) => {
+      const country = countriesDB.find((c) => c.isoAlpha3 === d.nationality);
 
       const contact =
         d.dateOfBirth && d.gender && country?.id
-          ? await prisma.contact.findFirst({
+          ? await prisma.applicant.findFirst({
               select: { id: true },
               where: {
                 dateOfBirth: {
@@ -168,7 +191,7 @@ async function main() {
       const createArgs: Prisma.EmployeeCreateArgs = {
         data: {
           id: d.mId,
-          contactId: contact?.id,
+          applicantId: contact?.id,
           dateOfBirth: d.dateOfBirth,
           countryId: country?.id,
         },

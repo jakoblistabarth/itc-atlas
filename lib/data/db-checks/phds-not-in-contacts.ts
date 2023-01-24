@@ -1,4 +1,4 @@
-import getContacts from "../getContacts";
+import getContacts from "../loadContacts";
 import * as aq from "arquero";
 import getPhdCandidates from "../getPhdCandidates";
 import { PhdCandidate } from "../../../types/PhdCandidate";

@@ -1,0 +1,17 @@
+[
+  { "id": "00", "label": "NA" },
+  { "id": "01", "label": "Applicant" },
+  { "id": "04", "label": "Not accepted" },
+  { "id": "07", "label": "Candidate" },
+  { "id": "10", "label": "Reserve Candidate" },
+  { "id": "13", "label": "Admitted Candidate" },
+  { "id": "16", "label": "Rejected by Sponsor" },
+  { "id": "19", "label": "Rejected by ITC" },
+  { "id": "22", "label": "Cancelled by Candidate" },
+  { "id": "27", "label": "Student Intramuraal" },
+  { "id": "28", "label": "Student Extramuraal" },
+  { "id": "29", "label": "Student Distance Education" },
+  { "id": "34", "label": "Cancelled by Student" },
+  { "id": "36", "label": "Cancelled by ITC" },
+  { "id": "38", "label": "Alumnus" }
+]

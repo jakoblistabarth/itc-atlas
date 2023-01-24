@@ -1,15 +1,14 @@
-import getContacts from "../getContacts";
-import getStaff, { StaffClean } from "../getStaff";
+import loadApplicants from "../loadApplicants";
 import * as aq from "arquero";
+import { EmployeeClean } from "../../../types/EmployeeClean";
+import getEmployees from "../getEmployees";
 
 (async () => {
-  const contactData = await getContacts();
-  const staffData = await getStaff();
+  const contactData = await loadApplicants();
+  const staffData = await getEmployees();
 
   const tb = aq.from(staffData).dedupe("mId");
-  // const tb = aq.from(staffData).dedupe("nationality", "dateOfBirth", "gender");
-
-  const res = tb.objects() as StaffClean[];
+  const res = tb.objects() as EmployeeClean[];
 
   const matches = res.reduce((acc: any[], s) => {
     if (s.dateOfBirth === null || s.gender === null || s.nationality === null)

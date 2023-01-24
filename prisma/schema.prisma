@@ -18,21 +18,49 @@ model Department {
   employment             Employment[]   @relation("DepartmentEmployment")
 }
 
-model Contact {
+model Status {
+  id          String        @id
+  label       String
+  application Application[] @relation("StatusApplication")
+}
+
+//TODO: add city
+model Applicant {
   id           String         @id
   itcStudentId String?        @unique
   gender       String?
   dateOfBirth  DateTime?      @db.Date
   countryId    Int?
-  country      Country?       @relation("ContactNationality", fields: [countryId], references: [id])
-  phd          PhdCandidate[] @relation("ContactPhd")
-  employee     Employee[]     @relation("ContactEmployee")
+  country      Country?       @relation("ApplicantNationality", fields: [countryId], references: [id])
+  phd          PhdCandidate[] @relation("ApplicantPhd")
+  employee     Employee[]     @relation("ApplicantEmployee")
+  application  Application[]  @relation("ApplicantApplication")
+}
+
+// TODO: add model programms
+// TODO: add programm relation to departments
+
+// TODO: add programm relation to application
+model Application {
+  id                String    @id
+  applicantId       String
+  applicant         Applicant @relation("ApplicantApplication", fields: [applicantId], references: [id])
+  level             String?
+  programmId        String?
+  statusId          String
+  status            Status    @relation("StatusApplication", fields: [statusId], references: [id])
+  courseId          String
+  enrollmentStart   DateTime? @db.Date
+  enrollmentEnd     DateTime? @db.Date
+  certificationDate DateTime? @db.Date
+  sponsor           String?
+  certificateType   String?
 }
 
 model PhdCandidate {
   id                    Int         @id @default(autoincrement())
   itcStudentId          String?
-  contact               Contact?    @relation("ContactPhd", fields: [itcStudentId], references: [itcStudentId])
+  applicant             Applicant?  @relation("ApplicantPhd", fields: [itcStudentId], references: [itcStudentId])
   departmentMainId      String?
   departmentMain        Department? @relation("DepartmentPhdMain", fields: [departmentMainId], references: [id])
   departmentSecondaryId String?
@@ -48,8 +76,8 @@ model PhdCandidate {
 
 model Employee {
   id          Int          @id
-  contactId   String?
-  contact     Contact?     @relation("ContactEmployee", fields: [contactId], references: [id])
+  applicantId String?
+  applicant   Applicant?   @relation("ApplicantEmployee", fields: [applicantId], references: [id])
   dateOfBirth DateTime?    @db.Date
   countryId   Int?
   country     Country?     @relation("EmployeeCountry", fields: [countryId], references: [id])
@@ -80,6 +108,6 @@ model Country {
   lldc                     Boolean
   sids                     Boolean
   phdCandidates            PhdCandidate[] @relation("PhdCountry")
-  contacts                 Contact[]      @relation("ContactNationality")
+  applicants               Applicant[]    @relation("ApplicantNationality")
   employee                 Employee[]     @relation("EmployeeCountry")
 }
