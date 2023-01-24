@@ -1,6 +1,6 @@
 import loadContacts, { ContactRaw } from "./loadContacts";
 import * as aq from "arquero";
-import { ApplicationClean } from "../../types/ApplicationClean";
+import { ApplicationClean } from "../../../types/ApplicationClean";
 
 export const loadApplications = async () => {
   const data = await loadContacts();

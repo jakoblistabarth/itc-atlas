@@ -1,7 +1,7 @@
 import loadContacts, { ContactRaw } from "./loadContacts";
 import * as aq from "arquero";
-import { ddmmyyyyToDate } from "../utilities/timeparser";
-import { ApplicantClean } from "../../types/ApplicantClean";
+import { ddmmyyyyToDate } from "../../utilities/timeparser";
+import { ApplicantClean } from "../../../types/ApplicantClean";
 
 export const loadApplicants = async () => {
   const data = await loadContacts();

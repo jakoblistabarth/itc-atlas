@@ -1,12 +1,12 @@
 import { Prisma, PrismaClient } from "@prisma/client";
-import loadDepartments from "../lib/data/loadDepartments";
+import loadDepartments from "../lib/data/load/loadDepartments";
 import getPhdCandidates from "../lib/data/getPhdCandidates";
 import getUnsdCountries from "../lib/data/getUnsdCountries";
-import loadApplicants from "../lib/data/loadApplicants";
-import loadApplications from "../lib/data/loadApplications";
+import loadApplicants from "../lib/data/load/loadApplicants";
+import loadApplications from "../lib/data/load/loadApplications";
 import getEmployees from "../lib/data/getEmployees";
 import getEmployments from "../lib/data/getEmployments";
-import loadStatus from "../lib/data/loadStatus";
+import loadStatus from "../lib/data/load/loadStatus";
 
 const prisma = new PrismaClient();
 

@@ -1,4 +1,4 @@
-import loadApplicants from "../loadApplicants";
+import loadApplicants from "../load/loadApplicants";
 import * as aq from "arquero";
 import { EmployeeClean } from "../../../types/EmployeeClean";
 import getEmployees from "../getEmployees";
