@@ -1,6 +1,7 @@
 import loadContacts, { ContactRaw } from "./loadContacts";
 import * as aq from "arquero";
 import { ApplicationClean } from "../../../types/ApplicationClean";
+import { ddmmyyyyToDate } from "../../utilities/timeparser";
 
 export const loadApplications = async () => {
   const data = await loadContacts();
@@ -9,6 +10,12 @@ export const loadApplications = async () => {
     .from(data)
     .derive({
       statusId: (d: ContactRaw) => aq.op.substring(d["Applicant status"], 0, 2),
+      enrollmentStart: aq.escape((d: ContactRaw) =>
+        d["Start Date"] ? ddmmyyyyToDate(d["Start Date"]) : null
+      ),
+      enrollmentEnd: aq.escape((d: ContactRaw) =>
+        d["End Date"] ? ddmmyyyyToDate(d["End Date"]) : null
+      ),
     })
     .rename({
       APPnr: "id",
@@ -30,6 +37,8 @@ export const loadApplications = async () => {
       "statusId",
       "level",
       "certificateType",
+      "enrollmentStart",
+      "enrollmentEnd",
       "sponsor"
     );
 
