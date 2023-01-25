@@ -29,8 +29,8 @@ const Home: NextPage = () => {
       description: "Policy changes framing ITC's work.",
     },
     {
-      href: "/staff",
-      children: "Staff",
+      href: "/employees",
+      children: "Employees",
       description: "Insights into ITC's staff composition.",
     },
     {

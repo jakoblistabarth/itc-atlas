@@ -1,6 +1,6 @@
+import { PhdCandidate } from "@prisma/client";
 import type { NextApiRequest, NextApiResponse } from "next";
-import getPhdCandidates from "../../../lib/data/getPhdCandidates";
-import { PhdCandidate } from "../../../types/PhdCandidate";
+import getPhdCandidates from "../../../../lib/data/getPhdCandidates";
 
 export default async function handler(
   req: NextApiRequest,

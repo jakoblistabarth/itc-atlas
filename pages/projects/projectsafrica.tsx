@@ -11,7 +11,7 @@ import BaseLayer from "../../components/map/BaseLayer";
 import Heading, { Headings } from "../../components/Heading";
 import { FeatureCollection, Feature, Point, MultiPolygon } from "geojson";
 import type { AreaCode } from "../../types/UnsdCodes";
-import getUnsdCountries from "../../lib/data/getUnsdCountries";
+import loadUnsdCountries from "../../lib/data/load/loadUnsdCountries";
 import { nanoid } from "nanoid";
 import themes, { ThemeNames } from "../../lib/styles/themes";
 import ChoroplethSymbol from "../../components/map/PolygonSymbol";
@@ -200,7 +200,7 @@ export const getStaticProps: GetStaticProps<Props> = async () => {
     d3.ascending(new Date(a.dateStart), new Date(b.dateStart))
   );
 
-  const areaCodes = await getUnsdCountries();
+  const areaCodes = await loadUnsdCountries();
   const neCountriesTopoJson = getCountries("50m");
 
   return {

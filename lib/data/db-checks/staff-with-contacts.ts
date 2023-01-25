@@ -1,11 +1,11 @@
 import loadApplicants from "../load/loadApplicants";
 import * as aq from "arquero";
 import { EmployeeClean } from "../../../types/EmployeeClean";
-import getEmployees from "../getEmployees";
+import loadEmployees from "../load/loadEmployees";
 
 (async () => {
   const contactData = await loadApplicants();
-  const staffData = await getEmployees();
+  const staffData = await loadEmployees();
 
   const tb = aq.from(staffData).dedupe("mId");
   const res = tb.objects() as EmployeeClean[];
@@ -30,7 +30,7 @@ import getEmployees from "../getEmployees";
       sDoB: s.dateOfBirth,
       cDoB: c.dateOfBirth,
       matches: match.length,
-      contactId: c.contactId,
+      contactId: c.applicantId,
     });
     return acc;
   }, []);

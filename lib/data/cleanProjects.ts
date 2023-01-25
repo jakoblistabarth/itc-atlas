@@ -1,9 +1,9 @@
 import DataFrame from "../DataFrame/DataFrame";
-import getUnsdCodes from "./getUnsdCodes";
+import loadUnsdCodes from "./load/loadUnsdCodes";
 import { ProjectType, ProjectStatus, Project } from "../../types/Project";
 import { mapCountries } from "../mappings/country.name.EN";
 import { UnLevel } from "../../types/UnsdCodes";
-import getUnsdCountries from "./getUnsdCountries";
+import loadUnsdCountries from "./load/loadUnsdCountries";
 
 export default async function cleanProjects(input: any[]) {
   const post2019 = new DataFrame(input[0])
@@ -76,10 +76,10 @@ export default async function cleanProjects(input: any[]) {
     d.countries = [];
   });
 
-  const countries = await getUnsdCountries();
-  const regionCodes = await getUnsdCodes(UnLevel.Regions);
-  const subRegionCodes = await getUnsdCodes(UnLevel.SubRegions);
-  const intermediateRegionCodes = await getUnsdCodes(
+  const countries = await loadUnsdCountries();
+  const regionCodes = await loadUnsdCodes(UnLevel.Regions);
+  const subRegionCodes = await loadUnsdCodes(UnLevel.SubRegions);
+  const intermediateRegionCodes = await loadUnsdCodes(
     UnLevel.IntermediateRegions
   );
 

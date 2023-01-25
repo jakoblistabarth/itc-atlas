@@ -1,8 +1,9 @@
 import * as aq from "arquero";
-import { StaffRaw } from "./getStaff";
-import { EmploymentClean } from "../../types/EmploymentClean";
+import loadStaff, { StaffRaw } from "./loadStaff";
+import { EmploymentClean } from "../../../types/EmploymentClean";
 
-const cleanEmployees = async (staff: StaffRaw[]) => {
+const loadEmployments = async () => {
+  const staff = await loadStaff();
   const tb = aq
     .from(staff)
     .derive({
@@ -35,4 +36,4 @@ const cleanEmployees = async (staff: StaffRaw[]) => {
   return tb.objects() as EmploymentClean[];
 };
 
-export default cleanEmployees;
+export default loadEmployments;

@@ -1,10 +1,12 @@
 import csv from "csvtojson";
-import { AreaCode, UnLevel } from "../../types/UnsdCodes";
+import { AreaCode, UnLevel } from "../../../types/UnsdCodes";
 
-export default async function getUnsdCodes(level: UnLevel) {
+export default async function loadUnsdCodes(level: UnLevel) {
   const csvFilePath = "./data/static/UNSD-Methodology.csv";
   // source: https://unstats.un.org/unsd/methodology/m49/overview/
-  const countries: AreaCode[] = await csv().fromFile(csvFilePath);
+  const countries: AreaCode[] = await csv({ delimiter: ";" }).fromFile(
+    csvFilePath
+  );
 
   const countryCodes = countries.map((d) => ({
     code: d["Region Code"],
@@ -50,8 +52,6 @@ export default async function getUnsdCodes(level: UnLevel) {
     });
 
   switch (level) {
-    case UnLevel.Countries:
-      return countryCodes;
     case UnLevel.Regions:
       return regions;
     case UnLevel.SubRegions:

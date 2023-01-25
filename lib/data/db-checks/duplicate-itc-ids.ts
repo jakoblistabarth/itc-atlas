@@ -1,4 +1,4 @@
-import getPhdCandidates from "../getPhdCandidates";
+import getPhdCandidates from "../load/loadPhdCandidates";
 
 (async () => {
   const phdData = await getPhdCandidates();

@@ -1,7 +1,6 @@
-import cleanEmployments from "./cleanEmployments";
-import getStaff from "./getStaff";
+import { PrismaClient } from "@prisma/client";
 
 export default async function getEmployments() {
-  const staff = await getStaff();
-  return await cleanEmployments(staff);
+  const prisma = new PrismaClient();
+  return await prisma.employment.findMany();
 }

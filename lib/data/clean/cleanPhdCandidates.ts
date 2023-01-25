@@ -1,12 +1,12 @@
 import * as aq from "arquero";
 import Fuse from "fuse.js";
-import { PhdCandidate } from "../../types/PhdCandidate";
-import { mapCountries } from "../mappings/country.name.EN";
-import { departmentMap } from "../mappings/departments";
-import { PhdCandidateRaw } from "./getPhdCandidates";
-import getUnsdCountries from "./getUnsdCountries";
+import { PhdCandidate } from "../../../types/PhdCandidate";
+import { mapCountries } from "../../mappings/country.name.EN";
+import { departmentMap } from "../../mappings/departments";
+import { PhdCandidateRaw } from "../load/loadPhdCandidates";
+import getUnsdCountries from "../load/loadUnsdCountries";
 
-export async function cleanPhdCandiates(data: PhdCandidateRaw[]) {
+export async function cleanPhdCandidates(data: PhdCandidateRaw[]) {
   const unsdCodes = await getUnsdCountries();
 
   const fuseOptions = {

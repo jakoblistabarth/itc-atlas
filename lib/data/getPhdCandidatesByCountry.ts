@@ -1,5 +1,5 @@
 import { PhdCandidate } from "../../types/PhdCandidate";
-import getPhdCandidates from "./getPhdCandidates";
+import getPhdCandidates from "./load/loadPhdCandidates";
 
 const getPhdCandidatesByCountry = async (
   isoCode: string

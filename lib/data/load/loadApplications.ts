@@ -38,7 +38,7 @@ export const loadApplications = async () => {
       "level",
       "certificateType",
       "enrollmentStart",
-      "enrollmentEnd",
+      "enrollmentEnd", //TODO: add certificationDate?
       "sponsor"
     );
 

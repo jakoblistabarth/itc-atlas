@@ -1,6 +1,6 @@
 import getCountries from "./getCountries";
 import * as topojson from "topojson-client";
-import getUnsdCountries from "./getUnsdCountries";
+import loadUnsdCountries from "./load/loadUnsdCountries";
 import { UnGrouping } from "../../types/UnsdCodes";
 import { NeCountriesGeoJson } from "../../types/NeCountriesGeoJson";
 import { CountryProperties } from "../../types/NeTopoJson";
@@ -8,7 +8,7 @@ import type { Feature, Polygon, MultiPolygon } from "geojson";
 
 const getCountriesByGroup = async (group: UnGrouping) => {
   const neCountriesTopojson = getCountries();
-  const areaCodes = await getUnsdCountries();
+  const areaCodes = await loadUnsdCountries();
 
   const countriesOfGroup = areaCodes
     .filter((area) => area[group])

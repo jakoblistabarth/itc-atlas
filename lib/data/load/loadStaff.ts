@@ -27,7 +27,7 @@ export type StaffRaw = {
   "Aantal Tenure tracks": number;
 };
 
-export default async function getStaff() {
+export default async function loadStaff() {
   const filePath = "./data/itc/ITCHRDWH.xlsx";
   const file = xlsx.readFile(filePath, {
     cellDates: true,

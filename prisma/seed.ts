@@ -1,11 +1,11 @@
 import { Prisma, PrismaClient } from "@prisma/client";
 import loadDepartments from "../lib/data/load/loadDepartments";
-import getPhdCandidates from "../lib/data/getPhdCandidates";
-import getUnsdCountries from "../lib/data/getUnsdCountries";
+import loadPhdCandidates from "../lib/data/load/loadPhdCandidates";
+import loadUnsdCountries from "../lib/data/load/loadUnsdCountries";
 import loadApplicants from "../lib/data/load/loadApplicants";
 import loadApplications from "../lib/data/load/loadApplications";
-import getEmployees from "../lib/data/getEmployees";
-import getEmployments from "../lib/data/getEmployments";
+import loadEmployees from "../lib/data/load/loadEmployees";
+import loadEmployments from "../lib/data/load/loadEmployments";
 import loadStatus from "../lib/data/load/loadStatus";
 
 const prisma = new PrismaClient();
@@ -34,12 +34,12 @@ async function main() {
   ] = await Promise.all([
     loadDepartments(),
     loadStatus(),
-    getUnsdCountries(),
-    getPhdCandidates(),
+    loadUnsdCountries(),
+    loadPhdCandidates(),
     loadApplicants(),
     loadApplications(),
-    getEmployees(),
-    getEmployments(),
+    loadEmployees(),
+    loadEmployments(),
   ]);
 
   await Promise.all(

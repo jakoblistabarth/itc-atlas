@@ -41,7 +41,7 @@ const PhdDepartments: NextPage<Props> = ({
   const fetcher = (...args) => fetch(...args).then((res) => res.json());
 
   const { data, error, isLoading } = useSWR(
-    "/api/data/phdcandidatesByCountry" + filter, // TODO: use own endpoint phds/
+    "/api/data/phd-candidate/by-country" + filter, // TODO: use own endpoint phds/
     fetcher
   );
 

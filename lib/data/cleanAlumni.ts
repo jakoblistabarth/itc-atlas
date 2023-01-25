@@ -4,7 +4,7 @@ import Fuse from "fuse.js";
 import { feature } from "topojson-client";
 import xlsx from "xlsx";
 import getPopulatedPlaces from "./getPopulatedPlaces";
-import getUnsdCountries from "./getUnsdCountries";
+import loadUnsdCountries from "./load/loadUnsdCountries";
 
 const cleanAlumni = async () => {
   const filePath = "./data/itc/All Alumni until 2020_Anon_JMT.xlsx";
@@ -15,7 +15,7 @@ const cleanAlumni = async () => {
     defval: null,
   });
 
-  const unsdCodes = await getUnsdCountries();
+  const unsdCodes = await loadUnsdCountries();
   const nePopulatedPlaces = getPopulatedPlaces("10m");
 
   const places = feature(
