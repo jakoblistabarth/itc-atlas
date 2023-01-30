@@ -12,7 +12,7 @@ async function main() {
       },
       country: {
         isNot: {
-          NameLongEn: "Albania",
+          nameLongEn: "Albania",
         },
       },
     },
@@ -20,8 +20,8 @@ async function main() {
       thesisTitle: true,
       country: {
         select: {
-          IsoAlpha3: true,
-          NameLongEn: true,
+          isoAlpha3: true,
+          nameLongEn: true,
         },
       },
     },

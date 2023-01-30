@@ -38,10 +38,14 @@ const PhdDepartments: NextPage<Props> = ({
 
   const filter = isChecked ? "?graduated=true" : ""; //TODO: switch only true/false no separate variable?
 
-  const fetcher = (...args) => fetch(...args).then((res) => res.json());
+  const fetcher = (...args) =>
+    fetch(...args).then(
+      (res) =>
+        res.json() as ReturnType<typeof getPhdCandidatesByCountryByDepartment>
+    );
 
   const { data, error, isLoading } = useSWR(
-    "/api/data/phd-candidate/by-country" + filter, // TODO: use own endpoint phds/
+    "/api/data/phd-candidate/by-country" + filter,
     fetcher
   );
 

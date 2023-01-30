@@ -7,7 +7,7 @@ import DataFrame from "../../lib/DataFrame/DataFrame";
 import styles from "../../styles/home.module.css";
 import useSWR from "swr";
 
-const ApplicantsOverview: NextPage<Props> = () => {
+const ApplicantsOverview: NextPage = () => {
   const fetcher = (...args) => fetch(...args).then((res) => res.json());
 
   const { data, error, isLoading } = useSWR("/api/data/applicant/", fetcher);
