@@ -6,9 +6,11 @@ import styles from "../../styles/home.module.css";
 import { feature } from "topojson-client";
 import getPopulatedPlaces from "../../lib/data/getPopulatedPlaces";
 import { NePopulatedPlaces } from "../../types/NeTopoJson";
-import { AgGridColumn, AgGridReact } from "ag-grid-react"; // the AG Grid React Component
+
+import { AgGridReact } from "ag-grid-react"; // the AG Grid React Component
 import "ag-grid-community/styles/ag-grid.css"; // Core grid CSS, always needed
 import "ag-grid-community/styles/ag-theme-material.css"; // Optional theme CSS
+import { ColDef } from "ag-grid-community";
 
 type Props = {
   populatedPlacesNE: NePopulatedPlaces;
@@ -20,6 +22,23 @@ const PopulatedPlacesOverview: NextPage<Props> = ({ populatedPlacesNE }) => {
     populatedPlacesNE.objects.ne_populated_places
   ).features;
   const data = features.map((d) => d.properties);
+
+  const columnDefs: ColDef[] = [
+    {
+      field: "NAME_EN",
+      headerName: "NAME",
+      filter: "agTextColumnFilter",
+      suppressMenu: true,
+    },
+    {
+      field: "ADM0_A3",
+      headerName: "Iso3",
+    },
+    {
+      field: "SOV_A3",
+      headerName: "Iso3 (Sovereing State)",
+    },
+  ];
   const defaultColDef = {
     sortable: true,
     filter: true,
@@ -40,19 +59,10 @@ const PopulatedPlacesOverview: NextPage<Props> = ({ populatedPlacesNE }) => {
         <div className="ag-theme-material" style={{ width: 1280, height: 500 }}>
           <AgGridReact
             rowData={data}
+            columnDefs={columnDefs}
             defaultColDef={defaultColDef}
             pagination={true}
-            paginationAutoPageSize={true}
-          >
-            <AgGridColumn
-              field="NAME_EN"
-              headerName="Name"
-              filter="agTextColumnFilter"
-              suppressMenu={true}
-            />
-            <AgGridColumn field="ADM0_A3" headerName="ISO3" />
-            <AgGridColumn field="SOV_A3" headerName="ISO3 (Sovereign State)" />
-          </AgGridReact>
+          />
         </div>
       </main>
 

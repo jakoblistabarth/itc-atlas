@@ -7,12 +7,12 @@ import DataFrame from "../../lib/DataFrame/DataFrame";
 import getAlumni from "../../lib/data/getAlumni";
 import styles from "../../styles/home.module.css";
 import { Alumni } from "../../types/Alumni";
-
 import React from "react";
-import { AgGridColumn, AgGridReact } from "ag-grid-react"; // the AG Grid React Component
 
+import { AgGridReact } from "ag-grid-react"; // the AG Grid React Component
 import "ag-grid-community/styles/ag-grid.css"; // Core grid CSS, always needed
 import "ag-grid-community/styles/ag-theme-material.css"; // Optional theme CSS
+import { ColDef } from "ag-grid-community";
 
 type Props = {
   alumni: Alumni[];
@@ -21,6 +21,20 @@ type Props = {
 const AlumniOverview: NextPage<Props> = ({ alumni }) => {
   const AlumniDf = new DataFrame(alumni);
 
+  const columnDefs: ColDef[] = [
+    { field: "contactNo" },
+    {
+      field: "examYear2",
+      headerName: "Exam Year",
+      filter: "agDateColumnFilter",
+    },
+    { field: "city" },
+    { field: "populatedPlaceNe" },
+    { field: "country" },
+    { field: "countryISO3" },
+    { field: "courseCode" },
+    { field: "level" },
+  ];
   const defaultColDef = {
     filter: true,
     sortable: true,
@@ -43,25 +57,11 @@ const AlumniOverview: NextPage<Props> = ({ alumni }) => {
         <h2>Data Table</h2>
         <div className="ag-theme-material" style={{ width: 1280, height: 500 }}>
           <AgGridReact
-            rowData={alumni} // Row Data for Rows
-            // columnDefs={columnDefs} // Column Defs for Columns
-            defaultColDef={defaultColDef} // Default Column Properties
+            rowData={alumni}
+            columnDefs={columnDefs}
+            defaultColDef={defaultColDef}
             pagination={true}
-            paginationAutoPageSize={true}
-          >
-            <AgGridColumn field="contactNo" />
-            <AgGridColumn
-              field="examYear2"
-              headerName="Exam Year"
-              filter="agDateColumnFilter"
-            />
-            <AgGridColumn field="city" />
-            <AgGridColumn field="populatedPlaceNE" />
-            <AgGridColumn field="country" />
-            <AgGridColumn field="countryISO3" />
-            <AgGridColumn field="courseCode" />
-            <AgGridColumn field="level" />
-          </AgGridReact>
+          />
         </div>
       </main>
 

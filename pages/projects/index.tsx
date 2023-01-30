@@ -2,7 +2,6 @@ import type { NextPage } from "next";
 import Head from "next/head";
 import styles from "../../styles/home.module.css";
 import BackToHome from "../../components/BackToHome";
-import SummaryTable from "../../components/SummaryTable";
 import { Project } from "../../types/Project";
 import getProjects from "../../lib/data/getProjects";
 import Footer from "../../components/Footer";
@@ -11,10 +10,10 @@ import Heading, { Headings } from "../../components/Heading";
 import LinkFramed from "../../components/LinkFramed";
 import { nanoid } from "nanoid";
 
-import { AgGridColumn, AgGridReact } from "ag-grid-react";
-
+import { AgGridReact } from "ag-grid-react";
 import "ag-grid-community/styles/ag-grid.css";
 import "ag-grid-community/styles/ag-theme-material.css";
+import { ColDef } from "ag-grid-community";
 
 type Props = React.PropsWithChildren<{
   projects: Project[];
@@ -55,6 +54,16 @@ const Travels: NextPage<Props> = ({ projects }) => {
   }, 0);
   console.log(duplicates, sum);
 
+  const columnDefs: ColDef[] = [
+    { field: "projectID" },
+    { field: "projectName" },
+    { field: "allCountries" },
+    { field: "populatedPlaceNe" },
+    { field: "type" },
+    { field: "dateStart", filter: "agDateColumnFilter" },
+    { field: "dateEnd", filter: "agDateColumnFilter" },
+  ];
+
   const defaultColDef = {
     filter: true,
     sortable: true,
@@ -88,19 +97,11 @@ const Travels: NextPage<Props> = ({ projects }) => {
         {/* <SummaryTable data={projectsDf} /> */}
         <div className="ag-theme-material" style={{ width: 1280, height: 500 }}>
           <AgGridReact
-            rowData={projects} // Row Data for Rows
-            defaultColDef={defaultColDef} // Default Column Properties
+            rowData={projects}
+            columnDefs={columnDefs}
+            defaultColDef={defaultColDef}
             pagination={true}
-            paginationAutoPageSize={true}
-          >
-            <AgGridColumn field="projectID" />
-            <AgGridColumn field="projectName" />
-            <AgGridColumn field="allCountries" />
-            <AgGridColumn field="populatedPlaceNE" />
-            <AgGridColumn field="type" />
-            <AgGridColumn field="dateStart" filter="agDateColumnFilter" />
-            <AgGridColumn field="datEnd" filter="agDateColumnFilter" />
-          </AgGridReact>
+          />
         </div>
       </main>
 
