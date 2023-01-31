@@ -68,7 +68,9 @@ const Home: NextPage = () => {
           Capacity <em>Building</em> of ITC
         </Heading>
 
-        <p className={styles.description}>A prototype of ITC's hybrid atlas</p>
+        <p className={styles.description}>
+          A prototype of ITC&apos;s hybrid atlas
+        </p>
 
         <div className={styles.grid}>
           {links.map((l) => (

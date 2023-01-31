@@ -26,8 +26,10 @@ const ApplicantsOverview: NextPage = () => {
       </Head>
 
       <main className={styles.main}>
-        <Heading Tag={Headings.H1}>ITC's applications</Heading>
-        <p className={styles.description}>Insights into ITC's applicants.</p>
+        <Heading Tag={Headings.H1}>ITC&apos;s applications</Heading>
+        <p className={styles.description}>
+          Insights into ITC&apos;s applicants.
+        </p>
 
         <div className={styles.grid}>
           <LinkFramed href={`${route}/origin-country`}>

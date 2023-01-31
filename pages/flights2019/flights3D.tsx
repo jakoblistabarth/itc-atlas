@@ -36,7 +36,7 @@ const Flights: NextPage<Props> = ({ odMatrix }) => {
       </Head>
 
       <main className={styles.main}>
-        <Heading Tag={Headings.H1}>ITC's travel activity</Heading>
+        <Heading Tag={Headings.H1}>ITC&apos;s travel activity</Heading>
         <div style={{ width: "100%", height: "700px" }}>
           <Canvas camera={{ position: [0, 0, 5], fov: 30 }} shadows>
             <Globe radius={earthRadius} texture={"explorer"}>

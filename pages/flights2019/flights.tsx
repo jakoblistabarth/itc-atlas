@@ -81,7 +81,7 @@ const Flights: NextPage<Props> = ({ odMatrix, neCountriesTopoJson }) => {
       </Head>
 
       <main className={styles.main}>
-        <Heading Tag={Headings.H1}>ITC's travel activity</Heading>
+        <Heading Tag={Headings.H1}>ITC&apos;s travel activity</Heading>
 
         <svg width={mapOptions.bounds.width} height={mapOptions.bounds.height}>
           <BaseLayer
