@@ -21,6 +21,7 @@ async function main() {
   await prisma.country.deleteMany({});
   await prisma.$queryRaw`ALTER SEQUENCE IF EXISTS "PhdCandidate_id_seq" RESTART WITH 1;`;
   await prisma.$queryRaw`ALTER SEQUENCE IF EXISTS "Country_id_seq" RESTART WITH 1;`;
+  console.log("Database reset. 🧹");
 
   const [
     departments,
@@ -41,6 +42,7 @@ async function main() {
     loadEmployees(),
     loadEmployments(),
   ]);
+  console.log("Data loaded. 🚚");
 
   await Promise.all(
     departments.map(async (d) => {
@@ -53,6 +55,7 @@ async function main() {
       return await prisma.department.create(createArgs);
     })
   );
+  console.log("Populated model Department. 🌱");
 
   await Promise.all(
     status.map(async (d) => {
@@ -65,6 +68,7 @@ async function main() {
       return await prisma.status.create(createArgs);
     })
   );
+  console.log("Populated model Status. 🌱");
 
   await Promise.all(
     countries.map(async (d) => {
@@ -88,6 +92,7 @@ async function main() {
       return await prisma.country.create(createArgs);
     })
   );
+  console.log("Populated model Country. 🌱");
 
   const countriesDB = await prisma.country.findMany();
 
@@ -109,6 +114,7 @@ async function main() {
       return await prisma.applicant.create(createArgs);
     })
   );
+  console.log("Populated model Applicant. 🌱");
 
   await Promise.all(
     applications.map(async (d) => {
@@ -131,6 +137,7 @@ async function main() {
       return await prisma.application.create(createArgs);
     })
   );
+  console.log("Populated model Application. 🌱");
 
   const itcIdsInApplicants = await prisma.applicant.findMany({
     select: {
@@ -165,6 +172,7 @@ async function main() {
       return await prisma.phdCandidate.create(createArgs);
     })
   );
+  console.log("Populated model PhdCandidate. 🌱");
 
   await Promise.all(
     employees.map(async (d) => {
@@ -200,6 +208,7 @@ async function main() {
       return await prisma.employee.create(createArgs);
     })
   );
+  console.log("Populated model Employee. 🌱");
 
   await Promise.all(
     employments.map(async (d, idx) => {
@@ -227,6 +236,7 @@ async function main() {
       return await prisma.employment.create(createArgs);
     })
   );
+  console.log("Populated model Employment. 🌱");
 }
 
 main()
