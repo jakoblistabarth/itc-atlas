@@ -79,7 +79,7 @@ export default async function handler(
           {data.map((d) => {
             const projection = mapOptions.projection;
             const xy = projection(d.coordinates as [number, number]);
-            const position = new Vector2(xy[0], xy[1]);
+            const position = xy ? new Vector2(xy[0], xy[1]) : new Vector2();
             return (
               <ScaledPie
                 key={nanoid()}

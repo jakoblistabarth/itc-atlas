@@ -1,10 +1,10 @@
 import { nanoid } from "nanoid";
-import { FC } from "react";
+import { FC, SVGProps } from "react";
 import sliceIntoChunks from "../../lib/utilities/sliceIntoChunks";
 import LegendTitle from "./LegendTitle";
 
 const NominalLegend: FC<{
-  entries: { label: string; color: string; symbol?: SVGElement }[];
+  entries: { label: string; color: string; symbol?: SVGProps<SVGGElement> }[];
   title?: string;
   columns?: number;
   columnWidth?: number;
