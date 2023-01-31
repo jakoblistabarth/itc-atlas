@@ -8,7 +8,6 @@
     "start": "next start",
     "lint": "next lint",
     "setup-data": "ts-node --project lib/setup/tsconfig-setup-scripts.json lib/setup/index.ts",
-    "clean-data": "ts-node --project lib/setup/tsconfig-setup-scripts.json lib/setup/cleanData.ts",
     "type-check": "npx tsc --noEmit",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build",

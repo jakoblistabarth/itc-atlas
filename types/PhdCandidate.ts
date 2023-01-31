@@ -4,9 +4,9 @@ export type PhdCandidate = {
   department1: string | null;
   department2: string | null;
   sponsor: string | null;
-  graduated: boolean | null;
+  status: string;
   dateStart: string | null;
   dateGraduation: string | null;
-  datePromotion: string | null;
+  yearPromotion: number | null;
   thesisTitle: string | null;
 };

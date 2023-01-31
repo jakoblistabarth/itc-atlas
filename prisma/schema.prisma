@@ -2,7 +2,8 @@
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
 generator client {
-  provider = "prisma-client-js"
+  provider        = "prisma-client-js"
+  previewFeatures = ["filteredRelationCount"]
 }
 
 datasource db {
@@ -19,9 +20,10 @@ model Department {
 }
 
 model Status {
-  id          String        @id
-  label       String
-  application Application[] @relation("StatusApplication")
+  id            String         @id
+  label         String
+  applications  Application[]  @relation("StatusApplication")
+  phdCandidates PhdCandidate[] @relation("StatusPhdCandidate")
 }
 
 //TODO: add city
@@ -32,9 +34,9 @@ model Applicant {
   dateOfBirth  DateTime?      @db.Date
   countryId    Int?
   country      Country?       @relation("ApplicantNationality", fields: [countryId], references: [id])
-  phd          PhdCandidate[] @relation("ApplicantPhd")
-  employee     Employee[]     @relation("ApplicantEmployee")
-  application  Application[]  @relation("ApplicantApplication")
+  phds         PhdCandidate[] @relation("ApplicantPhd")
+  employees    Employee[]     @relation("ApplicantEmployee")
+  applications Application[]  @relation("ApplicantApplication")
 }
 
 // TODO: add model programms
@@ -45,11 +47,12 @@ model Application {
   id                String    @id
   applicantId       String
   applicant         Applicant @relation("ApplicantApplication", fields: [applicantId], references: [id])
-  level             String?
+  courseId          String
   programmId        String?
+  level             String?
   statusId          String
   status            Status    @relation("StatusApplication", fields: [statusId], references: [id])
-  courseId          String
+  examYear          Int?
   enrollmentStart   DateTime? @db.Date
   enrollmentEnd     DateTime? @db.Date
   certificationDate DateTime? @db.Date
@@ -66,12 +69,13 @@ model PhdCandidate {
   departmentSecondaryId String?
   departmentSecondary   Department? @relation("DepartmentPhdSecondary", fields: [departmentSecondaryId], references: [id])
   thesisTitle           String?
-  graduated             Boolean?
   start                 DateTime?   @db.Date
   graduation            DateTime?   @db.Date
-  promotion             DateTime?   @db.Date
-  country               Country?    @relation("PhdCountry", fields: [countryId], references: [id])
+  promotionYear         Int?
+  statusId              String?
+  status                Status?     @relation("StatusPhdCandidate", fields: [statusId], references: [id])
   countryId             Int?
+  country               Country?    @relation("PhdCountry", fields: [countryId], references: [id])
 }
 
 model Employee {
@@ -109,5 +113,5 @@ model Country {
   sids                     Boolean
   phdCandidates            PhdCandidate[] @relation("PhdCountry")
   applicants               Applicant[]    @relation("ApplicantNationality")
-  employee                 Employee[]     @relation("EmployeeCountry")
+  employees                Employee[]     @relation("EmployeeCountry")
 }

@@ -41,10 +41,6 @@ const Travels: NextPage<Props> = ({ projects }) => {
       href: "/projects/projects-spacetimecube",
       children: "Projects Space Time Cube",
     },
-    {
-      href: "/projects/indonesia",
-      children: "Indonesia",
-    },
   ];
   const projectsDf = new DataFrame(projects);
   const duplicates = projectsDf.findDuplicates("projectShortName");

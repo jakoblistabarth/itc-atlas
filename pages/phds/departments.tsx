@@ -38,8 +38,8 @@ const PhdDepartments: NextPage<Props> = ({
 
   const filter = isChecked ? "?graduated=true" : ""; //TODO: switch only true/false no separate variable?
 
-  const fetcher = (...args) =>
-    fetch(...args).then(
+  const fetcher = (resource: RequestInfo | URL) =>
+    fetch(resource).then(
       (res) =>
         res.json() as ReturnType<typeof getPhdCandidatesByCountryByDepartment>
     );

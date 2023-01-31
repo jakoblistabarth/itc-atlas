@@ -4,10 +4,10 @@ import { PhdCandidate } from "../../../types/PhdCandidate";
 import { mapCountries } from "../../mappings/country.name.EN";
 import { departmentMap } from "../../mappings/departments";
 import { PhdCandidateRaw } from "../load/loadPhdCandidates";
-import getUnsdCountries from "../load/loadUnsdCountries";
+import loadCountries from "../load/loadUnsdCountries";
 
 export async function cleanPhdCandidates(data: PhdCandidateRaw[]) {
-  const unsdCodes = await getUnsdCountries();
+  const unsdCodes = await loadCountries();
 
   const fuseOptions = {
     includeScore: true,
@@ -28,8 +28,8 @@ export async function cleanPhdCandidates(data: PhdCandidateRaw[]) {
       dateGraduation: aq.escape((d: PhdCandidateRaw) =>
         d?.SISGraduated ? d.SISGraduated.toISOString() : null
       ),
-      datePromotion: aq.escape((d: PhdCandidateRaw) =>
-        d?.Promotion ? new Date(d.Promotion + "GMT").toISOString() : null
+      yearPromotion: aq.escape((d: PhdCandidateRaw) =>
+        d?.Promotion && d?.Promotion > 1950 ? d.Promotion : null
       ),
       dateEnd: aq.escape((d: PhdCandidateRaw) =>
         d?.PhDEnd ? d.PhDEnd.toISOString() : null
@@ -53,10 +53,8 @@ export async function cleanPhdCandidates(data: PhdCandidateRaw[]) {
         const departmentMapped = departmentMap.get(department);
         return departmentMapped ?? department;
       }),
-      graduated: aq.escape((d: PhdCandidateRaw) => {
-        if (d.Graduated === null) return null;
-        return d.Graduated === 0 ? false : true;
-      }),
+      status: (d: PhdCandidateRaw) =>
+        aq.op.padstart(d.LastStatus ? d.LastStatus + "" : "00", 2, "0"),
     })
     .rename({
       Country: "country",
@@ -71,10 +69,10 @@ export async function cleanPhdCandidates(data: PhdCandidateRaw[]) {
       "department1",
       "department2",
       "sponsor",
-      "graduated",
+      "status",
       "dateStart",
       "dateGraduation",
-      "datePromotion",
+      "yearPromotion",
       "thesisTitle"
     );
 

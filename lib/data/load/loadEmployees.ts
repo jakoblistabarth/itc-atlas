@@ -1,13 +1,13 @@
 import * as aq from "arquero";
 import Fuse from "fuse.js";
 import { countryMapNE } from "../../mappings/country.name.NL";
-import getUnsdCountries from "./loadUnsdCountries";
+import loadUnsdCountries from "./loadUnsdCountries";
 import loadStaff, { StaffRaw } from "../load/loadStaff";
 import { EmployeeClean } from "../../../types/EmployeeClean";
 
 const loadEmployees = async () => {
   const staff = await loadStaff();
-  const unsdCodes = await getUnsdCountries();
+  const unsdCodes = await loadUnsdCountries();
   const options = {
     includeScore: true,
     distance: 50,

@@ -6,11 +6,15 @@ import SummaryTable from "../../components/SummaryTable";
 import DataFrame from "../../lib/DataFrame/DataFrame";
 import styles from "../../styles/home.module.css";
 import useSWR from "swr";
+import { useRouter } from "next/router";
+import LinkFramed from "../../components/LinkFramed";
 
 const ApplicantsOverview: NextPage = () => {
-  const fetcher = (...args) => fetch(...args).then((res) => res.json());
+  const fetcher = (resource: RequestInfo | URL) =>
+    fetch(resource).then((res) => res.json()); //TODO: use swrconfig provider instead to remove redundant fetcher declaration
 
   const { data, error, isLoading } = useSWR("/api/data/applicant/", fetcher);
+  const { route } = useRouter();
 
   const applicantsDf = new DataFrame(data);
   return (
@@ -24,6 +28,13 @@ const ApplicantsOverview: NextPage = () => {
       <main className={styles.main}>
         <Heading Tag={Headings.H1}>ITC's applications</Heading>
         <p className={styles.description}>Insights into ITC's applicants.</p>
+
+        <div className={styles.grid}>
+          <LinkFramed href={`${route}/origin-country`}>
+            Origin by Country
+          </LinkFramed>
+        </div>
+
         {error && <div>failed to load</div>}
         {isLoading && <div>Loading …</div>}
         {!isLoading && !error && <SummaryTable data={applicantsDf} />}

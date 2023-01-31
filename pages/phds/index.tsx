@@ -34,11 +34,7 @@ const PhdOverview: NextPage<Props> = ({ phdCandidates }) => {
           <LinkFramed href="/phds/departments">
             Origin Per Country and Department
           </LinkFramed>
-          <LinkFramed href="/phds/spiral-timeline">Spiral Timeline</LinkFramed>
         </div>
-        <p>
-          <BackToHome />
-        </p>
         <SummaryTable data={phdCandidatesDf} />
       </main>
 

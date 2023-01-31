@@ -39,11 +39,6 @@ const Home: NextPage = () => {
       description: "ITC's applicants.",
     },
     {
-      href: "/alumni",
-      children: "Alumni",
-      description: "ITC's alumni.",
-    },
-    {
       href: "/phds",
       children: "PhDs",
       description: "ITC's PhDs and PhD candidates.",

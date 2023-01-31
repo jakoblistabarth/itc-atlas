@@ -5,8 +5,7 @@ export type ApplicationClean = {
   courseId: string;
   level?: string;
   statusId: string;
-  diplomaType?: string;
-  departmentId?: string;
+  examYear?: number;
   enrollmentStart: Date;
   enrollmentEnd: Date;
   certificationDate: Date;

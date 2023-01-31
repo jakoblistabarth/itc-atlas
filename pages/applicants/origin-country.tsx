@@ -1,11 +1,11 @@
-import { descending, max, rollup, rollups, scaleSqrt, sum } from "d3";
+import { descending, max, scaleSqrt } from "d3";
 import { geoBertin1953 } from "d3-geo-projection";
 import type {
   Feature,
   FeatureCollection,
   MultiPolygon,
-  Polygon,
   Point,
+  Polygon,
 } from "geojson";
 import { nanoid } from "nanoid";
 import type { GetStaticProps, NextPage } from "next";
@@ -19,43 +19,33 @@ import PointLabel from "../../components/map/PointLabel";
 import PointSymbol from "../../components/map/PointSymbol";
 import ProportionalCircleLegend from "../../components/map/ProportionalCircleLegend";
 import getMapHeight from "../../lib/cartographic/getMapHeight";
-import getAlumni from "../../lib/data/getAlumni";
 import getCentroidByIsoCode from "../../lib/data/getCentroidByIsoCode";
 import getCountries from "../../lib/data/getCountries";
+import getCountryCodes from "../../lib/data/queries/country/getCountryCodes";
+import getCountryWithApplicantCount, {
+  CountryWithApplicantCount,
+} from "../../lib/data/queries/country/getCountryWithApplicantCount";
 import styles from "../../styles/home.module.css";
-import { Alumni } from "../../types/Alumni";
 import { LabelPlacement } from "../../types/LabelPlacement";
 import { SharedPageProps } from "../../types/Props";
 
 type Props = {
-  alumni: Alumni[];
+  applicants: CountryWithApplicantCount;
 } & SharedPageProps;
 
-const AlumniOrigin: NextPage<Props> = ({ alumni, neCountriesTopoJson }) => {
-  const mscs = alumni
-    .filter((d) => d.level === "MSC")
-    .filter((d) => {
-      //filter out some of the land administration alumni 🤷
-      return !d.courseCode.match(".*LS/.*");
-    });
-  const count = new Map(
-    rollups(
-      mscs,
-      (d) => d.length,
-      (v) => v.countryISO3
-    )
-      .filter(([code, count]) => code)
-      .sort(([a_, aCount], [b_, bCount]) => descending(aCount, bCount))
-  );
-
-  const countries = feature(
+const AlumniOrigin: NextPage<Props> = ({
+  applicants,
+  neCountriesTopoJson,
+  countries,
+}) => {
+  const geographies = feature(
     neCountriesTopoJson,
     neCountriesTopoJson.objects.ne_admin_0_countries
   ) as FeatureCollection<MultiPolygon | Polygon>;
 
   const points: FeatureCollection<Point> = {
     type: "FeatureCollection",
-    features: countries.features
+    features: geographies.features
       .map((country) => {
         const isoCode = country.properties?.ADM0_A3_NL;
         const pos = getCentroidByIsoCode(isoCode);
@@ -67,7 +57,8 @@ const AlumniOrigin: NextPage<Props> = ({ alumni, neCountriesTopoJson }) => {
           },
           properties: {
             ...country.properties,
-            alumniCount: count.get(isoCode),
+            alumniCount: applicants.find((d) => d.isoAlpha3 === isoCode)?._count
+              .applicants,
           },
         };
         return feature;
@@ -156,15 +147,17 @@ const AlumniOrigin: NextPage<Props> = ({ alumni, neCountriesTopoJson }) => {
 };
 
 export const getStaticProps: GetStaticProps<Props> = async () => {
-  const [alumni, neCountriesTopoJson] = await Promise.all([
-    getAlumni(),
+  const [applicants, neCountriesTopoJson, countries] = await Promise.all([
+    getCountryWithApplicantCount(),
     getCountries(),
+    getCountryCodes(),
   ]);
 
   return {
     props: {
-      alumni,
+      applicants,
       neCountriesTopoJson,
+      countries,
     },
   };
 };

@@ -2,16 +2,11 @@ import type { GetStaticProps, NextPage } from "next";
 import Head from "next/head";
 import Footer from "../../components/Footer";
 import Heading, { Headings } from "../../components/Heading";
-import getAlumniByCountry from "../../lib/data/getAlumniByCountry";
 import getBTORsByCountry from "../../lib/data/getBTORsByCountry";
-import getPhdCandidatesByCountry from "../../lib/data/getPhdCandidatesByCountry";
 import styles from "../../styles/home.module.css";
-import { Alumni } from "../../types/Alumni";
-import { PhdCandidate } from "../../types/PhdCandidate";
 import { ProjectIndonesia } from "../../types/Project";
 import { TimelineEvent } from "../../types/TimelineEvent";
 import { BTOR } from "../../types/Travels";
-import { rollups } from "d3-array";
 import getDutchForeignAffairsMinisters from "../../lib/data/getDutchForeignAffairsMinisters";
 import { Minister } from "../../types/Minister";
 import {
@@ -46,11 +41,17 @@ import { GiWaterDrop, GiHeartPlus } from "react-icons/gi";
 import { RiLeafFill } from "react-icons/ri";
 import NominalLegend from "../../components/map/NominalLegend";
 import getProjectsIndonesia from "../../lib/data/getProjectsIndonesia";
+import getPhdCandidatesByYear, {
+  phdCandidateByYearWithCount,
+} from "../../lib/data/queries/phdCandidates/getPhdCandidatesByYear";
+import getApplicationsByYear, {
+  ApplicationByYearWithCount,
+} from "../../lib/data/queries/applications/getApplicationsByYear";
 
 type Props = {
   projects: ProjectIndonesia[];
-  phdCandidates: PhdCandidate[];
-  alumni: Alumni[];
+  phdGraduatesByYear: phdCandidateByYearWithCount;
+  applications: ApplicationByYearWithCount;
   btors: BTOR[];
   longTermMissions: LongTermMission[];
   ministers: Minister[];
@@ -59,8 +60,8 @@ type Props = {
 
 const IndonesiaTimeline: NextPage<Props> = ({
   projects,
-  phdCandidates,
-  alumni,
+  phdGraduatesByYear,
+  applications,
   btors,
   longTermMissions,
   ministers,
@@ -263,27 +264,14 @@ const IndonesiaTimeline: NextPage<Props> = ({
     .domain(longTermMissions.map((d) => d.project))
     .range([0, tlHeights.itc[1]]);
 
-  const phdGraduatesPerYear = rollups(
-    phdCandidates.filter((d) => d.datePromotion),
-    (v) => v.length,
-    (d) => new Date(d.datePromotion ?? "").getFullYear()
-  );
-
-  const alumniPerYear = rollups(
-    alumni,
-    (v) => v.length,
-    (d) => d.examYear
-  );
-  const examEvents: TimelineEvent[] = alumniPerYear
-    .filter(([year]) => year)
-    .map(([year, size]) => {
-      return {
-        name: year,
-        yOffset: "",
-        dateStart: new Date(parseInt(year), 0, 1),
-        size: size,
-      };
-    });
+  const examEvents: TimelineEvent[] = applications.map((d) => {
+    return {
+      name: d.examYear + "",
+      yOffset: "",
+      dateStart: new Date(d.examYear ?? 0, 0, 1),
+      size: d._count._all,
+    };
+  });
 
   const ministerEvents: TimelineEvent[] = ministers.map((minister, idx) => {
     const next = ministers[idx + 1];
@@ -719,18 +707,18 @@ const IndonesiaTimeline: NextPage<Props> = ({
                       />
                     );
                   })}
-                  {phdGraduatesPerYear.map(([year, count]) => {
+                  {phdGraduatesByYear.map((d) => {
                     const r = 2;
                     const gap = r * 3;
-                    return range(0, count).map((_, idx) => {
-                      const hasEvenChilds = count % 2 === 0;
+                    return range(0, d._count._all).map((_, idx) => {
+                      const hasEvenChilds = d._count._all % 2 === 0;
                       const offset = hasEvenChilds ? gap / -2 : 0;
                       const direction = idx % 2 ? 1 : -1;
                       return (
                         <circle
                           key={nanoid()}
                           r={r}
-                          cx={xScale(new Date(year + "GMT"))}
+                          cx={xScale(new Date(d.promotionYear + "GMT"))}
                           cy={offset + Math.ceil(idx / 2) * gap * direction}
                           stroke={"black"}
                           strokeWidth={1}
@@ -790,18 +778,18 @@ const IndonesiaTimeline: NextPage<Props> = ({
 export const getStaticProps: GetStaticProps<Props> = async () => {
   const [
     projects,
-    phdCandidates,
+    phdGraduatesByYear,
     btors,
     longTermMissions,
-    alumni,
+    applications,
     ministers,
     neCountries,
   ] = await Promise.all([
     getProjectsIndonesia(),
-    getPhdCandidatesByCountry("IDN"),
+    getPhdCandidatesByYear("IDN"),
     getBTORsByCountry("Indonesia"),
     getLongTermMissions(),
-    getAlumniByCountry("IDN"),
+    getApplicationsByYear("IDN"),
     getDutchForeignAffairsMinisters(),
     getCountries(),
   ]);
@@ -809,10 +797,10 @@ export const getStaticProps: GetStaticProps<Props> = async () => {
   return {
     props: {
       projects,
-      phdCandidates,
+      phdGraduatesByYear,
       btors,
       longTermMissions,
-      alumni,
+      applications,
       ministers,
       neCountries,
     },

@@ -16,6 +16,7 @@ export const loadApplications = async () => {
       enrollmentEnd: aq.escape((d: ContactRaw) =>
         d["End Date"] ? ddmmyyyyToDate(d["End Date"]) : null
       ),
+      examYear: (d: ContactRaw) => aq.op.parse_int(d["YearCert_Exam_Dipl"], 10),
     })
     .rename({
       APPnr: "id",
@@ -34,8 +35,9 @@ export const loadApplications = async () => {
       "applicantId",
       "courseId",
       "programmId",
-      "statusId",
       "level",
+      "statusId",
+      "examYear",
       "certificateType",
       "enrollmentStart",
       "enrollmentEnd", //TODO: add certificationDate?

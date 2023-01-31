@@ -15,7 +15,7 @@ const getPhdCandidatesByCountryByDepartment = async (
 ) => {
   const prisma = new PrismaClient();
 
-  const filter = onlyGraduates ? { graduated: true } : {};
+  const filter = onlyGraduates ? { status: { id: { equals: "38" } } } : {};
   const phdsGrouped = await prisma.phdCandidate.groupBy({
     by: ["countryId", "departmentMainId"],
     _count: {

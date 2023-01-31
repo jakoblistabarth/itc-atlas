@@ -24,7 +24,7 @@ export type PhdCandidateRaw = {
   Country?: string;
   ResearchTheme?: string;
   Thesis_Title?: string;
-  Promotion?: string;
+  Promotion?: number;
   Dissertation_Number?: number;
   ISBN?: string;
   Graduated?: number;

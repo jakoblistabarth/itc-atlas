@@ -116,10 +116,11 @@ async function main() {
         data: {
           id: d.id,
           applicantId: d.applicantId,
-          level: d.level,
-          programmId: d.programmId,
-          statusId: d.statusId,
           courseId: d.courseId,
+          programmId: d.programmId,
+          level: d.level,
+          statusId: d.statusId,
+          examYear: d.examYear,
           enrollmentStart: d.enrollmentStart,
           enrollmentEnd: d.enrollmentEnd,
           certificationDate: d.certificationDate,
@@ -131,7 +132,7 @@ async function main() {
     })
   );
 
-  const itcIdsInContacts = await prisma.applicant.findMany({
+  const itcIdsInApplicants = await prisma.applicant.findMany({
     select: {
       itcStudentId: true,
     },
@@ -139,7 +140,7 @@ async function main() {
 
   await Promise.all(
     phds.map(async (d, idx) => {
-      const itcStudentId = itcIdsInContacts
+      const itcStudentId = itcIdsInApplicants
         .map((d) => d.itcStudentId)
         .includes(d.itcStudentId)
         ? d.itcStudentId
@@ -154,10 +155,10 @@ async function main() {
           departmentMainId: d.department1,
           departmentSecondaryId: d.department2,
           thesisTitle: d.thesisTitle,
-          graduated: d.graduated,
+          statusId: d.status,
           start: d.dateStart,
           graduation: d.dateGraduation,
-          promotion: d.dateGraduation,
+          promotionYear: d.yearPromotion,
           countryId: country?.id,
         },
       };
@@ -169,7 +170,7 @@ async function main() {
     employees.map(async (d) => {
       const country = countriesDB.find((c) => c.isoAlpha3 === d.nationality);
 
-      const contact =
+      const applicant =
         d.dateOfBirth && d.gender && country?.id
           ? await prisma.applicant.findFirst({
               select: { id: true },
@@ -191,7 +192,7 @@ async function main() {
       const createArgs: Prisma.EmployeeCreateArgs = {
         data: {
           id: d.mId,
-          applicantId: contact?.id,
+          applicantId: applicant?.id,
           dateOfBirth: d.dateOfBirth,
           countryId: country?.id,
         },
