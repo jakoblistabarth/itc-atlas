@@ -4,7 +4,11 @@ export type NeScales = "10m" | "50m" | "110m";
 
 export type CountryProperties = {
   NAME_EN: string;
+  NAME_NL: string;
   ADM0_A3_NL: string;
+  ADM0_A3: string;
+  ADM0_ISO: string;
+  ADM0_UN: string;
 };
 
 export type NeCountriesTopoJson = Topology<{

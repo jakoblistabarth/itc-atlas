@@ -1,4 +1,4 @@
-import { Employee, PrismaClient } from "@prisma/client";
+import { Country, PrismaClient } from "@prisma/client";
 import * as d3 from "d3";
 import { geoBertin1953 } from "d3-geo-projection";
 import type { Feature, FeatureCollection, Point } from "geojson";
@@ -6,28 +6,32 @@ import { nanoid } from "nanoid";
 import type { GetStaticProps, NextPage } from "next";
 import Head from "next/head";
 import { Vector2 } from "three";
-import * as topojson from "topojson-client";
 import Footer from "../../components/Footer";
 import Heading, { Headings } from "../../components/Heading";
 import BaseLayer from "../../components/map/BaseLayer";
 import PointSymbol from "../../components/map/PointSymbol";
 import ProportionalCircleLegend from "../../components/map/ProportionalCircleLegend";
 import getMapHeight from "../../lib/cartographic/getMapHeight";
+import getCentroidByIsoCode from "../../lib/data/getCentroidByIsoCode";
 import getCountries from "../../lib/data/getCountries";
+import getCountryWithEmployeeCount, {
+  CountryWithEmployeeCount,
+} from "../../lib/data/queries/country/getCountryWithEmployeeCount";
 import styles from "../../styles/home.module.css";
+import { NeCountriesTopoJson } from "../../types/NeTopoJson";
 import { SharedPageProps } from "../../types/Props";
 
 type Props = {
-  employee: Employee[];
+  countryWithEmployeeCount: CountryWithEmployeeCount;
+  neCountriesTopoJson: NeCountriesTopoJson;
+  countries: Country[];
 } & SharedPageProps;
 
-const StaffOrigin: NextPage<Props> = ({ employee, neCountriesTopoJson }) => {
-  const neCountriesGeoJson = topojson.feature(
-    neCountriesTopoJson,
-    neCountriesTopoJson.objects.ne_admin_0_countries
-  );
-
-  const count = d3.group(employee, (d) => d.country?.isoAlpha3);
+const StaffOrigin: NextPage<Props> = ({
+  countryWithEmployeeCount,
+  neCountriesTopoJson,
+  countries,
+}) => {
   const dimension = {
     width: 1280,
     height: 0,
@@ -38,21 +42,20 @@ const StaffOrigin: NextPage<Props> = ({ employee, neCountriesTopoJson }) => {
 
   const points: FeatureCollection<Point> = {
     type: "FeatureCollection",
-    features: neCountriesGeoJson.features
-      .map((feature) => {
-        const employeeCount = count.get(feature.properties?.ADM0_A3_NL)?.length;
+    features: countryWithEmployeeCount
+      .map((d) => {
+        const centroid = getCentroidByIsoCode(d.isoAlpha3)?.toArray(); //TODO: what to do when getCetroidByIsoCode() returns undefined? example SSD – Southsudan
+        const coordinates = centroid ?? [0, 0];
         const pointFeature: Feature<Point> = {
           type: "Feature",
           properties: {
-            employeeCount,
-            ...feature.properties,
+            employeeCount: d._count.employees,
+            isoAlpha3: d.isoAlpha3,
+            nameLongEn: d.nameLongEn,
           },
           geometry: {
             type: "Point",
-            coordinates: [
-              d3.geoCentroid(feature)[0],
-              d3.geoCentroid(feature)[1],
-            ],
+            coordinates,
           },
         };
         return pointFeature;
@@ -63,15 +66,13 @@ const StaffOrigin: NextPage<Props> = ({ employee, neCountriesTopoJson }) => {
       ),
   };
 
-  const employeeCount = points.features.map(
-    (point) => point.properties?.employeeCount
-  );
+  const employeeCount = countryWithEmployeeCount.map((d) => d._count.employees);
   const min = d3.min(employeeCount);
   const max = d3.max(employeeCount);
 
   const scale = d3
     .scaleSqrt()
-    .domain([min, max])
+    .domain([min ?? 0, max ?? 100])
     .range([1, dimension.width / 30]);
 
   return (
@@ -115,17 +116,16 @@ const StaffOrigin: NextPage<Props> = ({ employee, neCountriesTopoJson }) => {
 
 export const getStaticProps: GetStaticProps<Props> = async () => {
   const prisma = new PrismaClient();
-  const [employee, neCountriesTopoJson, countries] = await Promise.all([
-    prisma.employee.findMany({
-      include: { country: true },
-    }),
-    getCountries(),
-    prisma.country.findMany(),
-  ]);
+  const [countryWithEmployeeCount, neCountriesTopoJson, countries] =
+    await Promise.all([
+      getCountryWithEmployeeCount(),
+      getCountries(),
+      prisma.country.findMany(),
+    ]);
 
   return {
     props: {
-      employee,
+      countryWithEmployeeCount,
       countries,
       neCountriesTopoJson,
     },
