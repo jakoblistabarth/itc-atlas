@@ -1,15 +1,21 @@
 import { Travel } from "../../types/Travels";
-import DataFrame from "../DataFrame/DataFrame";
+import * as aq from "arquero";
 
 const cleanTravels = (data: any) => {
-  const df = new DataFrame(data)
-    .mutate("dateStart", (row) => row.FromDate.toISOString() ?? null)
-    .mutate("dateEnd", (row) => row.ToDate.toISOString() ?? null)
-    .renameColumn({ MNumber: "mNumber" })
-    .renameColumn({ Country: "country" })
-    .renameColumn({ Destination: "destination" })
-    .renameColumn({ Dept: "department" })
-    .renameColumn({ Type: "type" })
+  //TODO: add type TravelRaw
+  const tb = aq
+    .from(data)
+    .derive({
+      dateStart: aq.escape((d: any) => d.FromDate.toISOString() ?? null),
+      dateEnd: aq.escape((d: any) => d.ToDate.toISOString() ?? null),
+    })
+    .rename({
+      MNumber: "mNumber",
+      Country: "country",
+      Destination: "destination",
+      Dept: "department",
+      Type: "type",
+    })
     .select([
       "dateStart",
       "dateEnd",
@@ -20,7 +26,7 @@ const cleanTravels = (data: any) => {
       "type",
     ]);
 
-  return df.toArray() as Travel[];
+  return tb.objects() as Travel[];
 };
 
 export default cleanTravels;

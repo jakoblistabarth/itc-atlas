@@ -1,17 +1,21 @@
 import { BTOR } from "../../types/Travels";
-import DataFrame from "../DataFrame/DataFrame";
+import * as aq from "arquero";
 
 const cleanBTORs = (data: any) => {
-  const df = new DataFrame(data);
-
-  const output = df
-    .mutate("dateStart", (row) => row.Departure.toISOString())
-    .mutate("dateEnd", (row) => row.Return.toISOString())
-    .renameColumn({ Dept: "department" })
-    .renameColumn({ "Purpose of travel": "purpose" })
-    .renameColumn({ Budget: "budget" })
-    .renameColumn({ Destination: "destination" })
-    .renameColumn({ "Nr of days": "daysOfTravel" })
+  //TODO: add type BTORRaw
+  const output = aq
+    .from(data)
+    .derive({
+      dateStart: aq.escape((d: any) => d.Departure.toISOString()),
+      dateEnd: aq.escape((d: any) => d.Return.toISOString()),
+    })
+    .rename({
+      Dept: "department",
+      "Purpose of travel": "purpose",
+      Budget: "budget",
+      Destination: "destination",
+      "Nr of days": "daysOfTravel",
+    })
     .select([
       "dateStart",
       "dateEnd",
@@ -22,7 +26,7 @@ const cleanBTORs = (data: any) => {
       "daysOfTravel",
     ]);
 
-  return output.toArray() as BTOR[];
+  return output.objects() as BTOR[];
 };
 
 export default cleanBTORs;

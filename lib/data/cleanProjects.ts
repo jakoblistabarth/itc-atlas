@@ -1,71 +1,114 @@
-import DataFrame from "../DataFrame/DataFrame";
 import loadUnsdCodes from "./load/loadUnsdCodes";
 import { ProjectType, ProjectStatus, Project } from "../../types/Project";
 import { mapCountries } from "../mappings/country.name.EN";
 import { UnLevel } from "../../types/UnsdCodes";
 import loadUnsdCountries from "./load/loadUnsdCountries";
+import * as aq from "arquero";
+import { ProjectPre2019Raw, ProjectPost2019Raw } from "./getProjects";
 
-export default async function cleanProjects(input: any[]) {
-  const post2019 = new DataFrame(input[0])
-    .renameColumn({ projecttype: "type" })
-    .renameColumn({ Status: "status" })
-    .renameColumn({ CountriesRegion: "countriesRegion" });
-  const pre2019 = new DataFrame(input[1])
-    .renameColumn({ Project_ID: "projectID" })
-    .renameColumn({ "Project name": "projectName" })
-    .renameColumn({ "Project name in short": "projectShortName" })
-    .renameColumn({ "Project status": "status" })
-    .renameColumn({ "Project type": "type" })
-    .renameColumn({ Country: "countriesRegion" })
-    .renameColumn({ "Starting date": "dateStart" })
-    .renameColumn({ "Completion date": "dateEnd" });
+export type ProjectClean = {
+  projectId: string;
+  countriesRegion: string;
+  countriesRegionArr: string[];
+  regions: string[];
+  subRegions: string[];
+  intermediateRegions: string[];
+  countries: string[];
+  allCountries: string[];
+};
 
-  const merged = pre2019
-    .merge(post2019)
-    .mutate("projectShortName", (row) =>
-      row.projectShortName === ""
-        ? `[${row.projectID}-${row.projectName.substr(0, 3)}]`
-        : row.projectShortName
-    )
-    .mutate("dateStart", (row) =>
-      !row.dateStart || row.dateStart === "NULL"
-        ? null
-        : row.dateStart.toISOString()
-    )
-    .mutate("dateEnd", (row) =>
-      !row.dateEnd || row.dateEnd === "NULL" ? null : row.dateEnd.toISOString()
-    )
-    .mutate("type", (row) => ProjectType[row.type] || row.type)
-    .mutate("status", (row) => ProjectStatus[row.status] || row.status)
-    .mutate("countriesRegion", (row) => mapCountries(row.countriesRegion))
-    .renameColumn({ Result: "result" })
-    .renameColumn({ "Next action": "nextAction" })
-    .renameColumn({ Remarks: "remarks" })
-    .renameColumn({ "Project summary": "projectSummary" })
-    .renameColumn({ "Funding type": "fundingType" })
-    .renameColumn({ "Tender type": "tenderType" })
-    .renameColumn({ "Percentage covered by ITC": "percentageCoveredByITC" })
-    .renameColumn({
-      "Percentage covered by partner(s)": "percentageCoveredByPartners",
+type ProjectMerged = {
+  type: ProjectType;
+  status: ProjectStatus;
+  countriesRegion: string;
+  dateStart: string;
+  dateEnd: string;
+};
+
+export default async function cleanProjects({
+  projectsPre2019,
+  projectsPost2019,
+}: {
+  projectsPre2019: ProjectPre2019Raw;
+  projectsPost2019: ProjectPost2019Raw;
+}) {
+  const post2019 = aq.from(projectsPost2019).rename({
+    projecttype: "type",
+    Status: "status",
+    CountriesRegion: "countriesregion",
+  });
+  const pre2019 = aq.from(projectsPre2019).rename({
+    Project_ID: "projectID",
+    "Project name": "projectName",
+    "Project name in short": "projectShortName",
+    "Project status": "status",
+    "Project type": "type",
+    Country: "countriesRegion",
+    "Starting date": "dateStart",
+    "Completion date": "dateEnd",
+  });
+
+  const merged = aq
+    .from([...pre2019.objects(), ...post2019.objects()])
+    .derive({
+      projectShortName: aq.escape((row: any) =>
+        row.projectShortName === ""
+          ? `[${row.projectID}-${row.projectName.substr(0, 3)}]`
+          : row.projectShortName
+      ),
+      dateStart: aq.escape((row: any) =>
+        !row.dateStart || row.dateStart === "NULL"
+          ? null
+          : row.dateStart.toISOString()
+      ),
+
+      dateEnd: aq.escape((row: any) =>
+        !row.dateEnd || row.dateEnd === "NULL"
+          ? null
+          : row.dateEnd.toISOString()
+      ),
+      type: aq.escape(
+        (row: ProjectMerged) => ProjectType[row.type] || row.type
+      ),
+      status: aq.escape(
+        (row: ProjectMerged) => ProjectStatus[row.status] || row.status
+      ),
+      countriesRegion: aq.escape((row: ProjectMerged) =>
+        mapCountries(row.countriesRegion)
+      ),
     })
-    .renameColumn({ Division: "division" })
-    .renameColumn({ "Project officer": "projectOfficer" })
-    .renameColumn({ "Project supervisor": "projectSupervisor" })
-    .renameColumn({ "Project administrator": "projectAdministrator" })
-    .renameColumn({ "Number of ITC staff involved": "ITCStaffInvolved" })
-    .renameColumn({ "Number of man months ITC": "manMonthsITC" })
-    .renameColumn({ "Number of man months partner(s)": "manMonthsPartners" })
-    .renameColumn({ "Personmonths abroad": "personMonthsAbroad" })
-    .renameColumn({ "Personmonths in NL": "personMonthsNL" })
-    .renameColumn({ "Student months abroad": "studentMonthsAbroad" })
-    .renameColumn({ "Student months in NL": "studentMonthsNL" })
-    .renameColumn({ "Total project budget": "totalBudget" })
-    .renameColumn({ "Total ITC budget": "totalITCBudget" })
-    .renameColumn({ "Sub contractor budget": "subContractorBudget" })
-    .renameColumn({ "Consulting budget": "consultingBudget" })
-    .where((row) => new Date(row.dateStart) < new Date(row.dateEnd)); // TODO: fix projects whith old entries
+    .rename({
+      Result: "result",
+      "Next action": "nextAction",
+      Remarks: "remarks",
+      "Project summary": "projectSummary",
+      "Funding type": "fundingType",
+      "Tender type": "tenderType",
+      "Percentage covered by ITC": "percentageCoveredByITC",
+      "Percentage covered by partner(s)": "percentageCoveredByPartners",
+      Division: "division",
+      "Project officer": "projectOfficer",
+      "Project supervisor": "projectSupervisor",
+      "Project administrator": "projectAdministrator",
+      "Number of ITC staff involved": "ITCStaffInvolved",
+      "Number of man months ITC": "manMonthsITC",
+      "Number of man months partner(s)": "manMonthsPartners",
+      "Personmonths abroad": "personMonthsAbroad",
+      "Personmonths in NL": "personMonthsNL",
+      "Student months abroad": "studentMonthsAbroad",
+      "Student months in NL": "studentMonthsNL",
+      "Total project budget": "totalBudget",
+      "Total ITC budget": "totalITCBudget",
+      "Sub contractor budget": "subContractorBudget",
+      "Consulting budget": "consultingBudget",
+    })
+    .filter(
+      aq.escape(
+        (row: ProjectMerged) => new Date(row.dateStart) < new Date(row.dateEnd)
+      )
+    ); // TODO: fix projects whith old entries
 
-  const output = merged.toArray();
+  const output = merged.objects() as ProjectClean[];
 
   output.forEach((d) => {
     if (typeof d.countriesRegion !== "string") return;
@@ -158,5 +201,5 @@ export default async function cleanProjects(input: any[]) {
     d.allCountries = Array.from(new Set(allCountries));
   });
 
-  return output as Project[];
+  return output;
 }

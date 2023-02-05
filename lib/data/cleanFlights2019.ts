@@ -1,36 +1,38 @@
 import { Flight } from "../../types/Travels";
-import DataFrame from "../DataFrame/DataFrame";
+import * as aq from "arquero";
+import { Travels2019Raw } from "./getFlights2019";
 
 const cleanTravelData2019 = (data: any) => {
-  const df = new DataFrame(data)
-    .where(
-      (row) =>
+  const tb = aq
+    .from(data)
+    .filter(
+      (row: Travels2019Raw) =>
         row["Sales Type"] !== "Train" &&
         row["Product Description"] == "Air ticket" &&
         row.Route
     )
-    .dropColumn("Hotel location")
-    .mutate("airportCodes", (row) => row.Route.split("-"))
-    .dropColumn("Route")
-    .mutate("orderDate", (row) => row["Order Date"].toISOString())
-    .dropColumn("Order Date")
-    .mutate("departureDate", (row) => row["Departure Date"].toISOString())
-    .dropColumn("Departure Date")
-    .mutate("arrivalDate", (row) => row["Arrival Date"].toISOString())
-    .dropColumn("Arrival Date")
-    .mutate("travelDays", (row) => Math.abs(row["Travel days"]))
-    .dropColumn("Travel days")
-    .mutate("ticketCount", (row) => Math.abs(row["Ticket Count"]))
-    .dropColumn("Ticket Count")
-    .mutate("fare", (row) => Math.abs(row["Fare"]))
-    .dropColumn("Fare")
-    .mutate("tax", (row) => Math.abs(row["Tax"]))
-    .dropColumn("Tax")
-    .mutate("ref2", (row) => (row["Ref2"] ? "#" + row["Ref2"] : null))
-    .dropColumn("Ref2")
-    .renameColumn({ Ref1: "ref1" });
+    .derive({
+      airportCodes: (d: Travels2019Raw) => aq.op.split(d.Route, "-", 100),
+      orderDate: (d: Travels2019Raw) =>
+        aq.op.format_date(d["Order Date"], true),
+      departureDate: (d: Travels2019Raw) =>
+        aq.op.format_date(d["Departure Date"], true),
+      arrivalDate: (d: Travels2019Raw) =>
+        aq.op.format_date(d["Arrival Date"], true),
+      travelDays: (d: Travels2019Raw) => aq.op.abs(d["Travel days"]),
+    })
+    .rename({ Ref1: "ref1", Ref2: "ref2", Route: "route" })
+    .select([
+      "orderDate",
+      "departureDate",
+      "arrivalDate",
+      "airportCodes",
+      "travelDays",
+      "ref1",
+      "ref2",
+    ]);
 
-  return df.toArray() as Flight[];
+  return tb.objects() as Flight[];
 };
 
 export default cleanTravelData2019;
