@@ -1,13 +1,10 @@
 import React from "react";
 import { ComponentStory, ComponentMeta } from "@storybook/react";
-import DataFrame from "../lib/DataFrame/DataFrame";
-import getTestData from "../lib/DataFrame/getTestData";
+import getTestData from "../lib/data/getTestData";
+import * as aq from "arquero";
 
 import SummaryTable from "../components/SummaryTable";
-import getBigTestData from "../lib/DataFrame/getBigTestData";
-
-const df = new DataFrame(getTestData());
-const dfBig = new DataFrame(getBigTestData());
+import getBigTestData from "../lib/data/getBigTestData";
 
 export default {
   title: "SummaryTable/SummaryTable",
@@ -20,11 +17,11 @@ const Template: ComponentStory<typeof SummaryTable> = (args) => (
 
 export const DefaultSummaryTable = Template.bind({});
 DefaultSummaryTable.args = {
-  data: df,
+  data: aq.from(getTestData()),
 };
 
 export const SummaryTableWithTitle = Template.bind({});
 SummaryTableWithTitle.args = {
-  data: dfBig,
+  data: aq.from(getBigTestData()),
   title: "Fake Staff Data",
 };

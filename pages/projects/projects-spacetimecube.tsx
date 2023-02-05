@@ -14,6 +14,7 @@ import { Project } from "../../types/Project";
 import getProjects from "../../lib/data/getProjects";
 import { SpaceTimeCubeEvent } from "../../types/SpaceTimeCubeEvent";
 import getCentroidByIsoCode from "../../lib/data/getCentroidByIsoCode";
+import getCountryCodes from "../../lib/data/queries/country/getCountryCodes";
 
 type Props = SharedPageProps & {
   projects: Project[];
@@ -95,13 +96,17 @@ const ProjectExplorer3D: NextPage<Props> = ({
 };
 
 export const getStaticProps: GetStaticProps<Props> = async () => {
-  const neCountriesTopoJson = getCountries();
-  const projects = await getProjects();
+  const [projects, countries, neCountriesTopoJson] = await Promise.all([
+    getProjects(),
+    getCountryCodes(),
+    getCountries(),
+  ]);
 
   return {
     props: {
       neCountriesTopoJson,
       projects,
+      countries,
     },
   };
 };

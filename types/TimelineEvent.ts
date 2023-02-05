@@ -1,4 +1,4 @@
-import { Row } from "../lib/DataFrame/DataFrame";
+import { Struct } from "arquero/dist/types/table/transformable";
 
 export type TimelineEvent = {
   name: string;
@@ -6,6 +6,6 @@ export type TimelineEvent = {
   dateStart: Date;
   dateEnd?: Date;
   fill?: string;
-  data?: Row;
+  data?: Struct;
   size?: number;
 };

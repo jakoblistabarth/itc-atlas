@@ -4,17 +4,16 @@ import styles from "../../styles/home.module.css";
 import SummaryTable from "../../components/SummaryTable";
 import Footer from "../../components/Footer";
 import Heading, { Headings } from "../../components/Heading";
-import DataFrame from "../../lib/DataFrame/DataFrame";
 import LinkFramed from "../../components/LinkFramed";
 import useSWR from "swr";
 import { useRouter } from "next/router";
+import * as aq from "arquero";
 
 const StaffPage: NextPage = () => {
   const fetcher = (resource: RequestInfo | URL) =>
     fetch(resource).then((res) => res.json());
 
   const { data, error, isLoading } = useSWR("/api/data/employee/", fetcher);
-  const df = new DataFrame(data);
 
   const { route } = useRouter();
 
@@ -38,7 +37,7 @@ const StaffPage: NextPage = () => {
 
         {error && <div>failed to load</div>}
         {isLoading && <div>Loading …</div>}
-        {!isLoading && !error && <SummaryTable data={df} />}
+        {!isLoading && !error && <SummaryTable data={aq.from(data)} />}
       </main>
 
       <Footer />

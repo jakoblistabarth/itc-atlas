@@ -1,49 +1,49 @@
-import React from "react";
-import { ComponentStory, ComponentMeta } from "@storybook/react";
-import DataFrame from "../lib/DataFrame/DataFrame";
-import getTestData from "../lib/DataFrame/getTestData";
+import { Meta, StoryObj } from "@storybook/react";
+import * as aq from "arquero";
+import getTestData from "../lib/data/getTestData";
 
 import Snapshot from "../components/Snapshot";
+import getSummaryTableData from "../lib/summarytable/getSummaryTableData";
 
-const df = new DataFrame(getTestData());
+const tb = aq.from(getTestData());
+const stdata = getSummaryTableData(tb);
 
-export default {
-  title: "SummaryTable/Snapshot",
+const meta: Meta<typeof Snapshot> = {
   component: Snapshot,
-} as ComponentMeta<typeof Snapshot>;
+  title: "SummaryTable/Snapshot",
+};
+export default meta;
 
-const Template: ComponentStory<typeof Snapshot> = (args) => (
-  <Snapshot {...args} />
-);
+type Story = StoryObj<typeof Snapshot>;
 
 const defaultArgs = {
   detailed: false,
 };
 
-export const NominalSnapshot = Template.bind({});
-NominalSnapshot.args = {
-  ...defaultArgs,
-  column: df.getColumn("name"),
-  columnName: "Name",
+export const NominalSnapshot: Story = {
+  args: {
+    ...defaultArgs,
+    column: stdata[0],
+  },
 };
 
-export const ContinuousSnapshot = Template.bind({});
-ContinuousSnapshot.args = {
-  ...defaultArgs,
-  column: df.getColumn("height"),
-  columnName: "Height",
+export const ContinuousSnapshot: Story = {
+  args: {
+    ...defaultArgs,
+    column: stdata[5],
+  },
 };
 
-export const ArraySnapshot = Template.bind({});
-ArraySnapshot.args = {
-  ...defaultArgs,
-  column: df.getColumn("pinArray"),
-  columnName: "PIN",
+export const ArraySnapshot: Story = {
+  args: {
+    ...defaultArgs,
+    column: stdata[6],
+  },
 };
 
-export const DateSnapshot = Template.bind({});
-DateSnapshot.args = {
-  ...defaultArgs,
-  column: df.getColumn("dateOfBirth"),
-  columnName: "Date of Birth",
+export const DateSnapshot: Story = {
+  args: {
+    ...defaultArgs,
+    column: stdata[4],
+  },
 };

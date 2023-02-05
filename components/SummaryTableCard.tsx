@@ -3,15 +3,15 @@ import { FC } from "react";
 import * as d3 from "d3";
 import { colorMap } from "../lib/summarytable/colorMap";
 import Heading, { Headings } from "./Heading";
-import type { Description } from "../lib/DataFrame/DataFrame";
 import { fFloat } from "../lib/utilities/formaters";
 import { nanoid } from "nanoid";
+import { SummaryTableData } from "../lib/summarytable/getSummaryTableData";
 
 type SummaryTableCardProps = {
-  description: Description;
+  data: SummaryTableData;
 };
 
-const SummaryTableCard: FC<SummaryTableCardProps> = ({ description }) => {
+const SummaryTableCard: FC<SummaryTableCardProps> = ({ data }) => {
   const fontSize = 9;
   const dimension = {
     width: 100,
@@ -25,7 +25,7 @@ const SummaryTableCard: FC<SummaryTableCardProps> = ({ description }) => {
 
   const scale = d3
     .scaleBand()
-    .domain(description.columns.map((column) => column.label))
+    .domain(data.columnNames)
     .rangeRound([0, dimension.width - dimension.margin.left])
     .paddingInner(0.1)
     .paddingOuter(0)
@@ -40,7 +40,7 @@ const SummaryTableCard: FC<SummaryTableCardProps> = ({ description }) => {
       <svg>
         <g className="labels" fontSize={fontSize}>
           <text x={dimension.margin.left} y={fontSize}>
-            {fFloat(description.nColumns) + " ⭢"}
+            {fFloat(data.nColumns) + " ⭢"}
           </text>
           <text
             y={dimension.margin.top + fontSize / 2 + headerHeight + 1}
@@ -48,7 +48,7 @@ const SummaryTableCard: FC<SummaryTableCardProps> = ({ description }) => {
               dimension.margin.top + fontSize / 2 + headerHeight + 1
             })`}
           >
-            {fFloat(description.nRows) + " ⭢"}
+            {fFloat(data.nRows) + " ⭢"}
           </text>
         </g>
         <g
@@ -56,18 +56,18 @@ const SummaryTableCard: FC<SummaryTableCardProps> = ({ description }) => {
           transform={`translate(${dimension.margin.left},${dimension.margin.top})`}
         >
           <g>
-            {description.columns.map((column) => (
+            {data.map((column) => (
               <g className="column" key={nanoid()}>
                 <rect
                   y={0}
-                  x={scale(column.label)}
+                  x={scale(column.name)}
                   fill={colorMap.get(column.type)?.baseColor ?? "grey"}
                   width={scale.bandwidth()}
                   height={headerHeight}
                 />
                 <rect
                   y={headerHeight + 1}
-                  x={scale(column.label)}
+                  x={scale(column.name)}
                   fill={colorMap.get(column.type)?.baseColor ?? "grey"}
                   width={scale.bandwidth()}
                   fillOpacity={0.3}

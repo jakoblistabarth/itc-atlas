@@ -4,14 +4,14 @@ import styles from "../../styles/home.module.css";
 import getFlights2019 from "../../lib/data/getFlights2019";
 import SummaryTable from "../../components/SummaryTable";
 import Footer from "../../components/Footer";
-import DataFrame from "../../lib/DataFrame/DataFrame";
 import Heading, { Headings } from "../../components/Heading";
-import { Row } from "../../lib/DataFrame/DataFrame";
 import LinkFramed from "../../components/LinkFramed";
 import { nanoid } from "nanoid";
+import * as aq from "arquero";
+import { Flight } from "../../types/Travels";
 
 type Props = {
-  flights: Row[];
+  flights: Flight[];
 };
 
 const Travels: NextPage<Props> = ({ flights }) => {
@@ -29,7 +29,7 @@ const Travels: NextPage<Props> = ({ flights }) => {
       children: "Flights (globe)",
     },
   ];
-  const flightsDf = new DataFrame(flights);
+
   return (
     <>
       <Head>
@@ -52,7 +52,7 @@ const Travels: NextPage<Props> = ({ flights }) => {
             </LinkFramed>
           ))}
         </div>
-        <SummaryTable data={flightsDf} />
+        <SummaryTable data={aq.from(flights)} />
       </main>
 
       <Footer />

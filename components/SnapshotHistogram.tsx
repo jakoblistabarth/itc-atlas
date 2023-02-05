@@ -3,7 +3,6 @@ import { nanoid } from "nanoid";
 import { FC, useMemo, useState } from "react";
 import { colorMap } from "../lib/summarytable/colorMap";
 import { fDateShort, fFloat, fPercentage } from "../lib/utilities/formaters";
-import Column, { ColumnType } from "../lib/DataFrame/Column";
 import SnapshotCell from "./SnapshotCell";
 import {
   autoUpdate,
@@ -15,9 +14,11 @@ import {
   useHover,
   useInteractions,
 } from "@floating-ui/react-dom-interactions";
+import { SummaryTableColumn } from "../lib/summarytable/getSummaryTableColumn";
+import { ColumnDataType } from "../lib/summarytable/getColumnType";
 
 type Props = {
-  column: Column;
+  column: SummaryTableColumn;
 };
 
 const SnapshotHistogram: FC<Props> = ({ column }) => {
@@ -53,22 +54,25 @@ const SnapshotHistogram: FC<Props> = ({ column }) => {
     (d) => d !== undefined && d !== null && d !== ""
   );
   const cleanedColumn =
-    column.type === ColumnType.Date
-      ? columnNoNA.map((d) => new Date(d))
+    column.type === ColumnDataType.Date
+      ? columnNoNA.map((d: string) => new Date(d))
       : columnNoNA;
 
   // How does this actually work? TODO: type after figuring it out
   function thresholdTime(n: number) {
-    return (column: Column, min: number, max: number) => {
+    return (column: SummaryTableColumn, min: number, max: number) => {
       return d3.scaleTime().domain([min, max]).ticks(n);
     };
   }
 
   const histogram =
-    column.type === ColumnType.Continuous
+    column.type === ColumnDataType.Continuous
       ? d3.bin()
       : d3.bin().thresholds(thresholdTime(10));
-  const bins = useMemo(() => histogram(cleanedColumn), [column]);
+  const bins = useMemo(
+    () => histogram(cleanedColumn),
+    [histogram, cleanedColumn]
+  );
 
   const xDomain = [bins[0].x0 ?? 0, bins[bins.length - 1].x1 ?? 1];
 
@@ -90,7 +94,7 @@ const SnapshotHistogram: FC<Props> = ({ column }) => {
   ];
 
   const tickFormat =
-    column.type === ColumnType.Continuous ? fFloat : fDateShort;
+    column.type === ColumnDataType.Continuous ? fFloat : fDateShort;
   const fontSize = 7;
 
   return (

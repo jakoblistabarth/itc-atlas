@@ -3,9 +3,9 @@ import Head from "next/head";
 import Footer from "../../components/Footer";
 import Heading, { Headings } from "../../components/Heading";
 import SummaryTable from "../../components/SummaryTable";
-import DataFrame from "../../lib/DataFrame/DataFrame";
 import styles from "../../styles/home.module.css";
 import useSWR from "swr";
+import * as aq from "arquero";
 
 const ApplicantsOverview: NextPage = () => {
   const fetcher = (resource: RequestInfo | URL) =>
@@ -13,7 +13,6 @@ const ApplicantsOverview: NextPage = () => {
 
   const { data, error, isLoading } = useSWR("/api/data/application/", fetcher);
 
-  const applicationsDf = new DataFrame(data);
   return (
     <>
       <Head>
@@ -29,7 +28,7 @@ const ApplicantsOverview: NextPage = () => {
         </p>
         {error && <div>failed to load</div>}
         {isLoading && <div>Loading …</div>}
-        {!isLoading && !error && <SummaryTable data={applicationsDf} />}
+        {!isLoading && !error && <SummaryTable data={aq.from(data)} />}
       </main>
 
       <Footer />

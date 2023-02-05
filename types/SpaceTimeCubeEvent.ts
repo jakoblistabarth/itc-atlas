@@ -1,5 +1,5 @@
-import { Row } from "../lib/DataFrame/DataFrame";
 import { Vector2 } from "three";
+import { Struct } from "arquero/dist/types/table/transformable";
 
 export type SpaceTimeCubeEvent = {
   name: string;
@@ -7,6 +7,6 @@ export type SpaceTimeCubeEvent = {
   dateEnd?: Date;
   coordinates: Vector2;
   color?: string;
-  data?: Row;
+  data?: Struct;
   size?: number;
 };

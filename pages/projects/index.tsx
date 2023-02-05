@@ -5,10 +5,11 @@ import BackToHome from "../../components/BackToHome";
 import { Project } from "../../types/Project";
 import getProjects from "../../lib/data/getProjects";
 import Footer from "../../components/Footer";
-import DataFrame from "../../lib/DataFrame/DataFrame";
 import Heading, { Headings } from "../../components/Heading";
 import LinkFramed from "../../components/LinkFramed";
 import { nanoid } from "nanoid";
+import * as aq from "arquero";
+import SummaryTable from "../../components/SummaryTable";
 
 import { AgGridReact } from "ag-grid-react";
 import "ag-grid-community/styles/ag-grid.css";
@@ -42,13 +43,13 @@ const Travels: NextPage<Props> = ({ projects }) => {
       children: "Projects Space Time Cube",
     },
   ];
-  const projectsDf = new DataFrame(projects);
-  const duplicates = projectsDf.findDuplicates("projectShortName");
-  const sum = duplicates.reduce((acc, [key, rows]) => {
-    acc += rows.length;
-    return acc;
-  }, 0);
-  console.log(duplicates, sum);
+  // const projectsDf = new DataFrame(projects);
+  // const duplicates = projectsDf.findDuplicates("projectShortName");
+  // const sum = duplicates.reduce((acc, [key, rows]) => {
+  //   acc += rows.length;
+  //   return acc;
+  // }, 0);
+  // console.log(duplicates, sum);
 
   const columnDefs: ColDef[] = [
     { field: "projectID" },
@@ -90,7 +91,7 @@ const Travels: NextPage<Props> = ({ projects }) => {
           <BackToHome />
         </p>
 
-        {/* <SummaryTable data={projectsDf} /> */}
+        <SummaryTable data={aq.from(projects)} />
         <div className="ag-theme-material" style={{ width: 1280, height: 500 }}>
           <AgGridReact
             rowData={projects}

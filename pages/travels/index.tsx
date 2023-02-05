@@ -1,20 +1,18 @@
 import type { GetStaticProps, NextPage } from "next";
 import Head from "next/head";
 import styles from "../../styles/home.module.css";
-import BackToHome from "../../components/BackToHome";
 import getTravels from "../../lib/data/getTravels";
 import SummaryTable from "../../components/SummaryTable";
 import Footer from "../../components/Footer";
-import DataFrame from "../../lib/DataFrame/DataFrame";
 import Heading, { Headings } from "../../components/Heading";
 import type { Travel } from "../../types/Travels";
+import * as aq from "arquero";
 
 type Props = {
   travels: Travel[];
 };
 
 const Travels: NextPage<Props> = ({ travels }) => {
-  const travelsDf = new DataFrame(travels);
   return (
     <>
       <Head>
@@ -30,10 +28,7 @@ const Travels: NextPage<Props> = ({ travels }) => {
           Insights into ITC&apos;s travels around the globe.
         </p>
 
-        <SummaryTable data={travelsDf} />
-        <p>
-          <BackToHome />
-        </p>
+        <SummaryTable data={aq.from(travels)} />
       </main>
 
       <Footer />

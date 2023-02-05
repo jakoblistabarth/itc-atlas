@@ -22,6 +22,7 @@ import { SharedPageProps } from "../../types/Props";
 import defaultTheme from "../../lib/styles/themes/defaultTheme";
 import Footer from "../../components/Footer";
 import { Vector2 } from "three";
+import getCountryCodes from "../../lib/data/queries/country/getCountryCodes";
 
 type Props = {
   data: FeatureCollection<Point>;
@@ -112,9 +113,10 @@ const ProjectCountries: NextPage<Props> = ({
 
 export const getStaticProps: GetStaticProps<Props> = async () => {
   const neCountriesTopoJson = getCountries();
-  const [{ data, domain }, highlightCountries] = await Promise.all([
+  const [{ data, domain }, highlightCountries, countries] = await Promise.all([
     getProjectsPerCountry(),
     getCountriesByGroup(UnGrouping.LDC),
+    getCountryCodes(),
   ]);
 
   return {
@@ -123,6 +125,7 @@ export const getStaticProps: GetStaticProps<Props> = async () => {
       domain,
       neCountriesTopoJson,
       highlightCountries,
+      countries,
     },
   };
 };

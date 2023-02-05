@@ -1,8 +1,8 @@
+import { Struct } from "arquero/dist/types/table/transformable";
 import csv from "csvtojson";
 import fs from "fs";
 import type { Link, Node } from "../../types/CourseGenealogy";
 import { TimelineEvent } from "../../types/TimelineEvent";
-import { Row } from "../DataFrame/DataFrame";
 
 const createCourseGenealogy = async () => {
   const nodesPath = "./data/static/course-genealogy-nodes.csv";
@@ -69,7 +69,7 @@ const createCourseGenealogy = async () => {
           yOffset: code,
           dateStart: new Date(year),
           size: value as number,
-          data: { code, year, value, stem } as Row,
+          data: { code, year, value, stem } as Struct,
           fill: stem,
         };
       })

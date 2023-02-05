@@ -1,42 +1,43 @@
-import { colorMap } from "../lib/summarytable/colorMap";
 import { FC } from "react";
 import SnapshotBar from "./SnapshotBar";
 import SnapshotHistogram from "./SnapshotHistogram";
-import Column, { ColumnType } from "../lib/DataFrame/Column";
+import { ColumnDataType } from "../lib/summarytable/getColumnType";
+import * as aq from "arquero";
+import getSummaryTableColumn, {
+  SummaryTableColumn,
+} from "../lib/summarytable/getSummaryTableColumn";
 
 type Props = {
-  column: Column;
-  columnName?: string;
+  column: SummaryTableColumn;
   detailed?: boolean;
 };
 
-const Snapshot: FC<Props> = ({ column, columnName, detailed }) => {
-  const color = colorMap.get(column.type);
-  function renderSnapshot(type: ColumnType) {
+const Snapshot: FC<Props> = ({ column, detailed }) => {
+  function renderSnapshot(type: ColumnDataType) {
     switch (type) {
-      case ColumnType.Ordinal:
+      case ColumnDataType.Ordinal:
         return <SnapshotBar column={column} />;
-      case ColumnType.Array:
+      case ColumnDataType.Array:
         const flat = column.data
-          .filter((d) => d)
-          .map((d) => (Array.isArray(d) ? `[${d?.join(", ")}]` : "empty"));
-        const newColumn = new Column(flat, column.label);
-        newColumn.type = ColumnType.Array;
+          .filter((d: []) => d && d.length > 0)
+          .map((d: []) => ({
+            [column.name]: Array.isArray(d) ? `[${d?.join(", ")}]` : "empty",
+          }));
+        const newColumn = getSummaryTableColumn(aq.from(flat), column.name);
+        newColumn.type = type;
         return <SnapshotBar column={newColumn} />;
-      case ColumnType.Continuous:
+      case ColumnDataType.Continuous:
         return <SnapshotHistogram column={column} />;
-      case ColumnType.Date:
+      case ColumnDataType.Date:
         return <SnapshotHistogram column={column} />;
     }
   }
-  return !column.type || !color ? (
-    <div>Snapshot creation failed!</div>
-  ) : (
+  return (
     <>
       {renderSnapshot(column.type)}
       {detailed && (
         <small>
-          {columnName}, {column.data.length} Rows
+          {column.name}, {column.data.length} Rows
         </small>
       )}
     </>

@@ -9,14 +9,13 @@ import LocatorMap from "../../components/map/LocatorMap";
 import NaivashaRegion from "../../components/models/NaivashaRegion";
 import Cubes from "../../components/models/TestCubes";
 import getCountries from "../../lib/data/getCountries";
+import getCountryCodes from "../../lib/data/queries/country/getCountryCodes";
 import styles from "../../styles/home.module.css";
 import { SharedPageProps } from "../../types/Props";
 
-type Props = {
-  model: string;
-} & SharedPageProps;
+type Props = {} & SharedPageProps;
 
-const Naivasha: NextPage<Props> = ({ model, neCountriesTopoJson }) => {
+const Naivasha: NextPage<Props> = ({ neCountriesTopoJson }) => {
   return (
     <>
       <Head>
@@ -62,12 +61,15 @@ const Naivasha: NextPage<Props> = ({ model, neCountriesTopoJson }) => {
 };
 
 export const getStaticProps: GetStaticProps<Props> = async () => {
-  const [neCountriesTopoJson] = await Promise.all([getCountries()]);
+  const [neCountriesTopoJson, countries] = await Promise.all([
+    getCountries(),
+    getCountryCodes(),
+  ]);
 
   return {
     props: {
-      model: "",
       neCountriesTopoJson,
+      countries,
     },
   };
 };

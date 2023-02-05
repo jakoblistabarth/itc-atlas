@@ -7,16 +7,17 @@ import {
   MdFormatListBulleted,
   MdOutlineCalculate,
 } from "react-icons/md";
-import DataFrame from "../lib/DataFrame/DataFrame";
 import { fFloat, fPercentage } from "../lib/utilities/formaters";
 import { colorMap } from "../lib/summarytable/colorMap";
 import styles from "../styles/summarytable.module.css";
-import { ColumnType } from "../lib/DataFrame/Column";
+import { ColumnDataType } from "../lib/summarytable/getColumnType";
 import SummaryTableCard from "./SummaryTableCard";
 import Snapshot from "./Snapshot";
 import Heading, { Headings } from "./Heading";
+import ColumnTable from "arquero/dist/types/table/column-table";
+import getSummaryTableData from "../lib/summarytable/getSummaryTableData";
 
-function getColumnIcon(type: ColumnType) {
+const getColumnIcon = (type: ColumnDataType) => {
   switch (type) {
     case "ordinal":
       return <MdFormatListBulleted />;
@@ -27,19 +28,20 @@ function getColumnIcon(type: ColumnType) {
     default:
       return <MdOutlineCalculate />;
   }
-}
+};
 
 type SummaryTableProps = {
   title?: string;
-  data: DataFrame;
+  data: ColumnTable;
 };
 
 const SummaryTable: FC<SummaryTableProps> = ({ data, title }) => {
+  const stdata = getSummaryTableData(data);
   return (
     <>
       {title && <Heading Tag={Headings.H2}>{title}</Heading>}
       <div className={styles.summaryTableContainer}>
-        <SummaryTableCard description={data.getDescription()} />
+        <SummaryTableCard data={stdata} />
         <div className={styles.summaryTable}>
           <table>
             <thead>
@@ -54,8 +56,7 @@ const SummaryTable: FC<SummaryTableProps> = ({ data, title }) => {
               </tr>
             </thead>
             <tbody>
-              {data.getColumns().map((column) => {
-                // TODO: fix hydration error: calendar icon in first and last row??
+              {stdata.map((column) => {
                 const color = colorMap.get(column.type);
                 {
                   if (!color) return;
@@ -69,10 +70,10 @@ const SummaryTable: FC<SummaryTableProps> = ({ data, title }) => {
                       {getColumnIcon(column.type)}
                     </td>
                     <td className={styles.label}>
-                      <div className={styles.scrollable}>{column.label}</div>
+                      <div className={styles.scrollable}>{column.name}</div>
                     </td>
                     <td>
-                      <Snapshot column={column} columnName={column.label} />
+                      <Snapshot column={column} />
                     </td>
                     <td
                       className={

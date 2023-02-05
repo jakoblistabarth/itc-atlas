@@ -1,7 +1,6 @@
 import { FC, useMemo, useState } from "react";
 import * as d3 from "d3";
 import { colorMap } from "../lib/summarytable/colorMap";
-import Column, { ColumnType } from "../lib/DataFrame/Column";
 import { nanoid } from "nanoid";
 import {
   autoUpdate,
@@ -17,9 +16,10 @@ import { fPercentage } from "../lib/utilities/formaters";
 import { createStack } from "../lib/summarytable/stack";
 import SnapshotCell from "./SnapshotCell";
 import Tooltip from "./Tooltip";
+import { SummaryTableColumn } from "../lib/summarytable/getSummaryTableColumn";
 
 type Props = {
-  column: Column;
+  column: SummaryTableColumn;
 };
 
 const SnapshotBar: FC<Props> = ({ column }) => {
@@ -50,7 +50,7 @@ const SnapshotBar: FC<Props> = ({ column }) => {
   const innerHeight = height - margin.vertical * 2;
   const innerWidth = width - margin.horizontal * 2;
 
-  const stack = useMemo(() => createStack(column), [column]);
+  const stack = useMemo(() => createStack(column.data), [column]);
 
   const xScale = d3
     .scaleLinear()

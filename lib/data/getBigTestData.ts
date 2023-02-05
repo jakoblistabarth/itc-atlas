@@ -8,11 +8,11 @@ type TestRow = {
   job: string;
 };
 
-export default function getTestData(): TestRow[] {
+export default function getBigTestData(): TestRow[] {
   const jobs = range(20).map((i) => faker.name.jobTitle());
 
   return range(400).map((record) => ({
-    name: faker.name.findName(),
+    name: faker.name.fullName(),
     date: faker.date.between("1950", "2022").toISOString(),
     job: getRandomElement(jobs),
   }));

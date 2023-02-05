@@ -10,7 +10,7 @@ const getCountryWithApplicantCount = async () => {
         select: {
           applicants: {
             where: {
-              application: {
+              applications: {
                 some: {
                   level: {
                     equals: "MSC",

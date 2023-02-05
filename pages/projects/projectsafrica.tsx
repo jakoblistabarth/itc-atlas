@@ -140,6 +140,8 @@ const ProjectCountries: NextPage<Props> = ({
             <PatternDots
               style={mapOptions.theme.choropleth?.pattern}
               angle={0}
+              spacing={2}
+              fill={"red"}
             ></PatternDots>
           </defs>
           <BaseLayer
@@ -154,6 +156,7 @@ const ProjectCountries: NextPage<Props> = ({
                 key={nanoid()}
                 projection={mapOptions.projection}
                 feature={feature}
+                fill={"url(#Dots)"}
               />
             ))}
           </g>

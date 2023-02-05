@@ -1,20 +1,24 @@
 import type { GetStaticProps, NextPage } from "next";
 import Head from "next/head";
-import BackToHome from "../../components/BackToHome";
 import Footer from "../../components/Footer";
 import Heading, { Headings } from "../../components/Heading";
 import SummaryTable from "../../components/SummaryTable";
-import DataFrame from "../../lib/DataFrame/DataFrame";
 import styles from "../../styles/home.module.css";
 import LinkFramed from "../../components/LinkFramed";
-import { PhdCandidate, PrismaClient } from "@prisma/client";
+import * as aq from "arquero";
+import useSWR from "swr";
+import { useRouter } from "next/router";
 
-type Props = {
-  phdCandidates: PhdCandidate[];
-};
+const PhdOverview: NextPage = () => {
+  const fetcher = (resource: RequestInfo | URL) =>
+    fetch(resource).then((res) => res.json());
 
-const PhdOverview: NextPage<Props> = ({ phdCandidates }) => {
-  const phdCandidatesDf = new DataFrame(phdCandidates);
+  const { data, error, isLoading } = useSWR(
+    "/api/data/phd-candidate/",
+    fetcher
+  );
+  const { route } = useRouter();
+
   return (
     <>
       <Head>
@@ -31,26 +35,19 @@ const PhdOverview: NextPage<Props> = ({ phdCandidates }) => {
         </p>
 
         <div className={styles.grid}>
-          <LinkFramed href="/phds/departments">
+          <LinkFramed href={`${route}/departments`}>
             Origin Per Country and Department
           </LinkFramed>
         </div>
-        <SummaryTable data={phdCandidatesDf} />
+
+        {error && <div>failed to load</div>}
+        {isLoading && <div>Loading …</div>}
+        {!isLoading && !error && <SummaryTable data={aq.from(data)} />}
       </main>
 
       <Footer />
     </>
   );
-};
-
-export const getStaticProps: GetStaticProps<Props> = async () => {
-  const prisma = new PrismaClient();
-  const phdCandidates = await prisma.phdCandidate.findMany();
-  return {
-    props: {
-      phdCandidates,
-    },
-  };
 };
 
 export default PhdOverview;
