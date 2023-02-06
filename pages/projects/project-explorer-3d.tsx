@@ -5,7 +5,6 @@ import Head from "next/head";
 import Footer from "../../components/Footer";
 import Heading, { Headings } from "../../components/Heading";
 import Point3D from "../../components/map-3d/Point3D";
-import getAirports from "../../lib/data/getAirports";
 import getCountries from "../../lib/data/getCountries";
 import styles from "../../styles/home.module.css";
 import { SharedPageProps } from "../../types/Props";
@@ -16,6 +15,7 @@ import { scaleLinear } from "d3";
 import Globe from "../../components/map-3d/Globe";
 import lonLatToXYZ from "../../lib/cartographic/lonLatToXYZ";
 import GlobeTexture from "../../components/map-3d/GlobeTexture";
+import getCountryCodes from "../../lib/data/queries/country/getCountryCodes";
 
 type Props = SharedPageProps;
 
@@ -77,9 +77,11 @@ const ProjectExplorer3D: NextPage<Props> = ({ neCountriesTopoJson }) => {
 
 export const getStaticProps: GetStaticProps<Props> = async () => {
   const neCountriesTopoJson = getCountries();
+  const countries = await getCountryCodes();
 
   return {
     props: {
+      countries,
       neCountriesTopoJson,
     },
   };

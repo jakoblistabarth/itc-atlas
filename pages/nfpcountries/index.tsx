@@ -16,6 +16,7 @@ import { SharedPageProps } from "../../types/Props";
 import { feature } from "topojson-client";
 import PolygonSymbol from "../../components/map/PolygonSymbol";
 import MapLayoutHeader from "../../components/map/layout/MapLayoutHeader";
+import getCountryCodes from "../../lib/data/queries/country/getCountryCodes";
 
 type Props = {
   nfps: NfpCountry[];
@@ -140,6 +141,7 @@ const NfpCountries: NextPage<Props> = ({ nfps, neCountriesTopoJson }) => {
                   <g>
                     {polygons.map((p) => (
                       <PolygonSymbol
+                        key={nanoid()}
                         feature={p}
                         projection={projection}
                         style={{ fill: "black" }}
@@ -161,10 +163,12 @@ const NfpCountries: NextPage<Props> = ({ nfps, neCountriesTopoJson }) => {
 export const getStaticProps: GetStaticProps<Props> = async () => {
   const nfps = getNfpCountries();
   const neCountriesTopoJson = getCountries();
+  const countries = await getCountryCodes();
   return {
     props: {
       nfps,
       neCountriesTopoJson,
+      countries,
     },
   };
 };

@@ -64,7 +64,6 @@ const Template: ComponentStory<
     <MapLayout projection={args.projection} bounds={bounds}>
       <MapLayoutBody bounds={bounds}>
         <BaseLayer {...args} countries={countries} />
-        {/* @ts-expect-error */}
         <TissotsIndicatricesLayer {...args} />
       </MapLayoutBody>
     </MapLayout>

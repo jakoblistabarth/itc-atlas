@@ -14,14 +14,18 @@ const ScaledPie: FC<{
   position: Vector2;
   radius: number;
   data: pieDatum[];
-  color?: ScaleOrdinal<string, string>;
+  color?: ScaleOrdinal<string, string, undefined>;
   style?: Appearance;
 }> = ({
   position,
   style,
   radius,
   data,
-  color = d3.scaleOrdinal().range(d3.schemeCategory10),
+  color = d3.scaleOrdinal().range(d3.schemeCategory10) as ScaleOrdinal<
+    string,
+    string,
+    undefined
+  >,
 }) => {
   const angleGenerator = d3
     .pie<{ label: string; value: number }>()

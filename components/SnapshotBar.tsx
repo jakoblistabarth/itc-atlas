@@ -122,6 +122,7 @@ const SnapshotBar: FC<Props> = ({ column }) => {
         <Tooltip
           {...getFloatingProps({ ref: floating })}
           style={{
+            //TODO: fix with theme-ui: use sx prop instead
             position: strategy,
             top: y ?? "",
             left: x ?? "",

@@ -15,31 +15,37 @@ import { AgGridReact } from "ag-grid-react";
 import "ag-grid-community/styles/ag-grid.css";
 import "ag-grid-community/styles/ag-theme-material.css";
 import { ColDef } from "ag-grid-community";
+import { useRouter } from "next/router";
 
 type Props = React.PropsWithChildren<{
   projects: Project[];
 }>;
 
 const Travels: NextPage<Props> = ({ projects }) => {
+  const { route } = useRouter();
   const links = [
     {
-      href: "/projects/projects-timeline",
-      children: "Timline",
+      href: `${route}/projects-timeline`,
+      children: "Timeline",
     },
     {
-      href: "/projects/projectcountries",
+      href: `${route}/projectcountries`,
       children: "Projects by Country",
     },
     {
-      href: "/projects/projectsafrica",
+      href: `${route}/projectsafrica`,
       children: "Sub-Saharan Africa",
     },
     {
-      href: "/projects/naivasha",
+      href: `${route}/naivasha`,
       children: "Naivasha Region",
     },
     {
-      href: "/projects/projects-spacetimecube",
+      href: `${route}/project-explorer-3d`,
+      children: "Projects Globe",
+    },
+    {
+      href: `${route}/projects-spacetimecube`,
       children: "Projects Space Time Cube",
     },
   ];

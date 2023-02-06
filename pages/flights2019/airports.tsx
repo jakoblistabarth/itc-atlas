@@ -14,6 +14,7 @@ import defaultTheme from "../../lib/styles/themes/defaultTheme";
 import { SharedPageProps } from "../../types/Props";
 import { nanoid } from "nanoid";
 import { Vector2 } from "three";
+import getCountryCodes from "../../lib/data/queries/country/getCountryCodes";
 
 type Props = {
   airports: FeatureCollection<Point>;
@@ -81,11 +82,15 @@ const Airports: NextPage<Props> = ({ airports, neCountriesTopoJson }) => {
 
 export const getStaticProps: GetStaticProps<Props> = async () => {
   const neCountriesTopoJson = getCountries();
-  const [airports] = await Promise.all([(await getFlights2019()).perAirport]);
+  const [airports, countries] = await Promise.all([
+    (await getFlights2019()).perAirport,
+    await getCountryCodes(),
+  ]);
 
   return {
     props: {
       airports,
+      countries,
       neCountriesTopoJson,
     },
   };

@@ -10,8 +10,6 @@ import getProjects from "../../lib/data/getProjects";
 import BaseLayer from "../../components/map/BaseLayer";
 import Heading, { Headings } from "../../components/Heading";
 import { FeatureCollection, Feature, Point, MultiPolygon } from "geojson";
-import type { AreaCode } from "../../types/UnsdCodes";
-import loadUnsdCountries from "../../lib/data/load/loadUnsdCountries";
 import { nanoid } from "nanoid";
 import themes, { ThemeNames } from "../../lib/styles/themes";
 import ChoroplethSymbol from "../../components/map/PolygonSymbol";
@@ -20,15 +18,17 @@ import PatternDots from "../../components/defs/patterns/PatternDots";
 import IsoUnit from "../../components/map/IsoUnit";
 import { SharedPageProps } from "../../types/Props";
 import defaultTheme from "../../lib/styles/themes/defaultTheme";
+import getCountryCodes from "../../lib/data/queries/country/getCountryCodes";
+import { Country } from "@prisma/client";
 
 type Props = {
   projects: Project[];
-  areaCodes: AreaCode[];
+  countries: Country[];
 } & SharedPageProps;
 
 const ProjectCountries: NextPage<Props> = ({
   projects,
-  areaCodes,
+  countries,
   neCountriesTopoJson,
 }) => {
   const mapOptions: MapOptions = {
@@ -50,11 +50,11 @@ const ProjectCountries: NextPage<Props> = ({
       projects
         .filter((project) =>
           project.countries.some((code) => {
-            const match = areaCodes.find(
-              (area) => area["ISO-alpha3 Code"] === code
+            const match = countries.find(
+              (country) => country.isoAlpha3 === code
             );
             if (!match) return;
-            return match["Region Name"] === "Africa";
+            return match.unRegionCode === "002";
           })
         )
         .reduce((acc: string[], proj) => {
@@ -115,10 +115,10 @@ const ProjectCountries: NextPage<Props> = ({
         neCountriesTopoJson.objects.ne_admin_0_countries
       )
       .features.filter((feature) => {
-        const matchedCountry = areaCodes.find(
-          (area) => area["ISO-alpha3 Code"] === feature.properties?.ADM0_A3_NL
+        const matchedCountry = countries.find(
+          (d) => d.isoAlpha3 === feature.properties?.ADM0_A3_NL
         );
-        const highlight = matchedCountry?.["Least Developed Countries (LDC)"];
+        const highlight = matchedCountry?.ldc;
         return highlight;
       }),
   };
@@ -203,13 +203,13 @@ export const getStaticProps: GetStaticProps<Props> = async () => {
     d3.ascending(new Date(a.dateStart), new Date(b.dateStart))
   );
 
-  const areaCodes = await loadUnsdCountries();
+  const countries = await getCountryCodes();
   const neCountriesTopoJson = getCountries("50m");
 
   return {
     props: {
       projects: projectSelection,
-      areaCodes,
+      countries,
       neCountriesTopoJson,
     },
   };
