@@ -9,13 +9,9 @@ import useSWR from "swr";
 import { useRouter } from "next/router";
 import * as aq from "arquero";
 
-const StaffPage: NextPage = () => {
-  const fetcher = (resource: RequestInfo | URL) =>
-    fetch(resource).then((res) => res.json());
-
-  const { data, error, isLoading } = useSWR("/api/data/employee/", fetcher);
-
+const EmployeesPage: NextPage = () => {
   const { route } = useRouter();
+  const { data, error, isLoading } = useSWR("/api/data/employee/");
 
   return (
     <>
@@ -45,4 +41,4 @@ const StaffPage: NextPage = () => {
   );
 };
 
-export default StaffPage;
+export default EmployeesPage;

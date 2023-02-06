@@ -1,4 +1,4 @@
-import type { GetStaticProps, NextPage } from "next";
+import type { NextPage } from "next";
 import Head from "next/head";
 import Footer from "../../components/Footer";
 import Heading, { Headings } from "../../components/Heading";
@@ -10,14 +10,8 @@ import useSWR from "swr";
 import { useRouter } from "next/router";
 
 const PhdOverview: NextPage = () => {
-  const fetcher = (resource: RequestInfo | URL) =>
-    fetch(resource).then((res) => res.json());
-
-  const { data, error, isLoading } = useSWR(
-    "/api/data/phd-candidate/",
-    fetcher
-  );
   const { route } = useRouter();
+  const { data, error, isLoading } = useSWR("/api/data/phd-candidate/");
 
   return (
     <>

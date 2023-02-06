@@ -35,24 +35,18 @@ const PhdDepartments: NextPage<Props> = ({
   const handleOnChange = () => {
     setIsChecked(!isChecked);
   };
-
   const filter = isChecked ? "?graduated=true" : ""; //TODO: switch only true/false no separate variable?
 
-  const fetcher = (resource: RequestInfo | URL) =>
-    fetch(resource).then(
-      (res) =>
-        res.json() as ReturnType<typeof getPhdCandidatesByCountryByDepartment>
-    );
-
   const { data, error, isLoading } = useSWR(
-    "/api/data/phd-candidate/by-country" + filter,
-    fetcher
+    "/api/data/phd-candidate/by-country" + filter
   );
 
   if (error) return <div>failed to load</div>;
-  // if (isLoading) return <div>Loading</div>;
 
-  const mapData = data ?? phdsByCountryByDepartment;
+  const mapData =
+    (data as Awaited<
+      ReturnType<typeof getPhdCandidatesByCountryByDepartment>
+    >) ?? phdsByCountryByDepartment;
 
   const dimension = {
     width: 1280,

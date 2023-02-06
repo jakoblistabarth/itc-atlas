@@ -10,15 +10,8 @@ import LinkFramed from "../../components/LinkFramed";
 import * as aq from "arquero";
 
 const ApplicantsOverview: NextPage = () => {
-  const fetcher = (resource: RequestInfo | URL) =>
-    fetch(resource).then((res) => res.json()); //TODO: use swrconfig provider instead to remove redundant fetcher declaration
-
-  const { data, error, isLoading } = useSWR("/api/data/applicant/", fetcher);
   const { route } = useRouter();
-
-  if (!isLoading && !error) {
-    const tb = aq.from(data);
-  }
+  const { data, error, isLoading } = useSWR("/api/data/applicant/");
 
   return (
     <>

@@ -8,10 +8,7 @@ import useSWR from "swr";
 import * as aq from "arquero";
 
 const ApplicantsOverview: NextPage = () => {
-  const fetcher = (resource: RequestInfo | URL) =>
-    fetch(resource).then((res) => res.json());
-
-  const { data, error, isLoading } = useSWR("/api/data/application/", fetcher);
+  const { data, error, isLoading } = useSWR("/api/data/application/");
 
   return (
     <>
