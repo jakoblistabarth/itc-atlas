@@ -1,5 +1,5 @@
 import React from "react";
-import { ComponentStory, ComponentMeta } from "@storybook/react";
+import { Meta, StoryObj } from "@storybook/react";
 import PointLabel from "../components/map/PointLabel";
 import { LabelPlacement } from "../types/LabelPlacement";
 import EventPoint from "../components/charts/timeline/EventPoint";
@@ -18,7 +18,7 @@ const margin = DefaultTimelineGrid.args?.margin ?? 0;
 const width = scale?.range()[1] ?? 0 + margin;
 const height = 100;
 
-export default {
+const meta: Meta<typeof EventPoint> = {
   title: "Charts/Timeline/EventPoint",
   component: EventPoint,
   decorators: [
@@ -28,26 +28,29 @@ export default {
       </svg>
     ),
   ],
-} as ComponentMeta<typeof EventPoint>;
+  render: (args) => (
+    <EventPoint {...args}>
+      <PointLabel placement={LabelPlacement.TOP}>{event.name}</PointLabel>
+    </EventPoint>
+  ),
+};
+export default meta;
+type Story = StoryObj<typeof EventPoint>;
 
-const Template: ComponentStory<typeof EventPoint> = (args) => (
-  <EventPoint {...args}>
-    <PointLabel placement={LabelPlacement.TOP}>{event.name}</PointLabel>
-  </EventPoint>
-);
-
-export const DefaultEventPoint = Template.bind({});
-DefaultEventPoint.args = {
-  y: height / 2 - 20,
-  date: event.dateStart,
-  xScale: scale,
+export const DefaultEventPoint: Story = {
+  args: {
+    y: height / 2 - 20,
+    date: event.dateStart,
+    xScale: scale,
+  },
 };
 
-export const ScaledEventPoint = Template.bind({});
-ScaledEventPoint.args = {
-  ...DefaultEventPoint.args,
-  radius: event.size,
-  fillOpacity: 0.1,
-  stroke: "black",
-  drawCenter: true,
+export const ScaledEventPoint: Story = {
+  args: {
+    ...DefaultEventPoint.args,
+    radius: event.size,
+    fillOpacity: 0.1,
+    stroke: "black",
+    drawCenter: true,
+  },
 };
