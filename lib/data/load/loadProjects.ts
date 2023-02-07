@@ -1,6 +1,5 @@
 import xlsx from "xlsx";
-import { Project } from "../../types/Project";
-import cleanProjects from "./cleanProjects";
+import cleanProjects, { ProjectClean } from "../cleanProjects";
 
 export type ProjectPre2019Raw = {
   Project_ID: string;
@@ -120,7 +119,7 @@ export type ProjectPost2019Raw = {
   FundingProgramme: string;
 };
 
-export default async function getProjects(): Promise<Project[]> {
+export default async function getProjects(): Promise<ProjectClean[]> {
   const filePath = "./data/itc/ITCProjects.xlsx";
   const file = xlsx.readFile(filePath, {
     cellDates: true,
@@ -133,7 +132,5 @@ export default async function getProjects(): Promise<Project[]> {
     file.Sheets[sheetNames[0]]
   ) as unknown as ProjectPost2019Raw;
 
-  const projects = await cleanProjects({ projectsPre2019, projectsPost2019 });
-
-  return projects as unknown as Project[];
+  return await cleanProjects({ projectsPre2019, projectsPost2019 });
 }

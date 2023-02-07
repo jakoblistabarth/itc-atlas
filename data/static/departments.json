@@ -24,6 +24,10 @@
     "name": "Department of Water Resources"
   },
   {
+    "id": "SUP",
+    "name": "Supporting Departments (non-scientific)"
+  },
+  {
     "id": "ALL",
     "name": "Multiple ITC Departments"
   }

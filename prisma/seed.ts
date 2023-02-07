@@ -1,4 +1,9 @@
-import { Prisma, PrismaClient } from "@prisma/client";
+import {
+  Prisma,
+  PrismaClient,
+  ProjectStatus,
+  ProjectType,
+} from "@prisma/client";
 import loadDepartments from "../lib/data/load/loadDepartments";
 import loadPhdCandidates from "../lib/data/load/loadPhdCandidates";
 import loadUnsdCountries from "../lib/data/load/loadUnsdCountries";
@@ -6,6 +11,7 @@ import loadApplicants from "../lib/data/load/loadApplicants";
 import loadApplications from "../lib/data/load/loadApplications";
 import loadEmployees from "../lib/data/load/loadEmployees";
 import loadEmployments from "../lib/data/load/loadEmployments";
+import loadProjects from "../lib/data/load/loadProjects";
 import loadStatus from "../lib/data/load/loadStatus";
 
 const prisma = new PrismaClient();
@@ -18,9 +24,11 @@ async function main() {
   await prisma.application.deleteMany({});
   await prisma.applicant.deleteMany({});
   await prisma.status.deleteMany({});
+  await prisma.project.deleteMany({});
   await prisma.country.deleteMany({});
   await prisma.$queryRaw`ALTER SEQUENCE IF EXISTS "PhdCandidate_id_seq" RESTART WITH 1;`;
   await prisma.$queryRaw`ALTER SEQUENCE IF EXISTS "Country_id_seq" RESTART WITH 1;`;
+  await prisma.$queryRaw`ALTER SEQUENCE IF EXISTS "Project_id_seq" RESTART WITH 1;`;
   console.log("Database reset. 🧹");
 
   const [
@@ -32,6 +40,7 @@ async function main() {
     applications,
     employees,
     employments,
+    projects,
   ] = await Promise.all([
     loadDepartments(),
     loadStatus(),
@@ -41,6 +50,7 @@ async function main() {
     loadApplications(),
     loadEmployees(),
     loadEmployments(),
+    loadProjects(),
   ]);
   console.log("Data loaded. 🚚");
 
@@ -95,6 +105,40 @@ async function main() {
   console.log("Populated model Country. 🌱");
 
   const countriesDB = await prisma.country.findMany();
+
+  await Promise.all(
+    projects.map(async (d) => {
+      const countryIds = countriesDB
+        .filter((c) => d.allCountries.includes(c.isoAlpha3))
+        .map((d) => d.id);
+      const createArgs: Prisma.ProjectCreateArgs = {
+        data: {
+          id: d.id,
+          name: d.name,
+          nameShort: d.nameShort,
+          description: d.description,
+          countries: {
+            connect: countryIds.map((d) => ({ id: d })),
+          },
+          start: d.dateStart,
+          end: d.dateEnd,
+          departmentMainId: d.leadDepartment,
+          departmentsSecondary:
+            Array.isArray(d.otherDepartments) && d.otherDepartments.length > 1
+              ? {
+                  connect: d.otherDepartments.map((d) => ({ id: d })),
+                }
+              : undefined,
+          leadOrganization: d.leadOrganization,
+          fundingOrganization: d.fundingOrganization,
+          type: d.type as ProjectType,
+          status: d.status as ProjectStatus,
+        },
+      };
+      return await prisma.project.create(createArgs);
+    })
+  );
+  console.log("Populated model Project. 🌱");
 
   await Promise.all(
     applicants.map(async (d) => {

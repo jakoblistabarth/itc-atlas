@@ -1,14 +1,13 @@
 import loadUnsdCodes from "./load/loadUnsdCodes";
-import { ProjectType, ProjectStatus, Project } from "../../types/Project";
 import { mapCountries } from "../mappings/country.name.EN";
 import { UnLevel } from "../../types/UnsdCodes";
 import loadUnsdCountries from "./load/loadUnsdCountries";
 import * as aq from "arquero";
 import { ProjectPre2019Raw, ProjectPost2019Raw } from "./getProjects";
+import { mapToDepartment } from "../mappings/departments";
 
-export type ProjectClean = {
-  projectId: string;
-  countriesRegion: string;
+export type ProjectClean = ProjectMerged & {
+  id: number;
   countriesRegionArr: string[];
   regions: string[];
   subRegions: string[];
@@ -18,93 +17,146 @@ export type ProjectClean = {
 };
 
 type ProjectMerged = {
-  type: ProjectType;
-  status: ProjectStatus;
+  id: string;
+  name: string;
+  nameShort: string;
+  type: string;
+  tenderType: string;
+  status: string;
+  description: string;
+  fundingType: string;
+  fundingOrganization: string;
+  leadOrganization: string;
+  leadDepartment: string;
+  otherDepartments: string[];
   countriesRegion: string;
   dateStart: string;
   dateEnd: string;
+  totalBudget: number;
+  totalITCBudget: number;
 };
 
-export default async function cleanProjects({
+const cleanProjects = async ({
   projectsPre2019,
   projectsPost2019,
 }: {
   projectsPre2019: ProjectPre2019Raw;
   projectsPost2019: ProjectPost2019Raw;
-}) {
-  const post2019 = aq.from(projectsPost2019).rename({
-    projecttype: "type",
-    Status: "status",
-    CountriesRegion: "countriesregion",
-  });
-  const pre2019 = aq.from(projectsPre2019).rename({
-    Project_ID: "projectID",
-    "Project name": "projectName",
-    "Project name in short": "projectShortName",
-    "Project status": "status",
-    "Project type": "type",
-    Country: "countriesRegion",
-    "Starting date": "dateStart",
-    "Completion date": "dateEnd",
-  });
-
-  const merged = aq
-    .from([...pre2019.objects(), ...post2019.objects()])
+}) => {
+  const pre2019 = aq
+    .from(projectsPre2019)
     .derive({
-      projectShortName: aq.escape((row: any) =>
-        row.projectShortName === ""
-          ? `[${row.projectID}-${row.projectName.substr(0, 3)}]`
-          : row.projectShortName
+      leadDepartment: (d: ProjectPre2019Raw) =>
+        aq.op.split(d["Division"], /, ?| ?\/ ?/, 10)[0],
+      otherDepartments: (d: ProjectPre2019Raw) =>
+        aq.op.split(d["Division"], /, ?| ?\/ ?/, 10).slice(1),
+    })
+    .rename({
+      Project_ID: "id",
+      "Project name": "name",
+      "Project name in short": "nameShort",
+      "Project summary": "description",
+      "Project status": "status",
+      "Project type": "type",
+      Country: "countriesRegion",
+      "Starting date": "dateStart",
+      "Completion date": "dateEnd",
+      "Consulting budget": "consultingBudget",
+      "Funding type": "fundingType",
+      "Next action": "nextAction",
+      "Number of ITC staff involved": "ITCStaffInvolved",
+      "Number of man months ITC": "manMonthsITC",
+      "Number of man months partner(s)": "manMonthsPartners",
+      "Percentage covered by ITC": "percentageCoveredByITC",
+      "Percentage covered by partner(s)": "percentageCoveredByPartners",
+      "Personmonths abroad": "personMonthsAbroad",
+      "Personmonths in NL": "personMonthsNL",
+      "Project administrator": "projectAdministrator",
+      "Project officer": "projectOfficer",
+      "Project supervisor": "projectSupervisor",
+      "Student months abroad": "studentMonthsAbroad",
+      "Student months in NL": "studentMonthsNL",
+      "Sub contractor budget": "subContractorBudget",
+      "Tender type": "tenderType",
+      "Total ITC budget": "totalITCBudget",
+      "Total project budget": "totalBudget",
+      Remarks: "remarks",
+      Result: "result",
+    });
+
+  const post2019 = aq
+    .from(projectsPost2019)
+    .rename({
+      projectName: "name",
+      projectShortName: "projectShortName",
+      Client_FundingAgency: "fundingOrganization",
+      CountriesRegion: "countriesregion",
+      descriptionProject: "description",
+      LeadDepartment: "leadDepartment",
+      LeadOrganisation: "leadOrganization",
+      projectID: "id",
+      projecttype: "type",
+      Status: "status",
+    })
+    .derive({
+      otherDepartments: (d: ProjectPost2019Raw) =>
+        aq.op.split(d.OtherDepartments, /,\s?/, undefined),
+    });
+
+  const merged = pre2019
+    .antijoin(post2019, "id")
+    .join_full(post2019)
+    .derive({
+      id: (d: ProjectMerged) => aq.op.parse_int(d.id, 10),
+      nameShort: aq.escape((row: ProjectMerged) =>
+        row.nameShort === ""
+          ? `[${row.id}-${row.name.substring(0, 3)}]`
+          : row.nameShort
       ),
-      dateStart: aq.escape((row: any) =>
+      dateStart: aq.escape((row: ProjectMerged) =>
         !row.dateStart || row.dateStart === "NULL"
           ? null
-          : row.dateStart.toISOString()
+          : //@ts-ignore
+            row.dateStart.toISOString()
       ),
-
-      dateEnd: aq.escape((row: any) =>
+      dateEnd: aq.escape((row: ProjectMerged) =>
         !row.dateEnd || row.dateEnd === "NULL"
           ? null
-          : row.dateEnd.toISOString()
+          : //@ts-ignore
+            row.dateEnd.toISOString()
       ),
-      type: aq.escape(
-        (row: ProjectMerged) => ProjectType[row.type] || row.type
+      status: aq.escape((row: ProjectMerged) => {
+        if (!row.status) return undefined;
+        if (!!row.status.match(/Finished|Completed|Finalized/g))
+          return "Finished";
+        if (!!row.status.match(/Proposal|Awaiting contract/g))
+          return "Proposed";
+        return "Ongoing";
+      }),
+      type: aq.escape((row: ProjectMerged) => {
+        if (!row.type) return undefined;
+        if (!!row.type.match(/Education/g)) return "Education";
+        if (!!row.type.match(/Resear?ch/g)) return "Research";
+        if (!!row.type.match(/Consulting/g)) return "Consulting";
+        return "Other";
+      }),
+      leadDepartment: aq.escape((row: ProjectMerged) =>
+        mapToDepartment(row.leadDepartment)
       ),
-      status: aq.escape(
-        (row: ProjectMerged) => ProjectStatus[row.status] || row.status
+      otherDepartments: aq.escape((row: ProjectMerged) =>
+        Array.isArray(row.otherDepartments)
+          ? row.otherDepartments.map((d) => mapToDepartment(d))
+          : []
       ),
       countriesRegion: aq.escape((row: ProjectMerged) =>
         mapCountries(row.countriesRegion)
       ),
     })
-    .rename({
-      Result: "result",
-      "Next action": "nextAction",
-      Remarks: "remarks",
-      "Project summary": "projectSummary",
-      "Funding type": "fundingType",
-      "Tender type": "tenderType",
-      "Percentage covered by ITC": "percentageCoveredByITC",
-      "Percentage covered by partner(s)": "percentageCoveredByPartners",
-      Division: "division",
-      "Project officer": "projectOfficer",
-      "Project supervisor": "projectSupervisor",
-      "Project administrator": "projectAdministrator",
-      "Number of ITC staff involved": "ITCStaffInvolved",
-      "Number of man months ITC": "manMonthsITC",
-      "Number of man months partner(s)": "manMonthsPartners",
-      "Personmonths abroad": "personMonthsAbroad",
-      "Personmonths in NL": "personMonthsNL",
-      "Student months abroad": "studentMonthsAbroad",
-      "Student months in NL": "studentMonthsNL",
-      "Total project budget": "totalBudget",
-      "Total ITC budget": "totalITCBudget",
-      "Sub contractor budget": "subContractorBudget",
-      "Consulting budget": "consultingBudget",
-    })
     .filter(
       aq.escape(
-        (row: ProjectMerged) => new Date(row.dateStart) < new Date(row.dateEnd)
+        (row: any) =>
+          row.dateEnd === null ||
+          new Date(row.dateStart) < new Date(row.dateEnd)
       )
     ); // TODO: fix projects whith old entries
 
@@ -202,4 +254,5 @@ export default async function cleanProjects({
   });
 
   return output;
-}
+};
+export default cleanProjects;

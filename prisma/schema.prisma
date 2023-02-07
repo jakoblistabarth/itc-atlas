@@ -16,7 +16,9 @@ model Department {
   name                   String
   phdCandidatesMain      PhdCandidate[] @relation("DepartmentPhdMain")
   phdCandidatesSecondary PhdCandidate[] @relation("DepartmentPhdSecondary")
-  employment             Employment[]   @relation("DepartmentEmployment")
+  employments            Employment[]   @relation("DepartmentEmployment")
+  projectMain            Project[]      @relation("DepartmentProjectMain")
+  projectsSecondary      Project[]
 }
 
 model Status {
@@ -114,4 +116,36 @@ model Country {
   phdCandidates            PhdCandidate[] @relation("PhdCountry")
   applicants               Applicant[]    @relation("ApplicantNationality")
   employees                Employee[]     @relation("EmployeeCountry")
+  projects                 Project[]
+}
+
+model Project {
+  id                   Int            @id @default(autoincrement())
+  name                 String?        @db.Text
+  nameShort            String?
+  description          String?        @db.Text
+  countries            Country[]
+  start                DateTime?      @db.Date
+  end                  DateTime?      @db.Date
+  departmentMainId     String?
+  departmentMain       Department?    @relation("DepartmentProjectMain", fields: [departmentMainId], references: [id])
+  departmentsSecondary Department[]
+  type                 ProjectType?
+  status               ProjectStatus?
+  leadOrganization     String?
+  fundingOrganization  String?
+}
+
+enum ProjectType {
+  Consulting
+  Education
+  Research
+  Other
+}
+
+enum ProjectStatus {
+  Finished
+  Ongoing
+  Proposed
+  Rejected
 }

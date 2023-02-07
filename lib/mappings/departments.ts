@@ -26,3 +26,13 @@ export const departmentMap = new Map([
   ["BMS", Department.ALL], // TODO: check with Menno-Jan how to proceed with department mapping
   ["CTW", Department.ALL],
 ]);
+
+export const mapToDepartment = (str: string) => {
+  if (!str) return undefined;
+  if (!!str.match(/NULL|EN|IR|MPS/)) return undefined;
+  if (!!str.match(/ENG|ESA|EA/g)) return "AES";
+  if (!!str.match(/EREG/g)) return "NRS";
+  if (!!str.match(/Various/g)) return "ALL";
+  if (!!str.match(/CRIB|FB|IT|BPS|MPS|Library/g)) return "SUP";
+  return str;
+};
