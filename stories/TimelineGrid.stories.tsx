@@ -1,36 +1,26 @@
 import React from "react";
-import { ComponentStory, ComponentMeta } from "@storybook/react";
+import { StoryObj, Meta } from "@storybook/react";
 import TimelineGrid from "../components/charts/timeline/TimelineGrid";
-import { scaleTime } from "d3";
+import { timelineSetup } from "../lib/sbTimelineSetup";
 
-const width = 700;
-const height = 100;
-const margin = 40;
-
-const timeDomain = [new Date("1950"), new Date("2030")];
-const scale = scaleTime()
-  .domain(timeDomain)
-  .range([0, width - margin]);
-
-export default {
+const meta = {
   title: "Charts/Timeline/TimelineGrid",
   component: TimelineGrid,
   decorators: [
     (Story) => (
-      <svg width={width} height={height}>
+      <svg width={timelineSetup.width} height={timelineSetup.height}>
         <Story />
       </svg>
     ),
   ],
-} as ComponentMeta<typeof TimelineGrid>;
+} satisfies Meta<typeof TimelineGrid>;
+export default meta;
+type Story = StoryObj<typeof meta>;
 
-const Template: ComponentStory<typeof TimelineGrid> = (args) => (
-  <TimelineGrid {...args} />
-);
-
-export const DefaultTimelineGrid = Template.bind({});
-DefaultTimelineGrid.args = {
-  scale: scale,
-  height: height,
-  margin: margin,
+export const DefaultTimelineGrid = {
+  args: {
+    scale: timelineSetup.scale,
+    height: timelineSetup.height,
+    margin: timelineSetup.margin,
+  },
 };

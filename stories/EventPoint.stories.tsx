@@ -4,7 +4,7 @@ import PointLabel from "../components/map/PointLabel";
 import { LabelPlacement } from "../types/LabelPlacement";
 import EventPoint from "../components/charts/timeline/EventPoint";
 import { TimelineEvent } from "../types/TimelineEvent";
-import { DefaultTimelineGrid } from "./TimelineGrid.stories";
+import { timelineSetup } from "../lib/sbTimelineSetup";
 
 const event: TimelineEvent = {
   name: "Event Point",
@@ -13,17 +13,12 @@ const event: TimelineEvent = {
   size: 30,
 };
 
-const scale = DefaultTimelineGrid.args?.scale;
-const margin = DefaultTimelineGrid.args?.margin ?? 0;
-const width = scale?.range()[1] ?? 0 + margin;
-const height = 100;
-
-const meta: Meta<typeof EventPoint> = {
+const meta = {
   title: "Charts/Timeline/EventPoint",
   component: EventPoint,
   decorators: [
     (Story) => (
-      <svg width={width} height={height}>
+      <svg width={timelineSetup.width} height={timelineSetup.height}>
         <Story />
       </svg>
     ),
@@ -33,22 +28,24 @@ const meta: Meta<typeof EventPoint> = {
       <PointLabel placement={LabelPlacement.TOP}>{event.name}</PointLabel>
     </EventPoint>
   ),
-};
+} satisfies Meta<typeof EventPoint>;
 export default meta;
-type Story = StoryObj<typeof EventPoint>;
+type Story = StoryObj<typeof meta>;
 
 export const DefaultEventPoint: Story = {
   args: {
-    y: height / 2 - 20,
+    y: timelineSetup.height / 2 - 20,
     date: event.dateStart,
-    xScale: scale,
+    xScale: timelineSetup.scale,
+    radius: 5,
+    drawCenter: false,
   },
 };
 
 export const ScaledEventPoint: Story = {
   args: {
     ...DefaultEventPoint.args,
-    radius: event.size,
+    radius: event.size ?? 0,
     fillOpacity: 0.1,
     stroke: "black",
     drawCenter: true,

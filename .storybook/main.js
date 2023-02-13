@@ -5,6 +5,12 @@ module.exports = {
     "@storybook/addon-essentials",
     "@storybook/addon-interactions",
     "storybook-css-modules-preset",
+    {
+      name: "storybook-addon-swc",
+      options: {
+        enableSwcMinify: false,
+      },
+    },
   ],
   staticDirs: ["../public", "../stories/assets", "../data/topographic"],
   framework: {

@@ -1,5 +1,5 @@
 import React from "react";
-import { ComponentStory, ComponentMeta } from "@storybook/react";
+import { Meta, StoryObj } from "@storybook/react";
 import BaseLayer from "../components/map/BaseLayer";
 import {
   geoBertin1953,
@@ -17,10 +17,18 @@ import projections, {
 } from "../lib/utilities/getProjections";
 
 const countries = getCountries();
+const bounds = { width: 300, height: 150 };
 
-export default {
+const meta: Meta<typeof TissotsIndicatricesLayer> = {
   title: "Map Layers/TissotsIndicatrices",
   component: TissotsIndicatricesLayer,
+  decorators: [
+    (Story) => (
+      <svg width={bounds.width} height={bounds.height}>
+        <Story />
+      </svg>
+    ),
+  ],
   argTypes: {
     opacity: {
       control: {
@@ -38,13 +46,13 @@ export default {
         step: 0.1,
       },
     },
-    theme: {
-      options: Array.from(themes.keys()),
-      mapping: Object.fromEntries(themes),
-      control: {
-        type: "select",
-      },
-    },
+    // theme: {
+    //   options: Array.from(themes.keys()),
+    //   mapping: Object.fromEntries(themes),
+    //   control: {
+    //     type: "select",
+    //   },
+    // },
     projection: {
       options: getProjectionNames(),
       mapping: projections,
@@ -53,55 +61,56 @@ export default {
       },
     },
   },
-} as ComponentMeta<typeof TissotsIndicatricesLayer>;
-
-const bounds = { width: 300 };
-
-const Template: ComponentStory<
-  typeof TissotsIndicatricesLayer | typeof BaseLayer
-> = (args) => {
-  return (
+  render: (args) => (
     <MapLayout projection={args.projection} bounds={bounds}>
       <MapLayoutBody bounds={bounds}>
-        <BaseLayer {...args} countries={countries} />
+        <BaseLayer
+          projection={args.projection}
+          // theme={args.theme}
+          countries={countries}
+        />
         <TissotsIndicatricesLayer {...args} />
       </MapLayoutBody>
     </MapLayout>
-  );
+  ),
+};
+export default meta;
+type Story = StoryObj<typeof meta>;
+
+export const Default: Story = {
+  args: {
+    projection: geoBertin1953(),
+    strokeColor: "none",
+    fillColor: "black",
+    opacity: 0.2,
+    radius: 2.5,
+  },
 };
 
-export const Default = Template.bind({});
-Default.args = {
-  ...Template.args,
-  projection: geoBertin1953(),
-  drawGraticuleLabels: false,
-  strokeColor: "none",
-  fillColor: "black",
-  opacity: 0.2,
-  radius: 2.5,
+export const Clipped = {
+  args: {
+    ...Default.args,
+    radius: 10,
+    step: 40,
+    projection: geoInterruptedMollweide(),
+  },
 };
 
-export const Clipped = Template.bind({});
-Clipped.args = {
-  ...Default.args,
-  radius: 10,
-  step: 40,
-  projection: geoInterruptedMollweide(),
+export const Baker = {
+  args: {
+    ...Default.args,
+    radius: 2.5,
+    step: 10,
+    fillColor: "red",
+    projection: geoBaker(),
+  },
 };
 
-export const Baker = Template.bind({});
-Baker.args = {
-  ...Default.args,
-  radius: 2.5,
-  step: 10,
-  fillColor: "red",
-  projection: geoBaker(),
-};
-
-export const Mercator = Template.bind({});
-Mercator.args = {
-  ...Default.args,
-  fillColor: "blue",
-  opacity: 0.8,
-  projection: geoMercator(),
+export const Mercator = {
+  args: {
+    ...Default.args,
+    fillColor: "blue",
+    opacity: 0.8,
+    projection: geoMercator(),
+  },
 };

@@ -7,41 +7,48 @@ import {
   MyListElementHighlight,
 } from "./ListElement.stories";
 
-const meta: Meta<typeof MyList> = {
+const meta: Meta<
+  React.ComponentProps<typeof MyList> & {
+    items: React.ComponentProps<typeof MyListElement>[];
+  }
+> = {
   component: MyList,
   title: "UI/MyList",
 };
-export default meta;
 
-type Story = StoryObj<typeof MyList>;
+export default meta;
+type Story = StoryObj<typeof meta>;
 
 const ListTemplate: Story = {
-  render: ({ items, ...args }) => (
+  render: ({ ...args }) => (
     <MyList {...args}>
-      {items.map((item) => (
+      {args.items.map((item) => (
         <MyListElement {...item} key={nanoid()} />
       ))}
     </MyList>
   ),
 };
 
-export const Empty = {
+export const Empty: Story = {
   ...ListTemplate,
   args: {
     items: [],
   },
 };
 
-export const OneItem = {
+export const OneItem: Story = {
   ...ListTemplate,
   args: {
-    items: [{ ...MyListElementHighlight }],
+    items: [{ ...MyListElementHighlight.args }],
   },
 };
 
-export const TwoItems = {
+export const TwoItems: Story = {
   ...ListTemplate,
   args: {
-    items: [{ ...MyListElementHighlight }, { ...MyListElementDefault }],
+    items: [
+      { ...MyListElementHighlight.args },
+      { ...MyListElementDefault.args },
+    ],
   },
 };
