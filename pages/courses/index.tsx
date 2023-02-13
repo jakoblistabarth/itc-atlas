@@ -37,7 +37,7 @@ type Props = {
   courseGenealogy: CourseGenealogy;
 };
 
-const CourseGenealogy: NextPage<Props> = ({ courseGenealogy }) => {
+const CourseGenealogyPage: NextPage<Props> = ({ courseGenealogy }) => {
   const linkGenerator = linkHorizontal();
 
   courseGenealogy.nodes.forEach((node) => {
@@ -380,4 +380,4 @@ export const getStaticProps: GetStaticProps<Props> = async () => {
   };
 };
 
-export default CourseGenealogy;
+export default CourseGenealogyPage;

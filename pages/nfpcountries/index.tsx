@@ -69,7 +69,7 @@ const NfpCountries: NextPage<Props> = ({ nfps, neCountriesTopoJson }) => {
               )
               .map((year) => {
                 const yearDate = new Date(year.toString());
-                const yearData = perYear.get(new Date(year));
+                const yearData = perYear.get(year);
                 return (
                   <g
                     key={nanoid()}
