@@ -3,7 +3,7 @@ import { mapCountries } from "../mappings/country.name.EN";
 import { UnLevel } from "../../types/UnsdCodes";
 import loadUnsdCountries from "./load/loadUnsdCountries";
 import * as aq from "arquero";
-import { ProjectPre2019Raw, ProjectPost2019Raw } from "./getProjects";
+import { ProjectPre2019Raw, ProjectPost2019Raw } from "./load/loadProjects";
 import { mapToDepartment } from "../mappings/departments";
 
 export type ProjectClean = ProjectMerged & {
@@ -114,16 +114,10 @@ const cleanProjects = async ({
           : row.nameShort
       ),
       dateStart: aq.escape((row: ProjectMerged) =>
-        !row.dateStart || row.dateStart === "NULL"
-          ? null
-          : //@ts-ignore
-            row.dateStart.toISOString()
+        !row.dateStart || row.dateStart === "NULL" ? null : row.dateStart
       ),
       dateEnd: aq.escape((row: ProjectMerged) =>
-        !row.dateEnd || row.dateEnd === "NULL"
-          ? null
-          : //@ts-ignore
-            row.dateEnd.toISOString()
+        !row.dateEnd || row.dateEnd === "NULL" ? null : row.dateEnd
       ),
       status: aq.escape((row: ProjectMerged) => {
         if (!row.status) return undefined;

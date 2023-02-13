@@ -118,8 +118,8 @@ const IndonesiaTimeline: NextPage<Props> = ({
     .flatMap((project) => {
       if (!project.dateStart || !project.dateEnd) return [];
       return {
-        name: project.projectName ?? "unnamed project",
-        yOffset: project.projectID ?? "",
+        name: project.nameShort ?? "unnamed project",
+        yOffset: project.id ?? "",
         dateStart: new Date(project.dateStart),
         dateEnd: new Date(project.dateEnd),
         data: project,

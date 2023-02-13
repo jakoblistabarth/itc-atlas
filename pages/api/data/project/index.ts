@@ -1,6 +1,6 @@
-import type { NextApiRequest, NextApiResponse } from "next";
-import getProjects from "../../../lib/data/queries/project/getProjects";
 import { Project } from "@prisma/client";
+import type { NextApiRequest, NextApiResponse } from "next";
+import getProjects from "../../../../lib/data/queries/project/getProjects";
 
 export default async function handler(
   req: NextApiRequest,

@@ -7,17 +7,18 @@ import Heading, { Headings } from "../../components/Heading";
 import getCountries from "../../lib/data/getCountries";
 import styles from "../../styles/home.module.css";
 import { SharedPageProps } from "../../types/Props";
-import React, { useRef } from "react";
-import { group, rollup, scaleLinear } from "d3";
+import React from "react";
+import { group, rollup } from "d3";
 import SpaceTimeCube from "../../components/map-3d/SpaceTimeCube";
-import { Project } from "../../types/Project";
-import getProjects from "../../lib/data/getProjects";
 import { SpaceTimeCubeEvent } from "../../types/SpaceTimeCubeEvent";
 import getCentroidByIsoCode from "../../lib/data/getCentroidByIsoCode";
 import getCountryCodes from "../../lib/data/queries/country/getCountryCodes";
+import getProjectsWithCountries, {
+  ProjectsWithCountries,
+} from "../../lib/data/queries/project/getProjectsWithCountries";
 
 type Props = SharedPageProps & {
-  projects: Project[];
+  projects: ProjectsWithCountries;
 };
 
 const ProjectExplorer3D: NextPage<Props> = ({
@@ -26,7 +27,7 @@ const ProjectExplorer3D: NextPage<Props> = ({
 }) => {
   const projectsSplit = projects
     .map((p) => {
-      const countries = p.allCountries;
+      const countries = p.countries.map((d) => d.isoAlpha3);
       return countries.flatMap((c) => [
         {
           ...p,
@@ -37,7 +38,7 @@ const ProjectExplorer3D: NextPage<Props> = ({
     .flat();
 
   const projectsByYear = group(projectsSplit, (d) =>
-    new Date(d.dateStart ?? "").getFullYear()
+    new Date(d.start ?? "").getFullYear().toString()
   );
   const projectsByYearCountry = Array.from(projectsByYear.entries()).map(
     ([key, projectsPerYear]) => {
@@ -46,21 +47,28 @@ const ProjectExplorer3D: NextPage<Props> = ({
         (v) => v.length,
         (d) => d.country
       );
-      return [key, countries];
+      return { year: key, countries };
     }
   );
 
-  const events: SpaceTimeCubeEvent[] = projectsByYearCountry
-    .flatMap(([year, countries]) => {
+  const events: SpaceTimeCubeEvent[] = projectsByYearCountry.flatMap(
+    ({ year, countries }) => {
       const countryList = Array.from(countries.entries());
-      return countryList.map(([code, value]) => ({
-        name: code,
-        dateStart: new Date(year.toString()),
-        coordinates: getCentroidByIsoCode(code),
-        size: value,
-      }));
-    })
-    .filter((e) => e.coordinates);
+      return countryList.flatMap(([name, size]) => {
+        const coordinates = getCentroidByIsoCode(name);
+        return coordinates
+          ? [
+              {
+                name,
+                dateStart: new Date(year.toString()),
+                coordinates,
+                size,
+              },
+            ]
+          : [];
+      });
+    }
+  );
 
   return (
     <>
@@ -97,7 +105,7 @@ const ProjectExplorer3D: NextPage<Props> = ({
 
 export const getStaticProps: GetStaticProps<Props> = async () => {
   const [projects, countries, neCountriesTopoJson] = await Promise.all([
-    getProjects(),
+    getProjectsWithCountries(),
     getCountryCodes(),
     getCountries(),
   ]);

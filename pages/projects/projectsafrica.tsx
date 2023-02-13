@@ -4,12 +4,13 @@ import styles from "../../styles/home.module.css";
 import { geoSatellite } from "d3-geo-projection";
 import * as d3 from "d3";
 import * as topojson from "topojson-client";
-import { Project } from "../../types/Project";
 import getCountries from "../../lib/data/getCountries";
-import getProjects from "../../lib/data/getProjects";
+import getCountryWithProjectCount, {
+  CountryWithProjectCount,
+} from "../../lib/data/queries/country/getCountryWithProjectCount";
 import BaseLayer from "../../components/map/BaseLayer";
 import Heading, { Headings } from "../../components/Heading";
-import { FeatureCollection, Feature, Point, MultiPolygon } from "geojson";
+import { FeatureCollection, Feature, Point } from "geojson";
 import { nanoid } from "nanoid";
 import themes, { ThemeNames } from "../../lib/styles/themes";
 import ChoroplethSymbol from "../../components/map/PolygonSymbol";
@@ -19,15 +20,13 @@ import IsoUnit from "../../components/map/IsoUnit";
 import { SharedPageProps } from "../../types/Props";
 import defaultTheme from "../../lib/styles/themes/defaultTheme";
 import getCountryCodes from "../../lib/data/queries/country/getCountryCodes";
-import { Country } from "@prisma/client";
 
 type Props = {
-  projects: Project[];
-  countries: Country[];
+  countriesWithProjectCount: CountryWithProjectCount;
 } & SharedPageProps;
 
 const ProjectCountries: NextPage<Props> = ({
-  projects,
+  countriesWithProjectCount,
   countries,
   neCountriesTopoJson,
 }) => {
@@ -45,32 +44,14 @@ const ProjectCountries: NextPage<Props> = ({
     theme: themes.get(ThemeNames.RAISZ) ?? defaultTheme,
   };
 
-  const count = d3
-    .rollups(
-      projects
-        .filter((project) =>
-          project.countries.some((code) => {
-            const match = countries.find(
-              (country) => country.isoAlpha3 === code
-            );
-            if (!match) return;
-            return match.unRegionCode === "002";
-          })
-        )
-        .reduce((acc: string[], proj) => {
-          acc.push(...proj.countries); // or proj.allCountries
-          return acc;
-        }, []),
-      (v) => v.length,
-      (d) => d
-    )
-    .sort((a, b) => d3.descending(a[1], b[1]));
-  const projectsCountry = new Map(count);
-
   const minHeight = 2;
   const maxHeight = 150;
 
-  const projectCount = Array.from(projectsCountry.values());
+  const countrySelection = countriesWithProjectCount.filter(
+    (d) => d.unRegionCode === "002"
+  );
+
+  const projectCount = countrySelection.map((d) => d._count.projects);
   const minRange = d3.min(projectCount) ?? 0; // TODO: meaningful fallback values
   const maxRange = d3.max(projectCount) ?? 10;
 
@@ -87,7 +68,9 @@ const ProjectCountries: NextPage<Props> = ({
         neCountriesTopoJson.objects.ne_admin_0_countries
       )
       .features.map((feature) => {
-        const value = projectsCountry.get(feature.properties?.ADM0_A3_NL);
+        const value = countrySelection.find(
+          (d) => d.isoAlpha3 === feature.properties?.ADM0_A3_NL
+        )?._count.projects;
         const pointFeature: Feature<Point> = {
           type: "Feature",
           properties: {
@@ -187,28 +170,13 @@ const ProjectCountries: NextPage<Props> = ({
 };
 
 export const getStaticProps: GetStaticProps<Props> = async () => {
-  const projects = await getProjects();
-
-  const projectSelection = projects.filter(
-    (
-      row
-    ): row is Omit<Project, "dateStart" | "dateEnd" | "projectID"> & {
-      dateStart: string;
-      dateEnd: string;
-      projectID: string;
-    } => typeof row.dateStart === "string" && typeof row.dateEnd === "string"
-  );
-
-  projectSelection.sort((a, b) =>
-    d3.ascending(new Date(a.dateStart), new Date(b.dateStart))
-  );
-
+  const countriesWithProjectCount = await getCountryWithProjectCount();
   const countries = await getCountryCodes();
   const neCountriesTopoJson = getCountries("50m");
 
   return {
     props: {
-      projects: projectSelection,
+      countriesWithProjectCount,
       countries,
       neCountriesTopoJson,
     },

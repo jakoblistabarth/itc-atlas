@@ -119,7 +119,7 @@ export type ProjectPost2019Raw = {
   FundingProgramme: string;
 };
 
-export default async function getProjects(): Promise<ProjectClean[]> {
+export default async function loadProjects(): Promise<ProjectClean[]> {
   const filePath = "./data/itc/ITCProjects.xlsx";
   const file = xlsx.readFile(filePath, {
     cellDates: true,

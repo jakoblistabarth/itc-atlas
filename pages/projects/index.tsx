@@ -1,9 +1,6 @@
 import type { NextPage } from "next";
 import Head from "next/head";
 import styles from "../../styles/home.module.css";
-import BackToHome from "../../components/BackToHome";
-import { Project } from "../../types/Project";
-import getProjects from "../../lib/data/getProjects";
 import Footer from "../../components/Footer";
 import Heading, { Headings } from "../../components/Heading";
 import LinkFramed from "../../components/LinkFramed";
@@ -16,12 +13,10 @@ import "ag-grid-community/styles/ag-grid.css";
 import "ag-grid-community/styles/ag-theme-material.css";
 import { ColDef } from "ag-grid-community";
 import { useRouter } from "next/router";
+import useSWR from "swr";
 
-type Props = React.PropsWithChildren<{
-  projects: Project[];
-}>;
-
-const Travels: NextPage<Props> = ({ projects }) => {
+const Travels: NextPage = () => {
+  const { data, error, isLoading } = useSWR("/api/data/project/");
   const { route } = useRouter();
   const links = [
     {
@@ -49,22 +44,16 @@ const Travels: NextPage<Props> = ({ projects }) => {
       children: "Projects Space Time Cube",
     },
   ];
-  // const projectsDf = new DataFrame(projects);
-  // const duplicates = projectsDf.findDuplicates("projectShortName");
-  // const sum = duplicates.reduce((acc, [key, rows]) => {
-  //   acc += rows.length;
-  //   return acc;
-  // }, 0);
-  // console.log(duplicates, sum);
 
   const columnDefs: ColDef[] = [
-    { field: "projectID" },
-    { field: "projectName" },
-    { field: "allCountries" },
-    { field: "populatedPlaceNe" },
+    { field: "id" },
+    { field: "name" },
+    { field: "nameShort" },
+    { field: "description" },
     { field: "type" },
-    { field: "dateStart", filter: "agDateColumnFilter" },
-    { field: "dateEnd", filter: "agDateColumnFilter" },
+    { field: "status" },
+    { field: "start", filter: "agDateColumnFilter" },
+    { field: "end", filter: "agDateColumnFilter" },
   ];
 
   const defaultColDef = {
@@ -93,33 +82,30 @@ const Travels: NextPage<Props> = ({ projects }) => {
             </LinkFramed>
           ))}
         </div>
-        <p>
-          <BackToHome />
-        </p>
 
-        <SummaryTable data={aq.from(projects)} />
-        <div className="ag-theme-material" style={{ width: 1280, height: 500 }}>
-          <AgGridReact
-            rowData={projects}
-            columnDefs={columnDefs}
-            defaultColDef={defaultColDef}
-            pagination={true}
-          />
-        </div>
+        {error && <div>failed to load</div>}
+        {isLoading && <div>Loading …</div>}
+        {!isLoading && !error && (
+          <>
+            <SummaryTable data={aq.from(data)} />
+            <div
+              className="ag-theme-material"
+              style={{ width: 1280, height: 500 }}
+            >
+              <AgGridReact
+                rowData={data}
+                columnDefs={columnDefs}
+                defaultColDef={defaultColDef}
+                pagination={true}
+              />
+            </div>
+          </>
+        )}
       </main>
 
       <Footer />
     </>
   );
 };
-
-export async function getStaticProps() {
-  const projects = await getProjects();
-  return {
-    props: {
-      projects,
-    },
-  };
-}
 
 export default Travels;

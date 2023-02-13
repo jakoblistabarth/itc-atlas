@@ -38,7 +38,7 @@ export default async function handler(
     getCountriesByGroup(UnGrouping.LDC),
   ]);
 
-  const scale = scaleSqrt().domain(domain).range([2, 40]);
+  const scale = scaleSqrt().domain(domain).range([1, 40]);
 
   const mapOptions: MapOptions = {
     bounds: {

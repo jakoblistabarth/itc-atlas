@@ -43,7 +43,7 @@ const ProjectCountries: NextPage<Props> = ({
   const theme = themes.get(ThemeNames.BAYER) ?? defaultTheme; // Question: this seems strange, I know that such theme exists, that's the point of the enum
   const projection = geoBertin1953();
   dimension.height = getMapHeight(dimension.width, projection);
-  const scale = scaleSqrt().domain(domain).range([2, 40]);
+  const scale = scaleSqrt().domain(domain).range([0.5, 40]);
 
   return (
     <>

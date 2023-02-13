@@ -9,10 +9,10 @@ import TimelineGrid from "../../components/charts/timeline/TimelineGrid";
 import Footer from "../../components/Footer";
 import Heading, { Headings } from "../../components/Heading";
 import PointLabel from "../../components/map/PointLabel";
-import getProjects from "../../lib/data/getProjects";
+import getProjects from "../../lib/data/queries/project/getProjects";
 import styles from "../../styles/home.module.css";
 import { LabelPlacement } from "../../types/LabelPlacement";
-import { Project } from "../../types/Project";
+import { Project } from "@prisma/client";
 import { TimelineEvent } from "../../types/TimelineEvent";
 
 type projectsTimelineProps = {
@@ -22,24 +22,21 @@ type projectsTimelineProps = {
 // QUESTION: better to always use page for all pages?
 const projectsTimeline: NextPage<projectsTimelineProps> = ({ projects }) => {
   // QUESTION: such filtering in static props or here?
-  const projectsSelection = projects.filter(
-    (
-      row
-    ): row is Omit<Project, "dateStart" | "dateEnd" | "projectID"> & {
-      dateStart: string;
-      dateEnd: string;
-      projectID: string;
-    } => typeof row.dateStart === "string" && typeof row.dateEnd === "string"
-  );
+  const projectsSelection = projects.filter((d) => d.start && d.end);
 
   const events: TimelineEvent[] = projectsSelection
-    .map((project) => ({
-      name: project.projectShortName ?? "Unnamed Project",
-      yOffset: project.projectID,
-      dateStart: new Date(project.dateStart),
-      dateEnd: new Date(project.dateEnd),
-      data: project,
-    }))
+    .flatMap((project) => {
+      if (!project.start || !project.end) return [];
+      return [
+        {
+          name: project.nameShort ?? "Unnamed Project",
+          yOffset: project.id.toString(),
+          dateStart: new Date(project.start),
+          dateEnd: new Date(project.end),
+          data: project,
+        },
+      ];
+    })
     .sort((a, b) => ascending(a.dateStart, b.dateStart));
 
   const wrapper = {

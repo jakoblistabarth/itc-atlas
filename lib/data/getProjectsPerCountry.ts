@@ -1,44 +1,15 @@
 import * as d3 from "d3";
-import getProjects from "./getProjects";
-import type { FeatureCollection, Feature, MultiPolygon, Point } from "geojson";
+import type { FeatureCollection, Feature, Point } from "geojson";
 import * as topojson from "topojson-client";
-import type { Project } from "../../types/Project";
 import getCountries from "./getCountries";
+import getCountryWithProjectCount from "./queries/country/getCountryWithProjectCount";
 
 const getProjectsPerCountry = async () => {
   const neCountriesTopojson = getCountries();
-  const [allProjects] = await Promise.all([getProjects()]);
+  const count = await getCountryWithProjectCount();
 
-  const projects = allProjects.filter(
-    (
-      row
-    ): row is Omit<Project, "dateStart" | "dateEnd" | "projectID"> & {
-      dateStart: string;
-      dateEnd: string;
-      projectID: string;
-    } => typeof row.dateStart === "string" && typeof row.dateEnd === "string"
-  );
-
-  projects.sort((a, b) =>
-    d3.ascending(new Date(a.dateStart), new Date(b.dateStart))
-  );
-
-  const count = d3
-    .rollups(
-      projects.reduce((acc: string[], proj) => {
-        acc.push(...proj.countries); // or proj.allCountries
-        return acc;
-      }, []),
-      (v) => v.length,
-      (d) => d
-    )
-    .sort((a, b) => d3.descending(a[1], b[1]));
-
-  const projectsCountry = new Map(count);
-
-  const projectCount = Array.from(projectsCountry.values());
-  const minDomain = d3.min(projectCount) ?? 0; // TODO: meaningful fallback values
-  const maxDomain = d3.max(projectCount) ?? 10;
+  const minDomain = d3.min(count.map((d) => d._count.projects)) ?? 0; // TODO: meaningful fallback values
+  const maxDomain = d3.max(count.map((d) => d._count.projects)) ?? 10;
   const domain: [number, number] = [minDomain, maxDomain];
 
   const neCountriesGeoJson = topojson.feature(
@@ -50,7 +21,9 @@ const getProjectsPerCountry = async () => {
     type: "FeatureCollection",
     features: neCountriesGeoJson.features
       .map((feature) => {
-        const value = projectsCountry.get(feature.properties?.ADM0_A3_NL);
+        const value = count.find(
+          (d) => d.isoAlpha3 === feature.properties?.ADM0_A3_NL
+        )?._count.projects;
         const pointFeature: Feature<Point> = {
           type: "Feature",
           properties: {
