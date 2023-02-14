@@ -32,34 +32,13 @@ const loadEmployees = async () => {
         }
         return result.item["ISO-alpha3 Code"];
       }),
-      organisation: aq.escape((d: StaffRaw) =>
-        d["Organisatiecode"] ? d["Organisatiecode"].replace(/ITC-*/, "") : null
-      ),
-      department: aq.escape((d: StaffRaw) =>
-        d["Organisatiecode"] ? d["Organisatiecode"].replace(/ITC-*/, "") : null
-      ),
     })
     .rename({
       Geboortedatum: "dateOfBirth",
       "Soort Medewerker": "type",
       "Functieprofiel Omschrijving": "description",
-      "Begin Datum Aanstelling": "employmentStart",
-      "Einddatum Aanstelling": "employmentEnd",
-      "Datum Einde dienstverband Eenheid": "employmentUnitEnd",
     })
-    .select(
-      "mId",
-      "dateOfBirth",
-      "employmentStart",
-      "employmentEnd",
-      "employmentUnitEnd",
-      "gender",
-      "nationality",
-      "organisation",
-      "department",
-      "type",
-      "description"
-    );
+    .select("mId", "dateOfBirth", "gender", "nationality");
 
   return tb.objects() as EmployeeClean[];
 };

@@ -1,6 +1,7 @@
 import * as aq from "arquero";
 import loadStaff, { StaffRaw } from "./loadStaff";
 import { EmploymentClean } from "../../../types/EmploymentClean";
+import { mapToDepartment } from "../../mappings/departments";
 
 const loadEmployments = async () => {
   const staff = await loadStaff();
@@ -8,11 +9,10 @@ const loadEmployments = async () => {
     .from(staff)
     .derive({
       mId: aq.escape((d: StaffRaw) => parseInt(d["Medewerker"], 10)),
-      organisation: aq.escape((d: StaffRaw) =>
-        d["Organisatiecode"] ? d["Organisatiecode"].replace(/ITC-*/, "") : null
-      ),
       department: aq.escape((d: StaffRaw) =>
-        d["Organisatiecode"] ? d["Organisatiecode"].replace(/ITC-*/, "") : null
+        d["Organisatiecode"]
+          ? mapToDepartment(d["Organisatiecode"].replace(/ITC-/, ""))
+          : null
       ),
     })
     .rename({
@@ -27,7 +27,6 @@ const loadEmployments = async () => {
       "employmentStart",
       "employmentEnd",
       "employmentUnitEnd",
-      "organisation",
       "department",
       "type",
       "description"

@@ -3,7 +3,6 @@ export type EmploymentClean = {
   employmentStart: Date;
   employmentEnd: Date;
   employmentUnitEnd: Date;
-  organisation?: string;
   department?: string;
   type?: string;
   description?: string;

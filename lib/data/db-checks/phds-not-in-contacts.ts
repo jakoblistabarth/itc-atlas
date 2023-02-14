@@ -1,11 +1,11 @@
 import loadApplicants from "../load/loadApplicants";
 import * as aq from "arquero";
-import getPhdCandidates from "../load/loadPhdCandidates";
+import loadPhdCandidates from "../load/loadPhdCandidates";
 import { PhdCandidate } from "../../../types/PhdCandidate";
 
 (async () => {
   const contactData = await loadApplicants();
-  const phdData = await getPhdCandidates();
+  const phdData = await loadPhdCandidates();
 
   const tb = aq.from(contactData).dedupe("itcStudentId").select("itcStudentId");
   const res = tb.objects() as { itcStudentId?: string }[];

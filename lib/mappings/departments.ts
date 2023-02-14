@@ -6,7 +6,7 @@ export enum Department {
   PGM = "PGM", // "Department of Urban and Regional Planning and Geo-information Management",
   WRS = "WRS", // "Department of Water Resources",
   SUP = "SUP", // "Non-scientific support departments",
-  ALL = "ALL", // "ITC", //TODO: map to existing department?
+  VAR = "VAR", // "ITC", //TODO: map to existing department?
 }
 
 export const departmentColors = {
@@ -16,23 +16,28 @@ export const departmentColors = {
   [Department.NRS]: "#af58ba",
   [Department.PGM]: "#ffc61e",
   [Department.WRS]: "#f28522",
-  [Department.ALL]: "#000000",
-  NA: "#aaaaaa",
+  [Department.VAR]: "#000000",
+  [Department.VAR]: "#aaaaaa",
+  NA: "#ffffff",
 };
 
-export const departmentMap = new Map([
-  ["RES", Department.ALL],
-  ["ESA", Department.AES],
-  ["BMS", Department.ALL], // TODO: check with Menno-Jan how to proceed with department mapping
-  ["CTW", Department.ALL],
-]);
+// TODO: check with Menno-Jan how to proceed with department mapping
+// CTW, BMS, PERS, S&A, FM, COM -> SUP
+// RES -> VAR
+// RC ?
+// BOOZ ?
+// IIH ?
+// TA ?
+// AA
 
-export const mapToDepartment = (str: string) => {
+export const mapToDepartment = (str?: string) => {
   if (!str) return undefined;
+  if (!!str.match(/RC|BOOZ|IIH|TA|AA/)) return undefined;
   if (!!str.match(/NULL|EN|IR|MPS/)) return undefined;
-  if (!!str.match(/ENG|ESA|EA/g)) return "AES";
-  if (!!str.match(/EREG/g)) return "NRS";
-  if (!!str.match(/Various/g)) return "ALL";
-  if (!!str.match(/CRIB|FB|IT|BPS|MPS|Library/g)) return "SUP";
+  if (!!str.match(/ENG|ESA|EA/)) return "AES";
+  if (!!str.match(/EREG/)) return "NRS";
+  if (!!str.match(/ITC|Various|RES/)) return "VAR";
+  if (!!str.match(/CRIB|FB|IT|BPS|MPS|CTW|BMS|PERS|S&A|FM|COM|Library/))
+    return "SUP";
   return str;
 };

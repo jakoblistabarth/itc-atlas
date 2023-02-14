@@ -2,11 +2,12 @@ import type { GetStaticProps, NextPage } from "next";
 import Head from "next/head";
 import Footer from "../../components/Footer";
 import Heading, { Headings } from "../../components/Heading";
-import getBTORsByCountry from "../../lib/data/getBTORsByCountry";
+import getBTORsByCountry, {
+  BtorsByCountry,
+} from "../../lib/data/getBTORsByCountry";
 import styles from "../../styles/home.module.css";
 import { ProjectIndonesia } from "../../types/Project";
 import { TimelineEvent } from "../../types/TimelineEvent";
-import { BTOR } from "../../types/Travels";
 import getDutchForeignAffairsMinisters from "../../lib/data/getDutchForeignAffairsMinisters";
 import { Minister } from "../../types/Minister";
 import {
@@ -52,7 +53,7 @@ type Props = {
   projects: ProjectIndonesia[];
   phdGraduatesByYear: phdCandidateByYearWithCount;
   applications: ApplicationByYearWithCount;
-  btors: BTOR[];
+  btors: BtorsByCountry;
   longTermMissions: LongTermMission[];
   ministers: Minister[];
   neCountries: NeCountriesTopoJson;
@@ -241,12 +242,12 @@ const IndonesiaTimeline: NextPage<Props> = ({
   };
 
   const btorEvents: TimelineEvent[] = btors.flatMap((btor) => {
-    if (!btor.dateStart || !btor.dateEnd) return [];
+    if (!btor.start || !btor.end) return [];
     return {
-      name: btor.destination,
+      name: "",
       yOffset: "",
-      dateStart: new Date(btor.dateStart),
-      dateEnd: new Date(btor.dateEnd),
+      dateStart: new Date(btor.start),
+      dateEnd: new Date(btor.end),
     };
   });
   const longTermMissionEvents: TimelineEvent[] = longTermMissions.flatMap(
@@ -787,7 +788,7 @@ export const getStaticProps: GetStaticProps<Props> = async () => {
   ] = await Promise.all([
     getProjectsIndonesia(),
     getPhdCandidatesByYear("IDN"),
-    getBTORsByCountry("Indonesia"),
+    getBTORsByCountry("IDN"),
     getLongTermMissions(),
     getApplicationsByYear("IDN"),
     getDutchForeignAffairsMinisters(),

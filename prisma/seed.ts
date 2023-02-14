@@ -3,6 +3,7 @@ import {
   PrismaClient,
   ProjectStatus,
   ProjectType,
+  PurposeOfTravel,
 } from "@prisma/client";
 import loadDepartments from "../lib/data/load/loadDepartments";
 import loadPhdCandidates from "../lib/data/load/loadPhdCandidates";
@@ -13,6 +14,7 @@ import loadEmployees from "../lib/data/load/loadEmployees";
 import loadEmployments from "../lib/data/load/loadEmployments";
 import loadProjects from "../lib/data/load/loadProjects";
 import loadStatus from "../lib/data/load/loadStatus";
+import loadBtors from "../lib/data/load/loadBtors";
 
 const prisma = new PrismaClient();
 
@@ -26,6 +28,8 @@ async function main() {
   await prisma.status.deleteMany({});
   await prisma.project.deleteMany({});
   await prisma.country.deleteMany({});
+  await prisma.btor.deleteMany({});
+  await prisma.$queryRaw`ALTER SEQUENCE IF EXISTS "Btor_id_seq" RESTART WITH 1;`;
   await prisma.$queryRaw`ALTER SEQUENCE IF EXISTS "PhdCandidate_id_seq" RESTART WITH 1;`;
   await prisma.$queryRaw`ALTER SEQUENCE IF EXISTS "Country_id_seq" RESTART WITH 1;`;
   await prisma.$queryRaw`ALTER SEQUENCE IF EXISTS "Project_id_seq" RESTART WITH 1;`;
@@ -41,6 +45,7 @@ async function main() {
     employees,
     employments,
     projects,
+    btors,
   ] = await Promise.all([
     loadDepartments(),
     loadStatus(),
@@ -51,6 +56,7 @@ async function main() {
     loadEmployees(),
     loadEmployments(),
     loadProjects(),
+    loadBtors(),
   ]);
   console.log("Data loaded. 🚚");
 
@@ -87,7 +93,7 @@ async function main() {
           isoAlpha2: d["ISO-alpha2 Code"],
           isoAlpha3: d["ISO-alpha3 Code"],
           isoNum3: d["M49 Code"],
-          nameEn: undefined,
+          nameEn: undefined, //TODO: implement alternative short name?
           nameLongEn: d["Country or Area"],
           unRegionCode: d["Region Code"],
           unSubRegionCode: d["Sub-region Code"],
@@ -105,6 +111,30 @@ async function main() {
   console.log("Populated model Country. 🌱");
 
   const countriesDB = await prisma.country.findMany();
+
+  await Promise.all(
+    btors.map(async (d) => {
+      const countryIds = countriesDB
+        .filter((c) => d.countries.includes(c.isoAlpha3))
+        .map((d) => d.id);
+      const createArgs: Prisma.BtorCreateArgs = {
+        data: {
+          countries: {
+            connect: countryIds.map((d) => ({ id: d })),
+          },
+          start: d.start,
+          end: d.end,
+          year: d.year,
+          department: {
+            connect: { id: d.department },
+          },
+          purpose: d.purpose as PurposeOfTravel,
+        },
+      };
+      return await prisma.btor.create(createArgs);
+    })
+  );
+  console.log("Populated model Btor. 🌱");
 
   await Promise.all(
     projects.map(async (d) => {

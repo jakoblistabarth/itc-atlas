@@ -19,6 +19,7 @@ model Department {
   employments            Employment[]   @relation("DepartmentEmployment")
   projectMain            Project[]      @relation("DepartmentProjectMain")
   projectsSecondary      Project[]
+  btors                  Btor[]         @relation("BtorsDepartment")
 }
 
 model Status {
@@ -117,6 +118,7 @@ model Country {
   applicants               Applicant[]    @relation("ApplicantNationality")
   employees                Employee[]     @relation("EmployeeCountry")
   projects                 Project[]
+  btors                    Btor[]
 }
 
 model Project {
@@ -148,4 +150,28 @@ enum ProjectStatus {
   Ongoing
   Proposed
   Rejected
+}
+
+model Btor {
+  id           Int              @id @default(autoincrement())
+  year         Int
+  start        DateTime?        @db.Date
+  end          DateTime?        @db.Date
+  departmentId String?
+  department   Department?      @relation("BtorsDepartment", fields: [departmentId], references: [id])
+  countries    Country[]
+  purpose      PurposeOfTravel?
+}
+
+enum PurposeOfTravel {
+  Conference
+  Project
+  Other
+  Workshop
+  Fieldwork
+  Consulting
+  Meeting
+  Research
+  Acquisition
+  Sabbatical
 }

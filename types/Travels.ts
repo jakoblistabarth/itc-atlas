@@ -36,13 +36,3 @@ export type Travel = {
   type: string;
   destination: string;
 };
-
-export type BTOR = {
-  dateStart: string;
-  dateEnd: string;
-  destination: string;
-  purpose: string;
-  budget: string;
-  department: string;
-  daysOfTravel: number;
-};

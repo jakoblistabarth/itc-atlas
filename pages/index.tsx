@@ -14,6 +14,11 @@ const Home: NextPage = () => {
       description: "Insights into ITC's travels around the globe.",
     },
     {
+      href: "/btors",
+      children: "Back to Office Reports",
+      description: "Insights into ITC's travels around the globe.",
+    },
+    {
       href: "/flights2019",
       children: "Flights 2019",
       description: "Insights into ITC's travels of 2019.",

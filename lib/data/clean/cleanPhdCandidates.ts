@@ -2,7 +2,7 @@ import * as aq from "arquero";
 import Fuse from "fuse.js";
 import { PhdCandidate } from "../../../types/PhdCandidate";
 import { mapCountries } from "../../mappings/country.name.EN";
-import { departmentMap } from "../../mappings/departments";
+import { mapToDepartment } from "../../mappings/departments";
 import { PhdCandidateRaw } from "../load/loadPhdCandidates";
 import loadCountries from "../load/loadUnsdCountries";
 
@@ -42,16 +42,10 @@ export async function cleanPhdCandidates(data: PhdCandidateRaw[]) {
         return result.item["ISO-alpha3 Code"];
       }),
       department1: aq.escape((d: PhdCandidateRaw) => {
-        const department = d.Department ?? null;
-        if (!department) return null;
-        const departmentMapped = departmentMap.get(department);
-        return departmentMapped ?? department;
+        return mapToDepartment(d.Department);
       }),
       department2: aq.escape((d: PhdCandidateRaw) => {
-        const department = d.DepartmentSecond ?? null;
-        if (!department) return null;
-        const departmentMapped = departmentMap.get(department);
-        return departmentMapped ?? department;
+        return mapToDepartment(d.DepartmentSecond);
       }),
       status: (d: PhdCandidateRaw) =>
         aq.op.padstart(d.LastStatus ? d.LastStatus + "" : "00", 2, "0"),

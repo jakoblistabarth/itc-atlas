@@ -1,6 +1,6 @@
 import { Prisma, PrismaClient } from "@prisma/client";
 
-export default async function getBtorsByCountry(isoAlpha3: string) {
+export default async function getBtorsWithRelations() {
   const prisma = new PrismaClient();
   return await prisma.btor.findMany({
     include: {
@@ -15,16 +15,9 @@ export default async function getBtorsByCountry(isoAlpha3: string) {
         },
       },
     },
-    where: {
-      countries: {
-        some: {
-          isoAlpha3: {
-            equals: isoAlpha3,
-          },
-        },
-      },
-    },
   });
 }
 
-export type BtorsByCountry = Prisma.PromiseReturnType<typeof getBtorsByCountry>;
+export type BtorsWithRelations = Prisma.PromiseReturnType<
+  typeof getBtorsWithRelations
+>;
