@@ -4,7 +4,7 @@ import Footer from "../../components/Footer";
 import Heading, { Headings } from "../../components/Heading";
 import getBTORsByCountry, {
   BtorsByCountry,
-} from "../../lib/data/getBTORsByCountry";
+} from "../../lib/data/queries/btors/getBTORsByCountry";
 import styles from "../../styles/home.module.css";
 import { ProjectIndonesia } from "../../types/Project";
 import { TimelineEvent } from "../../types/TimelineEvent";
@@ -44,10 +44,10 @@ import NominalLegend from "../../components/map/NominalLegend";
 import getProjectsIndonesia from "../../lib/data/getProjectsIndonesia";
 import getPhdCandidatesByYear, {
   phdCandidateByYearWithCount,
-} from "../../lib/data/queries/phdCandidates/getPhdCandidatesByYear";
+} from "../../lib/data/queries/phdCandidate/getPhdCandidatesByYear";
 import getApplicationsByYear, {
   ApplicationByYearWithCount,
-} from "../../lib/data/queries/applications/getApplicationsByYear";
+} from "../../lib/data/queries/application/getApplicationsByYear";
 
 type Props = {
   projects: ProjectIndonesia[];

@@ -13,7 +13,7 @@ import NominalLegend from "../../../components/map/NominalLegend";
 import ScaledPie from "../../../components/map/ScaledPie";
 import { setMapBounds } from "../../../lib/cartographic/getMapHeight";
 import getCountries from "../../../lib/data/getCountries";
-import getPhdCandidatesByCountryByDepartment from "../../../lib/data/getPhdCandidatesByCountryByDepartment";
+import getPhdCandidatesByCountryByDepartment from "../../../lib/data/queries/phdCandidate/getPhdCandidatesByCountryByDepartment";
 import { departmentColorScale } from "../../../lib/styles/departmentColorScale";
 import themes, { ThemeNames } from "../../../lib/styles/themes";
 import defaultTheme from "../../../lib/styles/themes/defaultTheme";

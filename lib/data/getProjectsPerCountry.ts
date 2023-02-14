@@ -4,6 +4,7 @@ import * as topojson from "topojson-client";
 import getCountries from "./getCountries";
 import getCountryWithProjectCount from "./queries/country/getCountryWithProjectCount";
 
+// TODO: refactor this to make it more generic, e.g. join properties to countries centroid?
 const getProjectsPerCountry = async () => {
   const neCountriesTopojson = getCountries();
   const count = await getCountryWithProjectCount();

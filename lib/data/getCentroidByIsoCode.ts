@@ -1,4 +1,4 @@
-import getCountries from "../data/getCountries";
+import getCountries from "./getCountries";
 import { feature } from "topojson-client";
 import { geoCentroid } from "d3-geo";
 import { Vector2 } from "three";

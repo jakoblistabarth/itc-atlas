@@ -1,5 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from "next";
-import getPhdCandidatesByYearFrom from "../../../../lib/data/queries/phdCandidates/getPhdCandidatesByYear";
+import getPhdCandidatesByYearFrom from "../../../../lib/data/queries/phdCandidate/getPhdCandidatesByYear";
 
 export default async function handler(
   req: NextApiRequest,

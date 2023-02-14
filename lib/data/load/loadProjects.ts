@@ -1,5 +1,5 @@
 import xlsx from "xlsx";
-import cleanProjects, { ProjectClean } from "../cleanProjects";
+import cleanProjects, { ProjectClean } from "../clean/cleanProjects";
 
 export type ProjectPre2019Raw = {
   Project_ID: string;

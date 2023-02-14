@@ -1,7 +1,7 @@
 import { group, geoCentroid, descending } from "d3";
-import getCountries from "./getCountries";
+import getCountries from "../../getCountries";
 import * as topojson from "topojson-client";
-import { pieDatum } from "../../components/map/ScaledPie";
+import { pieDatum } from "../../../../components/map/ScaledPie";
 import { PrismaClient } from "@prisma/client";
 
 export type phdPerCountryDepartment = {

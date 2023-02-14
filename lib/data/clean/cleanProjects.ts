@@ -1,10 +1,10 @@
-import loadUnsdCodes from "./load/loadUnsdCodes";
-import { mapCountries } from "../mappings/country.name.EN";
-import { UnLevel } from "../../types/UnsdCodes";
-import loadUnsdCountries from "./load/loadUnsdCountries";
+import loadUnsdCodes from "../load/loadUnsdCodes";
+import { mapCountries } from "../../mappings/country.name.EN";
+import { UnLevel } from "../../../types/UnsdCodes";
+import loadUnsdCountries from "../load/loadUnsdCountries";
 import * as aq from "arquero";
-import { ProjectPre2019Raw, ProjectPost2019Raw } from "./load/loadProjects";
-import { mapToDepartment } from "../mappings/departments";
+import { ProjectPre2019Raw, ProjectPost2019Raw } from "../load/loadProjects";
+import { mapToDepartment } from "../../mappings/departments";
 
 export type ProjectClean = ProjectMerged & {
   id: number;
