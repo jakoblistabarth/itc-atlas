@@ -7,12 +7,12 @@ import Head from "next/head";
 import Heading, { Headings } from "../../components/Heading";
 import Flow3D from "../../components/map-3d/Flow3D";
 import Globe from "../../components/map-3d/Globe";
-import getFlights2019 from "../../lib/data/getFlights2019";
+import getODMatrix from "../../lib/data/getOdMatrix";
 import styles from "../../styles/home.module.css";
-import type { ODMatrix } from "../../types/ODMatrix";
+import type { OdMatrix } from "../../types/OdMatrix";
 
 type Props = {
-  odMatrix: ODMatrix;
+  odMatrix: OdMatrix;
 };
 
 const earthRadius = 1;
@@ -63,10 +63,10 @@ const Flights: NextPage<Props> = ({ odMatrix }) => {
 };
 
 export async function getStaticProps() {
-  const flights = await getFlights2019();
+  const odMatrix = await getODMatrix();
   return {
     props: {
-      odMatrix: flights.odMatrix,
+      odMatrix,
     },
   };
 }

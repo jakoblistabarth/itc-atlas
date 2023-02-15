@@ -1,34 +1,34 @@
-import type { GetStaticProps, NextPage } from "next";
+import type { NextPage } from "next";
 import Head from "next/head";
 import styles from "../../styles/home.module.css";
-import getFlights2019 from "../../lib/data/getFlights2019";
 import SummaryTable from "../../components/SummaryTable";
 import Footer from "../../components/Footer";
 import Heading, { Headings } from "../../components/Heading";
 import LinkFramed from "../../components/LinkFramed";
 import { nanoid } from "nanoid";
 import * as aq from "arquero";
-import { Flight } from "../../types/Travels";
+import useSWR from "swr";
+import { useRouter } from "next/router";
 
-type Props = {
-  flights: Flight[];
-};
+const Travels: NextPage = () => {
+  const { route } = useRouter();
 
-const Travels: NextPage<Props> = ({ flights }) => {
   const links = [
     {
-      href: "/flights2019/airports",
+      href: `${route}/airports`,
       children: "Airports",
     },
     {
-      href: "/flights2019/flights",
+      href: `${route}/flights`,
       children: "Flights (map)",
     },
     {
-      href: "/flights2019/flights3D",
+      href: `${route}/flights3D`,
       children: "Flights (globe)",
     },
   ];
+
+  const { data, error, isLoading } = useSWR("/api/data/flight2019/");
 
   return (
     <>
@@ -52,21 +52,14 @@ const Travels: NextPage<Props> = ({ flights }) => {
             </LinkFramed>
           ))}
         </div>
-        <SummaryTable data={aq.from(flights)} />
+        {error && <div>failed to load</div>}
+        {isLoading && <div>Loading …</div>}
+        {!isLoading && !error && <SummaryTable data={aq.from(data)} />}
       </main>
 
       <Footer />
     </>
   );
-};
-
-export const getStaticProps: GetStaticProps<Props> = async () => {
-  const flights = await getFlights2019();
-  return {
-    props: {
-      flights: flights.flights,
-    },
-  };
 };
 
 export default Travels;

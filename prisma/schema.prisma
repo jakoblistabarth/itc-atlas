@@ -14,12 +14,14 @@ datasource db {
 model Department {
   id                     String         @id
   name                   String
+  number                 Int?           @unique
   phdCandidatesMain      PhdCandidate[] @relation("DepartmentPhdMain")
   phdCandidatesSecondary PhdCandidate[] @relation("DepartmentPhdSecondary")
   employments            Employment[]   @relation("DepartmentEmployment")
   projectMain            Project[]      @relation("DepartmentProjectMain")
   projectsSecondary      Project[]
   btors                  Btor[]         @relation("BtorsDepartment")
+  flights2019            Flight2019[]   @relation("Flight2019Department")
 }
 
 model Status {
@@ -119,6 +121,7 @@ model Country {
   employees                Employee[]     @relation("EmployeeCountry")
   projects                 Project[]
   btors                    Btor[]
+  flights2019              Flight2019[]   @relation("Flight2019Country")
 }
 
 model Project {
@@ -174,4 +177,18 @@ enum PurposeOfTravel {
   Research
   Acquisition
   Sabbatical
+}
+
+model Flight2019 {
+  id           Int         @id @default(autoincrement())
+  departure    DateTime?   @db.Date
+  arrival      DateTime?   @db.Date
+  ref1         String? //TODO: ref1 is the OFI no.? 3rd digit -> external/internal, digit 4-5 -> department
+  ref2         String? //TODO: ref2 courseNo?
+  emissions    Float
+  airportCodes String[]
+  countryId    Int?
+  departmentId String?
+  department   Department? @relation("Flight2019Department", fields: [departmentId], references: [id])
+  country      Country?    @relation("Flight2019Country", fields: [countryId], references: [id])
 }

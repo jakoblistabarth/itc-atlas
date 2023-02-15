@@ -1,11 +1,13 @@
 import * as d3 from "d3";
 import type { Point, Feature, FeatureCollection } from "geojson";
-import type { AirportProperties, Flight } from "../../types/Travels";
+import type { AirportProperties } from "../../types/Travels";
+import getAirports from "./getAirports";
+import getFlights2019 from "./queries/flight2019/getFlights2019";
 
-export default function countFlightsPerAirport(
-  flights: Flight[],
-  airports: AirportProperties[]
-) {
+const getFlightsPerAirport = async () => {
+  const flights = await getFlights2019();
+
+  const airports = getAirports().json;
   const allAirports = flights.map((d) => d.airportCodes).flat();
 
   const count = d3.rollup(
@@ -35,4 +37,5 @@ export default function countFlightsPerAirport(
   };
 
   return featureCollection;
-}
+};
+export default getFlightsPerAirport;

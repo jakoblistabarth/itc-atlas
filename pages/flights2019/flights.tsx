@@ -10,18 +10,18 @@ import FlowLegend from "../../components/map/FlowLegend";
 import PointLabel from "../../components/map/PointLabel";
 import getFlowPoints from "../../lib/cartographic/getFlowPoints";
 import getCountries from "../../lib/data/getCountries";
-import getFlights2019 from "../../lib/data/getFlights2019";
 import styles from "../../styles/home.module.css";
-import type { ODMatrix } from "../../types/ODMatrix";
+import type { OdMatrix } from "../../types/OdMatrix";
 import themes, { ThemeNames } from "../../lib/styles/themes";
 import getMapHeight from "../../lib/cartographic/getMapHeight";
 import { MapOptions } from "../../types/MapOptions";
 import { SharedPageProps } from "../../types/Props";
 import defaultTheme from "../../lib/styles/themes/defaultTheme";
 import { Vector2 } from "three";
+import getODMatrix from "../../lib/data/getOdMatrix";
 
 type Props = {
-  odMatrix: ODMatrix;
+  odMatrix: OdMatrix;
 } & SharedPageProps;
 
 const Flights: NextPage<Props> = ({ odMatrix, neCountriesTopoJson }) => {
@@ -132,7 +132,7 @@ const Flights: NextPage<Props> = ({ odMatrix, neCountriesTopoJson }) => {
 
 export async function getStaticProps() {
   const neCountriesTopoJson = getCountries();
-  const [odMatrix] = await Promise.all([(await getFlights2019()).odMatrix]);
+  const [odMatrix] = await Promise.all([getODMatrix()]);
   return {
     props: {
       odMatrix,

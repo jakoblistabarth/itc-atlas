@@ -1,6 +1,5 @@
 import * as d3 from "d3";
-import type { Flight } from "../../types/Travels";
-import type { FlowPointProperties, ODMatrix } from "../../types/ODMatrix";
+import type { FlowPointProperties, OdMatrix } from "../../types/OdMatrix";
 import type {
   GeoJsonProperties,
   Feature,
@@ -9,7 +8,8 @@ import type {
   Point,
 } from "geojson";
 import getAirports from "./getAirports";
-import { FlowProperties } from "../../types/ODMatrix";
+import { FlowProperties } from "../../types/OdMatrix";
+import getFlights2019 from "./queries/flight2019/getFlights2019";
 
 type od = {
   origin: string;
@@ -18,19 +18,20 @@ type od = {
   props: GeoJsonProperties;
 };
 
-async function getODMatrix(flights: Flight[]): Promise<ODMatrix> {
-  const flows = await getODFlows(flights);
+const getOdMatrix = async () => {
+  const flows = await getODFlows();
   const points = getODPoints(flows);
   return {
     flows,
     points,
   };
-}
+};
 
-async function getODFlows(
-  flights: Flight[]
-): Promise<FeatureCollection<LineString, FlowProperties>> {
-  const airports = (await getAirports()).json;
+const getODFlows = async (): Promise<
+  FeatureCollection<LineString, FlowProperties>
+> => {
+  const flights = await getFlights2019();
+  const airports = getAirports().json;
 
   const od = flights.reduce((acc: od[], d) => {
     const codes = d.airportCodes;
@@ -83,7 +84,7 @@ async function getODFlows(
     type: "FeatureCollection",
     features: features,
   };
-}
+};
 
 function getODPoints(
   flows: FeatureCollection<LineString, FlowProperties>
@@ -116,4 +117,4 @@ function getODPoints(
   };
 }
 
-export default getODMatrix;
+export default getOdMatrix;

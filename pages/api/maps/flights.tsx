@@ -1,5 +1,4 @@
 import type { NextApiRequest, NextApiResponse } from "next";
-import getFlights2019 from "../../../lib/data/getFlights2019";
 import ReactDOMServer from "react-dom/server";
 import getCountries from "../../../lib/data/getCountries";
 import BaseLayer from "../../../components/map/BaseLayer";
@@ -14,6 +13,7 @@ import FlowLegend from "../../../components/map/FlowLegend";
 import MapLayoutAside from "../../../components/map/layout/MapLayoutAside";
 import * as d3 from "d3";
 import defaultTheme from "../../../lib/styles/themes/defaultTheme";
+import getOdMatrix from "../../../lib/data/getOdMatrix";
 
 export default async function handler(
   req: NextApiRequest,
@@ -26,7 +26,7 @@ export default async function handler(
   }
 
   const neCountriesTopoJson = getCountries();
-  const [odMatrix] = await Promise.all([(await getFlights2019()).odMatrix]);
+  const odMatrix = await getOdMatrix();
 
   const flightsPerRoute = odMatrix.flows.features.map(
     (flow) => flow.properties?.value

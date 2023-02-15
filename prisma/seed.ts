@@ -15,11 +15,13 @@ import loadEmployments from "../lib/data/load/loadEmployments";
 import loadProjects from "../lib/data/load/loadProjects";
 import loadStatus from "../lib/data/load/loadStatus";
 import loadBtors from "../lib/data/load/loadBtors";
+import loadFlights2019 from "../lib/data/load/loadFlights2019";
 
 const prisma = new PrismaClient();
 
 async function main() {
   await prisma.phdCandidate.deleteMany({});
+  await prisma.$queryRaw`ALTER SEQUENCE IF EXISTS "PhdCandidate_id_seq" RESTART WITH 1;`;
   await prisma.department.deleteMany({});
   await prisma.employment.deleteMany({});
   await prisma.employee.deleteMany({});
@@ -27,12 +29,13 @@ async function main() {
   await prisma.applicant.deleteMany({});
   await prisma.status.deleteMany({});
   await prisma.project.deleteMany({});
-  await prisma.country.deleteMany({});
+  await prisma.$queryRaw`ALTER SEQUENCE IF EXISTS "Project_id_seq" RESTART WITH 1;`;
   await prisma.btor.deleteMany({});
   await prisma.$queryRaw`ALTER SEQUENCE IF EXISTS "Btor_id_seq" RESTART WITH 1;`;
-  await prisma.$queryRaw`ALTER SEQUENCE IF EXISTS "PhdCandidate_id_seq" RESTART WITH 1;`;
+  await prisma.flight2019.deleteMany({});
+  await prisma.$queryRaw`ALTER SEQUENCE IF EXISTS "Flight2019_id_seq" RESTART WITH 1;`;
+  await prisma.country.deleteMany({});
   await prisma.$queryRaw`ALTER SEQUENCE IF EXISTS "Country_id_seq" RESTART WITH 1;`;
-  await prisma.$queryRaw`ALTER SEQUENCE IF EXISTS "Project_id_seq" RESTART WITH 1;`;
   console.log("Database reset. 🧹");
 
   const [
@@ -46,6 +49,7 @@ async function main() {
     employments,
     projects,
     btors,
+    flights2019,
   ] = await Promise.all([
     loadDepartments(),
     loadStatus(),
@@ -57,6 +61,7 @@ async function main() {
     loadEmployments(),
     loadProjects(),
     loadBtors(),
+    loadFlights2019(),
   ]);
   console.log("Data loaded. 🚚");
 
@@ -66,6 +71,7 @@ async function main() {
         data: {
           id: d.id,
           name: d.name,
+          number: d.number,
         },
       };
       return await prisma.department.create(createArgs);
@@ -111,6 +117,36 @@ async function main() {
   console.log("Populated model Country. 🌱");
 
   const countriesDB = await prisma.country.findMany();
+
+  await Promise.all(
+    flights2019.map(async (d) => {
+      const countryId = countriesDB.find((c) => d.country === c.isoAlpha3)?.id;
+      const createArgs: Prisma.Flight2019CreateArgs = {
+        data: {
+          country: countryId
+            ? {
+                connect: { id: countryId },
+              }
+            : undefined,
+          departure: d.departure,
+          arrival: d.arrival,
+          ref1: d.ref1,
+          ref2: d.ref2,
+          department: d.department
+            ? {
+                connect: {
+                  number: d.department,
+                },
+              }
+            : undefined,
+          emissions: d.emissions,
+          airportCodes: d.airportCodes,
+        },
+      };
+      return await prisma.flight2019.create(createArgs);
+    })
+  );
+  console.log("Populated model Flight2019. 🌱");
 
   await Promise.all(
     btors.map(async (d) => {

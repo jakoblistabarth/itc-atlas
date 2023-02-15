@@ -1,34 +1,42 @@
 [
   {
     "id": "EOS",
-    "name": "Department of Earth Observation Science"
+    "name": "Department of Earth Observation Science",
+    "number": 31
   },
   {
     "id": "AES",
-    "name": "Department of Applied Earth Sciences"
+    "name": "Department of Applied Earth Sciences",
+    "number": 36
   },
   {
     "id": "GIP",
-    "name": "Department of Geo-Information Processing"
+    "name": "Department of Geo-Information Processing",
+    "number": 32
   },
   {
     "id": "NRS",
-    "name": "Department of Natural Resources"
+    "name": "Department of Natural Resources",
+    "number": 34
   },
   {
     "id": "PGM",
-    "name": "Department of Urban and Regional Planning and Geo-information Management"
+    "name": "Department of Urban and Regional Planning and Geo-information Management",
+    "number": 33
   },
   {
     "id": "WRS",
-    "name": "Department of Water Resources"
+    "name": "Department of Water Resources",
+    "number": 35
   },
   {
     "id": "SUP",
-    "name": "Supporting Departments (non-scientific)"
+    "name": "Supporting Departments (non-scientific)",
+    "number": null
   },
   {
     "id": "VAR",
-    "name": "Multiple ITC Departments"
+    "name": "Multiple ITC Departments",
+    "number": null
   }
 ]

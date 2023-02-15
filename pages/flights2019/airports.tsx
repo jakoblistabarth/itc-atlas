@@ -6,7 +6,6 @@ import styles from "../../styles/home.module.css";
 import { FeatureCollection, Point } from "geojson";
 import Heading, { Headings } from "../../components/Heading";
 import getCountries from "../../lib/data/getCountries";
-import getFlights2019 from "../../lib/data/getFlights2019";
 import BaseLayer from "../../components/map/BaseLayer";
 import PointLabel from "../../components/map/PointLabel";
 import PointSymbol from "../../components/map/PointSymbol";
@@ -15,6 +14,7 @@ import { SharedPageProps } from "../../types/Props";
 import { nanoid } from "nanoid";
 import { Vector2 } from "three";
 import getCountryCodes from "../../lib/data/queries/country/getCountryCodes";
+import getFlightsPerAirport from "../../lib/data/getFlightsPerAirport";
 
 type Props = {
   airports: FeatureCollection<Point>;
@@ -83,8 +83,8 @@ const Airports: NextPage<Props> = ({ airports, neCountriesTopoJson }) => {
 export const getStaticProps: GetStaticProps<Props> = async () => {
   const neCountriesTopoJson = getCountries();
   const [airports, countries] = await Promise.all([
-    (await getFlights2019()).perAirport,
-    await getCountryCodes(),
+    getFlightsPerAirport(),
+    getCountryCodes(),
   ]);
 
   return {

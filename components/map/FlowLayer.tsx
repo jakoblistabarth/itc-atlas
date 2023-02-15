@@ -1,6 +1,6 @@
 import { GeoProjection, ScaleLinear } from "d3";
 import { FC } from "react";
-import { ODMatrix } from "../../types/ODMatrix";
+import { OdMatrix } from "../../types/OdMatrix";
 import type { Appearance } from "../../types/Appearance";
 import Flow from "./Flow";
 import PointSymbol from "./PointSymbol";
@@ -10,7 +10,7 @@ import defaultTheme from "../../lib/styles/themes/defaultTheme";
 import { Vector2 } from "three";
 
 const FlowLayer: FC<{
-  data: ODMatrix;
+  data: OdMatrix;
   projection: GeoProjection;
   scaleWidth: ScaleLinear<number, number>;
   flowStyle?: Appearance;

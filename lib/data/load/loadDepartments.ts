@@ -3,6 +3,7 @@ import fs from "fs";
 type DepartmentRaw = {
   id: string;
   name: string;
+  number: number;
 };
 
 export default function getDepartments(): DepartmentRaw[] {

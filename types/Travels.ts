@@ -1,16 +1,3 @@
-export type Flight = {
-  orderDate: string;
-  departureDate: string;
-  arrivalDate: string;
-  airportCodes: string[];
-  travelDays: number;
-  ticketcount: number;
-  fare: number;
-  tax: number;
-  ref2: string;
-  ref1: string;
-};
-
 export type AirportProperties = {
   ident: string;
   type: string;
