@@ -1,45 +1,99 @@
-import React from "react";
-import { ComponentStory, ComponentMeta } from "@storybook/react";
+import { Meta, StoryObj } from "@storybook/react";
 import Timeline from "../components/charts/timeline/Timeline";
-import EventPoint from "../components/charts/timeline/EventPoint";
 import TimelineGrid from "../components/charts/timeline/TimelineGrid";
-import { DefaultEventPoint } from "./EventPoint.stories";
+import { DefaultEventPoint, ScaledEventPoint } from "./EventPoint.stories";
 import { DefaultEventPeriod } from "./EventPeriod.stories";
 import { DefaultTimelineGrid } from "./TimelineGrid.stories";
+import EventPoint from "../components/charts/timeline/EventPoint";
+import EventPeriod from "../components/charts/timeline/EventPeriod";
+import { nanoid } from "nanoid";
 import { scaleTime } from "d3";
+import { timelineSetup } from "./lib/timelineSetup";
 
-const margin = DefaultTimelineGrid.args?.margin ?? 0;
-const scale = DefaultTimelineGrid.args?.scale;
-const width = scale?.range()[1] ?? 0 + margin;
+type TimelineElements = {
+  points?: React.ComponentProps<typeof EventPoint>[];
+  periods?: React.ComponentProps<typeof EventPeriod>[];
+  grid?: React.ComponentProps<typeof TimelineGrid>;
+};
 
-export default {
-  title: "Charts/Timeline/Timeline",
+const meta = {
   component: Timeline,
+  title: "Charts/Timeline/Timeline",
+  argTypes: {
+    points: {
+      table: {
+        disable: true,
+      },
+    },
+    periods: {
+      table: {
+        disable: true,
+      },
+    },
+    grid: {
+      table: {
+        disable: true,
+      },
+    },
+  },
+  tags: ["autodocs"],
   decorators: [
     (Story) => (
-      <svg width={width} height={100}>
-        <Timeline {...defaultArgs}>
-          <TimelineGrid
-            scale={scale ?? scaleTime()}
-            height={200}
-            margin={margin}
-          />
-          <DefaultEventPoint {...DefaultEventPoint.args} />
-          <DefaultEventPeriod {...DefaultEventPeriod.args} />
-          <Story />
-        </Timeline>
+      <svg width={timelineSetup.width} height={timelineSetup.height}>
+        <Story />
       </svg>
     ),
   ],
-} as ComponentMeta<typeof Timeline>;
+} satisfies Meta<React.ComponentProps<typeof Timeline> & TimelineElements>;
 
-const Template: ComponentStory<typeof EventPoint> = (args) => (
-  <Timeline {...args} />
-);
+export default meta;
+type Story = StoryObj<typeof meta>;
 
-const defaultArgs = {};
+const TimelineTemplate: Story = {
+  render: (args) => (
+    <Timeline {...args}>
+      {args.grid && <TimelineGrid {...args.grid} />}
+      {args.points &&
+        args.points.map(({ ...args }) => (
+          <EventPoint key={nanoid()} {...args} />
+        ))}
+      {args.periods &&
+        args.periods.map(({ ...args }) => (
+          <EventPeriod key={nanoid()} {...args} />
+        ))}
+    </Timeline>
+  ),
+};
 
-export const DefaultTimeline = Template.bind({});
-DefaultTimeline.args = {
-  ...defaultArgs,
+export const Default: Story = {
+  ...TimelineTemplate,
+  args: {
+    points: [{ ...DefaultEventPoint.args }],
+    periods: [{ ...DefaultEventPeriod.args }],
+    grid: { ...DefaultTimelineGrid.args },
+  },
+};
+
+export const WithScaledItem: Story = {
+  ...TimelineTemplate,
+  args: {
+    points: [
+      {
+        date: new Date("2015"),
+        y: timelineSetup.height / 2,
+        xScale: scaleTime()
+          .domain([new Date("2010"), new Date()])
+          .range([0, 500]),
+        radius: 5,
+        drawCenter: true,
+      },
+      { ...ScaledEventPoint.args },
+    ],
+    grid: {
+      scale: scaleTime()
+        .domain([new Date("2010"), new Date()])
+        .range([0, 500]),
+      height: 100,
+    },
+  },
 };

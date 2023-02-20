@@ -1,11 +1,10 @@
-import React from "react";
-import { ComponentStory, ComponentMeta } from "@storybook/react";
+import { Meta, StoryObj } from "@storybook/react";
 
 import Star from "../components/shapes/Star";
 
 const side = 300;
 
-export default {
+const meta = {
   title: "Shapes/Star",
   component: Star,
   argTypes: {
@@ -25,23 +24,18 @@ export default {
       </svg>
     ),
   ],
-} as ComponentMeta<typeof Star>;
+} satisfies Meta<typeof Star>;
+export default meta;
+type Story = StoryObj<typeof meta>;
 
-const Template: ComponentStory<typeof Star> = (args) => {
-  return (
-    <>
-      <Star {...args} style={args.style} />
-    </>
-  );
-};
-
-export const DefaultStar = Template.bind({});
-DefaultStar.args = {
-  innerRadius: side / 6,
-  outerRadius: side / 3,
-  transform: `translate(${side / 2} ${side / 2})`,
-  fill: "teal",
-  fillOpacity: 0.2,
-  stroke: "teal",
-  strokeWidth: 2,
+export const DefaultStar: Story = {
+  args: {
+    innerRadius: side / 6,
+    outerRadius: side / 3,
+    transform: `translate(${side / 2} ${side / 2})`,
+    fill: "teal",
+    fillOpacity: 0.2,
+    stroke: "teal",
+    strokeWidth: 2,
+  },
 };

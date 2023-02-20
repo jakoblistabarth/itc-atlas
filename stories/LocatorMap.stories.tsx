@@ -1,20 +1,17 @@
-import React from "react";
-import { ComponentStory, ComponentMeta } from "@storybook/react";
+import { Meta, StoryObj } from "@storybook/react";
 import LocatorMap from "../components/map/LocatorMap";
 import getCountries from "../lib/data/getCountries";
 import themes from "../lib/styles/themes";
 
 const countries = getCountries();
 
-export default {
+const meta = {
   title: "Map Types/Locator Map",
   component: LocatorMap,
+  args: {
+    neCountriesTopoJson: countries,
+  },
   argTypes: {
-    projection: {
-      table: {
-        disable: true,
-      },
-    },
     neCountriesTopoJson: {
       table: {
         disable: true,
@@ -38,34 +35,30 @@ export default {
       ],
     },
   },
-  args: {},
-} as ComponentMeta<typeof LocatorMap>;
+} satisfies Meta<typeof LocatorMap>;
+export default meta;
+type Story = StoryObj<typeof meta>;
 
-const Template: ComponentStory<typeof LocatorMap> = (args) => {
-  return <LocatorMap {...args} />;
+export const DefaultLocatorMap: Story = {
+  args: {
+    highlight: ["NLD"],
+  },
 };
 
-export const DefaultLocatorMap = Template.bind({});
-DefaultLocatorMap.args = {
-  ...Template.args,
-  neCountriesTopoJson: countries,
-  highlight: ["NLD"],
+export const MultipleHighlights: Story = {
+  args: {
+    highlight: ["NLD", "AUT"],
+  },
 };
 
-export const MultipleHighlights = Template.bind({});
-MultipleHighlights.args = {
-  ...DefaultLocatorMap.args,
-  highlight: ["NLD", "AUT"],
+export const NoHightlight: Story = {
+  args: {
+    highlight: [],
+  },
 };
 
-export const NoHightlight = Template.bind({});
-NoHightlight.args = {
-  ...DefaultLocatorMap.args,
-  highlight: [],
-};
-
-export const DifferentHemispheres = Template.bind({});
-DifferentHemispheres.args = {
-  ...DefaultLocatorMap.args,
-  highlight: ["LAO", "CHL"],
+export const DifferentHemispheres: Story = {
+  args: {
+    highlight: ["LAO", "CHL"],
+  },
 };

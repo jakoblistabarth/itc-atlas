@@ -1,9 +1,8 @@
-import React from "react";
-import { ComponentStory, ComponentMeta } from "@storybook/react";
+import { Meta, StoryObj } from "@storybook/react";
 
 import SnapshotCell from "../components/SnapshotCell";
 
-export default {
+const meta = {
   title: "SummaryTable/SnapShotCell",
   component: SnapshotCell,
   decorators: [
@@ -13,17 +12,16 @@ export default {
       </svg>
     ),
   ],
-} as ComponentMeta<typeof SnapshotCell>;
+} satisfies Meta<typeof SnapshotCell>;
+export default meta;
+type Story = StoryObj<typeof meta>;
 
-const Template: ComponentStory<typeof SnapshotCell> = (args) => (
-  <SnapshotCell {...args} />
-);
-
-export const DefaultSnapshotCell = Template.bind({});
-DefaultSnapshotCell.args = {
-  x: 1,
-  y: 1,
-  width: 198,
-  height: 28,
-  fill: "lightgrey",
+export const DefaultSnapshotCell: Story = {
+  args: {
+    x: 1,
+    y: 1,
+    width: 198,
+    height: 28,
+    fill: "lightgrey",
+  },
 };

@@ -1,5 +1,5 @@
 import React, { useRef } from "react";
-import { ComponentStory, ComponentMeta } from "@storybook/react";
+import { Meta, StoryObj } from "@storybook/react";
 import Globe from "../components/map-3d/Globe";
 import { Canvas } from "@react-three/fiber";
 import { OrbitControls } from "@react-three/drei";
@@ -8,7 +8,7 @@ import getCountries from "../lib/data/getCountries";
 
 const countries = getCountries();
 
-export default {
+const meta = {
   title: "Map types/Globe",
   component: Globe,
   argTypes: {
@@ -28,7 +28,9 @@ export default {
       control: { type: "range", min: 0, max: 0.1, step: 0.001 },
     },
   },
-  args: {},
+  args: {
+    neCountriesTopoJson: countries,
+  },
   decorators: [
     (Story) => (
       <div style={{ width: "100%", height: "500px" }}>
@@ -36,61 +38,60 @@ export default {
       </div>
     ),
   ],
-} as ComponentMeta<typeof Globe>;
-
-const Template: ComponentStory<typeof Globe> = (args) => {
-  const canvasRef = useRef<HTMLCanvasElement>(null);
-  return (
-    <>
-      <Canvas camera={{ position: [0, 0, 5], fov: 30 }} shadows>
-        <Globe canvasRef={canvasRef} {...args} />
-        <OrbitControls
-          enableZoom={false}
-          enablePan={false}
-          maxPolarAngle={Math.PI / 2}
+  render: (args) => {
+    const canvasRef = useRef<HTMLCanvasElement>(null);
+    return (
+      <>
+        <Canvas camera={{ position: [0, 0, 5], fov: 30 }} shadows>
+          <Globe canvasRef={canvasRef} {...args} />
+          <OrbitControls
+            enableZoom={false}
+            enablePan={false}
+            maxPolarAngle={Math.PI / 2}
+          />
+        </Canvas>
+        <GlobeTexture
+          ref={canvasRef}
+          {...args}
+          neCountriesTopoJson={countries}
         />
-      </Canvas>
-      <GlobeTexture
-        ref={canvasRef}
-        /* @ts-expect-error */
-        {...args.canvasTextureStyle}
-        neCountriesTopoJson={countries}
-      />
-    </>
-  );
+      </>
+    );
+  },
+} satisfies Meta<
+  React.ComponentProps<typeof Globe> & React.ComponentProps<typeof GlobeTexture>
+>;
+export default meta;
+type Story = StoryObj<typeof meta>;
+
+export const DefaultGlobe: Story = {
+  args: {
+    texture: "day",
+  },
 };
 
-export const DefaultGlobe = Template.bind({});
-DefaultGlobe.args = {
-  ...Template.args,
-  texture: "day",
+export const NightGlobe: Story = {
+  args: {
+    texture: "night",
+  },
 };
 
-export const NightGlobe = Template.bind({});
-NightGlobe.args = {
-  ...Template.args,
-  texture: "night",
+export const ExplorerGlobe: Story = {
+  args: {
+    texture: "explorer",
+  },
 };
 
-export const ExplorerGlobe = Template.bind({});
-ExplorerGlobe.args = {
-  ...Template.args,
-  texture: "explorer",
+export const CanvasTextureGlobe: Story = {
+  args: {
+    canvasTexture: true,
+  },
 };
 
-export const CanvasTextureGlobe = Template.bind({});
-CanvasTextureGlobe.args = {
-  ...Template.args,
-  canvasTexture: true,
-};
-
-export const HoloTextureGlobe = Template.bind({});
-HoloTextureGlobe.args = {
-  ...Template.args,
-  canvasTexture: true,
-  transparent: true,
-  // @ts-expect-error
-  canvasTextureStyle: {
+export const HoloTextureGlobe: Story = {
+  args: {
+    canvasTexture: true,
+    transparent: true,
     fillColor: "rgba(0,200,255,0.3)",
     strokeColor: "lightblue",
     graticuleColor: "rgba(0,200,255,0.1)",

@@ -1,15 +1,19 @@
-import React from "react";
-import { ComponentStory, ComponentMeta } from "@storybook/react";
+import { Meta, StoryObj } from "@storybook/react";
 
 import LeaderLine from "../components/LeaderLine";
 import { Vector2 } from "three";
 
 const side = 200;
 
-export default {
+const meta = {
   title: "Annotations/LeaderLine",
   component: LeaderLine,
-  argTypes: {},
+  args: {
+    sourcePos: new Vector2(side / 2 - 50, side / 2 - 50),
+    targetPos: new Vector2(side / 2 + 50, side / 2 + 50),
+    stroke: "teal",
+    strokeWidth: "1",
+  },
   decorators: [
     (Story) => (
       <svg width={side} height={side}>
@@ -17,10 +21,7 @@ export default {
       </svg>
     ),
   ],
-} as ComponentMeta<typeof LeaderLine>;
-
-const Template: ComponentStory<typeof LeaderLine> = (args) => {
-  return (
+  render: (args) => (
     <>
       <circle
         cx={args.sourcePos.x}
@@ -37,24 +38,16 @@ const Template: ComponentStory<typeof LeaderLine> = (args) => {
       />
       <LeaderLine {...args} style={args.style} />
     </>
-  );
-};
+  ),
+} satisfies Meta<typeof LeaderLine>;
+export default meta;
+type Story = StoryObj<typeof meta>;
 
-const defaultArgs = {
-  sourcePos: new Vector2(side / 2 - 50, side / 2 - 50),
-  targetPos: new Vector2(side / 2 + 50, side / 2 + 50),
-  angle: Math.PI / 2,
-  stroke: "teal",
-  strokeWidth: "1",
-};
+export const VerticalLeaderLine: Story = {};
 
-export const VerticalLeaderLine = Template.bind({});
-VerticalLeaderLine.args = {
-  ...defaultArgs,
-};
-export const HorizontalLeaderLine = Template.bind({});
-HorizontalLeaderLine.args = {
-  ...defaultArgs,
-  sourcePos: new Vector2(side / 2 - 75, side / 2 - 25),
-  targetPos: new Vector2(side / 2 + 75, side / 2 + 25),
+export const HorizontalLeaderLine: Story = {
+  args: {
+    sourcePos: new Vector2(side / 2 - 75, side / 2 - 25),
+    targetPos: new Vector2(side / 2 + 75, side / 2 + 25),
+  },
 };

@@ -1,5 +1,4 @@
-import React from "react";
-import { ComponentStory, ComponentMeta } from "@storybook/react";
+import { Meta, StoryObj } from "@storybook/react";
 import MapLayout from "../components/map/layout/MapLayout";
 import BaseLayer from "../components/map/BaseLayer";
 import MapLayoutBody from "../components/map/layout/MapLayoutBody";
@@ -8,13 +7,17 @@ import { geoBertin1953 } from "d3-geo-projection";
 import defaultTheme from "../lib/styles/themes/defaultTheme";
 import getCountries from "../lib/data/getCountries";
 import themes from "../lib/styles/themes";
-import projections, {
-  getProjectionNames,
-} from "../lib/utilities/getProjections";
+import projections, { getProjectionNames } from "./lib/getProjections";
 
 const countries = getCountries();
+const projection = geoBertin1953();
+const bounds = {
+  width: 600,
+  height: 300,
+  frame: { top: 10, bottom: 10, left: 10, right: 10 },
+};
 
-export default {
+const meta = {
   title: "Map Elements/Layouts",
   component: MapLayout,
   argTypes: {
@@ -33,52 +36,46 @@ export default {
       },
     },
   },
-} as ComponentMeta<typeof MapLayout>;
+  render: (args) => {
+    return (
+      <MapLayout {...args}>
+        <MapLayoutHeader
+          bounds={args.bounds}
+          title={"Map title"}
+        ></MapLayoutHeader>
+        <MapLayoutBody bounds={args.bounds}>
+          <BaseLayer {...args} countries={countries}></BaseLayer>
+        </MapLayoutBody>
+      </MapLayout>
+    );
+  },
+} satisfies Meta<typeof MapLayout>;
+export default meta;
+type Story = StoryObj<typeof meta>;
 
-const projection = geoBertin1953();
-const bounds = {
-  width: 600,
-  height: 300,
-  frame: { top: 10, bottom: 10, left: 10, right: 10 },
+export const Simple: Story = {
+  args: {
+    debug: true,
+    theme: defaultTheme,
+    projection: projection,
+    bounds: bounds,
+  },
 };
 
-const Template: ComponentStory<typeof MapLayout> = (args) => {
-  return (
-    <MapLayout {...args}>
-      <MapLayoutHeader
-        bounds={args.bounds}
-        title={"Map title"}
-      ></MapLayoutHeader>
-      <MapLayoutBody bounds={args.bounds}>
-        <BaseLayer {...args} countries={countries}></BaseLayer>
-      </MapLayoutBody>
-    </MapLayout>
-  );
+export const BigHeader: Story = {
+  args: {
+    debug: true,
+    theme: defaultTheme,
+    projection: projection,
+    bounds: { width: 900, frame: { top: 100, left: 0 } },
+  },
 };
 
-export const Simple = Template.bind({});
-Simple.args = {
-  ...Template.args,
-  debug: true,
-  theme: defaultTheme,
-  projection: projection,
-  bounds: bounds,
-};
-
-export const BigHeader = Template.bind({});
-BigHeader.args = {
-  ...Template.args,
-  debug: true,
-  theme: defaultTheme,
-  projection: projection,
-  bounds: { width: 900, frame: { top: 100, left: 0 } },
-};
-
-export const LeftAside = Template.bind({});
-LeftAside.args = {
-  ...Template.args,
-  debug: true,
-  theme: defaultTheme,
-  projection: projection,
-  bounds: { width: 900, frame: { top: 0, left: 100 } },
+export const LeftAside: Story = {
+  args: {
+    debug: true,
+    theme: defaultTheme,
+    projection: projection,
+    bounds: { width: 900, frame: { top: 0, left: 100 } },
+  },
 };

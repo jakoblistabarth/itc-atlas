@@ -1,5 +1,4 @@
-import React from "react";
-import { ComponentStory, ComponentMeta } from "@storybook/react";
+import { Meta, StoryObj } from "@storybook/react";
 import { Canvas } from "@react-three/fiber";
 import { OrbitControls, useHelper } from "@react-three/drei";
 import getCountries from "../lib/data/getCountries";
@@ -53,7 +52,7 @@ const events: SpaceTimeCubeEvent[] = [
 ];
 const countries = getCountries();
 
-export default {
+const meta = {
   title: "Map types/SpaceTimeCube",
   component: SpaceTimeCube,
   argTypes: {
@@ -64,7 +63,6 @@ export default {
       control: { type: "range", min: 0.01, max: 3, step: 0.01 },
     },
   },
-  args: {},
   decorators: [
     (Story) => {
       return (
@@ -88,14 +86,13 @@ export default {
       );
     },
   ],
-} as ComponentMeta<typeof SpaceTimeCube>;
+} satisfies Meta<typeof SpaceTimeCube>;
+export default meta;
+type Story = StoryObj<typeof meta>;
 
-const Template: ComponentStory<typeof SpaceTimeCube> = (args) => {
-  return <SpaceTimeCube {...args} />;
-};
-
-export const DefaultSpaceTimeCube = Template.bind({});
-DefaultSpaceTimeCube.args = {
-  events,
-  geoData: countries,
+export const DefaultSpaceTimeCube: Story = {
+  args: {
+    events,
+    geoData: countries,
+  },
 };

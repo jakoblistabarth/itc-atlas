@@ -1,6 +1,6 @@
 import { Meta, StoryObj } from "@storybook/react";
 import * as aq from "arquero";
-import getTestData from "../lib/data/getTestData";
+import getTestData from "./lib/getTestData";
 
 import Snapshot from "../components/Snapshot";
 import getSummaryTableData from "../lib/summarytable/getSummaryTableData";

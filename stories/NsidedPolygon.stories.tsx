@@ -1,11 +1,9 @@
-import React from "react";
-import { ComponentStory, ComponentMeta } from "@storybook/react";
-
+import { Meta, StoryObj } from "@storybook/react";
 import NsidedPolygon from "../components/shapes/NsidedPolygon";
 
 const side = 300;
 
-export default {
+const meta = {
   title: "Shapes/NsidedPolygon",
   component: NsidedPolygon,
   argTypes: {
@@ -22,23 +20,18 @@ export default {
       </svg>
     ),
   ],
-} as ComponentMeta<typeof NsidedPolygon>;
+} satisfies Meta<typeof NsidedPolygon>;
+export default meta;
+type Story = StoryObj<typeof meta>;
 
-const Template: ComponentStory<typeof NsidedPolygon> = (args) => {
-  return (
-    <>
-      <NsidedPolygon {...args} style={args.style} />
-    </>
-  );
-};
-
-export const DefaultNsidedPolygon = Template.bind({});
-DefaultNsidedPolygon.args = {
-  radius: side / 4,
-  sides: 3,
-  transform: `translate(${side / 2} ${side / 2})`,
-  fill: "teal",
-  fillOpacity: 0.2,
-  stroke: "teal",
-  strokeWidth: 2,
+export const DefaultNsidedPolygon: Story = {
+  args: {
+    radius: side / 4,
+    sides: 3,
+    transform: `translate(${side / 2} ${side / 2})`,
+    fill: "teal",
+    fillOpacity: 0.2,
+    stroke: "teal",
+    strokeWidth: 2,
+  },
 };

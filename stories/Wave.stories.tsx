@@ -1,13 +1,20 @@
-import React from "react";
-import { ComponentStory, ComponentMeta } from "@storybook/react";
+import { Meta, StoryObj } from "@storybook/react";
 
 import Wave from "../components/shapes/Wave";
 
 const side = 300;
 
-export default {
+const meta = {
   title: "Shapes/Wave",
   component: Wave,
+  args: {
+    width: side,
+    height: side / 2,
+    transform: `translate(0 ${side / 2})`,
+    fill: "none",
+    stroke: "teal",
+    strokeWidth: 2,
+  },
   argTypes: {
     height: {
       control: { type: "range", min: 0, max: side / 2, step: 0.5 },
@@ -23,26 +30,8 @@ export default {
       </svg>
     ),
   ],
-} as ComponentMeta<typeof Wave>;
+} satisfies Meta<typeof Wave>;
+export default meta;
+type Story = StoryObj<typeof meta>;
 
-const Template: ComponentStory<typeof Wave> = (args) => {
-  return (
-    <>
-      <Wave {...args} style={args.style} />
-    </>
-  );
-};
-
-const defaultArgs = {
-  width: side,
-  height: side / 2,
-  transform: `translate(0 ${side / 2})`,
-  fill: "none",
-  stroke: "teal",
-  strokeWidth: 2,
-};
-
-export const defaultWave = Template.bind({});
-defaultWave.args = {
-  ...defaultArgs,
-};
+export const defaultWave: Story = {};

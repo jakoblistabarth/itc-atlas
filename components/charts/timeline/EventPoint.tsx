@@ -11,7 +11,7 @@ type Props = React.PropsWithChildren<
   } & Omit<SVGProps<SVGCircleElement>, "cx" | "cy" | "r">
 >;
 
-const Event: FC<Props> = ({
+const EventPoint: FC<Props> = ({
   date,
   xScale,
   y = 0,
@@ -29,4 +29,4 @@ const Event: FC<Props> = ({
   );
 };
 
-export default Event;
+export default EventPoint;

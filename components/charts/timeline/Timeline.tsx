@@ -2,12 +2,12 @@ import type { FC } from "react";
 import { Vector2 } from "three";
 
 type Props = React.PropsWithChildren<{
+  /** Where (within the parent element) should the timeline be positioned? */
   position?: Vector2;
 }>;
 
 /**
  * A wrapper components for a horizontal timeline off given dimensions.
- * @param Props Allows setting the position.
  * @returns An svg group element, containing the timeline.
  */
 const Timeline: FC<Props> = ({ position = new Vector2(), children }) => (

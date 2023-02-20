@@ -1,5 +1,4 @@
-import React from "react";
-import { ComponentStory, ComponentMeta } from "@storybook/react";
+import { Meta, StoryObj } from "@storybook/react";
 import { geoPath } from "d3-geo";
 import { geoRobinson, geoBertin1953 } from "d3-geo-projection";
 import eth from "../lib/styles/themes/eth";
@@ -8,10 +7,24 @@ import BendedLabel from "../components/map/BendedLabel";
 
 const width = 600;
 const height = 300;
+const projection = geoRobinson()
+  .fitSize([width - 5, height - 5], {
+    type: "Sphere",
+  })
+  .translate([width / 2, height / 2]);
 
-export default {
+const meta = {
   title: "Map Elements/Labels/BendedLabel",
   component: BendedLabel,
+  args: {
+    children: "Label Text",
+    graticuleType: "lon",
+    degree: 10,
+    xOffset: 0,
+    yOffset: 10,
+    projection: projection,
+    style: eth.label,
+  },
   argTypes: {
     degree: { control: { type: "range", min: -180, max: 180, step: 10 } },
     textOriginDegree: {
@@ -23,7 +36,7 @@ export default {
     (Story) => (
       <svg width={width} height={height}>
         <path
-          d={geoPath(defaultArgs.projection)({ type: "Sphere" }) ?? ""}
+          d={geoPath(projection)({ type: "Sphere" }) ?? ""}
           stroke={"grey"}
           strokeWidth={"0.5"}
           fill={"none"}
@@ -32,33 +45,14 @@ export default {
       </svg>
     ),
   ],
-} as ComponentMeta<typeof BendedLabel>;
+} satisfies Meta<typeof BendedLabel>;
+export default meta;
+type Story = StoryObj<typeof meta>;
 
-const Template: ComponentStory<typeof BendedLabel> = (args) => (
-  <BendedLabel {...args}>{args.children}</BendedLabel>
-);
+export const LonBendedLabel: Story = {};
 
-const defaultArgs = {
-  children: "Label Text",
-  graticuleType: "lon" as "lon", // QUESTION: improve typing
-  degree: 10,
-  xOffset: 0,
-  yOffset: 10,
-  projection: geoRobinson()
-    .fitSize([width - 5, height - 5], {
-      type: "Sphere",
-    })
-    .translate([width / 2, height / 2]),
-  style: eth.label,
-};
-
-export const LonBendedLabel = Template.bind({});
-LonBendedLabel.args = {
-  ...defaultArgs,
-};
-
-export const LatBendedLabel = Template.bind({});
-LatBendedLabel.args = {
-  ...defaultArgs,
-  graticuleType: "lat",
+export const LatBendedLabel: Story = {
+  args: {
+    graticuleType: "lat",
+  },
 };

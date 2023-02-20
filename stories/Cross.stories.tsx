@@ -1,5 +1,4 @@
-import React from "react";
-import { ComponentStory, ComponentMeta } from "@storybook/react";
+import { Meta, StoryObj } from "@storybook/react";
 
 import Cross from "../components/shapes/Cross";
 import { Vector2 } from "three";
@@ -14,9 +13,13 @@ const stylesArr = Array.from(themes.entries()).map(([key, value]) => [
 ]);
 const styles = Object.fromEntries(stylesArr);
 
-export default {
+const meta = {
   title: "Shapes/Cross",
   component: Cross,
+  args: {
+    style: { fill: "none", stroke: "black" },
+    position: new Vector2(width / 2, height / 2),
+  },
   argTypes: {
     length: { control: { type: "range", min: 1, max: 50, step: 1 } },
     style: {
@@ -31,43 +34,29 @@ export default {
       </svg>
     ),
   ],
-} as ComponentMeta<typeof Cross>;
+} satisfies Meta<typeof Cross>;
+export default meta;
+type Story = StoryObj<typeof meta>;
 
-const Template: ComponentStory<typeof Cross> = (args) => {
-  return (
-    <>
-      <Cross {...args} style={args.style} />
-    </>
-  );
+export const DefaultCross: Story = {};
+
+export const HeavyCross: Story = {
+  args: {
+    length: 15,
+    style: { stroke: "black", strokeWidth: 10 },
+  },
 };
 
-const defaultArgs = {
-  style: { fill: "none", stroke: "black" },
-  position: new Vector2(width / 2, height / 2),
-};
-
-export const DefaultCross = Template.bind({});
-DefaultCross.args = {
-  ...defaultArgs,
-};
-
-export const HeavyCross = Template.bind({});
-HeavyCross.args = {
-  ...defaultArgs,
-  length: 15,
-  style: { stroke: "black", strokeWidth: 10 },
-};
-
-export const HeavyCrossWithHalo = Template.bind({});
-HeavyCrossWithHalo.args = {
-  ...defaultArgs,
-  length: 15,
-  style: { stroke: "black", strokeWidth: 10 },
-  halos: [
-    {
-      size: 1.5,
-      color: "white",
-    },
-    { size: 2, color: "black" },
-  ],
+export const HeavyCrossWithHalo: Story = {
+  args: {
+    length: 15,
+    style: { stroke: "black", strokeWidth: 10 },
+    halos: [
+      {
+        size: 1.5,
+        color: "white",
+      },
+      { size: 2, color: "black" },
+    ],
+  },
 };
