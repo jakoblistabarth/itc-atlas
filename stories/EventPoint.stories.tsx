@@ -4,7 +4,7 @@ import PointLabel from "../components/map/PointLabel";
 import { LabelPlacement } from "../types/LabelPlacement";
 import EventPoint from "../components/charts/timeline/EventPoint";
 import { TimelineEvent } from "../types/TimelineEvent";
-import { timelineSetup } from "../lib/sbTimelineSetup";
+import { timelineSetup } from "./lib/timelineSetup";
 
 const event: TimelineEvent = {
   name: "Event Point",

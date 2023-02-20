@@ -1,4 +1,9 @@
-module.exports = {
+import type { StorybookConfig } from "@storybook/preset-react-webpack";
+
+const config: StorybookConfig = {
+  core: {
+    builder: "@storybook/builder-webpack5",
+  },
   stories: ["../stories/**/*.stories.@(ts|tsx|mdx)"],
   addons: [
     "@storybook/addon-links",
@@ -17,13 +22,13 @@ module.exports = {
     name: "@storybook/nextjs",
     options: {},
   },
-  webpackFinal: (config) => {
+  webpackFinal: async (config) => {
     // Default rule for images /\.(svg|ico|jpg|jpeg|png|gif|eot|otf|webp|ttf|woff|woff2|cur|ani|pdf)(\?.*)?$/
-    const fileLoaderRule = config.module.rules.find(
+    const fileLoaderRule = config.module?.rules?.find(
       (rule) => rule.test && rule.test.test(".svg")
     );
     fileLoaderRule.exclude = /\.svg$/;
-    config.module.rules.push({
+    config.module?.rules?.push({
       test: /\.svg$/,
       enforce: "pre",
       loader: require.resolve("@svgr/webpack"),
@@ -31,3 +36,5 @@ module.exports = {
     return config;
   },
 };
+
+export default config;

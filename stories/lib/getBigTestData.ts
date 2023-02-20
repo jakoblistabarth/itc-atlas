@@ -1,6 +1,6 @@
 import { faker } from "@faker-js/faker";
 import { range } from "d3-array";
-import getRandomElement from "../utilities/getRandomElement";
+import getRandomElement from "../../lib/utilities/getRandomElement";
 
 type TestRow = {
   name: string;

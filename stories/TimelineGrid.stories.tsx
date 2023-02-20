@@ -1,7 +1,7 @@
 import React from "react";
 import { StoryObj, Meta } from "@storybook/react";
 import TimelineGrid from "../components/charts/timeline/TimelineGrid";
-import { timelineSetup } from "../lib/sbTimelineSetup";
+import { timelineSetup } from "./lib/timelineSetup";
 
 const meta = {
   title: "Charts/Timeline/TimelineGrid",
@@ -17,7 +17,7 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const DefaultTimelineGrid = {
+export const DefaultTimelineGrid: Story = {
   args: {
     scale: timelineSetup.scale,
     height: timelineSetup.height,

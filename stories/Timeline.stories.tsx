@@ -2,18 +2,14 @@ import React from "react";
 import { Meta, StoryObj } from "@storybook/react";
 import Timeline from "../components/charts/timeline/Timeline";
 import TimelineGrid from "../components/charts/timeline/TimelineGrid";
-import { DefaultEventPoint } from "./EventPoint.stories";
+import { DefaultEventPoint, ScaledEventPoint } from "./EventPoint.stories";
 import { DefaultEventPeriod } from "./EventPeriod.stories";
 import { DefaultTimelineGrid } from "./TimelineGrid.stories";
 import EventPoint from "../components/charts/timeline/EventPoint";
 import EventPeriod from "../components/charts/timeline/EventPeriod";
 import { nanoid } from "nanoid";
 import { scaleTime } from "d3";
-import { timelineSetup } from "../lib/sbTimelineSetup";
-
-// const margin = DefaultTimelineGrid.args?.margin ?? 0;
-// const scale = DefaultTimelineGrid.args?.scale;
-// const width = scale?.range()[1] ?? 0 + margin;
+import { timelineSetup } from "./lib/timelineSetup";
 
 type TimelineElements = {
   points: React.ComponentProps<typeof EventPoint>[];
@@ -24,10 +20,27 @@ type TimelineElements = {
 const meta: Meta<React.ComponentProps<typeof Timeline> & TimelineElements> = {
   component: Timeline,
   title: "Charts/Timeline/Timeline",
-  subcomponents: {},
+  argTypes: {
+    points: {
+      table: {
+        disable: true,
+      },
+    },
+    periods: {
+      table: {
+        disable: true,
+      },
+    },
+    grid: {
+      table: {
+        disable: true,
+      },
+    },
+  },
+  tags: ["autodocs"],
   decorators: [
     (Story) => (
-      <svg width={timelineSetup.width} height={100}>
+      <svg width={timelineSetup.width} height={timelineSetup.height}>
         <Story />
       </svg>
     ),
@@ -53,7 +66,7 @@ const TimelineTemplate: Story = {
   ),
 };
 
-export const ReusingStories: Story = {
+export const Default: Story = {
   ...TimelineTemplate,
   args: {
     points: [{ ...DefaultEventPoint.args }],
@@ -62,7 +75,7 @@ export const ReusingStories: Story = {
   },
 };
 
-export const ManualItems: Story = {
+export const WithScaledItem: Story = {
   ...TimelineTemplate,
   args: {
     points: [
@@ -75,6 +88,7 @@ export const ManualItems: Story = {
         radius: 5,
         drawCenter: true,
       },
+      { ...ScaledEventPoint.args },
     ],
     grid: {
       scale: scaleTime()

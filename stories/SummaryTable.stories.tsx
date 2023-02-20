@@ -1,10 +1,10 @@
 import React from "react";
 import { ComponentStory, ComponentMeta } from "@storybook/react";
-import getTestData from "../lib/data/getTestData";
+import getTestData from "./lib/getTestData";
+import getBigTestData from "./lib/getBigTestData";
 import * as aq from "arquero";
 
 import SummaryTable from "../components/SummaryTable";
-import getBigTestData from "../lib/data/getBigTestData";
 
 export default {
   title: "SummaryTable/SummaryTable",
