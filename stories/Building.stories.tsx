@@ -1,5 +1,4 @@
-import React from "react";
-import { ComponentStory, ComponentMeta } from "@storybook/react";
+import { Meta, StoryObj } from "@storybook/react";
 
 import Building, { ITCLocationName } from "../components/Building";
 import { Vector2 } from "three";
@@ -7,10 +6,14 @@ import { Vector2 } from "three";
 const width = 300;
 const height = width / 2;
 
-export default {
+const meta = {
   title: "Shapes/Building",
   component: Building,
-  argTypes: {},
+  argTypes: {
+    width: {
+      control: { type: "range", min: 10, max: 960, step: 1 },
+    },
+  },
   decorators: [
     (Story) => (
       <svg width={width} height={height}>
@@ -18,18 +21,14 @@ export default {
       </svg>
     ),
   ],
-} as ComponentMeta<typeof Building>;
+} satisfies Meta<typeof Building>;
+export default meta;
+type Story = StoryObj<typeof meta>;
 
-const Template: ComponentStory<typeof Building> = (args) => {
-  return (
-    <>
-      <Building {...args} />
-    </>
-  );
-};
-
-export const DefaultBuilding = Template.bind({});
-DefaultBuilding.args = {
-  location: ITCLocationName.DELFT1,
-  position: new Vector2(width / 2, height / 2),
+export const DefaultBuilding: Story = {
+  args: {
+    width: width,
+    location: ITCLocationName.DELFT1,
+    position: new Vector2(width / 2, height / 2),
+  },
 };

@@ -1,5 +1,4 @@
-import React from "react";
-import { ComponentStory, ComponentMeta } from "@storybook/react";
+import { Meta, StoryObj } from "@storybook/react";
 import * as topojson from "topojson-client";
 import { geoRobinson } from "d3-geo-projection";
 import type { FeatureCollection, Polygon, MultiPolygon } from "geojson";
@@ -19,11 +18,12 @@ const featureCollection = topojson.feature(
 const feature = featureCollection.features[5];
 const projection = geoRobinson().fitSize([width, height], feature);
 
-export default {
+const meta = {
   title: "Map Elements/Symbols/PolygonSymbol",
   component: PolygonSymbol,
-  argTypes: {
-    projection: { table: { disable: true } },
+  args: {
+    feature,
+    projection,
   },
   decorators: [
     (Story) => (
@@ -35,26 +35,21 @@ export default {
       </svg>
     ),
   ],
-} as ComponentMeta<typeof PolygonSymbol>;
+} satisfies Meta<typeof PolygonSymbol>;
+export default meta;
+type Story = StoryObj<typeof meta>;
 
-const Template: ComponentStory<typeof PolygonSymbol> = (args) => {
-  return (
-    <>
-      <PolygonSymbol {...args} feature={feature} projection={projection} />
-    </>
-  );
+export const Default: Story = {
+  args: {
+    fill: "lightgrey",
+    stroke: "grey",
+  },
 };
 
-export const Default = Template.bind({});
-Default.args = {
-  fill: "lightgrey",
-  stroke: "grey",
-};
-
-export const Patternfill = Template.bind({});
-Patternfill.args = {
-  ...Default.args,
-  fill: "url(#Lines) blue",
-  stroke: "red",
-  opacity: 0.5,
+export const Patternfill: Story = {
+  args: {
+    fill: "url(#Lines) blue",
+    stroke: "red",
+    opacity: 0.5,
+  },
 };

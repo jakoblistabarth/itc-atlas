@@ -1,4 +1,4 @@
-import { ComponentMeta, ComponentStory } from "@storybook/react";
+import { Meta, StoryObj } from "@storybook/react";
 import { geoBertin1953 } from "d3-geo-projection";
 import BaseLayer from "../components/map/BaseLayer";
 import MapLayout from "../components/map/layout/MapLayout";
@@ -7,15 +7,19 @@ import getCountries from "../lib/data/getCountries";
 import getLakes from "../lib/data/getLakes";
 import getRivers from "../lib/data/getRivers";
 import themes from "../lib/styles/themes";
-import projections, {
-  getProjectionNames,
-} from "../lib/utilities/getProjections";
+import projections, { getProjectionNames } from "./lib/getProjections";
 
 const countries = getCountries();
 const lakes = getLakes();
 const rivers = getRivers();
+const defaultArgs = {
+  bounds: {
+    width: 1000,
+  },
+  projection: geoBertin1953(),
+};
 
-export default {
+const meta = {
   title: "Map Layers/BaseLayer",
   component: BaseLayer,
   argTypes: {
@@ -46,31 +50,23 @@ export default {
       </MapLayout>
     ),
   ],
-} as ComponentMeta<typeof BaseLayer>;
+} satisfies Meta<typeof BaseLayer>;
+export default meta;
+type Story = StoryObj<typeof meta>;
 
-const defaultArgs = {
-  bounds: {
-    width: 1000,
+export const DefaultBaseLayer: Story = {
+  args: {
+    projection: geoBertin1953(),
+    countries: countries,
   },
-  projection: geoBertin1953(),
 };
 
-const Template: ComponentStory<typeof BaseLayer> = (args) => {
-  return <BaseLayer {...args} />;
-};
-
-export const DefaultBaseLayer = Template.bind({});
-DefaultBaseLayer.args = {
-  ...Template.args,
-  projection: geoBertin1953(),
-  countries: countries,
-};
-
-export const Elaborate = Template.bind({});
-Elaborate.args = {
-  ...DefaultBaseLayer.args,
-  lakes: lakes,
-  rivers: rivers,
-  drawGraticuleLabels: true,
-  drawOutline: true,
+export const Elaborate: Story = {
+  args: {
+    ...DefaultBaseLayer.args,
+    lakes: lakes,
+    rivers: rivers,
+    drawGraticuleLabels: true,
+    drawOutline: true,
+  },
 };

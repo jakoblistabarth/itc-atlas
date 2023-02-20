@@ -1,4 +1,3 @@
-import React from "react";
 import { Meta, StoryObj } from "@storybook/react";
 import Timeline from "../components/charts/timeline/Timeline";
 import TimelineGrid from "../components/charts/timeline/TimelineGrid";
@@ -12,12 +11,12 @@ import { scaleTime } from "d3";
 import { timelineSetup } from "./lib/timelineSetup";
 
 type TimelineElements = {
-  points: React.ComponentProps<typeof EventPoint>[];
-  periods: React.ComponentProps<typeof EventPeriod>[];
-  grid: React.ComponentProps<typeof TimelineGrid>;
+  points?: React.ComponentProps<typeof EventPoint>[];
+  periods?: React.ComponentProps<typeof EventPeriod>[];
+  grid?: React.ComponentProps<typeof TimelineGrid>;
 };
 
-const meta: Meta<React.ComponentProps<typeof Timeline> & TimelineElements> = {
+const meta = {
   component: Timeline,
   title: "Charts/Timeline/Timeline",
   argTypes: {
@@ -45,13 +44,13 @@ const meta: Meta<React.ComponentProps<typeof Timeline> & TimelineElements> = {
       </svg>
     ),
   ],
-};
+} satisfies Meta<React.ComponentProps<typeof Timeline> & TimelineElements>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
 
 const TimelineTemplate: Story = {
-  render: ({ ...args }) => (
+  render: (args) => (
     <Timeline {...args}>
       {args.grid && <TimelineGrid {...args.grid} />}
       {args.points &&

@@ -1,5 +1,4 @@
-import React from "react";
-import { ComponentStory, ComponentMeta } from "@storybook/react";
+import { Meta, StoryObj } from "@storybook/react";
 import { max, scaleLinear } from "d3";
 
 import ProportionalRectangleLegend from "../components/map/ProportionalRectangleLegend";
@@ -12,12 +11,17 @@ const data = [
   80, 200, 120, 197,
 ];
 
-export default {
+const meta = {
   title: "Map Elements/Legends/ProportionalRectangleLegend",
-  argTypes: {
-    min: {
-      control: { type: "range", min: 0, max: 100, step: 1 },
-    },
+  args: {
+    x: 0,
+    y: 0,
+    data: data,
+    entryUnit: "fruit",
+    scaleHeight: scaleLinear()
+      .domain([0, max(data) ?? 1])
+      .range([0, 50]),
+    title: "Apples per tree",
   },
   component: ProportionalRectangleLegend,
   decorators: [
@@ -27,32 +31,14 @@ export default {
       </svg>
     ),
   ],
-} as ComponentMeta<typeof ProportionalRectangleLegend>;
+} satisfies Meta<typeof ProportionalRectangleLegend>;
+export default meta;
+type Story = StoryObj<typeof meta>;
 
-const Template: ComponentStory<typeof ProportionalRectangleLegend> = (args) => {
-  return (
-    <>
-      <ProportionalRectangleLegend {...args} />
-    </>
-  );
-};
-
-export const Default = Template.bind({});
-Default.args = {
-  x: 0,
-  y: 0,
-  data: data,
-  entryUnit: "fruit",
-  scaleHeight: scaleLinear()
-    .domain([0, max(data) ?? 1])
-    .range([0, 50]),
-  title: "Apples per tree",
-};
-
-export const StretchedLegend = Template.bind({});
-StretchedLegend.args = {
-  ...Default.args,
-  scaleHeight: scaleLinear()
-    .domain([0, max(data) ?? 1])
-    .range([0, 200]),
+export const StretchedLegend: Story = {
+  args: {
+    scaleHeight: scaleLinear()
+      .domain([0, max(data) ?? 1])
+      .range([0, 200]),
+  },
 };

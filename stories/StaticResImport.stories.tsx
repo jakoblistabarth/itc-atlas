@@ -1,16 +1,27 @@
-import React from "react";
-import { Meta } from "@storybook/react";
+import React, { FC } from "react";
+import { Meta, StoryObj } from "@storybook/react";
+import Image from "next/image";
 
-export default {
-  /* 👇 The title prop is optional.
-   * See https://storybook.js.org/docs/react/configure/overview#configure-story-loading
-   * to learn how to generate automatic titles
-   */
+type Props = {
+  src: string;
+  alt: string;
+  width: number;
+  height: number;
+};
+
+const Logo: FC<Props> = (args) => <Image {...args} alt={args.alt} />;
+const meta = {
   title: "ui/Img",
-} as Meta;
+  component: Logo,
+} satisfies Meta<typeof Logo>;
+export default meta;
+type Story = StoryObj<typeof meta>;
 
-export const DefaultImage = () => (
-  <>
-    <img src={"./images/image.png"} alt={"alt text"} />
-  </>
-);
+export const DefaultImage: Story = {
+  args: {
+    src: "./images/image.png",
+    alt: "ITC Logo",
+    width: 50,
+    height: 50,
+  },
+};

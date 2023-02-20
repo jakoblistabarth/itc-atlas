@@ -1,6 +1,6 @@
 import { OrbitControls } from "@react-three/drei";
 import { Canvas } from "@react-three/fiber";
-import { ComponentMeta, ComponentStory } from "@storybook/react";
+import { Meta, StoryObj } from "@storybook/react";
 import { geoPath } from "d3-geo";
 import { geoBertin1953 } from "d3-geo-projection";
 import type { FeatureCollection, MultiPolygon, Polygon } from "geojson";
@@ -11,7 +11,6 @@ import simplifyTopology from "../lib/cartographic/simplifyTopology";
 import featureCollectionToSVG from "../lib/cartographic/featureCollectionToSVG";
 
 const countries = simplifyTopology(getCountries(), 0.5);
-// const countries = getCountries("110m", true);
 const fc = topojson.feature(
   countries,
   countries.objects.ne_admin_0_countries
@@ -26,13 +25,16 @@ const projection = geoBertin1953().fitExtent(
 );
 const svg = featureCollectionToSVG(fc, geoPath(projection));
 
-export default {
+const meta = {
   title: "Map Types/PolygonMap3D",
   component: PolygonMap3D,
   argTypes: {
     svg: { table: { disable: true } },
   },
-  args: {},
+  args: {
+    color: "teal",
+    svg: svg,
+  },
   decorators: [
     (Story) => {
       return (
@@ -56,13 +58,8 @@ export default {
       );
     },
   ],
-} as ComponentMeta<typeof PolygonMap3D>;
+} satisfies Meta<typeof PolygonMap3D>;
+export default meta;
+type Story = StoryObj<typeof meta>;
 
-const Template: ComponentStory<typeof PolygonMap3D> = (args) => {
-  return <PolygonMap3D {...args} />;
-};
-
-export const DefaultPolygonMap3D = Template.bind({});
-DefaultPolygonMap3D.args = {
-  svg: svg,
-};
+export const DefaultPolygonMap3D: Story = {};

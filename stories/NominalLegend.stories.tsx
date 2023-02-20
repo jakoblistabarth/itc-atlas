@@ -1,5 +1,4 @@
-import React from "react";
-import { ComponentStory, ComponentMeta } from "@storybook/react";
+import { Meta, StoryObj } from "@storybook/react";
 
 import NominalLegend from "../components/map/NominalLegend";
 import Star from "../components/shapes/Star";
@@ -8,9 +7,17 @@ import NsidedPolygon from "../components/shapes/NsidedPolygon";
 const width = 600;
 const height = 600;
 
-export default {
+const meta = {
   title: "Map Elements/Legends/NominalLegend",
-  argTypes: {},
+  args: {
+    entries: [
+      { label: "VVD", color: "orange" },
+      { label: "PvdA", color: "red" },
+      { label: "CDA", color: "purple" },
+      { label: "D66", color: "skyblue" },
+    ],
+    title: "Parties",
+  },
   component: NominalLegend,
   decorators: [
     (Story) => (
@@ -19,63 +26,42 @@ export default {
       </svg>
     ),
   ],
-} as ComponentMeta<typeof NominalLegend>;
+} satisfies Meta<typeof NominalLegend>;
+export default meta;
+type Story = StoryObj<typeof meta>;
 
-const Template: ComponentStory<typeof NominalLegend> = (args) => {
-  return (
-    <>
-      <NominalLegend {...args} />
-    </>
-  );
+export const DefaultNominalLegend: Story = {};
+
+export const MulticolummnLegend: Story = {
+  args: {
+    columns: 4,
+    columnWidth: 30,
+  },
 };
 
-const defaultArgs = {
-  x: 0,
-  y: 0,
-  entries: [
-    { label: "VVD", color: "orange" },
-    { label: "PvdA", color: "red" },
-    { label: "CDA", color: "purple" },
-    { label: "D66", color: "skyblue" },
-  ],
-  title: "Parties",
-};
-
-export const DefaultNominalLegend = Template.bind({});
-DefaultNominalLegend.args = {
-  ...defaultArgs,
-};
-
-export const MulticolummnLegend = Template.bind({});
-MulticolummnLegend.args = {
-  ...defaultArgs,
-  columns: 4,
-  columnWidth: 30,
-};
-
-export const CustomSymbol = Template.bind({});
-CustomSymbol.args = {
-  ...defaultArgs,
-  entries: [
-    {
-      label: "VVD",
-      color: "yellow",
-      symbol: <Star innerRadius={2} outerRadius={5} />,
-    },
-    {
-      label: "PvdA",
-      color: "orange",
-      symbol: <NsidedPolygon sides={3} radius={5.5} />,
-    },
-    {
-      label: "CDA",
-      color: "red",
-      symbol: <NsidedPolygon sides={4} radius={5} transform="rotate(45)" />,
-    },
-    {
-      label: "D66",
-      color: "skyblue",
-      symbol: <NsidedPolygon sides={4} radius={5} />,
-    },
-  ],
+export const CustomSymbol: Story = {
+  args: {
+    entries: [
+      {
+        label: "VVD",
+        color: "yellow",
+        symbol: <Star innerRadius={2} outerRadius={5} />,
+      },
+      {
+        label: "PvdA",
+        color: "orange",
+        symbol: <NsidedPolygon sides={3} radius={5.5} />,
+      },
+      {
+        label: "CDA",
+        color: "red",
+        symbol: <NsidedPolygon sides={4} radius={5} transform="rotate(45)" />,
+      },
+      {
+        label: "D66",
+        color: "skyblue",
+        symbol: <NsidedPolygon sides={4} radius={5} />,
+      },
+    ],
+  },
 };

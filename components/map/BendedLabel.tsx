@@ -9,7 +9,7 @@ type Props = React.PropsWithChildren<{
   graticuleType: "lat" | "lon";
   degree: number;
   projection: GeoProjection;
-  textAnchor: "middle" | "start" | "end";
+  textAnchor?: "middle" | "start" | "end";
   textOriginDegree?: number;
   xOffset?: number;
   yOffset?: number;

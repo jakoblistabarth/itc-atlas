@@ -1,5 +1,4 @@
-import React from "react";
-import { ComponentStory, ComponentMeta } from "@storybook/react";
+import { Meta, StoryObj } from "@storybook/react";
 import { Canvas } from "@react-three/fiber";
 import { OrbitControls } from "@react-three/drei";
 import getCountries from "../lib/data/getCountries";
@@ -37,16 +36,20 @@ const featurePath = gPath(feature);
 
 const svgCountry = `<svg><path d="${featurePath}"/><svg>`;
 const svgPath = loader.parse(svgCountry);
+console.log(svgPath);
 const countryShapePath = svgPath.paths[0];
 const countryPath = countryShapePath.toShapes(true)[0];
 
-export default {
+const meta = {
   title: "Map Elements/Symbols/3D/Polygon3D",
   component: Polygon3D,
+  args: {
+    color: new Color("orange"),
+    fillOpacity: 1,
+  },
   argTypes: {
     fillOpacity: { control: { type: "range", min: 0, max: 1, step: 0.01 } },
   },
-  args: {},
   decorators: [
     (Story) => {
       return (
@@ -70,26 +73,19 @@ export default {
       );
     },
   ],
-} as ComponentMeta<typeof Polygon3D>;
+} satisfies Meta<typeof Polygon3D>;
+export default meta;
+type Story = StoryObj<typeof meta>;
 
-const Template: ComponentStory<typeof Polygon3D> = (args) => {
-  return <Polygon3D {...args} />;
+export const Square: Story = {
+  args: {
+    shape: squarePath,
+  },
 };
 
-const DefaultArgs = {
-  color: new Color("orange"),
-  fillOpacity: 1,
-};
-
-export const Square = Template.bind({});
-Square.args = {
-  ...DefaultArgs,
-  shape: squarePath,
-};
-
-export const Country = Template.bind({});
-Country.args = {
-  ...DefaultArgs,
-  color: new Color("blue"),
-  shape: countryPath,
+export const Country: Story = {
+  args: {
+    color: new Color("blue"),
+    shape: countryPath,
+  },
 };

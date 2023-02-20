@@ -1,4 +1,3 @@
-import React from "react";
 import { Meta, StoryObj } from "@storybook/react";
 import PointLabel from "../components/map/PointLabel";
 import { LabelPlacement } from "../types/LabelPlacement";

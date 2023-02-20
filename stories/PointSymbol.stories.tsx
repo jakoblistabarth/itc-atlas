@@ -1,5 +1,4 @@
-import React from "react";
-import { ComponentStory, ComponentMeta } from "@storybook/react";
+import { Meta, StoryObj } from "@storybook/react";
 
 import PointSymbol from "../components/map/PointSymbol";
 import { Vector2 } from "three";
@@ -14,9 +13,14 @@ const stylesArr = Array.from(themes.entries()).map(([key, value]) => [
 ]);
 const styles = Object.fromEntries(stylesArr);
 
-export default {
+const meta = {
   title: "Map Elements/Symbols/PointSymbol",
   component: PointSymbol,
+  args: {
+    style: { fill: "none", stroke: "black" },
+    position: new Vector2(width / 2, height / 2),
+    radius: 5,
+  },
   argTypes: {
     radius: { control: { type: "range", min: 1, max: 50, step: 1 } },
     style: {
@@ -32,29 +36,15 @@ export default {
       </svg>
     ),
   ],
-} as ComponentMeta<typeof PointSymbol>;
+} satisfies Meta<typeof PointSymbol>;
+export default meta;
+type Story = StoryObj<typeof meta>;
 
-const Template: ComponentStory<typeof PointSymbol> = (args) => {
-  return (
-    <>
-      <PointSymbol {...args} style={args.style} />
-    </>
-  );
-};
+export const DefaultPointSymbol: Story = {};
 
-const defaultArgs = {
-  style: { fill: "none", stroke: "black" },
-  position: new Vector2(width / 2, height / 2),
-  radius: 5,
-};
-
-export const SolidFill = Template.bind({});
-SolidFill.args = {
-  ...defaultArgs,
-};
-
-export const Patternfill = Template.bind({});
-Patternfill.args = {
-  ...defaultArgs,
-  style: { fill: "url(#Lines) blue", stroke: "red", opacity: 0.5 },
+//TODO: rename or add pattern definition
+export const Patternfill: Story = {
+  args: {
+    style: { fill: "url(#Lines) blue", stroke: "red", opacity: 0.5 },
+  },
 };

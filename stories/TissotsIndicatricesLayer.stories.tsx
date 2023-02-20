@@ -1,4 +1,3 @@
-import React from "react";
 import { Meta, StoryObj } from "@storybook/react";
 import BaseLayer from "../components/map/BaseLayer";
 import {
@@ -12,14 +11,13 @@ import MapLayoutBody from "../components/map/layout/MapLayoutBody";
 import TissotsIndicatricesLayer from "../components/map/TissotsIndicatricesLayer";
 import themes from "../lib/styles/themes";
 import getCountries from "../lib/data/getCountries";
-import projections, {
-  getProjectionNames,
-} from "../lib/utilities/getProjections";
+import projections, { getProjectionNames } from "./lib/getProjections";
+import { MapTheme } from "../types/MapTheme";
 
 const countries = getCountries();
 const bounds = { width: 300, height: 150 };
 
-const meta: Meta<typeof TissotsIndicatricesLayer> = {
+const meta = {
   title: "Map Layers/TissotsIndicatrices",
   component: TissotsIndicatricesLayer,
   decorators: [
@@ -46,13 +44,13 @@ const meta: Meta<typeof TissotsIndicatricesLayer> = {
         step: 0.1,
       },
     },
-    // theme: {
-    //   options: Array.from(themes.keys()),
-    //   mapping: Object.fromEntries(themes),
-    //   control: {
-    //     type: "select",
-    //   },
-    // },
+    theme: {
+      options: Array.from(themes.keys()),
+      mapping: Object.fromEntries(themes),
+      control: {
+        type: "select",
+      },
+    },
     projection: {
       options: getProjectionNames(),
       mapping: projections,
@@ -66,14 +64,16 @@ const meta: Meta<typeof TissotsIndicatricesLayer> = {
       <MapLayoutBody bounds={bounds}>
         <BaseLayer
           projection={args.projection}
-          // theme={args.theme}
+          theme={args.theme}
           countries={countries}
         />
         <TissotsIndicatricesLayer {...args} />
       </MapLayoutBody>
     </MapLayout>
   ),
-};
+} satisfies Meta<
+  React.ComponentProps<typeof TissotsIndicatricesLayer> & { theme?: MapTheme }
+>;
 export default meta;
 type Story = StoryObj<typeof meta>;
 
@@ -87,7 +87,7 @@ export const Default: Story = {
   },
 };
 
-export const Clipped = {
+export const Clipped: Story = {
   args: {
     ...Default.args,
     radius: 10,
@@ -96,7 +96,7 @@ export const Clipped = {
   },
 };
 
-export const Baker = {
+export const Baker: Story = {
   args: {
     ...Default.args,
     radius: 2.5,
@@ -106,7 +106,7 @@ export const Baker = {
   },
 };
 
-export const Mercator = {
+export const Mercator: Story = {
   args: {
     ...Default.args,
     fillColor: "blue",

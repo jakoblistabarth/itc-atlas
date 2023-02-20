@@ -1,27 +1,26 @@
-import React from "react";
-import { ComponentStory, ComponentMeta } from "@storybook/react";
+import { Meta, StoryObj } from "@storybook/react";
 import getTestData from "./lib/getTestData";
 import getBigTestData from "./lib/getBigTestData";
 import * as aq from "arquero";
 
 import SummaryTable from "../components/SummaryTable";
 
-export default {
+const meta = {
   title: "SummaryTable/SummaryTable",
   component: SummaryTable,
-} as ComponentMeta<typeof SummaryTable>;
+} satisfies Meta<typeof SummaryTable>;
+export default meta;
+type Story = StoryObj<typeof meta>;
 
-const Template: ComponentStory<typeof SummaryTable> = (args) => (
-  <SummaryTable {...args} />
-);
-
-export const DefaultSummaryTable = Template.bind({});
-DefaultSummaryTable.args = {
-  data: aq.from(getTestData()),
+export const DefaultSummaryTable: Story = {
+  args: {
+    data: aq.from(getTestData()),
+  },
 };
 
-export const SummaryTableWithTitle = Template.bind({});
-SummaryTableWithTitle.args = {
-  data: aq.from(getBigTestData()),
-  title: "Fake Staff Data",
+export const SummaryTableWithTitle: Story = {
+  args: {
+    data: aq.from(getBigTestData()),
+    title: "Fake Staff Data",
+  },
 };

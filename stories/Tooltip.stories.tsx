@@ -1,5 +1,4 @@
-import React from "react";
-import { ComponentStory, ComponentMeta } from "@storybook/react";
+import { Meta, StoryObj } from "@storybook/react";
 
 import Tooltip from "../components/Tooltip";
 
@@ -9,28 +8,25 @@ const children = (
   </div>
 );
 
-export default {
+const meta = {
   title: "UI/Tooltip",
   component: Tooltip,
-} as ComponentMeta<typeof Tooltip>;
+  args: {
+    raised: false,
+  },
+} satisfies Meta<typeof Tooltip>;
+export default meta;
+type Story = StoryObj<typeof meta>;
 
-const Template: ComponentStory<typeof Tooltip> = (args) => (
-  <Tooltip {...args}>{args.children}</Tooltip>
-);
-
-const defaultArgs: React.ComponentProps<typeof Tooltip> = {
-  raised: false,
+export const DefaultTooltip: Story = {
+  args: {
+    children: children,
+  },
 };
 
-export const DefaultTooltip = Template.bind({});
-DefaultTooltip.args = {
-  ...defaultArgs,
-  children: children,
-};
-
-export const RaisedTooltip = Template.bind({});
-RaisedTooltip.args = {
-  ...defaultArgs,
-  raised: true,
-  children: children,
+export const RaisedTooltip: Story = {
+  args: {
+    raised: true,
+    children: children,
+  },
 };

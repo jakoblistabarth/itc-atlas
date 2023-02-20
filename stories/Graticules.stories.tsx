@@ -1,16 +1,21 @@
-import { ComponentMeta, ComponentStory } from "@storybook/react";
+import { Meta, StoryObj } from "@storybook/react";
 import { geoBertin1953 } from "d3-geo-projection";
 import Graticules from "../components/map/Graticules";
 import MapLayout from "../components/map/layout/MapLayout";
 import MapLayoutBody from "../components/map/layout/MapLayoutBody";
 import themes from "../lib/styles/themes";
-import projections, {
-  getProjectionNames,
-} from "../lib/utilities/getProjections";
+import { Bounds } from "../types/MapOptions";
+import projections, { getProjectionNames } from "./lib/getProjections";
 
-export default {
+const meta = {
   title: "Map Layers/Graticules",
   component: Graticules,
+  args: {
+    bounds: {
+      width: 1000,
+    },
+    projection: geoBertin1953(),
+  },
   argTypes: {
     theme: {
       options: Array.from(themes.keys()),
@@ -27,32 +32,19 @@ export default {
       },
     },
   },
-  decorators: [
-    (Story) => (
-      <MapLayout
-        projection={defaultArgs.projection}
-        bounds={defaultArgs.bounds}
-      >
-        <MapLayoutBody bounds={defaultArgs.bounds}>
-          <Story />
-        </MapLayoutBody>
-      </MapLayout>
-    ),
-  ],
-} as ComponentMeta<typeof Graticules>;
+  render: (args) => (
+    <MapLayout projection={args.projection} bounds={args.bounds}>
+      <MapLayoutBody bounds={args.bounds}>
+        <Graticules {...args} />
+      </MapLayoutBody>
+    </MapLayout>
+  ),
+} satisfies Meta<React.ComponentProps<typeof Graticules> & { bounds: Bounds }>;
+export default meta;
+type Story = StoryObj<typeof meta>;
 
-const defaultArgs = {
-  bounds: {
-    width: 1000,
+export const DefaultGraticules: Story = {
+  args: {
+    projection: geoBertin1953(),
   },
-  projection: geoBertin1953(),
-};
-
-const Template: ComponentStory<typeof Graticules> = (args) => {
-  return <Graticules {...args} />;
-};
-
-export const DefaultGraticules = Template.bind({});
-DefaultGraticules.args = {
-  projection: geoBertin1953(),
 };
