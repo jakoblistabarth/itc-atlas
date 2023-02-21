@@ -10,7 +10,7 @@ export const loadApplicants = async () => {
     .from(data)
     .rename({
       ContactNo: "applicantId",
-      ISONationality: "countryIsoAlpha3",
+      ISONationality: "countryIsoAlpha3", //QUESTION: ask Menno-Jan whether we should use ?? d.CountryCodeOrigin as fallback
     })
     .dedupe("applicantId")
     .derive({
