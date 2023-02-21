@@ -39,7 +39,7 @@ export type ContactRaw = {
 };
 
 export default async function loadContacts() {
-  const filePath = "./data/itc/STUDENTSALUMNIv3 (20220304).xlsx";
+  const filePath = "./data/itc/STUDENTSALUMNIv4 (20230217).xlsx";
   const file = xlsx.readFile(filePath, {
     cellDates: true,
   });

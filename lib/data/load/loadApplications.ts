@@ -8,6 +8,7 @@ export const loadApplications = async () => {
 
   const tb = aq
     .from(data)
+    .dedupe("APPnr", "Start Date", "End Date")
     .derive({
       statusId: (d: ContactRaw) => aq.op.substring(d["Applicant status"], 0, 2),
       enrollmentStart: aq.escape((d: ContactRaw) =>
@@ -16,7 +17,10 @@ export const loadApplications = async () => {
       enrollmentEnd: aq.escape((d: ContactRaw) =>
         d["End Date"] ? ddmmyyyyToDate(d["End Date"]) : null
       ),
-      examYear: (d: ContactRaw) => aq.op.parse_int(d["YearCert_Exam_Dipl"], 10),
+      examYear: (d: ContactRaw) =>
+        aq.op.is_finite(aq.op.parse_int(d["YearCert_Exam_Dipl"], 10))
+          ? aq.op.parse_int(d["YearCert_Exam_Dipl"], 10)
+          : null,
     })
     .rename({
       APPnr: "id",
@@ -40,7 +44,7 @@ export const loadApplications = async () => {
       "examYear",
       "certificateType",
       "enrollmentStart",
-      "enrollmentEnd", //TODO: add certificationDate?
+      "enrollmentEnd",
       "sponsor"
     );
 
