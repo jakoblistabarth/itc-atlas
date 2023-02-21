@@ -28,21 +28,25 @@ The website uses a `PostgreSQL` database via [prisma](https://prisma.io/).
 The schema names follow the [prisma naming conventions](https://www.prisma.io/docs/reference/api-reference/prisma-schema-reference#naming-conventions): mainly, *singular form* and *PascalCase* for models and *camelCase* for fields.
 
 To run single queries (a module as .ts file) enter
+
 ```bash
 npx dotenv -e .env.local -- npx ts-node --compiler-options {\"module\":\"commonjs\"} <pathToQueryFile>
 ```
 
 To seed db manually
+
 ```bash
 npx prisma db seed
 ```
 
 To push the state of the *Prisma* schema file to the database without using migrations. Usually used during prototyping and local development.
+
 ```bash
 npx dotenv -e .env.local -- npx prisma db push
 ```
 
 To open up *Prisma Studio* to visually inspect and edit the data in the database run
+
 ```bash
  npx prisma studio
 ```
@@ -57,7 +61,7 @@ npm run dev
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the atlas.
 
-Visit https://nextjs.org/learn for informations on next.js.
+Visit [nextjs.org/learn](https://nextjs.org/learn) for information on next.js.
 
 ## UI & Map Components 🗺
 
@@ -67,7 +71,7 @@ To start storybook for development run:
 npm run storybook
 ```
 
-Visit https://storybook.js.org/docs/react/get-started/introduction for more Information on how to use storybook.js with react.
+Visit [storybook.js.org/docs/](https://storybook.js.org/docs/react/get-started/introduction) for more Information on how to use storybook.js with react.
 
 ## Building the website 📦
 
@@ -88,4 +92,10 @@ And eventually served in production mode with:
 
 ```{bash}
 npm run start
+```
+
+Run jest tests with:
+
+```{bash}
+npm run test
 ```
