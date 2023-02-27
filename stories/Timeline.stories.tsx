@@ -68,7 +68,9 @@ const TimelineTemplate: Story = {
 export const Default: Story = {
   ...TimelineTemplate,
   args: {
+    // @ts-expect-error: when using story args for EventPoint stories
     points: [{ ...DefaultEventPoint.args }],
+    // @ts-expect-error: when using story args for EventPeriod stories
     periods: [{ ...DefaultEventPeriod.args }],
     grid: { ...DefaultTimelineGrid.args },
   },
@@ -87,6 +89,7 @@ export const WithScaledItem: Story = {
         radius: 5,
         drawCenter: true,
       },
+      // @ts-expect-error: when using story args for EventPoint stories
       { ...ScaledEventPoint.args },
     ],
     grid: {

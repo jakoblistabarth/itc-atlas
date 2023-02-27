@@ -15,6 +15,13 @@ const event: TimelineEvent = {
 const meta = {
   title: "Charts/Timeline/EventPeriod",
   component: EventPeriod,
+  args: {
+    yOffset: timelineSetup.height / 2,
+    dateStart: event.dateStart,
+    dateEnd: event.dateEnd ?? new Date(),
+    xScale: timelineSetup.scale,
+    height: 10,
+  },
   decorators: [
     (Story) => (
       <svg width={timelineSetup.width} height={timelineSetup.height}>
@@ -31,19 +38,10 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const DefaultEventPeriod: Story = {
-  args: {
-    yOffset: timelineSetup.height / 2,
-    dateStart: event.dateStart,
-    dateEnd: event.dateEnd ?? new Date(),
-    xScale: timelineSetup.scale,
-    height: 10,
-  },
-};
+export const DefaultEventPeriod: Story = {};
 
 export const StyledEventPeriod: Story = {
   args: {
-    ...DefaultEventPeriod.args,
     fillOpacity: 0.1,
     stroke: "teal",
   },

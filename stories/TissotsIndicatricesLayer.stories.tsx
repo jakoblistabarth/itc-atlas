@@ -27,6 +27,13 @@ const meta = {
       </svg>
     ),
   ],
+  args: {
+    projection: geoBertin1953(),
+    strokeColor: "none",
+    fillColor: "black",
+    opacity: 0.2,
+    radius: 2.5,
+  },
   argTypes: {
     opacity: {
       control: {
@@ -77,19 +84,10 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const Default: Story = {
-  args: {
-    projection: geoBertin1953(),
-    strokeColor: "none",
-    fillColor: "black",
-    opacity: 0.2,
-    radius: 2.5,
-  },
-};
+export const Default: Story = {};
 
 export const Clipped: Story = {
   args: {
-    ...Default.args,
     radius: 10,
     step: 40,
     projection: geoInterruptedMollweide(),
@@ -98,7 +96,6 @@ export const Clipped: Story = {
 
 export const Baker: Story = {
   args: {
-    ...Default.args,
     radius: 2.5,
     step: 10,
     fillColor: "red",
@@ -108,7 +105,6 @@ export const Baker: Story = {
 
 export const Mercator: Story = {
   args: {
-    ...Default.args,
     fillColor: "blue",
     opacity: 0.8,
     projection: geoMercator(),

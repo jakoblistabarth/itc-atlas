@@ -22,6 +22,10 @@ const defaultArgs = {
 const meta = {
   title: "Map Layers/BaseLayer",
   component: BaseLayer,
+  args: {
+    projection: geoBertin1953(),
+    countries: countries,
+  },
   argTypes: {
     theme: {
       options: Array.from(themes.keys()),
@@ -54,16 +58,10 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const DefaultBaseLayer: Story = {
-  args: {
-    projection: geoBertin1953(),
-    countries: countries,
-  },
-};
+export const DefaultBaseLayer: Story = {};
 
 export const Elaborate: Story = {
   args: {
-    ...DefaultBaseLayer.args,
     lakes: lakes,
     rivers: rivers,
     drawGraticuleLabels: true,
