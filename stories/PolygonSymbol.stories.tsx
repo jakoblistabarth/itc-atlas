@@ -10,12 +10,14 @@ import PatternLines from "../components/defs/patterns/PatternLines";
 const width = 600;
 const height = 300;
 
-const countries = getCountries();
+const countries = getCountries("10m");
 const featureCollection = topojson.feature(
   countries,
   countries.objects.ne_admin_0_countries
-) as FeatureCollection<MultiPolygon | Polygon>;
-const feature = featureCollection.features[5];
+);
+const feature = featureCollection.features.find(
+  (d) => d.properties.ADM0_A3 === "GRC"
+);
 const projection = geoRobinson().fitSize([width, height], feature);
 
 const meta = {

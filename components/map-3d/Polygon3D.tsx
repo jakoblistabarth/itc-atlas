@@ -1,11 +1,12 @@
 import { FC, useEffect, useState } from "react";
-import { Color, DoubleSide, Shape } from "three";
+import { Color, DoubleSide, ExtrudeGeometryOptions, Shape } from "three";
 
 const Polygon3D: FC<{
-  shape: Shape;
-  color: Color;
+  shape: Shape | Shape[];
+  color: string;
   fillOpacity: number;
-}> = ({ shape, color, fillOpacity }) => {
+  extrudeGeometryOptions: ExtrudeGeometryOptions;
+}> = ({ shape, color, fillOpacity, extrudeGeometryOptions = {} }) => {
   const [hover, setHover] = useState(false);
 
   useEffect(
@@ -15,14 +16,15 @@ const Polygon3D: FC<{
 
   return (
     <mesh
-      onPointerOver={(e) => setHover(true)}
-      onPointerOut={() => setHover(false)}
+      onPointerEnter={() => setHover(true)}
+      onPointerLeave={() => setHover(false)}
+      rotation={[Math.PI,0,0,]} // taking into account the origin of svg coordinates in the top left rather than in the center
     >
-      <shapeBufferGeometry args={[shape]} />
-      <meshBasicMaterial
-        color={hover ? "grey" : color}
+      <extrudeGeometry args={[shape, { ...extrudeGeometryOptions }]} />
+      <meshStandardMaterial
+        color={hover ? new Color("grey") : new Color(color)}
         opacity={fillOpacity}
-        depthWrite={false}
+        depthWrite={true}
         side={DoubleSide}
         transparent
       />

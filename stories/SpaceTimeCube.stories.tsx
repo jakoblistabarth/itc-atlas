@@ -57,10 +57,10 @@ const meta = {
   component: SpaceTimeCube,
   argTypes: {
     side: {
-      control: { type: "range", min: 0.1, max: 1, step: 0.01 },
+      control: { type: "range", min: 0.1, max: 10, step: 0.1 },
     },
     height: {
-      control: { type: "range", min: 0.01, max: 3, step: 0.01 },
+      control: { type: "range", min: 0.01, max: 10, step: 0.1 },
     },
   },
   decorators: [
@@ -70,7 +70,7 @@ const meta = {
           <Canvas
             style={{ background: "black" }}
             orthographic
-            camera={{ position: [0, 0, 100], zoom: 250 }}
+            camera={{ position: [0, 0, 100], zoom: 30 }}
             shadows
           >
             <ambientLight args={[undefined, 0.1]} />

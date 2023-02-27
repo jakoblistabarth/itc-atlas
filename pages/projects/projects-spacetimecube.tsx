@@ -80,11 +80,11 @@ const ProjectExplorer3D: NextPage<Props> = ({
 
       <main className={styles.main}>
         <Heading Tag={Headings.H1}>Projects Space Time Cube</Heading>
-        <div style={{ width: "100%", height: "500px" }}>
+        <div style={{ width: "100%", height: "680px" }}>
           <Canvas
             style={{ background: "white" }}
             orthographic
-            camera={{ position: [0, 0, 100], zoom: 300 }}
+            camera={{ position: [0, 0, 100], zoom: 50 }}
             shadows
           >
             <SpaceTimeCube geoData={neCountriesTopoJson} events={events} />

@@ -3,23 +3,18 @@ import { Canvas } from "@react-three/fiber";
 import { Meta, StoryObj } from "@storybook/react";
 import { geoPath } from "d3-geo";
 import { geoBertin1953 } from "d3-geo-projection";
-import type { FeatureCollection, MultiPolygon, Polygon } from "geojson";
 import * as topojson from "topojson-client";
 import PolygonMap3D from "../components/map-3d/PolygonMap3D";
 import getCountries from "../lib/data/getCountries";
-import simplifyTopology from "../lib/cartographic/simplifyTopology";
 import featureCollectionToSVG from "../lib/cartographic/featureCollectionToSVG";
 
-const countries = simplifyTopology(getCountries(), 0.5);
-const fc = topojson.feature(
-  countries,
-  countries.objects.ne_admin_0_countries
-) as FeatureCollection<MultiPolygon | Polygon>;
+const countries = getCountries("50m");
+const fc = topojson.feature(countries, countries.objects.ne_admin_0_countries);
 
 const projection = geoBertin1953().fitExtent(
   [
-    [-1, -1],
-    [1, 1],
+    [-5, -5],
+    [5, 5],
   ],
   { type: "Sphere" }
 );
@@ -34,17 +29,23 @@ const meta = {
   args: {
     color: "teal",
     svg: svg,
+    extrudeGeometryOptions: {
+      depth: 0.01,
+      bevelSize: 0.005,
+      bevelThickness: 0.005,
+      bevelSegments: 12,
+    },
   },
   decorators: [
     (Story) => {
       return (
-        <div style={{ width: "100%", height: "300px" }}>
+        <div style={{ width: "100%", height: "400px" }}>
           <Canvas
             orthographic
-            camera={{ position: [0, 1, 0], zoom: 250 }}
+            camera={{ position: [0, 50, 0], zoom: 25 }}
             shadows
           >
-            <axesHelper />
+            <axesHelper args={[7.5]} />
             <ambientLight args={[undefined, 0.1]} />
             <hemisphereLight
               color="#ffffff"

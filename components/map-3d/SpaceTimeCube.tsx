@@ -24,8 +24,8 @@ type PropTypes = React.PropsWithChildren<{
 const SpaceTimeCube: FC<PropTypes> = ({
   events,
   geoData,
-  side = 1,
-  height = 1,
+  side = 10,
+  height = 10,
 }) => {
   const minDate = min(events.map((d) => d.dateStart));
   const maxDate = max(events.map((d) => d.dateEnd ?? new Date()));
@@ -110,7 +110,16 @@ const SpaceTimeCube: FC<PropTypes> = ({
         );
       })}
       <group position-y={height / -2}>
-        <PolygonMap3D svg={svg} color={"white"} />
+        <PolygonMap3D
+          svg={svg}
+          color={"white"}
+          extrudeGeometryOptions={{
+            depth: 0.05,
+            bevelSize: 0.005,
+            bevelThickness: 0.005,
+            bevelSegments: 12,
+          }}
+        />
       </group>
     </>
   );
