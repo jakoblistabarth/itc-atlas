@@ -1,6 +1,8 @@
 import { Meta, StoryObj } from "@storybook/react";
+import Tooltip from "../components/Tooltip/Tooltip";
 
-import Tooltip from "../components/Tooltip";
+import TooltipContent from "../components/Tooltip/TooltipContent";
+import { TooltipTrigger } from "../components/Tooltip/TooltipTrigger";
 
 const children = (
   <div>
@@ -10,23 +12,28 @@ const children = (
 
 const meta = {
   title: "UI/Tooltip",
-  component: Tooltip,
+  component: TooltipContent,
   args: {
-    raised: false,
+    children: children,
   },
-} satisfies Meta<typeof Tooltip>;
+  decorators: [
+    (Story) => (
+      <Tooltip open>
+        <Story />
+        <TooltipTrigger asChild>
+          <button disabled style={{ display: "none" }} />
+        </TooltipTrigger>
+      </Tooltip>
+    ),
+  ],
+} satisfies Meta<typeof TooltipContent>;
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const DefaultTooltip: Story = {
-  args: {
-    children: children,
-  },
-};
+export const DefaultTooltip: Story = {};
 
-export const RaisedTooltip: Story = {
+export const NotRaisedTooltip: Story = {
   args: {
-    raised: true,
-    children: children,
+    raised: false,
   },
 };

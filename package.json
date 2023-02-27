@@ -20,6 +20,7 @@
     "seed": "dotenv -e .env.local -- ts-node prisma/seed.ts"
   },
   "dependencies": {
+    "@floating-ui/react": "^0.19.2",
     "@floating-ui/react-dom": "^1.2.2",
     "@floating-ui/react-dom-interactions": "^0.6.6",
     "@prisma/client": "^4.9.0",

@@ -4,6 +4,10 @@ import type { AirportProperties } from "../../types/Travels";
 import getAirports from "./getAirports";
 import getFlights2019 from "./queries/flight2019/getFlights2019";
 
+export type AirportPropertiesWithCount = AirportProperties & {
+  value: number;
+};
+
 const getFlightsPerAirport = async () => {
   const flights = await getFlights2019();
 
@@ -19,19 +23,22 @@ const getFlightsPerAirport = async () => {
   const features = airports
     .map((d) => {
       const value = count.get(d.iata_code);
-      const feature: Feature<Point> = {
+      const feature: Feature<Point, AirportPropertiesWithCount> = {
         type: "Feature",
         geometry: {
           type: "Point",
           coordinates: [d.lon, d.lat],
         },
-        properties: { ...d, value: value },
+        properties: { ...d, value: value ?? 0 },
       };
       return feature;
     })
     .filter((d) => d.properties?.value);
 
-  const featureCollection: FeatureCollection<Point> = {
+  const featureCollection: FeatureCollection<
+    Point,
+    AirportPropertiesWithCount
+  > = {
     type: "FeatureCollection",
     features: features,
   };

@@ -14,16 +14,21 @@ import { SharedPageProps } from "../../types/Props";
 import { nanoid } from "nanoid";
 import { Vector2 } from "three";
 import getCountryCodes from "../../lib/data/queries/country/getCountryCodes";
-import getFlightsPerAirport from "../../lib/data/getFlightsPerAirport";
+import getFlightsPerAirport, {
+  AirportPropertiesWithCount,
+} from "../../lib/data/getFlightsPerAirport";
+import Tooltip from "../../components/Tooltip/Tooltip";
+import { TooltipTrigger } from "../../components/Tooltip/TooltipTrigger";
+import TooltipContent from "../../components/Tooltip/TooltipContent";
 
 type Props = {
-  airports: FeatureCollection<Point>;
+  airports: FeatureCollection<Point, AirportPropertiesWithCount>;
 } & SharedPageProps;
 
 const Airports: NextPage<Props> = ({ airports, neCountriesTopoJson }) => {
   const projection = geoBertin1953();
 
-  const airportsGeo: FeatureCollection<Point> = {
+  const airportsGeo: FeatureCollection<Point, AirportPropertiesWithCount> = {
     type: "FeatureCollection",
     features: airports.features.sort((a, b) =>
       d3.descending(a.properties?.value, b.properties?.value)
@@ -31,11 +36,14 @@ const Airports: NextPage<Props> = ({ airports, neCountriesTopoJson }) => {
   };
 
   const flightCount = airportsGeo.features.map(
-    (feature) => feature.properties?.value
+    (feature) => feature.properties.value
   );
   const minRange = d3.min(flightCount);
   const maxRange = d3.max(flightCount);
-  const scale = d3.scaleSqrt().domain([minRange, maxRange]).range([0, 30]);
+  const scale = d3
+    .scaleSqrt()
+    .domain([minRange ?? 0, maxRange ?? 10])
+    .range([0, 30]);
 
   return (
     <>
@@ -52,12 +60,23 @@ const Airports: NextPage<Props> = ({ airports, neCountriesTopoJson }) => {
           {airportsGeo.features.map((airport) => {
             const coords = projection(airport.geometry.coordinates);
             return (
-              <PointSymbol
-                key={nanoid()}
-                style={defaultTheme.symbol}
-                position={new Vector2(coords[0], coords[1])}
-                radius={scale(airport.properties?.value)}
-              />
+              <Tooltip key={nanoid()}>
+                <TooltipContent>
+                  <strong>{airport.properties?.["iata_code"]}</strong>
+                  &nbsp;{airport.properties?.name}
+                  <br />
+                  {airport.properties?.value} flights (incoming/outgoing)
+                </TooltipContent>
+                <TooltipTrigger asChild>
+                  <g>
+                    <PointSymbol
+                      style={defaultTheme.symbol}
+                      position={new Vector2(coords[0], coords[1])}
+                      radius={scale(airport.properties?.value)}
+                    />
+                  </g>
+                </TooltipTrigger>
+              </Tooltip>
             );
           })}
           {airportsGeo.features.slice(0, 5).map((airport) => {
