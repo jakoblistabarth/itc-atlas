@@ -47,7 +47,7 @@ const Naivasha: NextPage<Props> = ({ neCountriesTopoJson }) => {
               <Cubes position={[0, 20, 0]} />
               <mesh receiveShadow position={[0, -1, 0]}>
                 <boxGeometry args={[150, 1, 150]} />
-                <meshBasicMaterial color={"white"} />
+                <meshStandardMaterial color={"white"} />
               </mesh>
               <NaivashaRegion castShadow position={[0, 3, 0]} />
               <OrbitControls />
