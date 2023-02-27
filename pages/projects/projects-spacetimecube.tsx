@@ -87,7 +87,11 @@ const ProjectExplorer3D: NextPage<Props> = ({
             camera={{ position: [0, 0, 100], zoom: 50 }}
             shadows
           >
-            <SpaceTimeCube geoData={neCountriesTopoJson} events={events} />
+            <SpaceTimeCube
+              topology={neCountriesTopoJson}
+              topologyObject="ne_admin_0_countries"
+              events={events}
+            />
             <ambientLight args={[undefined, 0.1]} />
             <hemisphereLight
               color="#ffffff"

@@ -1,5 +1,5 @@
 import { Edges, Text3D } from "@react-three/drei";
-import { geoPath, max, min, scaleTime } from "d3";
+import { max, min, scaleTime } from "d3";
 import { geoBertin1953 } from "d3-geo-projection";
 import { nanoid } from "nanoid";
 import React, { FC } from "react";
@@ -9,21 +9,19 @@ import InterRegular from "../../public/fonts/Inter_Regular.json";
 import { SpaceTimeCubeEvent } from "../../types/SpaceTimeCubeEvent";
 import type { Topology } from "topojson-specification";
 import PolygonMap3D from "./PolygonMap3D";
-import { feature } from "topojson-client";
-import simplifyTopology from "../../lib/cartographic/simplifyTopology";
-import featureCollectionToSVG from "../../lib/cartographic/featureCollectionToSVG";
-import { FeatureCollection, Polygon, MultiPolygon } from "geojson";
 
 type PropTypes = React.PropsWithChildren<{
   events: SpaceTimeCubeEvent[];
-  geoData: Topology;
+  topology: Topology;
+  topologyObject: string;
   side?: number;
   height?: number;
 }>;
 
 const SpaceTimeCube: FC<PropTypes> = ({
   events,
-  geoData,
+  topology,
+  topologyObject,
   side = 10,
   height = 10,
 }) => {
@@ -45,13 +43,6 @@ const SpaceTimeCube: FC<PropTypes> = ({
       type: "Sphere",
     }
   );
-
-  const countries = simplifyTopology(geoData, 0.5);
-  const fc = feature(
-    countries,
-    countries.objects.ne_admin_0_countries
-  ) as FeatureCollection<MultiPolygon | Polygon>;
-  const svg = featureCollectionToSVG(fc, geoPath(projection));
 
   return (
     <>
@@ -111,7 +102,11 @@ const SpaceTimeCube: FC<PropTypes> = ({
       })}
       <group position-y={height / -2}>
         <PolygonMap3D
-          svg={svg}
+          topology={topology}
+          topologyObject={topologyObject}
+          width={side}
+          height={side}
+          projection={projection}
           color={"white"}
           extrudeGeometryOptions={{
             depth: 0.05,

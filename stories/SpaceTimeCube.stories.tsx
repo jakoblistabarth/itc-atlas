@@ -93,6 +93,7 @@ type Story = StoryObj<typeof meta>;
 export const DefaultSpaceTimeCube: Story = {
   args: {
     events,
-    geoData: countries,
+    topology: countries,
+    topologyObject: "ne_admin_0_countries",
   },
 };

@@ -1,5 +1,5 @@
 import { GeoPath } from "d3-geo";
-import { FeatureCollection } from "geojson";
+import { FeatureCollection, MultiPolygon, Polygon } from "geojson";
 
 /**
  *
@@ -8,7 +8,7 @@ import { FeatureCollection } from "geojson";
  * @returns An SVG containing the feature-collection's features as individual paths.
  */
 const featureCollectionToSVG = (
-  fc: FeatureCollection,
+  fc: FeatureCollection<MultiPolygon | Polygon>,
   geoPath: GeoPath
 ): string => {
   const svgPaths = fc.features.map((f) => `<path d="${geoPath(f)}" />`);

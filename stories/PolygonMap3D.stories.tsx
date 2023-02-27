@@ -1,34 +1,31 @@
 import { OrbitControls } from "@react-three/drei";
 import { Canvas } from "@react-three/fiber";
 import { Meta, StoryObj } from "@storybook/react";
-import { geoPath } from "d3-geo";
-import { geoBertin1953 } from "d3-geo-projection";
-import * as topojson from "topojson-client";
+import { geoBertin1953, geoBaker } from "d3-geo-projection";
 import PolygonMap3D from "../components/map-3d/PolygonMap3D";
 import getCountries from "../lib/data/getCountries";
-import featureCollectionToSVG from "../lib/cartographic/featureCollectionToSVG";
-
-const countries = getCountries("50m");
-const fc = topojson.feature(countries, countries.objects.ne_admin_0_countries);
-
-const projection = geoBertin1953().fitExtent(
-  [
-    [-5, -5],
-    [5, 5],
-  ],
-  { type: "Sphere" }
-);
-const svg = featureCollectionToSVG(fc, geoPath(projection));
+import projections, { getProjectionNames } from "./lib/getProjections";
 
 const meta = {
   title: "Map Types/PolygonMap3D",
   component: PolygonMap3D,
   argTypes: {
-    svg: { table: { disable: true } },
+    topology: { table: { disable: true } },
+    projection: {
+      options: getProjectionNames(),
+      mapping: projections,
+      control: {
+        type: "select",
+      },
+    },
   },
   args: {
     color: "teal",
-    svg: svg,
+    topology: getCountries(),
+    topologyObject: "ne_admin_0_countries",
+    projection: geoBertin1953(),
+    width: 10,
+    height: 10,
     extrudeGeometryOptions: {
       depth: 0.01,
       bevelSize: 0.005,
@@ -64,3 +61,9 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const DefaultPolygonMap3D: Story = {};
+export const PolygonMap3DInterrupted: Story = {
+  tags: ["wip"], //TODO: add this tag to sidebar?
+  args: {
+    projection: geoBaker(),
+  },
+};
