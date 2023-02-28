@@ -32,6 +32,10 @@ const PointSymbol: FC<Props> = ({
       cursor={interactive ? "pointer" : "inherit"}
       onMouseEnter={() => setActive(true)}
       onMouseLeave={() => setActive(false)}
+      style={{
+        ...props.style,
+        transition: "stroke-width .25s",
+      }}
     />
   );
 };

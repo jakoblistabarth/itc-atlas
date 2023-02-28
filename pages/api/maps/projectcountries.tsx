@@ -117,6 +117,7 @@ export default async function handler(
                   position={new Vector2(xy[0], xy[1])}
                   radius={scale(feature.properties?.projectCount)}
                   {...theme?.symbol}
+                  interactive={false}
                 />
               )
             );
