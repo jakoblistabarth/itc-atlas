@@ -20,6 +20,8 @@ import getFlightsPerAirport, {
 import Tooltip from "../../components/Tooltip/Tooltip";
 import { TooltipTrigger } from "../../components/Tooltip/TooltipTrigger";
 import TooltipContent from "../../components/Tooltip/TooltipContent";
+import { fInt } from "../../lib/utilities/formaters";
+import ProportionalCircleLegend from "../../components/map/ProportionalCircleLegend";
 
 type Props = {
   airports: FeatureCollection<Point, AirportPropertiesWithCount>;
@@ -65,14 +67,14 @@ const Airports: NextPage<Props> = ({ airports, neCountriesTopoJson }) => {
                   <strong>{airport.properties?.["iata_code"]}</strong>
                   &nbsp;{airport.properties?.name}
                   <br />
-                  {airport.properties?.value} flights (incoming/outgoing)
+                  {fInt(airport.properties?.value)} flights (incoming/outgoing)
                 </TooltipContent>
                 <TooltipTrigger asChild>
                   <g>
                     <PointSymbol
-                      style={defaultTheme.symbol}
                       position={new Vector2(coords[0], coords[1])}
                       radius={scale(airport.properties?.value)}
+                      {...defaultTheme.symbol}
                     />
                   </g>
                 </TooltipTrigger>

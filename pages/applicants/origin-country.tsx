@@ -106,12 +106,10 @@ const AlumniOrigin: NextPage<Props> = ({
                   new Vector2(...projection(point.geometry.coordinates))
                 }
                 radius={scale(point.properties?.alumniCount)}
-                style={{
-                  fill: "teal",
-                  stroke: "teal",
-                  strokeWidth: 0.5,
-                  fillOpacity: 0.1,
-                }}
+                fill={"teal"}
+                stroke={"teal"}
+                strokeWidth={0.5}
+                fillOpacity={0.1}
               />
             ))}
           </g>

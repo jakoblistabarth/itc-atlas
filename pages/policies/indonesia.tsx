@@ -430,11 +430,10 @@ const IndonesiaTimeline: NextPage<Props> = ({
                         <PointSymbol
                           position={new Vector2()}
                           radius={2}
-                          style={{
-                            stroke: itcGreen,
-                            fill: "white",
-                            fillOpacity: 1,
-                          }}
+                          stroke={itcGreen}
+                          fill={"white"}
+                          fillOpacity={1}
+                          interactive={false}
                         />
                       </EventPeriod>
                     );
@@ -489,11 +488,10 @@ const IndonesiaTimeline: NextPage<Props> = ({
                           />
                           <PointSymbol
                             position={new Vector2(0, width / 2)}
-                            style={{
-                              fillOpacity: 1,
-                              fill: "white",
-                              stroke: itcGreen,
-                            }}
+                            fillOpacity={1}
+                            fill={"white"}
+                            stroke={itcGreen}
+                            interactive={false}
                           />
                           <PointLabel
                             position={new Vector2(0, width / 2)}

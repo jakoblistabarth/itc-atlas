@@ -38,7 +38,7 @@ const FlowLayer: FC<{
               key={nanoid()}
               position={new Vector2(position[0], position[1])}
               radius={1}
-              style={pointStyle}
+              {...pointStyle}
             />
           )
         );

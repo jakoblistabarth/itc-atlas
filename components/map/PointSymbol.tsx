@@ -1,24 +1,37 @@
-import { FC } from "react";
-import { Appearance } from "../../types/Appearance";
+import { FC, SVGProps, useState } from "react";
 import defaultTheme from "../../lib/styles/themes/defaultTheme";
 import { Vector2 } from "three";
+import toInt from "../../lib/utilities/toInt";
 
-const PointSymbol: FC<{
+type Props = {
   position: Vector2;
-  style?: Appearance;
   radius?: number;
-}> = ({ position, style, radius = 2 }) => {
+  interactive?: boolean;
+} & Omit<SVGProps<SVGCircleElement>, "cx" | "cy" | "r">;
+
+const PointSymbol: FC<Props> = ({
+  position,
+  radius = 2,
+  interactive = true,
+  ...props
+}) => {
+  const [isActive, setActive] = useState(false);
+  const strokeWidth =
+    toInt(props.strokeWidth) ?? defaultTheme.symbol?.strokeWidth ?? 1;
   return (
     <circle
+      {...props}
       cx={position.x}
       cy={position.y}
       r={radius}
-      fill={style?.fill ?? defaultTheme.symbol?.fill}
-      fillOpacity={style?.fillOpacity ?? defaultTheme.symbol?.fillOpacity}
-      stroke={style?.stroke ?? defaultTheme.symbol?.stroke}
-      strokeOpacity={style?.strokeOpacity ?? defaultTheme.symbol?.strokeOpacity}
-      strokeWidth={style?.strokeWidth ?? defaultTheme.symbol?.strokeWidth}
-      strokeLinejoin={style?.strokeLineJoin ?? "round"}
+      fill={props.fill ?? defaultTheme.symbol?.fill}
+      fillOpacity={props.fillOpacity ?? defaultTheme.symbol?.fillOpacity}
+      stroke={props.stroke ?? defaultTheme.symbol?.stroke}
+      strokeOpacity={props.strokeOpacity ?? defaultTheme.symbol?.strokeOpacity}
+      strokeWidth={isActive && interactive ? strokeWidth * 2 : strokeWidth}
+      cursor={interactive ? "pointer" : "inherit"}
+      onMouseEnter={() => setActive(true)}
+      onMouseLeave={() => setActive(false)}
     />
   );
 };

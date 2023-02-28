@@ -17,7 +17,8 @@ const meta = {
   title: "Map Elements/Symbols/PointSymbol",
   component: PointSymbol,
   args: {
-    style: { fill: "none", stroke: "black" },
+    fill: "transparent",
+    stroke: "black",
     position: new Vector2(width / 2, height / 2),
     radius: 5,
   },
@@ -41,10 +42,18 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const DefaultPointSymbol: Story = {};
+export const StaticPointSymbol: Story = {
+  args: {
+    interactive: false,
+  },
+};
 
 //TODO: rename or add pattern definition
 export const Patternfill: Story = {
   args: {
-    style: { fill: "url(#Lines) blue", stroke: "red", opacity: 0.5 },
+    fill: "url(#Lines) blue",
+    stroke: "red",
+    fillOpacity: 1,
+    opacity: 1,
   },
 };

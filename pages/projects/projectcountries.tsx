@@ -89,7 +89,8 @@ const ProjectCountries: NextPage<Props> = ({
                   key={nanoid()}
                   position={position}
                   radius={scale(feature.properties?.projectCount)}
-                  style={theme.symbol}
+                  {...theme.symbol}
+                  interactive
                 />
               );
             })}
