@@ -9,7 +9,7 @@ const MyApp = ({ Component, pageProps }: AppProps) => (
         fetch(resource).then((res) => res.json()),
     }}
   >
-    <Component {...pageProps} />;
+    <Component {...pageProps} />
   </SWRConfig>
 );
 
