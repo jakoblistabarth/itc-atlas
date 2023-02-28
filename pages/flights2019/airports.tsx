@@ -95,6 +95,17 @@ const Airports: NextPage<Props> = ({ airports, neCountriesTopoJson }) => {
               </PointLabel>
             );
           })}
+          <g>
+            <ProportionalCircleLegend
+              data={airports.features.map(
+                (feature) => feature.properties?.value
+              )}
+              scaleRadius={scale}
+              title={"Flights per Airport"}
+              unitLabel={"flight"}
+              showFunction={false}
+            />
+          </g>
         </svg>
       </main>
     </>
