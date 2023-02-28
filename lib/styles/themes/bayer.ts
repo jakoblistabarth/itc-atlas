@@ -43,8 +43,6 @@ const bayer: MapTheme = {
   label: {
     fontFamily: "Inter",
     fontSize: 8,
-    letterSpacing: "0.2em",
-    textTransform: "uppercase",
   },
 };
 

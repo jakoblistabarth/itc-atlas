@@ -1,43 +1,43 @@
-import type { FC } from "react";
-import type { TextAppearance } from "../../types/Appearance";
+import type { FC, SVGProps } from "react";
 import { LabelPlacement } from "../../types/LabelPlacement";
 import { Vector2 } from "three";
+import toInt from "../../lib/utilities/toInt";
 
-type Props = React.PropsWithChildren<{
-  position?: Vector2;
-  placement?: LabelPlacement;
-  style?: TextAppearance & {
-    fontSize: number;
-  };
-}>;
+type Props = React.PropsWithChildren<
+  SVGProps<SVGTextElement> & {
+    position?: Vector2;
+    placement?: LabelPlacement;
+  }
+>;
 
 const PointLabel: FC<Props> = ({
   position = new Vector2(0, 0),
   placement = LabelPlacement.TOPRIGHT,
-  style = { fontSize: 6 },
   children,
+  fontSize = 6,
+  ...props
 }) => {
   const dx =
     placement === LabelPlacement.TOPRIGHT ||
     placement === LabelPlacement.BOTTOMRIGHT ||
     placement === LabelPlacement.RIGHT
-      ? style.fontSize * 0.5
+      ? (toInt(fontSize) ?? 6) * 0.5
       : placement === LabelPlacement.BOTTOMLEFT ||
         placement === LabelPlacement.TOPLEFT ||
         placement === LabelPlacement.LEFT
-      ? style.fontSize * -0.5
+      ? (toInt(fontSize) ?? 6) * -0.5
       : 0;
   const dy =
     placement === LabelPlacement.TOP
-      ? style.fontSize * -0.75
+      ? (toInt(fontSize) ?? 6) * -0.75
       : placement === LabelPlacement.TOPLEFT ||
         placement === LabelPlacement.TOPRIGHT
-      ? style.fontSize * -0.5
+      ? (toInt(fontSize) ?? 6) * -0.5
       : placement === LabelPlacement.BOTTOMRIGHT ||
         placement === LabelPlacement.BOTTOMLEFT
-      ? style.fontSize * 1.5
+      ? (toInt(fontSize) ?? 6) * 1.5
       : placement === LabelPlacement.BOTTOM
-      ? style.fontSize * 1.75
+      ? (toInt(fontSize) ?? 6) * 1.75
       : 0;
   const textAnchor =
     placement === LabelPlacement.TOP ||
@@ -57,25 +57,18 @@ const PointLabel: FC<Props> = ({
       : "auto";
   return (
     <g
-      fontSize={style.fontSize}
-      fontFamily={style.fontFamily}
-      style={{
-        textTransform: style.textTransform ?? "none",
-        letterSpacing: style.letterSpacing,
-      }}
+      fontSize={fontSize}
+      fontFamily={props.fontFamily}
       transform={`translate(${position.x}, ${position.y})`}
     >
       <text
+        {...props}
         dx={dx}
         dy={dy}
         textAnchor={textAnchor}
         dominantBaseline={dominantBaseline}
-        fill={style.fill}
-        stroke={style.stroke}
-        paintOrder={"stroke"}
-        strokeWidth={style.strokeWidth}
+        paintOrder={"stroke fill"}
         strokeLinejoin={"round"}
-        style={{ paintOrder: "stroke fill" }}
       >
         {children}
       </text>

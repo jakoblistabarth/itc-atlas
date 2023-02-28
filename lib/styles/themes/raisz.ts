@@ -54,8 +54,6 @@ const raisz: MapTheme = {
   label: {
     fontFamily: "Fraunces",
     fontSize: 8,
-    letterSpacing: "0.2em",
-    textTransform: "uppercase",
   },
 };
 

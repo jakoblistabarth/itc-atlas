@@ -20,8 +20,6 @@ export type TextAppearance = {
   fill?: string;
   stroke?: string;
   strokeWidth?: number;
-  letterSpacing?: string;
-  textTransform?: "uppercase" | "lowercase" | "none";
 };
 
 export type PatternAppearance = {

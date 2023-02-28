@@ -418,7 +418,8 @@ const IndonesiaTimeline: NextPage<Props> = ({
                               ? LabelPlacement.BOTTOMRIGHT
                               : LabelPlacement.TOPRIGHT
                           }
-                          style={{ fill: itcGreen, fontSize: 6 }}
+                          fill={itcGreen}
+                          fontSize={6}
                         >
                           {ne.name}
                         </PointLabel>
@@ -496,7 +497,8 @@ const IndonesiaTimeline: NextPage<Props> = ({
                           <PointLabel
                             position={new Vector2(0, width / 2)}
                             placement={LabelPlacement.BOTTOM}
-                            style={{ fill: itcGreen, fontSize: 6 }}
+                            fill={itcGreen}
+                            fontSize={6}
                           >
                             <tspan fontWeight={"bold"} fontFamily={"Fraunces"}>
                               {d}

@@ -272,13 +272,11 @@ const CourseGenealogyPage: NextPage<Props> = ({ courseGenealogy }) => {
                         position={sourcePos}
                         placement={LabelPlacement.LEFT}
                         key={nanoid()}
-                        style={{
-                          fontSize: 6,
-                          fontFamily: "Fraunces",
-                          fill: "black",
-                          stroke: "white",
-                          strokeWidth: 2,
-                        }}
+                        fontSize={6}
+                        fontFamily={"Fraunces"}
+                        fill={"black"}
+                        stroke={"white"}
+                        strokeWidth={2}
                       >
                         <tspan fontWeight={"bold"}>{link.source}</tspan>
                       </PointLabel>
