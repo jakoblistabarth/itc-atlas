@@ -28,16 +28,16 @@ import getCountryWithApplicantCount, {
 import styles from "../../styles/home.module.css";
 import { LabelPlacement } from "../../types/LabelPlacement";
 import { SharedPageProps } from "../../types/Props";
+import useMeasure from "react-use-measure";
+import Tooltip from "../../components/Tooltip/Tooltip";
+import { TooltipTrigger } from "../../components/Tooltip/TooltipTrigger";
+import TooltipContent from "../../components/Tooltip/TooltipContent";
 
 type Props = {
   applicants: CountryWithApplicantCount;
 } & SharedPageProps;
 
-const AlumniOrigin: NextPage<Props> = ({
-  applicants,
-  neCountriesTopoJson,
-  countries,
-}) => {
+const AlumniOrigin: NextPage<Props> = ({ applicants, neCountriesTopoJson }) => {
   const geographies = feature(
     neCountriesTopoJson,
     neCountriesTopoJson.objects.ne_admin_0_countries
@@ -69,8 +69,9 @@ const AlumniOrigin: NextPage<Props> = ({
       ),
   };
 
+  const [mapRef, { width }] = useMeasure();
   const dimension = {
-    width: 1280,
+    width,
     height: 0,
   };
 
@@ -82,7 +83,9 @@ const AlumniOrigin: NextPage<Props> = ({
   );
   const alumniMax = max(alumniCount);
 
-  const scale = scaleSqrt().domain([0, alumniMax]).range([0, 50]);
+  const scale = scaleSqrt()
+    .domain([0, alumniMax])
+    .range([0, dimension.width / 20]);
 
   return (
     <>
@@ -96,50 +99,79 @@ const AlumniOrigin: NextPage<Props> = ({
         <Heading Tag={Headings.H1}>
           ITC&apos;s MSc alumni country of origin
         </Heading>
-        <svg width={dimension.width} height={dimension.height}>
-          <BaseLayer countries={neCountriesTopoJson} projection={projection} />
-          <g id="alumni-countries-symbols">
-            {points.features.map((point) => (
-              <PointSymbol
-                key={nanoid()}
-                position={
-                  new Vector2(...projection(point.geometry.coordinates))
-                }
-                radius={scale(point.properties?.alumniCount)}
-                fill={"teal"}
-                stroke={"teal"}
-                strokeWidth={0.5}
-                fillOpacity={0.1}
+
+        <div
+          style={{ padding: "0 1em", width: "100%", height: "100%" }}
+          ref={mapRef}
+        >
+          {dimension.width > 0 && (
+            <svg
+              width={"100%"}
+              height={"100%"}
+              viewBox={`0 0 ${dimension.width} ${dimension.height}`}
+            >
+              <BaseLayer
+                countries={neCountriesTopoJson}
+                projection={projection}
               />
-            ))}
-          </g>
-          <g id="alumni-country-labels">
-            {points.features.slice(0, 10).map((point) => {
-              const pos = new Vector2(
-                ...projection(point.geometry.coordinates)
-              );
-              return (
-                <PointLabel
-                  key={nanoid()}
-                  position={pos}
-                  placement={LabelPlacement.CENTER}
-                  style={{ fill: "teal", fontSize: 6 }}
-                >
-                  {point.properties?.NAME}
-                </PointLabel>
-              );
-            })}
-          </g>
-          <ProportionalCircleLegend
-            data={points.features.map(
-              (feature) => feature.properties?.alumniCount
-            )}
-            scaleRadius={scale}
-            title={"Graduates per country"}
-            unitLabel={"graduate"}
-            showFunction={false}
-          />
-        </svg>
+              <g id="alumni-countries-symbols">
+                {points.features.map((point, idx) => (
+                  <Tooltip key={`tooltip-country-${idx}`}>
+                    <TooltipTrigger asChild>
+                      <g>
+                        <PointSymbol
+                          key={nanoid()}
+                          position={
+                            new Vector2(
+                              ...projection(point.geometry.coordinates)
+                            )
+                          }
+                          radius={scale(point.properties?.alumniCount)}
+                          fill={"teal"}
+                          stroke={"teal"}
+                          strokeWidth={0.5}
+                          fillOpacity={0.1}
+                        />
+                      </g>
+                    </TooltipTrigger>
+                    <TooltipContent>
+                      <strong>{point.properties?.NAME}</strong>
+                      <br />
+                      {point.properties?.alumniCount} MSc alumni
+                    </TooltipContent>
+                  </Tooltip>
+                ))}
+              </g>
+              <g id="alumni-country-labels">
+                {points.features.slice(0, 10).map((point) => {
+                  const pos = new Vector2(
+                    ...projection(point.geometry.coordinates)
+                  );
+                  return (
+                    <PointLabel
+                      key={nanoid()}
+                      position={pos}
+                      placement={LabelPlacement.CENTER}
+                      fill={"teal"}
+                      fontSize={10}
+                    >
+                      {point.properties?.NAME}
+                    </PointLabel>
+                  );
+                })}
+              </g>
+              <ProportionalCircleLegend
+                data={points.features.map(
+                  (feature) => feature.properties?.alumniCount
+                )}
+                scaleRadius={scale}
+                title={"Graduates per country"}
+                unitLabel={"graduate"}
+                showFunction={false}
+              />
+            </svg>
+          )}
+        </div>
       </main>
       <Footer />
     </>

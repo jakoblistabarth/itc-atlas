@@ -50,6 +50,7 @@
     "react-dom": "^18.2.0",
     "react-icons": "^4.7.1",
     "react-popper-tooltip": "^4.4.2",
+    "react-use-measure": "^2.1.1",
     "storybook-css-modules-preset": "^1.1.1",
     "superjson": "^1.12.2",
     "swr": "^2.0.3",
