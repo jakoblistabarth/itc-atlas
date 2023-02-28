@@ -3,7 +3,7 @@ import { FC } from "react";
 import * as d3 from "d3";
 import { colorMap } from "../lib/summarytable/colorMap";
 import Heading, { Headings } from "./Heading";
-import { fFloat } from "../lib/utilities/formaters";
+import { fInt } from "../lib/utilities/formaters";
 import { nanoid } from "nanoid";
 import { SummaryTableData } from "../lib/summarytable/getSummaryTableData";
 
@@ -40,7 +40,7 @@ const SummaryTableCard: FC<SummaryTableCardProps> = ({ data }) => {
       <svg>
         <g className="labels" fontSize={fontSize}>
           <text x={dimension.margin.left} y={fontSize}>
-            {fFloat(data.nColumns) + " ⭢"}
+            {fInt(data.nColumns) + " ⭢"}
           </text>
           <text
             y={dimension.margin.top + fontSize / 2 + headerHeight + 1}
@@ -48,7 +48,7 @@ const SummaryTableCard: FC<SummaryTableCardProps> = ({ data }) => {
               dimension.margin.top + fontSize / 2 + headerHeight + 1
             })`}
           >
-            {fFloat(data.nRows) + " ⭢"}
+            {fInt(data.nRows) + " ⭢"}
           </text>
         </g>
         <g
