@@ -8,7 +8,7 @@ type Props = PropsWithChildren<{
   spacing?: number;
 }>;
 
-const PatternLines: FC<Props> = ({
+const PatternShapes: FC<Props> = ({
   name = "Shape",
   height,
   width,
@@ -31,4 +31,4 @@ const PatternLines: FC<Props> = ({
   );
 };
 
-export default PatternLines;
+export default PatternShapes;

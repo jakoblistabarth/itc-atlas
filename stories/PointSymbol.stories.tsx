@@ -3,6 +3,7 @@ import { Meta, StoryObj } from "@storybook/react";
 import PointSymbol from "../components/map/PointSymbol";
 import { Vector2 } from "three";
 import themes from "../lib/styles/themes";
+import PatternLines from "../components/defs/patterns/PatternLines";
 
 const width = 600;
 const height = 300;
@@ -24,15 +25,13 @@ const meta = {
   },
   argTypes: {
     radius: { control: { type: "range", min: 1, max: 50, step: 1 } },
-    style: {
-      options: Array.from(themes.keys()),
-      mapping: styles,
-      control: { labels: { bayer: "Bayer", eth: "ETH", raisz: "Raisz" } },
-    },
   },
   decorators: [
     (Story) => (
       <svg width={width} height={height}>
+        <defs>
+          <PatternLines stroke={"red"} />
+        </defs>
         <Story />
       </svg>
     ),
@@ -48,7 +47,6 @@ export const StaticPointSymbol: Story = {
   },
 };
 
-//TODO: rename or add pattern definition
 export const Patternfill: Story = {
   args: {
     fill: "url(#Lines) blue",
