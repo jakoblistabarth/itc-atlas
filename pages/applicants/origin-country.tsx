@@ -1,12 +1,6 @@
-import { descending, max, scaleSqrt } from "d3";
+import { descending, max, range, scaleSqrt } from "d3";
 import { geoBertin1953 } from "d3-geo-projection";
-import type {
-  Feature,
-  FeatureCollection,
-  MultiPolygon,
-  Point,
-  Polygon,
-} from "geojson";
+import type { Feature, FeatureCollection, Point } from "geojson";
 import { nanoid } from "nanoid";
 import type { GetStaticProps, NextPage } from "next";
 import Head from "next/head";
@@ -32,6 +26,11 @@ import useMeasure from "react-use-measure";
 import Tooltip from "../../components/Tooltip/Tooltip";
 import { TooltipTrigger } from "../../components/Tooltip/TooltipTrigger";
 import TooltipContent from "../../components/Tooltip/TooltipContent";
+import { useState } from "react";
+import { CountryProperties } from "../../types/NeTopoJson";
+import useSWR from "swr";
+import LineChart from "../../components/charts/timeline/LineChart";
+import getApplicationsByYear from "../../lib/data/queries/application/getApplicationsByYear";
 
 type Props = {
   applicants: CountryWithApplicantCount;
@@ -41,15 +40,19 @@ const AlumniOrigin: NextPage<Props> = ({ applicants, neCountriesTopoJson }) => {
   const geographies = feature(
     neCountriesTopoJson,
     neCountriesTopoJson.objects.ne_admin_0_countries
-  ) as FeatureCollection<MultiPolygon | Polygon>;
+  );
 
-  const points: FeatureCollection<Point> = {
+  type CountryPropertiesWithAlumniCount = CountryProperties & {
+    alumniCount: number;
+  };
+
+  const points: FeatureCollection<Point, CountryPropertiesWithAlumniCount> = {
     type: "FeatureCollection",
     features: geographies.features
       .map((country) => {
         const isoCode = country.properties?.ADM0_A3_NL;
         const pos = getCentroidByIsoCode(isoCode);
-        const feature: Feature<Point> = {
+        const feature: Feature<Point, CountryPropertiesWithAlumniCount> = {
           type: "Feature",
           geometry: {
             type: "Point",
@@ -57,17 +60,34 @@ const AlumniOrigin: NextPage<Props> = ({ applicants, neCountriesTopoJson }) => {
           },
           properties: {
             ...country.properties,
-            alumniCount: applicants.find((d) => d.isoAlpha3 === isoCode)?._count
-              .applicants,
+            alumniCount:
+              applicants.find((d) => d.isoAlpha3 === isoCode)?._count
+                .applicants ?? 0,
           },
         };
         return feature;
       })
-      .filter((feature: Feature) => feature.properties?.alumniCount)
+      .filter(
+        (feature: Feature): feature is Feature =>
+          !!feature.properties?.alumniCount
+      ) //TODO: replace by filter > 0
       .sort((a: Feature, b: Feature) =>
         descending(a.properties?.alumniCount, b.properties?.alumniCount)
       ),
   };
+
+  const [country, setCountry] = useState<string | null>(null);
+
+  const { data, error, isLoading } = useSWR<
+    Awaited<ReturnType<typeof getApplicationsByYear>>
+  >("/api/data/application/groupByYear?country=" + country);
+
+  const minX = 1950;
+  const maxX = new Date().getFullYear();
+  const dataClean = range(minX, maxX).map((i) => ({
+    x: i,
+    y: data?.find((d) => d.examYear === i)?._count._all ?? 0,
+  }));
 
   const [mapRef, { width }] = useMeasure();
   const dimension = {
@@ -78,13 +98,17 @@ const AlumniOrigin: NextPage<Props> = ({ applicants, neCountriesTopoJson }) => {
   const projection = geoBertin1953();
   dimension.height = getMapHeight(dimension.width, projection);
 
-  const alumniCount = points.features.map(
-    (point) => point.properties?.alumniCount
-  );
-  const alumniMax = max(alumniCount);
+  const isNumber = (item: number | undefined): item is number => {
+    return !!item;
+  };
+
+  const alumniCount = points.features
+    .map((point) => point.properties?.alumniCount)
+    .filter(isNumber);
+  const alumniMax = max<number>(alumniCount);
 
   const scale = scaleSqrt()
-    .domain([0, alumniMax])
+    .domain([0, alumniMax ?? 1])
     .range([0, dimension.width / 20]);
 
   return (
@@ -120,7 +144,6 @@ const AlumniOrigin: NextPage<Props> = ({ applicants, neCountriesTopoJson }) => {
                     <TooltipTrigger asChild>
                       <g>
                         <PointSymbol
-                          key={nanoid()}
                           position={
                             new Vector2(
                               ...projection(point.geometry.coordinates)
@@ -131,14 +154,35 @@ const AlumniOrigin: NextPage<Props> = ({ applicants, neCountriesTopoJson }) => {
                           stroke={"teal"}
                           strokeWidth={0.5}
                           fillOpacity={0.1}
+                          // TODO: check whether moving state back to point symbol improves behaviour (e.g. css transition)
+                          // seems like the transition is only working once the data is fetched by SWR
+                          onMouseEnter={() => {
+                            setCountry(point.properties?.ADM0_A3_NL);
+                          }}
+                          onMouseLeave={() => setCountry(null)}
+                          isActive={country === point.properties?.ADM0_A3_NL}
+                          interactive
                         />
                       </g>
                     </TooltipTrigger>
-                    <TooltipContent>
-                      <strong>{point.properties?.NAME}</strong>
-                      <br />
-                      {point.properties?.alumniCount} MSc alumni
-                    </TooltipContent>
+                    {data && (
+                      <TooltipContent>
+                        <div>
+                          <strong>{point.properties?.NAME_EN}</strong>
+                          <br />
+                          {point.properties?.alumniCount} M.Sc. alumni
+                        </div>
+                        <div>
+                          {dataClean && (
+                            <LineChart
+                              data={dataClean}
+                              width={100}
+                              height={30}
+                            />
+                          )}
+                        </div>
+                      </TooltipContent>
+                    )}
                   </Tooltip>
                 ))}
               </g>
@@ -155,15 +199,15 @@ const AlumniOrigin: NextPage<Props> = ({ applicants, neCountriesTopoJson }) => {
                       fill={"teal"}
                       fontSize={10}
                     >
-                      {point.properties?.NAME}
+                      {point.properties?.NAME_EN}
                     </PointLabel>
                   );
                 })}
               </g>
               <ProportionalCircleLegend
-                data={points.features.map(
-                  (feature) => feature.properties?.alumniCount
-                )}
+                data={points.features
+                  .map((feature) => feature.properties?.alumniCount)
+                  .filter(isNumber)}
                 scaleRadius={scale}
                 title={"Graduates per country"}
                 unitLabel={"graduate"}

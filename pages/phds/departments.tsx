@@ -37,16 +37,13 @@ const PhdDepartments: NextPage<Props> = ({
   };
   const filter = isChecked ? "?graduated=true" : ""; //TODO: switch only true/false no separate variable?
 
-  const { data, error, isLoading } = useSWR(
-    "/api/data/phd-candidate/by-country" + filter
-  );
+  const { data, error, isLoading } = useSWR<
+    Awaited<ReturnType<typeof getPhdCandidatesByCountryByDepartment>>
+  >("/api/data/phd-candidate/by-country" + filter);
 
   if (error) return <div>failed to load</div>;
 
-  const mapData =
-    (data as Awaited<
-      ReturnType<typeof getPhdCandidatesByCountryByDepartment>
-    >) ?? phdsByCountryByDepartment;
+  const mapData = data ?? phdsByCountryByDepartment;
 
   const dimension = {
     width: 1280,
