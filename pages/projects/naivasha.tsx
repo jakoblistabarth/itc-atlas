@@ -1,5 +1,6 @@
 import { OrbitControls } from "@react-three/drei";
 import { Canvas } from "@react-three/fiber";
+import Wordcloud from "../../components/charts/WordCloud";
 import type { GetStaticProps, NextPage } from "next";
 import Head from "next/head";
 import { Suspense } from "react";
@@ -12,10 +13,11 @@ import getCountries from "../../lib/data/getCountries";
 import getCountryCodes from "../../lib/data/queries/country/getCountryCodes";
 import styles from "../../styles/home.module.css";
 import { SharedPageProps } from "../../types/Props";
+import getTextFromFile from "../../lib/data/getTextFromFile";
 
-type Props = {} & SharedPageProps;
+type Props = { words: string } & SharedPageProps;
 
-const Naivasha: NextPage<Props> = ({ neCountriesTopoJson }) => {
+const Naivasha: NextPage<Props> = ({ neCountriesTopoJson, words }) => {
   return (
     <>
       <Head>
@@ -30,11 +32,12 @@ const Naivasha: NextPage<Props> = ({ neCountriesTopoJson }) => {
           neCountriesTopoJson={neCountriesTopoJson}
           highlight={["KEN"]}
         />
+        <Heading Tag={Headings.H2}>Wordcloud</Heading>
+        <Wordcloud width={960} height={400} text={words} />
         <Heading Tag={Headings.H2}>3D Block Diagram</Heading>
         <div style={{ width: "100%", height: "500px" }}>
           <Canvas shadows>
             <Suspense fallback={null}>
-              {/* <ambientLight castShadow args={[undefined, 1]} /> */}
               <directionalLight
                 castShadow
                 position={[10, 10, 0]}
@@ -61,15 +64,17 @@ const Naivasha: NextPage<Props> = ({ neCountriesTopoJson }) => {
 };
 
 export const getStaticProps: GetStaticProps<Props> = async () => {
-  const [neCountriesTopoJson, countries] = await Promise.all([
+  const [neCountriesTopoJson, countries, words] = await Promise.all([
     getCountries(),
     getCountryCodes(),
+    getTextFromFile("./data/static/naivasha-msc-theses-titles.txt"),
   ]);
 
   return {
     props: {
       neCountriesTopoJson,
       countries,
+      words,
     },
   };
 };

@@ -1,0 +1,88 @@
+Design of an information system to support soil degradation mapping and monitoring in lake Naivasha area
+Surface water-groundwater interaction Lake Naivasha
+Habitat and bio-diversity mapping of the wetlands of lake Naivasha using RS and GIS: A study on the distribution of the african fish eagle and hippopotamus 
+Land Use/Farming System and Livelihood Changes in the Upper Catchment of Lake Naivasha
+Economy versus Environment: how a system with RS & GIS can assisst in decisions for water resource management a case study in the Lake Naivasha Central Rift Valley Province
+Estimating lake evaporation using meteorological data & remote sensing 
+Surface runoff modelling using GIS and remote sensing: case study in Malewa catchment Naivasha
+Explaining satelite-derived actual evapotranspiration patterns in homogeneously cropped large fields 
+Modelling water Resource management in Lake Naivasha 
+Water balance of the southernrift valley lakes
+GIS Based Rainfall Runoff Model for the Turasha Sub Catchment
+Relating land people and environment in Lake Naivasha's watershed
+An assessment of the spatial and temporal distribution of a papyrus swamp: the application of Remote Sensing GIS and a Decision Support System for the monitoring and management of the wetland vegetation of Lake Naivasha
+Simulation of maize production using a pixel based weather generator: Case of Lake Naivasha catchment 
+Building a soil information system for multi source data integration A case study in Lake Naivasha area
+Study to assess accurate spatial rainfall data in lake naivasha basin
+Competition over Water Resources: Analysis and Mapping of Water-Related Conflicts in the Catchment of Lake Naivasha
+Building a dynamic water quality evaluation system for lake Naivasha exploration in the use of DMS 
+ A preliminary study on the fate of agrochemicals in the vadose zone environment 
+Integration of GIS and computer modelling to study the water quality of lake naivasha central rift valley
+Evaluation of irrigation practice at farm level using GIS RS data and swap model: Case study at the lake Naivasha project
+FEstimation of regional evaporation under different weather conditions from satellite and meteorological data: a case study in the Naivasha Basin
+Spatial information sharing to enhance local based management an analysis of Institutional aspect of Lake Naivasha as a Ramsar site 
+Flowering Economy of Naivasha: Impacts of Major Farming Systems on the Local Economy 
+Soil survey to predict characteristics relevant to land management 
+Study of long term waterbalance of lake Naivasha
+Peak runoff estimation of the unguaged area in Naivasha basin using the slope area method empirical formulas 
+Groundwater recharge estimation of the Malewa catchmen Naivasha
+Application of geophysical techniques for groundwater investigation in lake Naivasha area
+Strategies to increase water use efficiency of irrigated farm South of Lake Naivasha
+Time series analysis of NOAAAVHRR composite images of lake Naivasha basin 
+Erosion assessment for large basins using remote sensing and GIS 
+Water availability assessment using multi-objective decision support system MODSS: a study around Lake Naivasha Rift Valley Province
+Groundwater contamination potential of agriculture around Lake Naivasha: Comparison of five unsaturated soil zones models 
+Empirical Evaluation and Comparative Study of Use of Erosion Modelling in Small Catchments in Naivasha
+Temporal and spatial varation of groundwater level north of Lake NaivashaAnalysed using Modflow 
+Vulnerability of soils to change in agricultural use around Lake Naivasha
+A dry season grazing reserves site selection model for drought management in the pastoral production systems 
+Groundwater and lake water balance of lake Naivasha using 3-D transient groundwater model University of Twente Faculty of Geo-Information and Earth Observation
+ Regional impact of climate change and variability on water resources Lake Naivasha Basin
+Spatial analysis of water quality and eutrophication controls in lake Naivasha
+Evaluation of spatial scale alternatives for hydrological modelling of the Lake Naivasha basinUniversity of Twente 
+Determination of regional scale crop coefficients for crop water requirement calculations: a RS perspective A Case Study of the Lake Naivasha Basin
+Papyrus conservation around lake Naivasha: development of alternative management schemes in
+ Assessment of artificial groundwater recharge using greenhouses runoff North-east Naivasha
+MSpatial distribution of pesticide contamination potential around lake Naivasha
+Groundwater chemistry and quality assessment of the lake Naivasha area
+Comparison of water consumption between greenhouse and outdoor cultivation 
+Analysis of the leaching process in the intensive flower farms around lake Naivasha: SULMAC farm case study Naivasha basin
+Spatial water quality monitoring and assessment in Malewa river and lake Naivasha
+Using weap and scenrios to assess sustainability water resources in a basincase study for lake Naivasha catchment
+Long term rainfall-runoff-lakelevel modelling of the Lake Naivasha Basin
+Development of 3d conceptual hydrogeological model for lake naivasha area 
+Performance analysis of small format aerial photography SFAP in assessing current status and trends in wind erosion 
+Estimation of direct recharge on natural vegetations of the Lake Aquifer A case study of Lake Naivasha basin
+Assessment of the use of groundwater for irrigation in the southern part of lake Naivasha
+Pastoralists dilemma: assessment of changes in livestock productionand household dynamics among the Masaai due to development of boreholes in Moindabi
+The Long-Term Interaction of Groundwater with Lake Naivasha : A numerical simulation of the relationship between groundwater and lake allowing for fluctuating lake levels 
+Geophysical study of the groundwater system south of lake Naivasha
+Development of information system to support hydro envirmonmental economic modelling of lake Naivasha area 
+Environmental impact of urban storm runoff and sewage from Naivasha town on Lake Naivasha 
+Matter fluxes in the Turusha Catchment : an exploratory analysis 
+Estimation of long term inflow into lake naivasha from the Malewa catchment
+Groundwater flow modelling of Naivasha basin
+Land suitability assessment for housing and local road construction 
+Assessment of soil erosion in the Turasha catchment in the Lake Naivasha area
+Use of GIS and RS assessing lake sedimentation processes: case study for Naivashsa lake
+Productive and suistainable use of water among competing sectors 
+Hydrological investigation for water harvesting potential using GIS RS and runoff models: a case study of Lake Naivasha Area
+Soils and land use with particular attention to land evaluation for selected land use types in the lake Naivasha basin
+The use of multivariate classification in the defintion of soil series in lake naivasha area 
+Solute balance modelling of Lake Naivasha; Application of DMS 
+Estimation of rainfall using Meteosat TIR data for the Naivasha catchment 
+Modelling water quality using soil and water assessment tool SWAT 
+Land degradation detection mapping and monitoring in the lake Naivasha basin
+Chemical runoff potential of agriculture around Lake Naivasha
+ Modelling groundwater storage change in response to fluctuating levels of lake Naivasha
+2d resistivity and time-domain EM in aquifer mapping: a case study north of lake Naivasha
+SRTM DEM Suitability runoff studies 
+The wetland soils around Lake Naivasha : characterization and ecological functions 
+An assessment of water use efficiency in Lake Naivasha basinUniversity of Nairobi MSc thesis Nairobi 
+Monitoring Spatio-temporal Dynamics of Land Cover Changes in Lake Naivasha Drainage Basin
+Water quality assessment and pesticide fate modeling in the lake Naivasha area
+A three dimensional ground water model of the aquifers lake Naivasha area
+Assessment of irrigation performance by remote sensing in the Naivasha Basin
+Delineation and quantification of submerged aquatic vegetation SAV in inland lakes using 
+Reconstruction of streamflow into Lake Naivasha using crest model and remote sensed rainfall and evapotranspiration 
+Assessment of the herbaceous above ground biomass gain on the fringe of LakeNaivasha

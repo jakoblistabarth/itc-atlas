@@ -187,13 +187,13 @@ const AlumniOrigin: NextPage<Props> = ({ applicants, neCountriesTopoJson }) => {
                 ))}
               </g>
               <g id="alumni-country-labels">
-                {points.features.slice(0, 10).map((point) => {
+                {points.features.slice(0, 10).map((point, idx) => {
                   const pos = new Vector2(
                     ...projection(point.geometry.coordinates)
                   );
                   return (
                     <PointLabel
-                      key={nanoid()}
+                      key={`label-${point.properties?.ADM0_A3_NL}-${idx}`}
                       position={pos}
                       placement={LabelPlacement.CENTER}
                       fill={"teal"}
