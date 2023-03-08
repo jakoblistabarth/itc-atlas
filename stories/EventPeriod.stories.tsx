@@ -4,6 +4,7 @@ import { LabelPlacement } from "../types/LabelPlacement";
 import EventPeriod from "../components/charts/timeline/EventPeriod";
 import { TimelineEvent } from "../types/TimelineEvent";
 import { timelineSetup } from "./lib/timelineSetup";
+import { Text } from "@visx/text";
 
 const event: TimelineEvent = {
   name: "Event Period",
@@ -44,5 +45,20 @@ export const StyledEventPeriod: Story = {
   args: {
     fillOpacity: 0.1,
     stroke: "teal",
+  },
+};
+
+export const EventWithText: Story = {
+  args: {
+    fillOpacity: 0.1,
+    stroke: "teal",
+    children: (
+      <Text fontSize={10} width={150} verticalAnchor={"start"} y={10}>
+        This is a label with a rather long text, in multiple lines
+      </Text>
+    ),
+  },
+  render: (args) => {
+    return <EventPeriod {...args}>{args.children}</EventPeriod>;
   },
 };

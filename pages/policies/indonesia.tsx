@@ -35,11 +35,7 @@ import getLongTermMissions from "../../lib/data/getLongTermMissions";
 import { LongTermMission } from "../../types/LongTermMission";
 import LeaderLine from "../../components/LeaderLine";
 import NsidedPolygon from "../../components/shapes/NsidedPolygon";
-import PatternShapes from "../../components/defs/patterns/PatternShapes";
-import { FC, PropsWithChildren, SVGProps } from "react";
-import { FaCarrot, FaMoneyBill } from "react-icons/fa";
-import { GiWaterDrop, GiHeartPlus } from "react-icons/gi";
-import { RiLeafFill } from "react-icons/ri";
+import { useEffect, useState } from "react";
 import NominalLegend from "../../components/map/NominalLegend";
 import getProjectsIndonesia from "../../lib/data/getProjectsIndonesia";
 import getPhdCandidatesByYear, {
@@ -48,6 +44,14 @@ import getPhdCandidatesByYear, {
 import getApplicationsByYear, {
   ApplicationByYearWithCount,
 } from "../../lib/data/queries/application/getApplicationsByYear";
+import { Text } from "@visx/text";
+import { Group } from "@visx/group";
+import TopicPatterns from "../../components/TopicPatterns";
+import TimelineSeparator from "../../components/charts/timeline/TimelineSeparator";
+import TimelineHeader from "../../components/charts/timeline/TimelineHeader";
+import Tooltip from "../../components/Tooltip/Tooltip";
+import { TooltipTrigger } from "../../components/Tooltip/TooltipTrigger";
+import TooltipContent from "../../components/Tooltip/TooltipContent";
 
 type Props = {
   projects: ProjectIndonesia[];
@@ -105,7 +109,7 @@ const IndonesiaTimeline: NextPage<Props> = ({
   const itcGreen = "teal";
   const itcBlue = "rgb(0, 35, 149)";
   const indonesiaColor = "red";
-  const xScale = scaleTime().domain(commonDomain).range([0, width]);
+  const xScale = scaleTime().domain(commonDomain).rangeRound([0, width]);
 
   const partnersScale = scaleOrdinal<string, string>()
     .domain([
@@ -164,10 +168,10 @@ const IndonesiaTimeline: NextPage<Props> = ({
   ];
   const renamingEvents: TimelineEvent[] = namesITC.map((d, idx) => {
     const next = namesITC[idx + 1];
-    const dateEnd = next ? new Date(next.year + "GMT") : new Date();
+    const dateEnd = next ? new Date(next.year + "") : new Date();
     return {
       name: d.name,
-      dateStart: new Date(d.year + "GMT"),
+      dateStart: new Date(d.year + ""),
       dateEnd: dateEnd,
       yOffset: "",
     };
@@ -185,8 +189,8 @@ const IndonesiaTimeline: NextPage<Props> = ({
   ];
   const topics = topicsRaw
     .map((d) => {
-      const start = new Date(d.dateStart + "GMT");
-      const end = new Date(d.dateEnd + "GMT");
+      const start = new Date(d.dateStart + "");
+      const end = new Date(d.dateEnd + "");
       return {
         name: d.name,
         dateStart: start,
@@ -206,40 +210,6 @@ const IndonesiaTimeline: NextPage<Props> = ({
   const firstTopicOccurences = topicPatternScale
     .domain()
     .map((topic) => topics.find((t) => t.name === topic));
-
-  const TopicPatterns = () => {
-    const s = 16;
-    const patternProps = {
-      spacing: 0,
-      width: s / 2,
-      height: s,
-    };
-    const shapeProps = {
-      x: s / -4,
-      y: s / -2,
-      color: itcBlue,
-    };
-    return (
-      <defs>
-        <PatternShapes name="A" {...patternProps}>
-          <FaMoneyBill {...shapeProps} />
-        </PatternShapes>
-        <PatternShapes name="B" {...patternProps}>
-          /react-icons/search
-          <GiWaterDrop {...shapeProps} />
-        </PatternShapes>
-        <PatternShapes name="C" {...patternProps}>
-          <FaCarrot {...shapeProps} />
-        </PatternShapes>
-        <PatternShapes name="D" {...patternProps}>
-          <GiHeartPlus {...shapeProps} />
-        </PatternShapes>
-        <PatternShapes name="E" {...patternProps}>
-          <RiLeafFill {...shapeProps} />
-        </PatternShapes>
-      </defs>
-    );
-  };
 
   const btorEvents: TimelineEvent[] = btors.flatMap((btor) => {
     if (!btor.start || !btor.end) return [];
@@ -276,11 +246,11 @@ const IndonesiaTimeline: NextPage<Props> = ({
 
   const ministerEvents: TimelineEvent[] = ministers.map((minister, idx) => {
     const next = ministers[idx + 1];
-    const dateEnd = next ? new Date(next.dateStart + "GMT") : new Date();
+    const dateEnd = next ? new Date(next.dateStart + "") : new Date();
     return {
       name: minister.name,
       yOffset: "",
-      dateStart: new Date(minister.dateStart),
+      dateStart: new Date(minister.dateStart + ""),
       dateEnd: new Date(dateEnd),
       fill: "black",
       data: { party: minister.party },
@@ -315,38 +285,10 @@ const IndonesiaTimeline: NextPage<Props> = ({
     }
   };
 
-  const SectionContent: FC<PropsWithChildren<{}>> = ({ children }) => (
-    <g transform={`translate(0, ${sectionHeaderHeight})`}>{children}</g>
-  );
-  const RowContent: FC<PropsWithChildren<{}>> = ({ children }) => (
-    <g transform={`translate(0, ${rowHeaderHeight})`}>{children}</g>
-  );
-
-  const TimelineHeader: FC<
-    PropsWithChildren<
-      { color?: string; size: number } & SVGProps<SVGTextElement>
-    >
-  > = ({ color = "black", size, children, ...rest }) => {
-    return (
-      <text fill={color} fontFamily="Fraunces" fontSize={size} {...rest}>
-        {children}
-      </text>
-    );
-  };
-
-  const TimelineSeparator = ({ y = 0 }) => {
-    return (
-      <line
-        x1="0"
-        x2={width}
-        y1={y}
-        y2={y}
-        stroke="white"
-        strokeWidth={separatorHeight}
-        fill="none"
-      />
-    );
-  };
+  const [isSSR, setIsSSR] = useState(true);
+  useEffect(() => {
+    setIsSSR(false);
+  }, []);
 
   return (
     <>
@@ -359,52 +301,37 @@ const IndonesiaTimeline: NextPage<Props> = ({
       <main className={styles.main}>
         <Heading Tag={Headings.H1}>ITC&apos;s Activities in Indonesia</Heading>
         <svg width={width} height={height} fontSize="6" fontFamily="Inter">
-          {/* <g id="grid-debugger" opacity={0.2}>
-            <rect width="100%" height={margin} fill="blue" />
-            <rect
-              width="100%"
-              height={getSectionHeight(0)}
-              y={margin}
-              fill="red"
-            />
-            <rect
-              width="100%"
-              height={getSectionHeight(1)}
-              y={getSectionY(0)}
-              fill="orange"
-            />
-            <rect
-              width="100%"
-              height={getSectionHeight(2)}
-              y={getSectionY(1)}
-              fill="red"
-            />
-            <rect width="100%" height={margin} y={getSectionY(2)} fill="blue" />
-          </g> */}
           <TimelineGrid scale={xScale} height={height} margin={margin} />
-
-          <TimelineSeparator y={getSectionY(0)} />
-          <TimelineSeparator y={getSectionY(1)} />
+          <TimelineSeparator
+            width={width}
+            strokeWidth={separatorHeight}
+            y={getSectionY(0)}
+          />
+          <TimelineSeparator
+            width={width}
+            strokeWidth={separatorHeight}
+            y={getSectionY(1)}
+          />
 
           <g id="itcContextEvents" transform={`translate(0 ${margin})`}>
-            <SectionContent>
-              <TimelineHeader color={itcGreen} size={sectionHeaderHeight}>
+            <Group top={sectionHeaderHeight}>
+              <TimelineHeader fill={itcGreen} fontSize={sectionHeaderHeight}>
                 ITC History
               </TimelineHeader>
               <g id="nameChanges" transform={`translate(0 ${getRowY(0, 0)})`}>
                 <TimelineHeader
-                  color={itcGreen}
+                  fill={itcGreen}
                   fontWeight={"bold"}
-                  size={rowHeaderHeight}
+                  fontSize={rowHeaderHeight}
                 >
                   Name changes
                 </TimelineHeader>
-                <RowContent>
+                <Group top={rowHeaderHeight}>
                   {renamingEvents.map((ne, idx) => {
                     const isEven = idx % 2 === 0;
                     return (
                       <EventPeriod
-                        key={nanoid()}
+                        key={`renaming-${idx}`}
                         dateStart={ne.dateStart}
                         dateEnd={ne.dateEnd ?? new Date()}
                         xScale={xScale}
@@ -412,17 +339,18 @@ const IndonesiaTimeline: NextPage<Props> = ({
                         height={1}
                         fill={itcGreen}
                       >
-                        <PointLabel
-                          placement={
-                            isEven
-                              ? LabelPlacement.BOTTOMRIGHT
-                              : LabelPlacement.TOPRIGHT
-                          }
-                          fill={itcGreen}
-                          fontSize={6}
-                        >
-                          {ne.name}
-                        </PointLabel>
+                        {!isSSR && (
+                          <Text
+                            fontSize={6}
+                            fill={itcGreen}
+                            width={200}
+                            y={isEven ? 5 : -5}
+                            x={5}
+                            verticalAnchor={isEven ? "start" : "end"}
+                          >
+                            {ne.name}
+                          </Text>
+                        )}
                         <line
                           y2={10 * (isEven ? 1 : -1)}
                           stroke={itcGreen}
@@ -439,17 +367,17 @@ const IndonesiaTimeline: NextPage<Props> = ({
                       </EventPeriod>
                     );
                   })}
-                </RowContent>
+                </Group>
               </g>
               <g id="moves" transform={`translate(0 ${getRowY(0, 1)})`}>
                 <TimelineHeader
-                  color={itcGreen}
+                  fill={itcGreen}
                   fontWeight={"bold"}
-                  size={rowHeaderHeight}
+                  fontSize={rowHeaderHeight}
                 >
                   Moves
                 </TimelineHeader>
-                <RowContent>
+                <Group top={rowHeaderHeight}>
                   {Array.from(ITClocations.keys()).map((d, idx) => {
                     const currentLocation = ITClocations.get(d);
                     if (!currentLocation) return <></>;
@@ -459,9 +387,8 @@ const IndonesiaTimeline: NextPage<Props> = ({
                       ? next[1].moveInDate
                       : new Date(2050, 0, 1);
                     return (
-                      <>
+                      <g key={nanoid()}>
                         <rect
-                          key={nanoid()}
                           x={xScale(new Date(currentLocation.moveInDate))}
                           y={width / 2 - 1}
                           width={
@@ -472,7 +399,6 @@ const IndonesiaTimeline: NextPage<Props> = ({
                           fill={itcGreen}
                         />
                         <g
-                          key={nanoid()}
                           transform={`translate(${xScale(
                             new Date(currentLocation.moveInDate)
                           )} 0)`}
@@ -483,6 +409,7 @@ const IndonesiaTimeline: NextPage<Props> = ({
                             stroke={itcGreen}
                           />
                           <Building
+                            position={new Vector2(0, width / 2 / 2)}
                             color={itcGreen}
                             width={width}
                             location={d}
@@ -508,31 +435,31 @@ const IndonesiaTimeline: NextPage<Props> = ({
                             </tspan>
                           </PointLabel>
                         </g>
-                      </>
+                      </g>
                     );
                   })}
-                </RowContent>
+                </Group>
               </g>
-            </SectionContent>
+            </Group>
           </g>
           <g
             id="policyEvents"
             fill={itcBlue}
             transform={`translate(0 ${getSectionY(0)})`}
           >
-            <SectionContent>
-              <TimelineHeader color={itcBlue} size={sectionHeaderHeight}>
+            <Group top={sectionHeaderHeight}>
+              <TimelineHeader fill={itcBlue} fontSize={sectionHeaderHeight}>
                 Government Context
               </TimelineHeader>
               <g id="ministers" transform={`translate(0 ${getRowY(1, 0)})`}>
                 <TimelineHeader
                   color={itcBlue}
                   fontWeight={"bold"}
-                  size={rowHeaderHeight}
+                  fontSize={rowHeaderHeight}
                 >
                   Ministers in charge
                 </TimelineHeader>
-                <RowContent>
+                <Group top={rowHeaderHeight}>
                   <NominalLegend
                     entries={parties.map((d) => ({
                       label: d,
@@ -542,37 +469,50 @@ const IndonesiaTimeline: NextPage<Props> = ({
                     columns={4}
                     columnWidth={35}
                   />
-                  {ministerEvents.map((ce) => (
-                    <EventPeriod
-                      key={nanoid()}
-                      dateStart={ce.dateStart}
-                      dateEnd={ce.dateEnd ?? new Date()}
-                      xScale={xScale}
-                      yOffset={0}
-                      height={1}
-                    >
-                      <g transform="rotate(-45) translate(2 0)">
-                        <PointLabel placement={LabelPlacement.RIGHT}>
-                          {ce.name}
-                        </PointLabel>
-                      </g>
-                      {ce.data?.party &&
-                        renderPartySymbol(ce.data?.party as string)}
-                      {/* TODO: fix typing? */}
-                    </EventPeriod>
-                  ))}
-                </RowContent>
+                  {ministerEvents.map((ce) => {
+                    return (
+                      <EventPeriod
+                        key={nanoid()}
+                        dateStart={ce.dateStart}
+                        dateEnd={ce.dateEnd ?? new Date()}
+                        xScale={xScale}
+                        yOffset={0}
+                        height={1}
+                      >
+                        <g transform="rotate(-45) translate(2 0)">
+                          <PointLabel placement={LabelPlacement.RIGHT}>
+                            {ce.name}
+                          </PointLabel>
+                        </g>
+                        <Tooltip>
+                          <TooltipTrigger asChild>
+                            <g>
+                              {ce.data?.party &&
+                                renderPartySymbol(ce.data?.party as string)}
+                            </g>
+                          </TooltipTrigger>
+                          <TooltipContent>
+                            <h3>{ce.name}</h3>
+                            {ce.data?.party} <br />
+                            {ce.dateStart.getFullYear()}–
+                            {ce.dateEnd?.getFullYear()}
+                          </TooltipContent>
+                        </Tooltip>
+                      </EventPeriod>
+                    );
+                  })}
+                </Group>
               </g>
               <g id="topics" transform={`translate(0, ${getRowY(1, 1)})`}>
                 <TimelineHeader
                   color={itcBlue}
                   fontWeight={"bold"}
-                  size={rowHeaderHeight}
+                  fontSize={rowHeaderHeight}
                 >
                   Development aid priorities
                 </TimelineHeader>
-                <RowContent>
-                  <TopicPatterns />
+                <Group top={rowHeaderHeight}>
+                  <TopicPatterns color={itcBlue} />
                   {topics.map((topic) => (
                     <EventPeriod
                       key={nanoid()}
@@ -598,24 +538,27 @@ const IndonesiaTimeline: NextPage<Props> = ({
                       {topic?.name}
                     </PointLabel>
                   ))}
-                </RowContent>
+                </Group>
               </g>
-            </SectionContent>
+            </Group>
           </g>
           <g id="itcEvents" transform={`translate(0 ${getSectionY(1)})`}>
-            <SectionContent>
-              <TimelineHeader color={indonesiaColor} size={sectionHeaderHeight}>
+            <Group top={sectionHeaderHeight}>
+              <TimelineHeader
+                fill={indonesiaColor}
+                fontSize={sectionHeaderHeight}
+              >
                 Activities in Indonesia
               </TimelineHeader>
               <g transform={`translate(0,${getRowY(2, 0)})`}>
                 <TimelineHeader
-                  color={indonesiaColor}
+                  fill={indonesiaColor}
                   fontWeight={"bold"}
-                  size={rowHeaderHeight}
+                  fontSize={rowHeaderHeight}
                 >
                   Projects
                 </TimelineHeader>
-                <RowContent>
+                <Group top={rowHeaderHeight}>
                   {projectEvents.map((e) => (
                     <EventPeriod
                       key={nanoid()}
@@ -643,18 +586,18 @@ const IndonesiaTimeline: NextPage<Props> = ({
                       )}
                     </EventPeriod>
                   ))}
-                </RowContent>
+                </Group>
               </g>
 
               <g transform={`translate(0 ${getRowY(2, 1)})`}>
                 <TimelineHeader
-                  color={indonesiaColor}
+                  fill={indonesiaColor}
                   fontWeight={"bold"}
-                  size={rowHeaderHeight}
+                  fontSize={rowHeaderHeight}
                 >
                   Staff travels
                 </TimelineHeader>
-                <RowContent>
+                <Group top={rowHeaderHeight}>
                   {btorEvents.map((e) => (
                     <EventPeriod
                       key={nanoid()}
@@ -681,18 +624,18 @@ const IndonesiaTimeline: NextPage<Props> = ({
                       />
                     ))}
                   </g>
-                </RowContent>
+                </Group>
               </g>
 
               <g transform={`translate(0 ${getRowY(2, 2)})`}>
                 <TimelineHeader
-                  color={indonesiaColor}
+                  fill={indonesiaColor}
                   fontWeight={"bold"}
-                  size={rowHeaderHeight}
+                  fontSize={rowHeaderHeight}
                 >
                   Graduates & PhDs
                 </TimelineHeader>
-                <RowContent>
+                <Group top={rowHeaderHeight}>
                   {examEvents.map((e) => {
                     const width = 9;
                     const height = (e.size ?? 0) / 3;
@@ -708,64 +651,64 @@ const IndonesiaTimeline: NextPage<Props> = ({
                       />
                     );
                   })}
-                  {phdGraduatesByYear.map((d) => {
-                    const r = 2;
-                    const gap = r * 3;
-                    return range(0, d._count._all).map((_, idx) => {
-                      const hasEvenChilds = d._count._all % 2 === 0;
-                      const offset = hasEvenChilds ? gap / -2 : 0;
-                      const direction = idx % 2 ? 1 : -1;
-                      return (
-                        <circle
-                          key={nanoid()}
-                          r={r}
-                          cx={xScale(new Date(d.promotionYear + "GMT"))}
-                          cy={offset + Math.ceil(idx / 2) * gap * direction}
-                          stroke={"black"}
-                          strokeWidth={1}
-                          fill={"white"}
-                        />
-                      );
-                    });
-                  })}
-                </RowContent>
+                  {phdGraduatesByYear
+                    .filter((d) => d.promotionYear)
+                    .map((d) => {
+                      const r = 2;
+                      const gap = r * 3;
+                      return range(0, d._count._all).map((_, idx) => {
+                        const hasEvenChilds = d._count._all % 2 === 0;
+                        const offset = hasEvenChilds ? gap / -2 : 0;
+                        const direction = idx % 2 ? 1 : -1;
+                        return (
+                          <circle
+                            key={nanoid()}
+                            r={r}
+                            cx={xScale(new Date(d.promotionYear + ""))}
+                            cy={offset + Math.ceil(idx / 2) * gap * direction}
+                            stroke={"black"}
+                            strokeWidth={1}
+                            fill={"white"}
+                          />
+                        );
+                      });
+                    })}
+                </Group>
               </g>
-            </SectionContent>
+            </Group>
           </g>
           <g id="annotations">
-            <g id="annotation-travels">
-              <text
-                textAnchor="center"
-                transform={`translate(${width / 2 + 30}, 370)`}
-              >
-                <tspan fontFamily="Fraunces" fontWeight={"bold"}>
-                  Travels over time
-                </tspan>
-                <tspan x={0} dy={7}>
-                  The travels were comparatively long in the beginning
-                </tspan>
-                <tspan x={0} dy={7}>
-                  and got much shorter in the current century.
-                </tspan>
-                <tspan x={0} dy={7}>
-                  Darker shades of red indicate overlapping travels.
-                </tspan>
-              </text>
-              <LeaderLine
-                sourcePos={new Vector2(width / 2 + 90, 400)}
-                targetPos={new Vector2(width / 2 + 30, 418)}
-                orientation="vertical"
-                stroke="black"
-                strokeWidth={0.5}
-              />
-              <LeaderLine
-                sourcePos={new Vector2(width / 2 + 100, 400)}
-                targetPos={new Vector2(width / 2 + 200, 425)}
-                orientation="vertical"
-                stroke="black"
-                strokeWidth={0.5}
-              />
-            </g>
+            {!isSSR && (
+              <g id="annotation-travels">
+                <g
+                  textAnchor="center"
+                  transform={`translate(${width / 2 + 30}, 370)`}
+                >
+                  <Text fontFamily="Fraunces" fontWeight={"bold"}>
+                    Travels over time
+                  </Text>
+                  <Text verticalAnchor={"start"} width={width / 2} y={2}>
+                    The travels were comparatively long in the beginning and got
+                    much shorter in the current century. Darker shades of red
+                    indicate overlapping travels.
+                  </Text>
+                </g>
+                <LeaderLine
+                  sourcePos={new Vector2(width / 2 + 90, 400)}
+                  targetPos={new Vector2(width / 2 + 30, 418)}
+                  orientation="vertical"
+                  stroke="black"
+                  strokeWidth={0.5}
+                />
+                <LeaderLine
+                  sourcePos={new Vector2(width / 2 + 100, 400)}
+                  targetPos={new Vector2(width / 2 + 200, 425)}
+                  orientation="vertical"
+                  stroke="black"
+                  strokeWidth={0.5}
+                />
+              </g>
+            )}
           </g>
         </svg>
         <h2>Indonesia</h2>
