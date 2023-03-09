@@ -5,6 +5,9 @@ import Footer from "../components/Footer";
 import Heading, { Headings } from "../components/Heading";
 import LinkFramed from "../components/LinkFramed";
 import { nanoid } from "nanoid";
+import Building, { ITClocations } from "../components/Building";
+import { Group } from "@visx/group";
+import useMeasure from "react-use-measure";
 
 const Home: NextPage = () => {
   const links = [
@@ -60,6 +63,9 @@ const Home: NextPage = () => {
     },
   ];
 
+  const [heroVizRef, { width }] = useMeasure();
+  const height = width / 5;
+
   return (
     <>
       <Head>
@@ -69,13 +75,44 @@ const Home: NextPage = () => {
       </Head>
 
       <main className={styles.main}>
-        <Heading Tag={Headings.H1}>
-          Capacity <em>Building</em> of ITC
+        {/* TODO: fix css to make it responsive  */}
+        <div
+          style={{
+            width: "100%",
+            maxWidth: "960px",
+            height: "220px",
+            padding: "1em",
+          }}
+        >
+          <svg
+            ref={heroVizRef}
+            width="100%"
+            height="100%"
+            viewBox={`0 0 ${width} ${height}`}
+          >
+            <line x2={"100%"} y1={width / 5.4} y2={width / 5.4} stroke="teal" />
+            {Array.from(ITClocations.entries()).map(([location], i) => {
+              const buildingWith = width / 4;
+              return (
+                <Group
+                  key={location}
+                  top={buildingWith / 2}
+                  left={buildingWith + (i * buildingWith) / 2}
+                >
+                  <Building
+                    width={buildingWith}
+                    location={location}
+                    color={"teal"}
+                  />
+                </Group>
+              );
+            })}
+          </svg>
+        </div>
+        <Heading className={Headings.H1} Tag={Headings.H1}>
+          Atlas of the world of ITC
         </Heading>
-
-        <p className={styles.description}>
-          A prototype of ITC&apos;s hybrid atlas
-        </p>
+        <p className={styles.description}>The impact of capacity development</p>
 
         <div className={styles.grid}>
           {links.map((l) => (
