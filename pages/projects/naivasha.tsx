@@ -11,7 +11,7 @@ import NaivashaRegion from "../../components/models/NaivashaRegion";
 import Cubes from "../../components/models/TestCubes";
 import getCountries from "../../lib/data/getCountries";
 import getCountryCodes from "../../lib/data/queries/country/getCountryCodes";
-import styles from "../../styles/home.module.css";
+import styles from "../../styles/Home.module.css";
 import { SharedPageProps } from "../../types/Props";
 import getTextFromFile from "../../lib/data/getTextFromFile";
 

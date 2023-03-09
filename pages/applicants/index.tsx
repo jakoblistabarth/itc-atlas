@@ -3,7 +3,7 @@ import Head from "next/head";
 import Footer from "../../components/Footer";
 import Heading, { Headings } from "../../components/Heading";
 import SummaryTable from "../../components/SummaryTable";
-import styles from "../../styles/home.module.css";
+import styles from "../../styles/Home.module.css";
 import useSWR from "swr";
 import { useRouter } from "next/router";
 import LinkFramed from "../../components/LinkFramed";

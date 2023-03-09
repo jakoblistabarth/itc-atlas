@@ -17,7 +17,7 @@ import getCountries from "../../lib/data/getCountries";
 import getCountryWithEmployeeCount, {
   CountryWithEmployeeCount,
 } from "../../lib/data/queries/country/getCountryWithEmployeeCount";
-import styles from "../../styles/home.module.css";
+import styles from "../../styles/Home.module.css";
 import { NeCountriesTopoJson } from "../../types/NeTopoJson";
 import { SharedPageProps } from "../../types/Props";
 

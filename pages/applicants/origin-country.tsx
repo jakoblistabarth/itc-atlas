@@ -19,7 +19,7 @@ import getCountryCodes from "../../lib/data/queries/country/getCountryCodes";
 import getCountryWithApplicantCount, {
   CountryWithApplicantCount,
 } from "../../lib/data/queries/country/getCountryWithApplicantCount";
-import styles from "../../styles/home.module.css";
+import styles from "../../styles/Home.module.css";
 import { LabelPlacement } from "../../types/LabelPlacement";
 import { SharedPageProps } from "../../types/Props";
 import useMeasure from "react-use-measure";

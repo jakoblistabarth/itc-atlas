@@ -1,6 +1,6 @@
 import type { GetStaticProps, NextPage } from "next";
 import Head from "next/head";
-import styles from "../../styles/home.module.css";
+import styles from "../../styles/Home.module.css";
 import getTravels from "../../lib/data/getTravels";
 import SummaryTable from "../../components/SummaryTable";
 import Footer from "../../components/Footer";

@@ -1,7 +1,7 @@
 import Link from "next/link";
 import React, { FC } from "react";
 import { MdOutlineArrowRightAlt } from "react-icons/md";
-import styles from "../styles/home.module.css";
+import styles from "../styles/Home.module.css";
 
 type Props = React.PropsWithChildren<{
   href: string;

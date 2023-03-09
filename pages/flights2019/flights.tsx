@@ -10,7 +10,7 @@ import FlowLegend from "../../components/map/FlowLegend";
 import PointLabel from "../../components/map/PointLabel";
 import getFlowPoints from "../../lib/cartographic/getFlowPoints";
 import getCountries from "../../lib/data/getCountries";
-import styles from "../../styles/home.module.css";
+import styles from "../../styles/Home.module.css";
 import type { OdMatrix } from "../../types/OdMatrix";
 import themes, { ThemeNames } from "../../lib/styles/themes";
 import getMapHeight from "../../lib/cartographic/getMapHeight";

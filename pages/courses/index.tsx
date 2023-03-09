@@ -33,7 +33,7 @@ import TooltipContent from "../../components/Tooltip/TooltipContent";
 import { TooltipTrigger } from "../../components/Tooltip/TooltipTrigger";
 import getCourseGenealogy from "../../lib/data/getCourseGenealogy";
 import toInt from "../../lib/utilities/toInt";
-import styles from "../../styles/home.module.css";
+import styles from "../../styles/Home.module.css";
 import { CourseGenealogy } from "../../types/CourseGenealogy";
 import { LabelPlacement } from "../../types/LabelPlacement";
 import { TimelineEvent } from "../../types/TimelineEvent";

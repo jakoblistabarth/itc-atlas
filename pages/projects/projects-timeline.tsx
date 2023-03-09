@@ -10,7 +10,7 @@ import Footer from "../../components/Footer";
 import Heading, { Headings } from "../../components/Heading";
 import PointLabel from "../../components/map/PointLabel";
 import getProjects from "../../lib/data/queries/project/getProjects";
-import styles from "../../styles/home.module.css";
+import styles from "../../styles/Home.module.css";
 import { LabelPlacement } from "../../types/LabelPlacement";
 import { Project } from "@prisma/client";
 import { TimelineEvent } from "../../types/TimelineEvent";

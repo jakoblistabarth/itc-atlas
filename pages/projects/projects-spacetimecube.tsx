@@ -5,7 +5,7 @@ import Head from "next/head";
 import Footer from "../../components/Footer";
 import Heading, { Headings } from "../../components/Heading";
 import getCountries from "../../lib/data/getCountries";
-import styles from "../../styles/home.module.css";
+import styles from "../../styles/Home.module.css";
 import { SharedPageProps } from "../../types/Props";
 import React from "react";
 import { group, rollup } from "d3";

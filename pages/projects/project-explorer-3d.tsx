@@ -6,7 +6,7 @@ import Footer from "../../components/Footer";
 import Heading, { Headings } from "../../components/Heading";
 import Point3D from "../../components/map-3d/Point3D";
 import getCountries from "../../lib/data/getCountries";
-import styles from "../../styles/home.module.css";
+import styles from "../../styles/Home.module.css";
 import { SharedPageProps } from "../../types/Props";
 import * as topojson from "topojson-client";
 import { geoCentroid } from "d3-geo";

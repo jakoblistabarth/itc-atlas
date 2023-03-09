@@ -8,7 +8,7 @@ import Heading, { Headings } from "../../components/Heading";
 import Flow3D from "../../components/map-3d/Flow3D";
 import Globe from "../../components/map-3d/Globe";
 import getODMatrix from "../../lib/data/getOdMatrix";
-import styles from "../../styles/home.module.css";
+import styles from "../../styles/Home.module.css";
 import type { OdMatrix } from "../../types/OdMatrix";
 
 type Props = {

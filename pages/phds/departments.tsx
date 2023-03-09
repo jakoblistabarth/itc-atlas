@@ -15,7 +15,7 @@ import getMapHeight from "../../lib/cartographic/getMapHeight";
 import getCountries from "../../lib/data/getCountries";
 import getPhdCandidatesByCountryByDepartment from "../../lib/data/queries/phdCandidate/getPhdCandidatesByCountryByDepartment";
 import defaultTheme from "../../lib/styles/themes/defaultTheme";
-import styles from "../../styles/home.module.css";
+import styles from "../../styles/Home.module.css";
 import { SharedPageProps } from "../../types/Props";
 import useSWR from "swr";
 import { useState } from "react";

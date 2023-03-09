@@ -13,7 +13,7 @@ import getMapHeight from "../../lib/cartographic/getMapHeight";
 import getCountries from "../../lib/data/getCountries";
 import getProjectsPerCountry from "../../lib/data/getProjectsPerCountry";
 import themes, { ThemeNames } from "../../lib/styles/themes";
-import styles from "../../styles/home.module.css";
+import styles from "../../styles/Home.module.css";
 import { scaleSqrt } from "d3";
 import getCountriesByGroup from "../../lib/data/getCountriesByGroup";
 import { UnGrouping } from "../../types/UnsdCodes";

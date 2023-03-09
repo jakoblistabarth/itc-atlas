@@ -2,7 +2,7 @@ import type { NextPage } from "next";
 import Head from "next/head";
 import Footer from "../../components/Footer";
 import Heading, { Headings } from "../../components/Heading";
-import styles from "../../styles/home.module.css";
+import styles from "../../styles/Home.module.css";
 import { Canvas } from "@react-three/fiber";
 import { OrbitControls } from "@react-three/drei";
 

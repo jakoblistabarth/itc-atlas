@@ -2,7 +2,7 @@ import * as d3 from "d3";
 import { geoBertin1953 } from "d3-geo-projection";
 import type { GetStaticProps, NextPage } from "next";
 import Head from "next/head";
-import styles from "../../styles/home.module.css";
+import styles from "../../styles/Home.module.css";
 import { FeatureCollection, Point } from "geojson";
 import Heading, { Headings } from "../../components/Heading";
 import getCountries from "../../lib/data/getCountries";

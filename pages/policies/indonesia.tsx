@@ -5,7 +5,7 @@ import Heading, { Headings } from "../../components/Heading";
 import getBTORsByCountry, {
   BtorsByCountry,
 } from "../../lib/data/queries/btors/getBTORsByCountry";
-import styles from "../../styles/home.module.css";
+import styles from "../../styles/Home.module.css";
 import { ProjectIndonesia } from "../../types/Project";
 import { TimelineEvent } from "../../types/TimelineEvent";
 import getDutchForeignAffairsMinisters from "../../lib/data/getDutchForeignAffairsMinisters";

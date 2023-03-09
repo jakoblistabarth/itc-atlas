@@ -1,6 +1,6 @@
 import type { GetStaticProps, NextPage } from "next";
 import Head from "next/head";
-import styles from "../../styles/home.module.css";
+import styles from "../../styles/Home.module.css";
 import { geoSatellite } from "d3-geo-projection";
 import * as d3 from "d3";
 import * as topojson from "topojson-client";

@@ -1,6 +1,6 @@
 import React, { FC } from "react";
 import { fDateMonthYear } from "../lib/utilities/formaters";
-import styles from "../styles/home.module.css";
+import styles from "../styles/Home.module.css";
 import BackToHome from "./BackToHome";
 
 type Props = React.PropsWithChildren<{}>;
