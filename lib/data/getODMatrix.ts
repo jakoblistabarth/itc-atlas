@@ -1,14 +1,14 @@
 import * as d3 from "d3";
-import type { FlowPointProperties, OdMatrix } from "../../types/OdMatrix";
 import type {
-  GeoJsonProperties,
   Feature,
   FeatureCollection,
+  GeoJsonProperties,
   LineString,
   Point,
 } from "geojson";
-import getAirports from "./getAirports";
+import type { FlowPointProperties } from "../../types/OdMatrix";
 import { FlowProperties } from "../../types/OdMatrix";
+import getAirports from "./getAirports";
 import getFlights2019 from "./queries/flight2019/getFlights2019";
 
 type od = {

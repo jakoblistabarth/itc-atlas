@@ -1,7 +1,6 @@
 import { Meta, StoryObj } from "@storybook/react";
 import * as topojson from "topojson-client";
 import { geoRobinson } from "d3-geo-projection";
-import type { FeatureCollection, Polygon, MultiPolygon } from "geojson";
 
 import PolygonSymbol from "../components/map/PolygonSymbol";
 import getCountries from "../lib/data/getCountries";

@@ -1,7 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import ReactDOMServer from "react-dom/server";
 import WordCloud from "../../../components/charts/WordCloud";
-import { Text } from "@visx/text";
 import getTextFromFile from "../../../lib/data/getTextFromFile";
 
 export default async function handler(

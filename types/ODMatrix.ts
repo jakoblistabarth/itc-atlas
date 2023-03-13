@@ -1,4 +1,3 @@
-import type { FeatureCollection, LineString, Point } from "geojson";
 import getOdMatrix from "../lib/data/getOdMatrix";
 
 export type FlowProperties = {
