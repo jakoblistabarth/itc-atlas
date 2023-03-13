@@ -18,7 +18,7 @@ import { MapOptions } from "../../types/MapOptions";
 import { SharedPageProps } from "../../types/Props";
 import defaultTheme from "../../lib/styles/themes/defaultTheme";
 import { Vector2 } from "three";
-import getODMatrix from "../../lib/data/getOdMatrix";
+import getOdMatrix from "../../lib/data/getOdMatrix";
 
 type Props = {
   odMatrix: OdMatrix;
@@ -132,7 +132,7 @@ const Flights: NextPage<Props> = ({ odMatrix, neCountriesTopoJson }) => {
 
 export async function getStaticProps() {
   const neCountriesTopoJson = getCountries();
-  const [odMatrix] = await Promise.all([getODMatrix()]);
+  const [odMatrix] = await Promise.all([getOdMatrix()]);
   return {
     props: {
       odMatrix,
