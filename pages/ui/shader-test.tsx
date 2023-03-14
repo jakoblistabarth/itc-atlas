@@ -6,17 +6,14 @@ import Footer from "../../components/Footer";
 import Heading, { Headings } from "../../components/Heading";
 import BlockDiagramm from "../../components/map-3d/BlockDiagram";
 import styles from "../../styles/Home.module.css";
+import useSWR from "swr";
 
 const ShaderTest: NextPage = () => {
-  // TODO: refactor displacement generation with custom hook?
+  // TODO: get segements and side with custom hook from fetched data?
   const segments = 12;
   const side = 4;
-  const res = Math.pow(segments + 1, 2);
 
-  const displacement = new Float32Array(res).map((_, i) => (i + 1) / res);
-  const randomDisplacement = new Float32Array(res).map(
-    (_) => Math.random() * 0.5
-  );
+  const { data, error, isLoading } = useSWR("/api/data/elevation/Paramaribo");
 
   return (
     <>
@@ -34,14 +31,16 @@ const ShaderTest: NextPage = () => {
           style={{ width: "100%", height: "500px" }}
         >
           <axesHelper args={[side * 0.75]} />
-          <BlockDiagramm side={side} segments={segments} data={displacement} />
-          <group position={[0, 1.5, 0]}>
-            <BlockDiagramm
-              side={side}
-              segments={segments}
-              data={randomDisplacement}
-            />
-          </group>
+          {data && (
+            <group position={[0, 0.5, 0]}>
+              <BlockDiagramm
+                side={side}
+                yScale={0.01}
+                segments={segments}
+                data={Float32Array.from(data.elevation)}
+              />
+            </group>
+          )}
           <mesh rotation={[-Math.PI / 2, 0, 0]}>
             <planeGeometry args={[side, side, segments, segments]} />
             <shaderMaterial wireframe />

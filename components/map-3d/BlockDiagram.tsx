@@ -5,6 +5,7 @@ import { useFrame } from "@react-three/fiber";
 type Props = {
   side: number;
   segments: number;
+  yScale: number;
   data: Float32Array;
 };
 
@@ -13,12 +14,12 @@ type Props = {
 
 // TODO: if shaders get more complex move shaders to separate files: https://github.com/glslify/glslify-loader
 
-const BlockDiagramm: FC<Props> = ({ side, segments, data }) => {
+const BlockDiagramm: FC<Props> = ({ side, segments, data, yScale }) => {
   const vertexShader = /*glsl*/ `
   attribute float displacement;
 
   void main() {
-    vec3 newPosition = position + vec3(0,0,displacement);
+    vec3 newPosition = position + vec3(0,0,displacement * ${yScale.toFixed(6)});
     gl_Position = projectionMatrix * modelViewMatrix * vec4(newPosition, 1.0);
 
   }
