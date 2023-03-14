@@ -1,6 +1,5 @@
-import { FC, useEffect, useMemo, useRef } from "react";
+import { FC, useEffect, useRef } from "react";
 import { BufferAttribute, Mesh, PlaneGeometry, ShaderMaterial } from "three";
-import { useFrame } from "@react-three/fiber";
 
 type Props = {
   side: number;
@@ -39,21 +38,6 @@ const BlockDiagramm: FC<Props> = ({ side, segments, data, yScale }) => {
     geomRef.current?.setAttribute("displacement", new BufferAttribute(data, 1));
   });
 
-  const uniforms = useMemo(
-    () => ({
-      u_time: {
-        value: 0.0,
-      },
-    }),
-    []
-  );
-
-  useFrame((state) => {
-    if (!meshRef.current) return;
-    const { clock } = state;
-    meshRef.current.material.uniforms.u_time.value = clock.getElapsedTime();
-  });
-
   return (
     <>
       <mesh ref={meshRef} rotation={[-Math.PI / 2, 0, 0]}>
@@ -61,7 +45,6 @@ const BlockDiagramm: FC<Props> = ({ side, segments, data, yScale }) => {
         <shaderMaterial
           vertexShader={vertexShader}
           fragmentShader={fragmentShader}
-          uniforms={uniforms}
           wireframe
         />
       </mesh>
