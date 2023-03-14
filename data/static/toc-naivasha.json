@@ -1,0 +1,176 @@
+{
+  "nodes": [
+    {
+      "level": 1,
+      "id": 1,
+      "label": "Improvements of socio-economic conditions of the habitants and businesses of the Lake Naivasha Region"
+    },
+    {
+      "level": 2,
+      "id": 1,
+      "label": "Governance Planning, regulation and policies"
+    },
+    {
+      "level": 2,
+      "id": 2,
+      "label": "Water resource management"
+    },
+    {
+      "level": 2,
+      "id": 3,
+      "label": "Environmental friendly food production"
+    },
+    {
+      "level": 2,
+      "id": 4,
+      "label": "Land use and planning"
+    },
+    {
+      "level": 3,
+      "id": 1,
+      "label": "Strengthening key stakeholder"
+    },
+    {
+      "level": 3,
+      "id": 2,
+      "label": "Strengthening knowledge and research institutes"
+    },
+    {
+      "level": 4,
+      "id": 1,
+      "label": "Networks strengthened"
+    },
+    {
+      "level": 4,
+      "id": 2,
+      "label": "Staff capacity enhanced"
+    },
+    {
+      "level": 4,
+      "id": 3,
+      "label": "Organizational capacity enhanced"
+    },
+    {
+      "level": 4,
+      "id": 4,
+      "label": "Educational and training programs developed"
+    },
+    {
+      "level": 5,
+      "id": 1,
+      "label": "Strategy development"
+    },
+    {
+      "level": 5,
+      "id": 2,
+      "label": "Info sys development"
+    },
+    {
+      "level": 5,
+      "id": 3,
+      "label": "Action plan development"
+    },
+    {
+      "level": 5,
+      "id": 4,
+      "label": "Training and coaching"
+    },
+    {
+      "level": 5,
+      "id": 5,
+      "label": "MSc and PhD studies"
+    },
+    {
+      "level": 5,
+      "id": 6,
+      "label": "Improved research"
+    },
+    {
+      "level": 5,
+      "id": 7,
+      "label": "GEO/RS capacity"
+    },
+    {
+      "level": 5,
+      "id": 8,
+      "label": "Management support"
+    },
+    {
+      "level": 5,
+      "id": 9,
+      "label": "Curricula and training"
+    },
+    {
+      "level": 6,
+      "id": 1,
+      "label": "MaMaSe"
+    },
+    {
+      "level": 6,
+      "id": 2,
+      "label": "Its4Land"
+    },
+    {
+      "level": 6,
+      "id": 3,
+      "label": "IWRAP"
+    },
+    {
+      "level": 6,
+      "id": 4,
+      "label": "EOIA"
+    },
+    {
+      "level": 6,
+      "id": 5,
+      "label": "Partnership RCMRD"
+    },
+    {
+      "level": 6,
+      "id": 6,
+      "label": "Education and training"
+    },
+    {
+      "level": 6,
+      "id": 7,
+      "label": "PhD prorgram"
+    },
+    {
+      "level": 6,
+      "id": 8,
+      "label": "SEALAN"
+    },
+    {
+      "level": 6,
+      "id": 9,
+      "label": "Project Strengthen Polytechs"
+    },
+    {
+      "level": 6,
+      "id": 10,
+      "label": "Partnership Egerton University"
+    }
+  ],
+  "relations": [
+    { "from": "1.1", "to": ["2.1", "2.2", "2.3", "2.4"] },
+    { "from": "2.1", "to": ["3.1"] },
+    { "from": "2.2", "to": ["3.1", "3.2"] },
+    { "from": "2.3", "to": ["3.1", "3.2"] },
+    { "from": "2.4", "to": ["3.1", "3.2"] },
+    { "from": "3.1", "to": ["4.1", "4.2", "4.3"] },
+    { "from": "3.2", "to": ["4.2", "4.3", "4.4"] },
+    { "from": "4.1", "to": ["5.1", "5.2", "5.3", "5.4"] },
+    { "from": "4.2", "to": ["5.4", "5.5"] },
+    { "from": "4.3", "to": ["5.5", "5.6", "5.7", "5.8"] },
+    { "from": "4.4", "to": ["5.8", "5.9"] },
+    { "from": "5.1", "to": ["6.1", "6.2"] },
+    { "from": "5.2", "to": ["6.1", "6.2", "6.4", "6.5"] },
+    { "from": "5.3", "to": ["6.3"] },
+    { "from": "5.4", "to": ["6.3", "6.4", "6.5", "6.6", "6.9"] },
+    { "from": "5.5", "to": ["6.6", "6.7"] },
+    { "from": "5.6", "to": ["6.6", "6.7"] },
+    { "from": "5.7", "to": ["6.5", "6.6", "6.7", "6.8", "6.9", "6.10"] },
+    { "from": "5.8", "to": ["6.9"] },
+    { "from": "5.9", "to": ["6.8", "6.9", "6.10"] }
+  ]
+}

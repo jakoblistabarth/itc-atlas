@@ -14,10 +14,18 @@ import getCountryCodes from "../../lib/data/queries/country/getCountryCodes";
 import styles from "../../styles/Home.module.css";
 import { SharedPageProps } from "../../types/Props";
 import getTextFromFile from "../../lib/data/getTextFromFile";
+import HierarchyTree, {
+  Hierarchy,
+} from "../../components/charts/HierarchyTree";
+import { readFileSync } from "fs";
 
-type Props = { words: string } & SharedPageProps;
+type Props = { words: string; hierarchy: Hierarchy } & SharedPageProps;
 
-const Naivasha: NextPage<Props> = ({ neCountriesTopoJson, words }) => {
+const Naivasha: NextPage<Props> = ({
+  neCountriesTopoJson,
+  words,
+  hierarchy,
+}) => {
   return (
     <>
       <Head>
@@ -32,6 +40,8 @@ const Naivasha: NextPage<Props> = ({ neCountriesTopoJson, words }) => {
           neCountriesTopoJson={neCountriesTopoJson}
           highlight={["KEN"]}
         />
+        <Heading Tag={Headings.H2}>Theory of Change</Heading>
+        <HierarchyTree height={600} hierarchy={hierarchy} />
         <Heading Tag={Headings.H2}>Wordcloud</Heading>
         <Wordcloud width={960} height={400} text={words} />
         <Heading Tag={Headings.H2}>3D Block Diagram</Heading>
@@ -64,7 +74,8 @@ const Naivasha: NextPage<Props> = ({ neCountriesTopoJson, words }) => {
 };
 
 export const getStaticProps: GetStaticProps<Props> = async () => {
-  const [neCountriesTopoJson, countries, words] = await Promise.all([
+  const [hierarchy, neCountriesTopoJson, countries, words] = await Promise.all([
+    JSON.parse(readFileSync("./data/static/toc-naivasha.json", "utf-8")),
     getCountries(),
     getCountryCodes(),
     getTextFromFile("./data/static/naivasha-msc-theses-titles.txt"),
@@ -72,6 +83,7 @@ export const getStaticProps: GetStaticProps<Props> = async () => {
 
   return {
     props: {
+      hierarchy,
       neCountriesTopoJson,
       countries,
       words,
