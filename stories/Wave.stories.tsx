@@ -19,6 +19,9 @@ const meta = {
     height: {
       control: { type: "range", min: 0, max: side / 2, step: 0.5 },
     },
+    frequency: {
+      control: { type: "range", min: 1, max: 50, step: 1 },
+    },
     amplitude: {
       control: { type: "range", min: 0, max: 1, step: 0.1 },
     },
