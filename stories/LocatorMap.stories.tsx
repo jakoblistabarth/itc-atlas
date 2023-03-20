@@ -62,3 +62,20 @@ export const DifferentHemispheres: Story = {
     highlight: ["LAO", "CHL"],
   },
 };
+
+export const WithMarkers: Story = {
+  args: {
+    highlight: ["IDN"],
+    markers: [
+      [106.5, -6],
+      [110, -7.5],
+    ].map((d, i) => ({
+      lng: d[0],
+      lat: d[1],
+      label: i.toFixed(),
+      fill: "red",
+      labelColor: "white",
+      fontSize: 7,
+    })),
+  },
+};
