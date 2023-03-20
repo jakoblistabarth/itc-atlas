@@ -16,10 +16,10 @@ const meta = {
     width: 20,
     height: 20,
     name: "pattern",
+    angle: 0,
   },
   argTypes: {
     spacing: { control: { type: "range", min: 0, max: 2, step: 0.01 } },
-    angle: { control: { type: "range", min: -90, max: 90, step: 0.1 } },
     name: {
       table: {
         disable: true,
