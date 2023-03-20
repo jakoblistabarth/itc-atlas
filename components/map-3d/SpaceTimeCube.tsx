@@ -5,7 +5,6 @@ import { nanoid } from "nanoid";
 import React, { FC } from "react";
 import lonLatTimeToXYZ from "../../lib/cartographic/lonLatTimeToXYZ";
 import { fDateYear } from "../../lib/utilities/formaters";
-import InterRegular from "../../public/fonts/Inter_Regular.json";
 import { SpaceTimeCubeEvent } from "../../types/SpaceTimeCubeEvent";
 import type { Topology } from "topojson-specification";
 import PolygonMap3D from "./PolygonMap3D";
@@ -68,7 +67,7 @@ const SpaceTimeCube: FC<PropTypes> = ({
               <Text3D
                 receiveShadow
                 castShadow
-                font={InterRegular}
+                font={"/fonts/Inter_Regular.json"}
                 position={[-side / 2, timeScale(t) - fontSize / 2, side * 0.52]}
                 size={fontSize}
                 height={fontSize / 50}
@@ -93,7 +92,7 @@ const SpaceTimeCube: FC<PropTypes> = ({
         );
         return (
           <mesh key={nanoid()} position={pos}>
-            <boxBufferGeometry
+            <boxGeometry
               args={[(e.size ?? 1) / 200, eventSide / 5, (e.size ?? 1) / 200]}
             />
             <meshPhongMaterial color={"teal"} />

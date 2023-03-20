@@ -4,8 +4,8 @@ import { FC, SVGProps } from "react";
 type Props = {
   width: number;
   height: number;
-  amplitude: number;
-  frequency: number;
+  amplitude?: number;
+  frequency?: number;
 } & SVGProps<SVGPathElement>;
 
 const Wave: FC<Props> = ({

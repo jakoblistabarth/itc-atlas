@@ -74,11 +74,12 @@ const HierarchyTree: FC<Props> = ({ hierarchy, height }) => {
                   const targetXScale = xScales.find(
                     (d) => d.level === level
                   )?.scale;
-                  if (!targetXScale) return;
+                  if (!targetXScale || !origin.y) return;
                   const target = {
                     x: (targetXScale(id) ?? 0) + targetXScale.bandwidth() / 2,
                     y: yScale(level),
                   };
+                  if (!target.y) return;
                   const curve = linkVertical()({
                     source: [origin.x, 20 + origin.y ?? 1],
                     target: [target.x, -15 + target.y ?? 1],
