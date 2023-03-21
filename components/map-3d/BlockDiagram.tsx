@@ -11,13 +11,12 @@ type Props = {
   zOffset?: number;
 };
 
-let features = {
+const features = {
   Palette: FXRand.choice(['Black&White', 'Mono', 'Analogous', 'Complementary']),
   Layer: FXRand.bool(0.2) ? 1 : FXRand.int(2, 3)
 }
-let colors = generateColorPalette(features);
-let surfaceColor = hsl2rgb(colors[1][0], colors[1][1], colors[1][2]);
-const layerCount = features.Layer;
+const colors = generateColorPalette(features);
+const surfaceColor = hsl2rgb(colors[1][0], colors[1][1], colors[1][2]);
 // TODO: refactor with react drei fiber's shaderMaterial for declarative uniforms: https://docs.pmnd.rs/react-three-fiber/tutorials/typescript#extend-usage
 // for typing, see: https://docs.pmnd.rs/react-three-fiber/tutorials/typescript#extend-usage
 
