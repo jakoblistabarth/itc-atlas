@@ -10,7 +10,7 @@ import useSWR from "swr";
 
 const ShaderTest: NextPage = () => {
   // TODO: get segements and side with custom hook from fetched data?
-  const segments = 12;
+  const segments = 400;
   const side = 4;
 
   const { data, error, isLoading } = useSWR("/api/data/elevation/Paramaribo");
@@ -32,10 +32,11 @@ const ShaderTest: NextPage = () => {
         >
           <axesHelper args={[side * 0.75]} />
           {data && (
-            <group position={[0, 0.5, 0]}>
+            <group position={[0, 0, 0]}>
               <BlockDiagramm
                 side={side}
                 yScale={0.01}
+                zOffset={0.25}
                 segments={segments}
                 data={Float32Array.from(data.elevation)}
               />
@@ -43,7 +44,7 @@ const ShaderTest: NextPage = () => {
           )}
           <mesh rotation={[-Math.PI / 2, 0, 0]}>
             <planeGeometry args={[side, side, segments, segments]} />
-            <shaderMaterial wireframe />
+            <shaderMaterial />
           </mesh>
           <OrbitControls />
         </Canvas>
