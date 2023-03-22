@@ -1,9 +1,8 @@
-import React, { FC, useEffect, useState } from "react";
-import { Text } from "@visx/text";
 import { Label } from "@visx/annotation";
+import { Text } from "@visx/text";
 import { groups, linkVertical, range, ScaleBand, scaleBand } from "d3";
+import { FC, useEffect, useState } from "react";
 import useMeasure from "react-use-measure";
-import { LinkVerticalCurve } from "@visx/shape";
 
 type Props = {
   hierarchy: Hierarchy;
@@ -13,6 +12,7 @@ type Props = {
 export type Hierarchy = {
   nodes: { level: number; id: number; label: string }[];
   relations: { from: string; to: string[] }[];
+  levelNames?: string[];
 };
 
 const HierarchyTree: FC<Props> = ({ hierarchy, height }) => {
@@ -23,6 +23,8 @@ const HierarchyTree: FC<Props> = ({ hierarchy, height }) => {
   const [containerRef, { width }] = useMeasure();
 
   const margin = 50;
+  const levelDescriptionWidth = 100;
+  const xStart = hierarchy.levelNames ? levelDescriptionWidth : 0;
 
   const groupedByLevel = groups(hierarchy.nodes, (d) => d.level);
   const levels = groupedByLevel.map((d) => d[0]);
@@ -37,7 +39,7 @@ const HierarchyTree: FC<Props> = ({ hierarchy, height }) => {
         level: level,
         scale: scaleBand<number>()
           .domain(range(nodes.length).map((_, i) => i + 1))
-          .range([0, width])
+          .range([xStart, width])
           .paddingOuter(1)
           .align(0.5),
       });
@@ -51,10 +53,21 @@ const HierarchyTree: FC<Props> = ({ hierarchy, height }) => {
       <svg width={"100%"} height={"100%"} viewBox={`0 0 ${width} ${height}`}>
         <defs>
           <linearGradient id="gradient" gradientTransform="rotate(90)">
-            <stop offset="30%" stop-color="PaleTurquoise" />
-            <stop offset="90%" stop-color="teal" />
+            <stop offset="30%" stopColor="PaleTurquoise" />
+            <stop offset="90%" stopColor="teal" />
           </linearGradient>
         </defs>
+        {hierarchy.levelNames &&
+          hierarchy.levelNames.map((d, idx) => (
+            <Text
+              fontSize={10}
+              verticalAnchor="middle"
+              key={`level-label-${idx}`}
+              y={yScale(idx + 1)}
+            >
+              {d}
+            </Text>
+          ))}
         {hierarchy.nodes.map((d, idx) => {
           const scale = xScales.find((e) => e.level === d.level)?.scale;
           const links = hierarchy.relations.find(
@@ -67,7 +80,7 @@ const HierarchyTree: FC<Props> = ({ hierarchy, height }) => {
           };
           const isProject = d.level === 6;
           return (
-            <g key={`circle-${idx}`}>
+            <g key={`node-${idx}`}>
               {links &&
                 links.to.map((link) => {
                   const [level, id] = link.split(".").map((d) => Number(d));
@@ -95,22 +108,24 @@ const HierarchyTree: FC<Props> = ({ hierarchy, height }) => {
                     />
                   );
                 })}
-              <Label
-                x={origin.x}
-                y={origin.y}
-                verticalAnchor="middle"
-                horizontalAnchor="middle"
-                width={scale.bandwidth() * 0.8}
-                backgroundFill={isProject ? "teal" : "PaleTurquoise"}
-                backgroundProps={{ rx: 4 }}
-                titleFontSize={10}
-                titleProps={{
-                  textAnchor: "middle",
-                  fontFamily: "Fraunces",
-                  fill: isProject ? "white" : "teal",
-                }}
-                title={d.label}
-              />
+              {!isSSR && (
+                <Label
+                  x={origin.x}
+                  y={origin.y}
+                  verticalAnchor="middle"
+                  horizontalAnchor="middle"
+                  width={scale.bandwidth() * 0.8}
+                  backgroundFill={isProject ? "teal" : "PaleTurquoise"}
+                  backgroundProps={{ rx: 4 }}
+                  titleFontSize={10}
+                  titleProps={{
+                    textAnchor: "middle",
+                    fontFamily: "Fraunces",
+                    fill: isProject ? "white" : "teal",
+                  }}
+                  title={d.label}
+                />
+              )}
             </g>
           );
         })}
