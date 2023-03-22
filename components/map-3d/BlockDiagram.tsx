@@ -1,8 +1,8 @@
 import { FC, useEffect, useRef } from "react";
 import { BufferAttribute, Mesh, PlaneGeometry, ShaderMaterial } from "three";
 import * as THREE from "three";
-import { generateColorPalette, hsl2rgb } from './BlockDiagramStyle/color';
-import * as FXRand from './BlockDiagramStyle/random'
+import { generateColorPalette, hsl2rgb } from "./BlockDiagramStyle/color";
+import * as FXRand from "./BlockDiagramStyle/random";
 type Props = {
   side: number;
   segments: number;
@@ -12,9 +12,9 @@ type Props = {
 };
 
 const features = {
-  Palette: FXRand.choice(['Black&White', 'Mono', 'Analogous', 'Complementary']),
-  Layer: FXRand.bool(0.2) ? 1 : FXRand.int(2, 3)
-}
+  Palette: FXRand.choice(["Black&White", "Mono", "Analogous", "Complementary"]),
+  Layer: FXRand.bool(0.2) ? 1 : FXRand.int(2, 3),
+};
 const colors = generateColorPalette(features);
 const surfaceColor = hsl2rgb(colors[1][0], colors[1][1], colors[1][2]);
 // TODO: refactor with react drei fiber's shaderMaterial for declarative uniforms: https://docs.pmnd.rs/react-three-fiber/tutorials/typescript#extend-usage
@@ -22,11 +22,22 @@ const surfaceColor = hsl2rgb(colors[1][0], colors[1][1], colors[1][2]);
 
 // TODO: if shaders get more complex move shaders to separate files: https://github.com/glslify/glslify-loader
 
-
-const BlockDiagramm: FC<Props> = ({ side, segments, data, yScale, zOffset }) => {
+const BlockDiagramm: FC<Props> = ({
+  side,
+  segments,
+  data,
+  yScale,
+  zOffset,
+}) => {
   const uniforms = {
-    uColor: { value: new THREE.Vector3(surfaceColor[0], surfaceColor[1], surfaceColor[2]) },
-  }
+    uColor: {
+      value: new THREE.Vector3(
+        surfaceColor[0],
+        surfaceColor[1],
+        surfaceColor[2]
+      ),
+    },
+  };
 
   const vertexShader = /*glsl*/ `
   attribute float displacement;
@@ -35,7 +46,9 @@ const BlockDiagramm: FC<Props> = ({ side, segments, data, yScale, zOffset }) => 
   void main() {
     vec3 p = position;
     if ( p.x < 2. && p.x > -2. && p.y < 2. && p.y > -2. ) { 
-       p = p + vec3(0,0,${zOffset.toFixed(6)} + displacement * ${yScale.toFixed(6)});
+       p = p + vec3(0,0,${zOffset.toFixed(6)} + displacement * ${yScale.toFixed(
+    6
+  )});
     }
     vVertex = ( modelViewMatrix * vec4(p, 1. ) ).xyz;
     gl_Position = projectionMatrix * modelViewMatrix * vec4(p, 1.0);
