@@ -39,14 +39,17 @@ const BlockDiagramm: FC<Props> = ({
     },
   };
 
+  const sideHalf = (side / 2).toFixed(6);
   const vertexShader = /*glsl*/ `
   attribute float displacement;
   varying vec3 vVertex;
 
   void main() {
     vec3 p = position;
-    if ( p.x < 2. && p.x > -2. && p.y < 2. && p.y > -2. ) { 
-       p = p + vec3(0,0,${zOffset.toFixed(6)} + displacement * ${yScale.toFixed(6)});
+    if ( p.x < ${sideHalf} && p.x > -${sideHalf} && p.y < ${sideHalf} && p.y > -${sideHalf} ) {
+       p = p + vec3(0,0,${zOffset?.toFixed(
+         6
+       )} + displacement * ${yScale.toFixed(6)});
     }
     vVertex = ( modelViewMatrix * vec4(p, 1. ) ).xyz;
     gl_Position = projectionMatrix * modelViewMatrix * vec4(p, 1.0);
