@@ -46,8 +46,8 @@ const BlockDiagramm: FC<Props> = ({
 
   void main() {
     vec3 p = position;
-    if ( p.x < 2. && p.x > -2. && p.y < 2. && p.y > -2. ) { 
-       p = p + vec3(0,0,${zOffset.toFixed(6)} + displacement * ${yScale.toFixed(
+    if ( p.x < ${sideHalf} && p.x > -${sideHalf} && p.y < ${sideHalf} && p.y > -${sideHalf} ) {
+      p = p + vec3(0,0,${zOffset?.toFixed(6)} + displacement * ${yScale.toFixed(
     6
   )});
     }
