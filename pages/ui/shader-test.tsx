@@ -27,22 +27,15 @@ const ShaderTest: NextPage = () => {
           camera={{ zoom: 70 }}
           style={{ width: "100%", height: "500px" }}
         >
-          <axesHelper args={[side * 0.75]} />
           {data && (
-            <group position={[0, 0, 0]}>
-              <BlockDiagramm
-                side={side}
-                yScale={0.01}
-                zOffset={0.25}
-                segments={segments}
-                data={Float32Array.from(data.elevation)}
-              />
-            </group>
+            <BlockDiagramm
+              side={side}
+              yScale={0.01}
+              zOffset={0.25}
+              segments={segments}
+              data={Float32Array.from(data.elevation)}
+            />
           )}
-          <mesh rotation={[-Math.PI / 2, 0, 0]}>
-            <planeGeometry args={[side, side, segments, segments]} />
-            <shaderMaterial />
-          </mesh>
           <OrbitControls />
         </Canvas>
       </main>
