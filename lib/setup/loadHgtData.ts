@@ -1,6 +1,6 @@
 import { writeFileSync } from "fs";
 //@ts-ignore-error TODO: add types?
-import { SyncTileSet, Hgt } from "srtm-elevation";
+import { SyncTileSet } from "srtm-elevation";
 
 // Rough bounding box around Paramaribo
 const loadHgtData = async () => {
@@ -65,6 +65,5 @@ const loadHgtData = async () => {
       provider: "https://bailu.ch/dem3/{lat}/{lat}{lng}.hgt.zip",
     }
   );
-}
+};
 export default loadHgtData;
-
