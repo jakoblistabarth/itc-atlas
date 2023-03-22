@@ -1,5 +1,4 @@
 import * as FXRand from './random.js'
-
 // convert hsl values color to rgb format
 /* author: Michael Jackson
    source: https://stackoverflow.com/questions/2353211/hsl-to-rgb-color-conversion
