@@ -39,6 +39,7 @@ const BlockDiagramm: FC<Props> = ({
     },
   };
 
+  const sideHalf = (side / 2).toFixed(6);
   const vertexShader = /*glsl*/ `
   attribute float displacement;
   varying vec3 vVertex;
