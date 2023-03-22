@@ -78,6 +78,7 @@ const HierarchyTree: FC<Props> = ({ hierarchy, height }) => {
             x: (scale(d.id) ?? 0) + scale.bandwidth() / 2,
             y: yScale(d.level),
           };
+          // TODO: use highlight(?) prop to make this dynamic?
           const isProject = d.level === 6;
           return (
             <g key={`node-${idx}`}>
