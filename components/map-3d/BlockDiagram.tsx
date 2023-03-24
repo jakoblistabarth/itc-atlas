@@ -1,8 +1,7 @@
 import { FC, useEffect, useRef } from "react";
 import { BufferAttribute, Mesh, PlaneGeometry, ShaderMaterial } from "three";
-import * as THREE from "three";
-import { generateColorPalette, hsl2rgb } from "./BlockDiagramStyle/color";
-import * as FXRand from "./BlockDiagramStyle/random";
+import json from "../../data/topographic/elevation-Paramaribo.json";
+
 type Props = {
   side: number;
   segments: number;
@@ -10,13 +9,21 @@ type Props = {
   data: Float32Array;
   zOffset?: number;
 };
-
-const features = {
-  Palette: FXRand.choice(["Black&White", "Mono", "Analogous", "Complementary"]),
-  Layer: FXRand.bool(0.2) ? 1 : FXRand.int(2, 3),
+var ele = json.elevation;
+//var scale_b = d3.scaleBand().domain(ele).range([0, 1]);
+var compare = function (x, y) {
+  //比较函数
+  if (x < y) {
+    return -1;
+  } else if (x > y) {
+    return 1;
+  } else {
+    return 0;
+  }
 };
-const colors = generateColorPalette(features);
-const surfaceColor = hsl2rgb(colors[1][0], colors[1][1], colors[1][2]);
+ele.sort(compare);
+const min = ele[0];
+const minus = ele[ele.length - 1] - ele[0];
 // TODO: refactor with react drei fiber's shaderMaterial for declarative uniforms: https://docs.pmnd.rs/react-three-fiber/tutorials/typescript#extend-usage
 // for typing, see: https://docs.pmnd.rs/react-three-fiber/tutorials/typescript#extend-usage
 
@@ -30,20 +37,15 @@ const BlockDiagramm: FC<Props> = ({
   zOffset,
 }) => {
   const uniforms = {
-    uColor: {
-      value: new THREE.Vector3(
-        surfaceColor[0],
-        surfaceColor[1],
-        surfaceColor[2]
-      ),
-    },
+    Diff: minus,
+    Min: min,
   };
 
   const sideHalf = (side / 2).toFixed(6);
   const vertexShader = /*glsl*/ `
-  attribute float displacement;
+  attribute highp float displacement;
   varying vec3 vVertex;
-
+  varying highp float sVertex;
   void main() {
     vec3 p = position;
     if ( p.x < ${sideHalf} && p.x > -${sideHalf} && p.y < ${sideHalf} && p.y > -${sideHalf} ) {
@@ -51,6 +53,7 @@ const BlockDiagramm: FC<Props> = ({
     6
   )});
     }
+    sVertex=displacement;
     vVertex = ( modelViewMatrix * vec4(p, 1. ) ).xyz;
     gl_Position = projectionMatrix * modelViewMatrix * vec4(p, 1.0);
 
@@ -59,19 +62,34 @@ const BlockDiagramm: FC<Props> = ({
 
   // TODO: remove random color (introduced for debugging)
   const fragmentShader = /*glsl*/ `
-  uniform vec3 uColor;
   varying vec3 vVertex;
-  
+  varying highp float sVertex;
+  uniform highp float Diff;
+  uniform highp float Min;
   void main() {
-    vec3 N = normalize( cross( dFdx( vVertex ), dFdy( vVertex ) ) );
-
+    vec3 Color=vec3(1.0-(sVertex-Min)/Diff,0.9,0.0);
+    if(sVertex<0.0){
+       Color=vec3(1.0-(sVertex-Min)/Diff,0.2,(sVertex-Min)/Diff);
+    }
+    if(sVertex<1.0&&sVertex>=0.0){
+       Color=vec3((sVertex-Min)/Diff,0.9,0.9);
+    }
+    if(sVertex<3.2&&sVertex>=1.0){
+       Color=vec3(1.0,0.9,1.0-(sVertex-Min)/Diff);
+    }
+    if(sVertex<3.65&&sVertex>=3.2){
+       Color=vec3(0.7,0.9,(sVertex-Min)/Diff);
+    }
+    if(sVertex<4.76&&sVertex>=3.65){
+       Color=vec3(0.0,0.8,(sVertex-Min)/Diff);
+    }
+    //normal vector
+     vec3 N = normalize( cross( dFdx( vVertex ), dFdy( vVertex ) ) );
     // arbitrary direction of the light
-    const vec3 lightDir = vec3( 1., 0., -1. );
-
-    vec3 L = normalize( lightDir );
-    vec3 diffuse = uColor * max( dot( N, -L ), 0.0 );
-
-    gl_FragColor = vec4( diffuse, 1.0 );
+     const vec3 lightDir = vec3( 1., 0., -1. );
+     vec3 L = normalize( lightDir );
+     vec3 diffuse = Color * max( dot( N, -L ), 0.0 );
+     gl_FragColor = vec4(diffuse, 1.0 );
   }
   `;
 

@@ -18,7 +18,7 @@ const loadHgtData = async () => {
   const minLng = Math.min.apply(null, lngs);
   const maxLng = Math.max.apply(null, lngs);
 
-  const segments = 400;
+  const segments = 1000;
   const gridSize = segments + 1;
 
   const stepLat = Math.abs(maxLat - minLat) / gridSize;

@@ -7,10 +7,53 @@ import Heading, { Headings } from "../../components/Heading";
 import BlockDiagramm from "../../components/map-3d/BlockDiagram";
 import styles from "../../styles/Home.module.css";
 import useSWR from "swr";
-
 const ShaderTest: NextPage = () => {
+  //Dig the Json of Paramaribo
+  /*var ele = json.elevation;
+  var scale_b = d3.scaleBand().domain(ele).range([0, 1]);
+  var max = ele[0];
+  for (var i = 1; i < ele.length; i++) {
+    max = max < ele[i] ? ele[i] : max;
+  }
+  var compare = function (x, y) {
+    //Compare function
+    if (x < y) {
+      return -1;
+    } else if (x > y) {
+      return 1;
+    } else {
+      return 0;
+    }
+  };
+  var sum = function (x, y) {
+    return x + y;
+  }; //Sum Function
+  var square = function (x) {
+    return x * x;
+  }; //Square of each element of array
+  ele.sort(compare);
+  var mid;
+  const minus = ele[ele.length - 1] - ele[0];
+  console.log("差:" + minus);
+  if (ele.length % 2 == 0) {
+    mid = (ele[ele.length / 2] + ele[ele.length / 2 + 1]) / 2;
+  }
+  if (ele.length % 2 != 0) {
+    mid = ele[(ele.length + 1) / 2];
+  }
+  var mean = ele.reduce(sum) / ele.length;
+  var deviations = ele.map(function (x) {
+    return x - mean;
+  });
+  var stddev = Math.sqrt(deviations.map(square).reduce(sum) / (ele.length - 1));
+  console.log(max);
+  console.log("Mid：" + mid);
+  console.log("Mean：" + mean);
+  console.log("Dev：" + deviations);
+  console.log("Std：" + stddev);
+  console.log("length:" + ele.length);*/
   // TODO: get segements and side with custom hook from fetched data?
-  const segments = 400;
+  const segments = 1000;
   const side = 4;
   const { data, error, isLoading } = useSWR("/api/data/elevation/Paramaribo");
   return (
@@ -31,7 +74,7 @@ const ShaderTest: NextPage = () => {
             <BlockDiagramm
               side={side}
               yScale={0.01}
-              zOffset={0.25}
+              zOffset={0.01}
               segments={segments}
               data={Float32Array.from(data.elevation)}
             />
