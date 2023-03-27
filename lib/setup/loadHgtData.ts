@@ -10,20 +10,16 @@ const loadHgtData = async () => {
     [5.920616894, -55.0791060777],
     [5.920616894, -55.2499057923],
   ];
-
   const lats = locations.map((l) => l[0]);
   const lngs = locations.map((l) => l[1]);
   const minLat = Math.min.apply(null, lats);
   const maxLat = Math.max.apply(null, lats);
   const minLng = Math.min.apply(null, lngs);
   const maxLng = Math.max.apply(null, lngs);
-
-  const segments = 400;
+  const segments = 1000;
   const gridSize = segments + 1;
-
   const stepLat = Math.abs(maxLat - minLat) / gridSize;
   const stepLng = Math.abs(maxLng - minLng) / gridSize;
-
   const pois = Array.from({ length: gridSize })
     .map((_, rowIdx) => {
       const lat = minLat + rowIdx * stepLat;
