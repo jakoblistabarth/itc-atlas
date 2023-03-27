@@ -49,7 +49,10 @@ const loadHgtData = async () => {
         return;
       }
 
-      const elevation = pois.map((l) => tileset.getElevation([l[0], l[1]]));
+      const elevation = pois.map((l) => {
+        const elevation = tileset.getElevation([l[0], l[1]]);
+        return +elevation.toFixed(2);
+      });
 
       const fileContent = {
         elevation,
