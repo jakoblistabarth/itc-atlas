@@ -4,8 +4,14 @@ import fs from "fs";
 
 const loadAirports = async () => {
   const url = "https://datahub.io/core/airport-codes/r/airport-codes.csv";
+  const output = "data/topographic/airports.json";
 
-  console.log(`downloading airports ✈️ … (${url}) `);
+  console.log(`downloading airports 🛬 … (${url}) `);
+  if (fs.existsSync(output)) {
+    console.log("file already exists, download skipped");
+    return;
+  }
+
   const body = await axios.get(url, {
     responseType: "blob",
   });
@@ -24,10 +30,7 @@ const loadAirports = async () => {
     delete airport.coordinates;
   });
 
-  fs.writeFileSync(
-    "data/topographic/airports.json",
-    JSON.stringify(majorAirports)
-  );
+  fs.writeFileSync(output, JSON.stringify(majorAirports));
 };
 
 export default loadAirports;
