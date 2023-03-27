@@ -1,28 +1,37 @@
 import * as d3 from "d3";
-import { FC } from "react";
-import * as topojson from "topojson-client";
 import { FeatureCollection } from "geojson";
-import BaseLayer from "./BaseLayer";
-import { MapTheme } from "../../types/MapTheme";
-import getMapHeight from "../../lib/cartographic/getMapHeight";
-import PolygonSymbol from "./PolygonSymbol";
 import { nanoid } from "nanoid";
+import { FC } from "react";
+import { Vector2 } from "three";
+import * as topojson from "topojson-client";
+import getMapHeight from "../../lib/cartographic/getMapHeight";
 import defaultTheme from "../../lib/styles/themes/defaultTheme";
+import { MapTheme } from "../../types/MapTheme";
 import { NeCountriesTopoJson } from "../../types/NeTopoJson";
+import BaseLayer from "./BaseLayer";
+import PolygonSymbol from "./PolygonSymbol";
+import RoundMarker from "./RoundMarker";
 
 type Props = {
   neCountriesTopoJson: NeCountriesTopoJson;
   highlight?: string[];
   theme?: MapTheme;
+  width?: number;
+  markers?: (Omit<React.ComponentProps<typeof RoundMarker>, "position"> & {
+    lat: number;
+    lng: number;
+  })[];
 };
 
 const LocatorMap: FC<Props> = ({
   neCountriesTopoJson,
   highlight,
+  markers,
+  width = 300,
   theme = defaultTheme,
 }) => {
   const dimension = {
-    width: 300,
+    width,
     height: 0,
   };
 
@@ -101,6 +110,19 @@ const LocatorMap: FC<Props> = ({
             </text>
           </g>
         )}
+        {markers &&
+          markers?.map((d, idx) => {
+            const p = projection([d.lng, d.lat]);
+            return (
+              p && (
+                <RoundMarker
+                  key={`marker-${idx}`}
+                  position={new Vector2(p[0], p[1])}
+                  {...d}
+                />
+              )
+            );
+          })}
       </svg>
     </>
   );

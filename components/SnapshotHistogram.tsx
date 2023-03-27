@@ -29,7 +29,7 @@ const SnapshotHistogram: FC<Props> = ({ column }) => {
   const isDate = column.type === ColumnDataType.Date;
 
   const columnNoNA = column.data.filter(
-    (d: any) => d !== undefined && d !== null && d !== ""
+    (d: number | Date) => d !== undefined && d !== null
   );
   const cleanedColumn = isDate
     ? columnNoNA.map((d: string) => new Date(d))
@@ -37,17 +37,12 @@ const SnapshotHistogram: FC<Props> = ({ column }) => {
 
   const totalRows = column.data.length;
 
-  // How does this actually work? TODO: type after figuring it out
-  function thresholdTime(n: number) {
-    return (column: SummaryTableColumn, min: number, max: number) => {
-      return d3.scaleTime().domain([min, max]).ticks(n);
-    };
-  }
-
-  const histogram = isDate ? d3.bin().thresholds(thresholdTime(10)) : d3.bin();
+  const histogram = d3.bin();
   const bins = histogram(cleanedColumn);
 
-  const xDomain = [bins[0].x0 ?? 0, bins[bins.length - 1].x1 ?? 1];
+  const minX = bins[0].x0 ?? 0;
+  const maxX = bins[bins.length - 1].x1 ?? 1;
+  const xDomain = [minX, maxX];
 
   const yDomain = [0, d3.max(bins.map((d) => d.length)) ?? 1];
 
@@ -62,11 +57,14 @@ const SnapshotHistogram: FC<Props> = ({ column }) => {
     .range([dimension.height - dimension.margin.bottom, dimension.margin.top]);
 
   const stats = [
-    { name: "mean", label: "x̅", value: d3.mean(cleanedColumn as number[]) },
-    { name: "median", label: "M", value: d3.median(cleanedColumn as number[]) },
+    { name: "mean", label: "x̅", value: d3.mean(cleanedColumn) },
+    { name: "median", label: "M", value: d3.median(cleanedColumn) },
   ];
 
-  const tickFormat = isDate ? fDateShort : fFloat;
+  const fTick = (v: Date | number) => {
+    // TODO: don't rely on typeof operator for typing
+    return typeof v === "object" ? fDateShort(v) : fFloat(v);
+  };
   const fontSize = 7;
 
   return (
@@ -81,7 +79,11 @@ const SnapshotHistogram: FC<Props> = ({ column }) => {
             <Tooltip key={`tooltip-${column.name}-${idx}`}>
               <TooltipContent>
                 <strong>
-                  {tickFormat(bin.x0)}-{tickFormat(bin.x1)}
+                  {isDate
+                    ? `${fTick(new Date(bin.x0))}–${fDateShort(
+                        new Date(bin.x1)
+                      )}`
+                    : `${fTick(bin.x0)}–${fTick(bin.x1)}`}
                 </strong>
                 <br />
                 {nRows} {rowLabel}, {fPercentage(ratio)}
@@ -131,7 +133,7 @@ const SnapshotHistogram: FC<Props> = ({ column }) => {
             strokeWidth={0.5}
           />
           <text dy={fontSize} y={2.5} textAnchor="start">
-            {tickFormat(bins[0][0])}
+            {fTick(isDate ? new Date(minX) : minX)}
           </text>
         </g>
         <g
@@ -148,7 +150,7 @@ const SnapshotHistogram: FC<Props> = ({ column }) => {
             strokeWidth={0.5}
           />
           <text dy={fontSize} y={2.5} textAnchor="end">
-            {tickFormat(bins[bins.length - 1][0])}
+            {fTick(isDate ? new Date(maxX) : maxX)}
           </text>
         </g>
       </g>

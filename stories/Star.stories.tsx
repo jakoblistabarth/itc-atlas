@@ -9,7 +9,6 @@ const meta = {
   component: Star,
   argTypes: {
     rays: { control: { type: "range", min: 3, max: 36, step: 1 } },
-    strokeWidth: { control: { type: "range", min: 0.5, max: 10, step: 0.5 } },
     innerRadius: {
       control: { type: "range", min: 0, max: side / 2, step: 0.5 },
     },

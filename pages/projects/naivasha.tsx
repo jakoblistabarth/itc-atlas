@@ -1,23 +1,26 @@
-import { OrbitControls } from "@react-three/drei";
-import { Canvas } from "@react-three/fiber";
 import Wordcloud from "../../components/charts/WordCloud";
 import type { GetStaticProps, NextPage } from "next";
 import Head from "next/head";
-import { Suspense } from "react";
 import Footer from "../../components/Footer";
 import Heading, { Headings } from "../../components/Heading";
 import LocatorMap from "../../components/map/LocatorMap";
-import NaivashaRegion from "../../components/models/NaivashaRegion";
-import Cubes from "../../components/models/TestCubes";
 import getCountries from "../../lib/data/getCountries";
 import getCountryCodes from "../../lib/data/queries/country/getCountryCodes";
 import styles from "../../styles/Home.module.css";
 import { SharedPageProps } from "../../types/Props";
 import getTextFromFile from "../../lib/data/getTextFromFile";
+import HierarchyTree, {
+  Hierarchy,
+} from "../../components/charts/HierarchyTree";
+import { readFileSync } from "fs";
 
-type Props = { words: string } & SharedPageProps;
+type Props = { words: string; hierarchy: Hierarchy } & SharedPageProps;
 
-const Naivasha: NextPage<Props> = ({ neCountriesTopoJson, words }) => {
+const Naivasha: NextPage<Props> = ({
+  neCountriesTopoJson,
+  words,
+  hierarchy,
+}) => {
   return (
     <>
       <Head>
@@ -32,31 +35,10 @@ const Naivasha: NextPage<Props> = ({ neCountriesTopoJson, words }) => {
           neCountriesTopoJson={neCountriesTopoJson}
           highlight={["KEN"]}
         />
+        <Heading Tag={Headings.H2}>Theory of Change</Heading>
+        <HierarchyTree height={600} hierarchy={hierarchy} />
         <Heading Tag={Headings.H2}>Wordcloud</Heading>
         <Wordcloud width={960} height={400} text={words} />
-        <Heading Tag={Headings.H2}>3D Block Diagram</Heading>
-        <div style={{ width: "100%", height: "500px" }}>
-          <Canvas shadows>
-            <Suspense fallback={null}>
-              <directionalLight
-                castShadow
-                position={[10, 10, 0]}
-                args={["white", 1]}
-              />
-              <mesh castShadow position={[0, 10, 0]}>
-                <boxGeometry args={[2, 2, 2]} />
-                <meshStandardMaterial color={"orange"} />
-              </mesh>
-              <Cubes position={[0, 20, 0]} />
-              <mesh receiveShadow position={[0, -1, 0]}>
-                <boxGeometry args={[150, 1, 150]} />
-                <meshStandardMaterial color={"white"} />
-              </mesh>
-              <NaivashaRegion castShadow position={[0, 3, 0]} />
-              <OrbitControls />
-            </Suspense>
-          </Canvas>
-        </div>
       </main>
       <Footer />
     </>
@@ -64,7 +46,8 @@ const Naivasha: NextPage<Props> = ({ neCountriesTopoJson, words }) => {
 };
 
 export const getStaticProps: GetStaticProps<Props> = async () => {
-  const [neCountriesTopoJson, countries, words] = await Promise.all([
+  const [hierarchy, neCountriesTopoJson, countries, words] = await Promise.all([
+    JSON.parse(readFileSync("./data/static/toc-naivasha.json", "utf-8")),
     getCountries(),
     getCountryCodes(),
     getTextFromFile("./data/static/naivasha-msc-theses-titles.txt"),
@@ -72,6 +55,7 @@ export const getStaticProps: GetStaticProps<Props> = async () => {
 
   return {
     props: {
+      hierarchy,
       neCountriesTopoJson,
       countries,
       words,

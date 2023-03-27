@@ -7,7 +7,7 @@ import Head from "next/head";
 import Heading, { Headings } from "../../components/Heading";
 import Flow3D from "../../components/map-3d/Flow3D";
 import Globe from "../../components/map-3d/Globe";
-import getODMatrix from "../../lib/data/getOdMatrix";
+import getOdMatrix from "../../lib/data/getOdMatrix";
 import styles from "../../styles/Home.module.css";
 import type { OdMatrix } from "../../types/OdMatrix";
 
@@ -63,7 +63,7 @@ const Flights: NextPage<Props> = ({ odMatrix }) => {
 };
 
 export async function getStaticProps() {
-  const odMatrix = await getODMatrix();
+  const odMatrix = await getOdMatrix();
   return {
     props: {
       odMatrix,

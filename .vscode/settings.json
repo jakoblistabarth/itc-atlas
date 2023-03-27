@@ -1,4 +1,5 @@
 {
   "editor.formatOnSave": true,
-  "todohighlight.keywordsPattern": "TODO|todo|QUESTION|Question|FIXME|fixme"
+  "todohighlight.keywordsPattern": "TODO|todo|QUESTION|Question|FIXME|fixme",
+  "editor.defaultFormatter": "esbenp.prettier-vscode"
 }

@@ -15,8 +15,6 @@ const meta = {
   argTypes: {
     dotSize: { control: { type: "range", min: 1, max: 20, step: 1 } },
     spacing: { control: { type: "range", min: 0, max: 1, step: 0.01 } },
-    angle: { control: { type: "range", min: -90, max: 90, step: 0.1 } },
-    strokeWidth: { control: { type: "range", min: 0, max: 10, step: 0.1 } },
     name: {
       table: {
         disable: true,

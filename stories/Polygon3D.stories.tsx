@@ -48,7 +48,6 @@ const meta = {
     },
   },
   argTypes: {
-    fillOpacity: { control: { type: "range", min: 0, max: 1, step: 0.01 } },
     color: { control: { type: "color" } },
   },
   decorators: [

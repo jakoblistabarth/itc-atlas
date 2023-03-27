@@ -14,7 +14,6 @@ type Props = {
   data: Float32Array;
   zOffset?: number;
 };
-
 const BlockDiagramm: FC<Props> = ({
   side,
   segments,
@@ -43,7 +42,6 @@ const BlockDiagramm: FC<Props> = ({
     height=displacement;
     vVertex = ( modelViewMatrix * vec4(p, 1. ) ).xyz;
     gl_Position = projectionMatrix * modelViewMatrix * vec4(p, 1.0);
-
   }
   `;
   const fragmentShader = /*glsl*/ `

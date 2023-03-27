@@ -730,7 +730,37 @@ const IndonesiaTimeline: NextPage<Props> = ({
           </svg>
         </div>
         <h2>Indonesia</h2>
-        <LocatorMap neCountriesTopoJson={neCountries} highlight={["IDN"]} />
+        <LocatorMap
+          neCountriesTopoJson={neCountries}
+          highlight={["IDN"]}
+          width={500}
+          markers={[
+            {
+              lng: 106.5,
+              lat: -6,
+              fill: "red",
+              labelColor: "white",
+              label: "A",
+              fontSize: 10,
+            },
+            {
+              lng: 106.8,
+              lat: -6.5,
+              fill: "darkred",
+              labelColor: "white",
+              fontSize: 10,
+              label: "B",
+            },
+            {
+              lng: 110,
+              lat: -7.5,
+              fill: "red",
+              labelColor: "white",
+              label: "C",
+              fontSize: 10,
+            },
+          ]}
+        />
       </main>
       <Footer />
     </>

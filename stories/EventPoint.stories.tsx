@@ -15,13 +15,6 @@ const event: TimelineEvent = {
 const meta = {
   title: "Charts/Timeline/EventPoint",
   component: EventPoint,
-  args: {
-    y: timelineSetup.height / 2 - 20,
-    date: event.dateStart,
-    xScale: timelineSetup.scale,
-    radius: 5,
-    drawCenter: false,
-  },
   decorators: [
     (Story) => (
       <svg width={timelineSetup.width} height={timelineSetup.height}>
@@ -38,10 +31,21 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const DefaultEventPoint: Story = {};
+export const DefaultEventPoint: Story = {
+  // QUESTION: How to do this properly?
+  // Can't use story args here, otherwhise import of this story in other stories would not work
+  args: {
+    y: timelineSetup.height / 2 - 20,
+    date: event.dateStart,
+    xScale: timelineSetup.scale,
+    radius: 5,
+    drawCenter: false,
+  },
+};
 
 export const ScaledEventPoint: Story = {
   args: {
+    ...DefaultEventPoint.args,
     radius: event.size ?? 0,
     fillOpacity: 0.1,
     stroke: "black",
