@@ -4,6 +4,7 @@ import { SyncTileSet } from "srtm-elevation";
 
 // Rough bounding box around Paramaribo
 const loadHgtData = async () => {
+  console.log("loading height data 🗻 …");
   const locations = [
     [5.7535908852, -55.2499057923],
     [5.7535908852, -55.0791060777],
