@@ -32,6 +32,7 @@ const BlockDiagramm: FC<Props> = ({
   attribute highp float displacement;
   varying vec3 vVertex;
   varying highp float height;
+  varying vec2 XY;
   void main() {
     vec3 p = position;
     if ( p.x < ${sideHalf} && p.x > -${sideHalf} && p.y < ${sideHalf} && p.y > -${sideHalf} ) {
@@ -41,21 +42,18 @@ const BlockDiagramm: FC<Props> = ({
     }
     height=displacement;
     vVertex = ( modelViewMatrix * vec4(p, 1. ) ).xyz;
+    XY=p.xy;
     gl_Position = projectionMatrix * modelViewMatrix * vec4(p, 1.0);
   }
   `;
   const fragmentShader = /*glsl*/ `
   varying vec3 vVertex;
   varying highp float height;
+  varying vec2 XY;
   uniform highp float Diff;
   uniform highp float Min;
   void main() {
     vec3 Color=vec3(1.0-(height-Min)/Diff,0.9,0.0);
-    vec3 p = vVertex;
-    //Assign same color to 4 sides
-    if ( p.x == ${sideHalf} || p.x == -${sideHalf} || p.y == ${sideHalf} || p.y == -${sideHalf} ) {
-       Color=vec3(1.0,1.0,1.0);
-    }
     if(height<0.0){
        Color=vec3(1.0-(height-Min)/Diff,0.2,(height-Min)/Diff);
     }
@@ -70,6 +68,10 @@ const BlockDiagramm: FC<Props> = ({
     }
     if(height<4.76&&height>=3.65){
        Color=vec3(0.0,0.8,(height-Min)/Diff);
+    }
+    //Assign same color to 4 sides
+    if ( XY.x == ${sideHalf} || XY.x == -${sideHalf} || XY.y == ${sideHalf} || XY.y == -${sideHalf} ) {
+       Color=vec3(0.0,0.0,0.0);
     }
     //normal vector
      vec3 N = normalize( cross( dFdx( vVertex ), dFdy( vVertex ) ) );
