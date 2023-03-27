@@ -80,7 +80,6 @@ const BlockDiagramm: FC<Props> = ({
      gl_FragColor = vec4(diffuse, 1.0 );
   }
   `;
-
   const meshRef = useRef<Mesh<PlaneGeometry, ShaderMaterial>>(null);
   const geomRef = useRef<PlaneGeometry>(null);
   useEffect(() => {
