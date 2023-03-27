@@ -6,7 +6,7 @@ import * as aq from "arquero";
 import { ProjectPre2019Raw, ProjectPost2019Raw } from "../load/loadProjects";
 import { mapToDepartment } from "../../mappings/departments";
 
-export type ProjectClean = ProjectMerged & {
+export type ProjectClean = Omit<ProjectMerged, "id"> & {
   id: number;
   countriesRegionArr: string[];
   regions: string[];

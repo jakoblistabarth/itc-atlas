@@ -5,18 +5,18 @@ import {
   ProjectType,
   PurposeOfTravel,
 } from "@prisma/client";
-import fakeFlights2019 from "../lib/data/fake/fakeFlights2019";
-import fakeBTORS from "../lib/data/fake/fakeBtors";
 import loadDepartments from "../lib/data/load/loadDepartments";
-import loadStatus from "../lib/data/load/loadStatus";
+import loadPhdCandidates from "../lib/data/load/loadPhdCandidates";
 import loadUnsdCountries from "../lib/data/load/loadUnsdCountries";
+import loadApplicants from "../lib/data/load/loadApplicants";
+import loadApplications from "../lib/data/load/loadApplications";
+import loadEmployees from "../lib/data/load/loadEmployees";
+import loadEmployments from "../lib/data/load/loadEmployments";
+import loadProjects from "../lib/data/load/loadProjects";
+import loadStatus from "../lib/data/load/loadStatus";
+import loadBtors from "../lib/data/load/loadBtors";
+import loadFlights2019 from "../lib/data/load/loadFlights2019";
 import resetDatabase from "./resetDatabase";
-import fakeProjects from "../lib/data/fake/fakeProjects";
-import fakeApplicants from "../lib/data/fake/fakeApplicants";
-import fakeApplications from "../lib/data/fake/fakeApplications";
-import fakePhds from "../lib/data/fake/fakePhds";
-import fakeEmployees from "../lib/data/fake/fakeEmployees";
-import fakeEmployments from "../lib/data/fake/fakeEmployments";
 
 const prisma = new PrismaClient();
 
@@ -27,18 +27,26 @@ async function main() {
     departments,
     status,
     countries,
-    flights2019,
-    btors,
-    projects,
+    phds,
     applicants,
+    applications,
+    employees,
+    employments,
+    projects,
+    btors,
+    flights2019,
   ] = await Promise.all([
     loadDepartments(),
     loadStatus(),
     loadUnsdCountries(),
-    fakeFlights2019(),
-    fakeBTORS(),
-    fakeProjects(),
-    fakeApplicants(),
+    loadPhdCandidates(),
+    loadApplicants(),
+    loadApplications(),
+    loadEmployees(),
+    loadEmployments(),
+    loadProjects(),
+    loadBtors(),
+    loadFlights2019(),
   ]);
   console.log("Data loaded. 🚚");
 
@@ -54,7 +62,7 @@ async function main() {
       return await prisma.department.create(createArgs);
     })
   );
-  console.log("Seeded model Department. 🌱");
+  console.log("Populated model Department. 🌱");
 
   await Promise.all(
     status.map(async (d) => {
@@ -67,7 +75,7 @@ async function main() {
       return await prisma.status.create(createArgs);
     })
   );
-  console.log("Seeded model Status. 🌱");
+  console.log("Populated model Status. 🌱");
 
   await Promise.all(
     countries.map(async (d) => {
@@ -91,7 +99,7 @@ async function main() {
       return await prisma.country.create(createArgs);
     })
   );
-  console.log("Seeded model Country. 🌱");
+  console.log("Populated model Country. 🌱");
 
   const countriesDB = await prisma.country.findMany();
 
@@ -123,7 +131,7 @@ async function main() {
       return await prisma.flight2019.create(createArgs);
     })
   );
-  console.log("Seeded model Flight2019. 🌱");
+  console.log("Populated model Flight2019. 🌱");
 
   await Promise.all(
     btors.map(async (d) => {
@@ -147,7 +155,7 @@ async function main() {
       return await prisma.btor.create(createArgs);
     })
   );
-  console.log("Seeded model Btor. 🌱");
+  console.log("Populated model Btor. 🌱");
 
   await Promise.all(
     projects.map(async (d) => {
@@ -181,7 +189,7 @@ async function main() {
       return await prisma.project.create(createArgs);
     })
   );
-  console.log("Seeded model Project. 🌱");
+  console.log("Populated model Project. 🌱");
 
   await Promise.all(
     applicants.map(async (d) => {
@@ -201,9 +209,7 @@ async function main() {
       return await prisma.applicant.create(createArgs);
     })
   );
-  console.log("Seeded model Applicant. 🌱");
-
-  const applications = await fakeApplications(applicants);
+  console.log("Populated model Applicant. 🌱");
 
   await Promise.all(
     applications.map(async (d) => {
@@ -226,15 +232,13 @@ async function main() {
       return await prisma.application.create(createArgs);
     })
   );
-  console.log("Seeded model Application. 🌱");
+  console.log("Populated model Application. 🌱");
 
   const itcIdsInApplicants = await prisma.applicant.findMany({
     select: {
       itcStudentId: true,
     },
   });
-
-  const phds = await fakePhds(applicants);
 
   await Promise.all(
     phds.map(async (d, idx) => {
@@ -263,19 +267,35 @@ async function main() {
       return await prisma.phdCandidate.create(createArgs);
     })
   );
-  console.log("Seeded model PhdCandidate. 🌱");
-
-  const employees = await fakeEmployees(applicants);
+  console.log("Populated model PhdCandidate. 🌱");
 
   await Promise.all(
     employees.map(async (d) => {
       const country = countriesDB.find((c) => c.isoAlpha3 === d.nationality);
 
+      const applicant =
+        d.dateOfBirth && d.gender && country?.id
+          ? await prisma.applicant.findFirst({
+              select: { id: true },
+              where: {
+                dateOfBirth: {
+                  equals: d.dateOfBirth,
+                },
+                gender: {
+                  equals: d.gender,
+                },
+                countryId: {
+                  equals: country?.id,
+                },
+              },
+            })
+          : null;
+
       // TODO: add unit end?
       const createArgs: Prisma.EmployeeCreateArgs = {
         data: {
           id: d.mId,
-          applicantId: d.applicantId,
+          applicantId: applicant?.id,
           dateOfBirth: d.dateOfBirth,
           countryId: country?.id,
         },
@@ -283,9 +303,7 @@ async function main() {
       return await prisma.employee.create(createArgs);
     })
   );
-  console.log("Seeded model Employee. 🌱");
-
-  const employments = await fakeEmployments(employees);
+  console.log("Populated model Employee. 🌱");
 
   await Promise.all(
     employments.map(async (d, idx) => {
@@ -313,7 +331,7 @@ async function main() {
       return await prisma.employment.create(createArgs);
     })
   );
-  console.log("Seeded model Employment. 🌱");
+  console.log("Populated model Employment. 🌱");
 }
 
 main()
