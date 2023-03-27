@@ -1,7 +1,12 @@
 import { FC, useEffect, useRef } from "react";
-import { BufferAttribute, Mesh, PlaneGeometry, ShaderMaterial } from "three";
-import json from "../../data/topographic/elevation-Paramaribo.json";
-
+import {
+  BufferAttribute,
+  Mesh,
+  PlaneGeometry,
+  ShaderMaterial,
+  Uniform,
+} from "three";
+import * as d3 from "d3";
 type Props = {
   side: number;
   segments: number;
@@ -9,25 +14,6 @@ type Props = {
   data: Float32Array;
   zOffset?: number;
 };
-var ele = json.elevation;
-//var scale_b = d3.scaleBand().domain(ele).range([0, 1]);
-var compare = function (x, y) {
-  //比较函数
-  if (x < y) {
-    return -1;
-  } else if (x > y) {
-    return 1;
-  } else {
-    return 0;
-  }
-};
-ele.sort(compare);
-const min = ele[0];
-const minus = ele[ele.length - 1] - ele[0];
-// TODO: refactor with react drei fiber's shaderMaterial for declarative uniforms: https://docs.pmnd.rs/react-three-fiber/tutorials/typescript#extend-usage
-// for typing, see: https://docs.pmnd.rs/react-three-fiber/tutorials/typescript#extend-usage
-
-// TODO: if shaders get more complex move shaders to separate files: https://github.com/glslify/glslify-loader
 
 const BlockDiagramm: FC<Props> = ({
   side,
@@ -36,16 +22,17 @@ const BlockDiagramm: FC<Props> = ({
   yScale,
   zOffset,
 }) => {
+  const min = d3.min(data);
+  const range = d3.max(data) - min;
   const uniforms = {
-    Diff: minus,
-    Min: min,
+    Diff: new Uniform(new Number(range)),
+    Min: new Uniform(new Number(min)),
   };
-
   const sideHalf = (side / 2).toFixed(6);
   const vertexShader = /*glsl*/ `
   attribute highp float displacement;
   varying vec3 vVertex;
-  varying highp float sVertex;
+  varying highp float height;
   void main() {
     vec3 p = position;
     if ( p.x < ${sideHalf} && p.x > -${sideHalf} && p.y < ${sideHalf} && p.y > -${sideHalf} ) {
@@ -53,35 +40,38 @@ const BlockDiagramm: FC<Props> = ({
     6
   )});
     }
-    sVertex=displacement;
+    height=displacement;
     vVertex = ( modelViewMatrix * vec4(p, 1. ) ).xyz;
     gl_Position = projectionMatrix * modelViewMatrix * vec4(p, 1.0);
 
   }
   `;
-
-  // TODO: remove random color (introduced for debugging)
   const fragmentShader = /*glsl*/ `
   varying vec3 vVertex;
-  varying highp float sVertex;
+  varying highp float height;
   uniform highp float Diff;
   uniform highp float Min;
   void main() {
-    vec3 Color=vec3(1.0-(sVertex-Min)/Diff,0.9,0.0);
-    if(sVertex<0.0){
-       Color=vec3(1.0-(sVertex-Min)/Diff,0.2,(sVertex-Min)/Diff);
+    vec3 Color=vec3(1.0-(height-Min)/Diff,0.9,0.0);
+    vec3 p = vVertex;
+    //Assign same color to 4 sides
+    if ( p.x == ${sideHalf} || p.x == -${sideHalf} || p.y == ${sideHalf} || p.y == -${sideHalf} ) {
+       Color=vec3(1.0,1.0,1.0);
     }
-    if(sVertex<1.0&&sVertex>=0.0){
-       Color=vec3((sVertex-Min)/Diff,0.9,0.9);
+    if(height<0.0){
+       Color=vec3(1.0-(height-Min)/Diff,0.2,(height-Min)/Diff);
     }
-    if(sVertex<3.2&&sVertex>=1.0){
-       Color=vec3(1.0,0.9,1.0-(sVertex-Min)/Diff);
+    if(height<1.0&&height>=0.0){
+       Color=vec3((height-Min)/Diff,0.9,0.9);
     }
-    if(sVertex<3.65&&sVertex>=3.2){
-       Color=vec3(0.7,0.9,(sVertex-Min)/Diff);
+    if(height<3.2&&height>=1.0){
+       Color=vec3(1.0,0.9,1.0-(height-Min)/Diff);
     }
-    if(sVertex<4.76&&sVertex>=3.65){
-       Color=vec3(0.0,0.8,(sVertex-Min)/Diff);
+    if(height<3.65&&height>=3.2){
+       Color=vec3(0.7,0.9,(height-Min)/Diff);
+    }
+    if(height<4.76&&height>=3.65){
+       Color=vec3(0.0,0.8,(height-Min)/Diff);
     }
     //normal vector
      vec3 N = normalize( cross( dFdx( vVertex ), dFdy( vVertex ) ) );
@@ -95,11 +85,9 @@ const BlockDiagramm: FC<Props> = ({
 
   const meshRef = useRef<Mesh<PlaneGeometry, ShaderMaterial>>(null);
   const geomRef = useRef<PlaneGeometry>(null);
-
   useEffect(() => {
     geomRef.current?.setAttribute("displacement", new BufferAttribute(data, 1));
   });
-
   return (
     <>
       <mesh ref={meshRef} rotation={[-Math.PI / 2, 0, 0]}>
