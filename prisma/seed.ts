@@ -16,27 +16,12 @@ import loadProjects from "../lib/data/load/loadProjects";
 import loadStatus from "../lib/data/load/loadStatus";
 import loadBtors from "../lib/data/load/loadBtors";
 import loadFlights2019 from "../lib/data/load/loadFlights2019";
+import resetDatabase from "./resetDatabase";
 
 const prisma = new PrismaClient();
 
 async function main() {
-  await prisma.phdCandidate.deleteMany({});
-  await prisma.$queryRaw`ALTER SEQUENCE IF EXISTS "PhdCandidate_id_seq" RESTART WITH 1;`;
-  await prisma.department.deleteMany({});
-  await prisma.employment.deleteMany({});
-  await prisma.employee.deleteMany({});
-  await prisma.application.deleteMany({});
-  await prisma.applicant.deleteMany({});
-  await prisma.status.deleteMany({});
-  await prisma.project.deleteMany({});
-  await prisma.$queryRaw`ALTER SEQUENCE IF EXISTS "Project_id_seq" RESTART WITH 1;`;
-  await prisma.btor.deleteMany({});
-  await prisma.$queryRaw`ALTER SEQUENCE IF EXISTS "Btor_id_seq" RESTART WITH 1;`;
-  await prisma.flight2019.deleteMany({});
-  await prisma.$queryRaw`ALTER SEQUENCE IF EXISTS "Flight2019_id_seq" RESTART WITH 1;`;
-  await prisma.country.deleteMany({});
-  await prisma.$queryRaw`ALTER SEQUENCE IF EXISTS "Country_id_seq" RESTART WITH 1;`;
-  console.log("Database reset. 🧹");
+  await resetDatabase(prisma);
 
   const [
     departments,
