@@ -42,5 +42,4 @@ const ShaderTest: NextPage = () => {
     </>
   );
 };
-
 export default ShaderTest;
