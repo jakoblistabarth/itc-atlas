@@ -12,7 +12,8 @@ const ShaderTest: NextPage = () => {
   // TODO: get segements and side with custom hook from fetched data?
   const segments = 1000;
   const side = 4;
-  const { data, error, isLoading } = useSWR("/api/data/elevation/Paramaribo");
+  const sur = useSWR("/api/data/elevation/Paramaribo");
+  const aut = useSWR("/api/data/elevation/Grossglockner");
 
   return (
     <>
@@ -25,16 +26,33 @@ const ShaderTest: NextPage = () => {
         <Heading Tag={Headings.H1}>Shader Test</Heading>
         <Canvas
           orthographic
-          camera={{ zoom: 70 }}
+          camera={{ zoom: 100 }}
           style={{ width: "100%", height: "500px" }}
         >
-          {data && (
+          {sur.data && (
             <BlockDiagramm
               side={side}
               yScale={0.01}
               zOffset={0.01}
               segments={segments}
-              data={Float32Array.from(data.elevation)}
+              data={Float32Array.from(sur.data.elevation)}
+            />
+          )}
+          <OrbitControls enablePan />
+        </Canvas>
+
+        <Canvas
+          orthographic
+          camera={{ zoom: 100 }}
+          style={{ width: "100%", height: "500px" }}
+        >
+          {aut.data && (
+            <BlockDiagramm
+              side={side}
+              yScale={0.0002}
+              zOffset={0.25}
+              segments={segments}
+              data={Float32Array.from(aut.data.elevation)}
             />
           )}
           <OrbitControls />
