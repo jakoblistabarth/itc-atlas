@@ -1,5 +1,6 @@
 import { FC, useEffect, useRef } from "react";
 import {
+  BackSide,
   BufferAttribute,
   Mesh,
   PlaneGeometry,
@@ -87,20 +88,23 @@ const BlockDiagramm: FC<Props> = ({
   }
   `;
 
-  const meshRef = useRef<Mesh<PlaneGeometry, ShaderMaterial>>(null);
   const geomRef = useRef<PlaneGeometry>(null);
   useEffect(() => {
     geomRef.current?.setAttribute("displacement", new BufferAttribute(data, 1));
   });
   return (
     <>
-      <mesh ref={meshRef} rotation={[-Math.PI / 2, 0, 0]}>
+      <mesh rotation={[-Math.PI / 2, 0, 0]}>
         <planeGeometry ref={geomRef} args={[side, side, segments, segments]} />
         <shaderMaterial
           vertexShader={vertexShader}
           fragmentShader={fragmentShader}
           uniforms={uniforms}
         />
+      </mesh>
+      <mesh rotation={[-Math.PI / 2, 0, 0]}>
+        <planeGeometry args={[side, side, segments, segments]} />
+        <meshStandardMaterial side={BackSide} />
       </mesh>
     </>
   );
