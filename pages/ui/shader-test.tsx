@@ -7,7 +7,6 @@ import Heading, { Headings } from "../../components/Heading";
 import BlockDiagramm from "../../components/map-3d/BlockDiagram";
 import styles from "../../styles/Home.module.css";
 import useSWR from "swr";
-
 const ShaderTest: NextPage = () => {
   // TODO: get segements and side with custom hook from fetched data?
   const segments = 1000;
@@ -62,5 +61,4 @@ const ShaderTest: NextPage = () => {
     </>
   );
 };
-
 export default ShaderTest;
