@@ -7,11 +7,13 @@ import Heading, { Headings } from "../../components/Heading";
 import BlockDiagramm from "../../components/map-3d/BlockDiagram";
 import styles from "../../styles/Home.module.css";
 import useSWR from "swr";
+
 const ShaderTest: NextPage = () => {
   // TODO: get segements and side with custom hook from fetched data?
   const segments = 1000;
   const side = 4;
   const { data, error, isLoading } = useSWR("/api/data/elevation/Paramaribo");
+
   return (
     <>
       <Head>
@@ -42,4 +44,5 @@ const ShaderTest: NextPage = () => {
     </>
   );
 };
+
 export default ShaderTest;

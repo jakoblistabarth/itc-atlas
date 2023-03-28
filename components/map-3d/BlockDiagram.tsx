@@ -7,6 +7,7 @@ import {
   Uniform,
 } from "three";
 import * as d3 from "d3";
+
 type Props = {
   side: number;
   segments: number;
@@ -14,6 +15,7 @@ type Props = {
   data: Float32Array;
   zOffset?: number;
 };
+
 const BlockDiagramm: FC<Props> = ({
   side,
   segments,
@@ -21,13 +23,14 @@ const BlockDiagramm: FC<Props> = ({
   yScale,
   zOffset,
 }) => {
-  const min = d3.min(data);
-  const range = d3.max(data) - min;
+  const min = d3.min(data) ?? 0;
+  const range = (d3.max(data) ?? 1) - min;
   const uniforms = {
-    Diff: new Uniform(new Number(range)),
-    Min: new Uniform(new Number(min)),
+    Diff: new Uniform(range),
+    Min: new Uniform(min),
   };
   const sideHalf = (side / 2).toFixed(6);
+
   const vertexShader = /*glsl*/ `
   attribute highp float displacement;
   varying vec3 vVertex;
@@ -46,6 +49,7 @@ const BlockDiagramm: FC<Props> = ({
     gl_Position = projectionMatrix * modelViewMatrix * vec4(p, 1.0);
   }
   `;
+
   const fragmentShader = /*glsl*/ `
   varying vec3 vVertex;
   varying highp float height;
@@ -82,6 +86,7 @@ const BlockDiagramm: FC<Props> = ({
      gl_FragColor = vec4(diffuse, 1.0 );
   }
   `;
+
   const meshRef = useRef<Mesh<PlaneGeometry, ShaderMaterial>>(null);
   const geomRef = useRef<PlaneGeometry>(null);
   useEffect(() => {
