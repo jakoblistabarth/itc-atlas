@@ -49,7 +49,7 @@ npx dotenv -e .env.local -- npx prisma db push
 To open up _Prisma Studio_ to visually inspect and edit the data in the database run
 
 ```bash
- npx prisma studio
+npx dotenv -e .env.local -- npx prisma studio
 ```
 
 ### 4. Starting the next.js app

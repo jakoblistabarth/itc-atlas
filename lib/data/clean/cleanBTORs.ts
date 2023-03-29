@@ -6,7 +6,7 @@ import { mapToPurposeOfTravel } from "../../mappings/purposeoftravel";
 import { BtorRaw } from "../load/loadBtors";
 import loadCountries from "../load/loadUnsdCountries";
 
-type BtorClean = {
+export type BtorClean = {
   id: number;
   start: string;
   end: string;
