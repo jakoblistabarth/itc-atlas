@@ -49,7 +49,7 @@ const ShaderTest: NextPage = () => {
             <BlockDiagramm
               side={side}
               yScale={0.0002}
-              zOffset={0.25}
+              zOffset={0.01}
               segments={segments}
               data={Float32Array.from(aut.data.elevation)}
             />

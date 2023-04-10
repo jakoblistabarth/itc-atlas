@@ -55,21 +55,44 @@ const BlockDiagramm: FC<Props> = ({
   uniform highp float Diff;
   uniform highp float Min;
   void main() {
-    vec3 Color=vec3(1.0-(height-Min)/Diff,0.9,0.0);
-    if(height<0.0){
-       Color=vec3(1.0-(height-Min)/Diff,0.2,(height-Min)/Diff);
+    //Cold-humid regions
+    float gradient[12]=float[12](-400.0,0.0,50.0,200.0,600.0,1000.0,2000.0,3000.0,4000.0,5000.0,6000.0,7000.0);
+    vec3 Color;
+    if(height<=(gradient[0]+gradient[1])/2.0){
+       Color=vec3(112.0,147.0,141.0)/256.0;
     }
-    if(height<1.0&&height>=0.0){
-       Color=vec3((height-Min)/Diff,0.9,0.9);
+    if((gradient[0]+gradient[1])/2.0<height&&height<=(gradient[1]+gradient[2])/2.0){
+       Color=vec3(120.0,159.0,152.0)/256.0;
     }
-    if(height<3.2&&height>=1.0){
-       Color=vec3(1.0,0.9,1.0-(height-Min)/Diff);
+    if((gradient[1]+gradient[2])/2.0<height&&height<=(gradient[2]+gradient[3])/2.0){
+      Color=vec3(130.0,165.0,159.0)/256.0;
     }
-    if(height<3.65&&height>=3.2){
-       Color=vec3(0.7,0.9,(height-Min)/Diff);
+    if((gradient[2]+gradient[3])/2.0<height&&height<=(gradient[3]+gradient[4])/2.0){
+      Color=vec3(145.0,177.0,171.0)/256.0;
     }
-    if(height<4.76&&height>=3.65){
-       Color=vec3(0.0,0.8,(height-Min)/Diff);
+    if((gradient[3]+gradient[4])/2.0<height&&height<=(gradient[4]+gradient[5])/2.0){
+      Color=vec3(180.0,192.0,180.0)/256.0;
+    }
+    if((gradient[4]+gradient[5])/2.0<height&&height<=(gradient[5]+gradient[6])/2.0){
+      Color=vec3(212.0,201.0,180.0)/256.0;
+    }
+    if((gradient[5]+gradient[6])/2.0<height&&height<=(gradient[6]+gradient[7])/2.0){
+      Color=vec3(212.0,184.0,163.0)/256.0;
+    }
+    if((gradient[6]+gradient[7])/2.0<height&&height<=(gradient[7]+gradient[8])/2.0){
+      Color=vec3(212.0,193.0,179.0)/256.0;
+    }
+    if((gradient[7]+gradient[8])/2.0<height&&height<=(gradient[8]+gradient[9])/2.0){
+      Color=vec3(212.0,207.0,204.0)/256.0;
+    }
+    if((gradient[8]+gradient[9])/2.0<height&&height<=(gradient[9]+gradient[10])/2.0){
+      Color=vec3(220.0,220.0,220.0)/256.0;
+    }
+    if((gradient[9]+gradient[10])/2.0<height&&height<=(gradient[10]+gradient[11])/2.0){
+      Color=vec3(235.0,235.0,237.0)/256.0;
+    }
+    if((gradient[10]+gradient[11])/2.0<height){
+      Color=vec3(245.0,245.0,245.0)/256.0;
     }
     //Assign same color to 4 sides
     if ( XY.x == ${sideHalf} || XY.x == -${sideHalf} || XY.y == ${sideHalf} || XY.y == -${sideHalf} ) {
