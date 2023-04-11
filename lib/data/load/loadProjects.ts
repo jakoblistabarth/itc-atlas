@@ -127,10 +127,10 @@ export default async function loadProjects(): Promise<ProjectClean[]> {
   const sheetNames = file.SheetNames;
   const projectsPre2019 = xlsx.utils.sheet_to_json(
     file.Sheets[sheetNames[1]]
-  ) as unknown as ProjectPre2019Raw;
+  ) as unknown as ProjectPre2019Raw[];
   const projectsPost2019 = xlsx.utils.sheet_to_json(
     file.Sheets[sheetNames[0]]
-  ) as unknown as ProjectPost2019Raw;
+  ) as unknown as ProjectPost2019Raw[];
 
   return await cleanProjects({ projectsPre2019, projectsPost2019 });
 }

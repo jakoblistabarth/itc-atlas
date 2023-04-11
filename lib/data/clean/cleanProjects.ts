@@ -40,8 +40,8 @@ const cleanProjects = async ({
   projectsPre2019,
   projectsPost2019,
 }: {
-  projectsPre2019: ProjectPre2019Raw;
-  projectsPost2019: ProjectPost2019Raw;
+  projectsPre2019: ProjectPre2019Raw[];
+  projectsPost2019: ProjectPost2019Raw[];
 }) => {
   const pre2019 = aq
     .from(projectsPre2019)
