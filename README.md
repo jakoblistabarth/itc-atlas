@@ -31,7 +31,7 @@ The schema names follow the [prisma naming conventions](https://www.prisma.io/do
 To run single queries (a module as .ts file) enter
 
 ```bash
-npx dotenv -e .env.local -- npx ts-node --compiler-options {\"module\":\"commonjs\"} <pathToQueryFile>
+npx dotenv -e .env.local -- npx tsx <pathToQueryFile>
 ```
 
 To seed db manually

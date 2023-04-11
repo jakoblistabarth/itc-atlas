@@ -100,7 +100,7 @@ const cleanProjects = async ({
     })
     .derive({
       otherDepartments: (d: ProjectPost2019Raw) =>
-        aq.op.split(d.OtherDepartments, /,\s?/, undefined),
+        aq.op.split(d.OtherDepartments, /,\s?/, null),
     });
 
   const merged = pre2019

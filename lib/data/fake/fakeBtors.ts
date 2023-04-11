@@ -1,11 +1,10 @@
 import { faker } from "@faker-js/faker";
 import { BtorClean } from "../clean/cleanBTORs";
-import getRandomElement from "../../utilities/getRandomElement";
 import loadDepartments from "../load/loadDepartments";
 import loadUnsdCountries from "../load/loadUnsdCountries";
 import { PurposeOfTravel } from "@prisma/client";
 import addDays from "../../utilities/addDays";
-import { random, range } from "lodash";
+import { random, range, sample } from "lodash";
 
 const fakeBtors = async (number: number = 5000): Promise<BtorClean[]> => {
   const departments = loadDepartments();
@@ -18,7 +17,7 @@ const fakeBtors = async (number: number = 5000): Promise<BtorClean[]> => {
     );
     const arrivalDate = addDays(departureDate, traveldays);
     const travelledCountries = Array.from({ length: random(1, 3) }).map(
-      (_) => getRandomElement(countries)["ISO-alpha3 Code"]
+      (_) => sample(countries)?.["ISO-alpha3 Code"] as string
     );
     const btor: BtorClean = {
       id: i,
@@ -26,9 +25,9 @@ const fakeBtors = async (number: number = 5000): Promise<BtorClean[]> => {
       start: departureDate.toISOString(),
       end: arrivalDate.toISOString(),
       year: departureDate.getFullYear(),
-      department: getRandomElement(departments).id,
+      department: sample(departments)?.id ?? "",
       countries: travelledCountries,
-      purpose: getRandomElement(Object.values(PurposeOfTravel)),
+      purpose: sample(Object.values(PurposeOfTravel)) ?? "",
     };
     return btor;
   });

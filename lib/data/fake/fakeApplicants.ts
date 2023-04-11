@@ -1,8 +1,7 @@
 import { faker } from "@faker-js/faker";
 import { ApplicantClean } from "../../../types/ApplicantClean";
-import getRandomElement from "../../utilities/getRandomElement";
 import loadUnsdCountries from "../load/loadUnsdCountries";
-import { sampleSize, range } from "lodash";
+import { sampleSize, range, sample } from "lodash";
 
 const fakeApplicants = async (
   number: number = 4000
@@ -14,11 +13,11 @@ const fakeApplicants = async (
 
   const data = range(number).map((d) => {
     const countryPool = Math.random() > 0.5 ? countriesSample : focusCountries;
-    const country = getRandomElement(countryPool)["ISO-alpha3 Code"];
+    const country = sample(countryPool)?.["ISO-alpha3 Code"];
     const applicant: ApplicantClean = {
       applicantId: "RL" + String(d).padStart(6, "0"),
       itcStudentId: Math.random() > 0.25 ? "itc" + d : undefined,
-      countryIsoAlpha3: country,
+      countryIsoAlpha3: country ?? "",
       gender: Math.random() < 0.75 ? "m" : "f",
       dateOfBirth: faker.date.birthdate(),
     };

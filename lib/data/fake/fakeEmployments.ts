@@ -1,10 +1,10 @@
 import { faker } from "@faker-js/faker";
-import getRandomElement from "../../utilities/getRandomElement";
 import { EmployeeClean } from "../../../types/EmployeeClean";
 import { EmploymentClean } from "../../../types/EmploymentClean";
 import loadDepartments from "../load/loadDepartments";
 import addDays from "../../utilities/addDays";
-import { random, range } from "lodash";
+import { randomInt, range } from "d3";
+import { sample } from "lodash";
 
 const fakeEmployments = async (
   employees: EmployeeClean[],
@@ -15,16 +15,16 @@ const fakeEmployments = async (
 
   const data = range(1, number).map((d) => {
     const start = faker.date.between(new Date("1960"), new Date("2022"));
-    const duration = random(30 * 5, 365 * 10);
+    const duration = randomInt(30 * 5, 365 * 10)();
     const end = addDays(start, duration);
 
     const employment: EmploymentClean = {
-      mId: getRandomElement(employees).mId,
-      department: getRandomElement(departments).id,
+      mId: sample(employees)?.mId ?? 0,
+      department: sample(departments)?.id,
       employmentStart: start,
       employmentEnd: end,
       employmentUnitEnd: new Date(),
-      description: getRandomElement(descriptions),
+      description: sample(descriptions),
     };
     return employment;
   });

@@ -1,8 +1,0 @@
-{
-  // "extends": "../../tsconfig.json", // FIXME: extend tsconfig file
-  "compilerOptions": {
-    "target": "es6",
-    "esModuleInterop": true,
-    "isolatedModules": false
-  }
-}

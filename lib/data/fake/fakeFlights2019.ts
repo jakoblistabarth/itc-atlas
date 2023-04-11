@@ -1,7 +1,6 @@
 import { faker } from "@faker-js/faker";
-import { random, range, sampleSize } from "lodash";
+import { random, range, sample, sampleSize } from "lodash";
 import { Flight2019Clean } from "../../data/clean/cleanTravels2019";
-import getRandomElement from "../../utilities/getRandomElement";
 import getAirports from "../getAirports";
 import loadDepartments from "../load/loadDepartments";
 import loadUnsdCountries from "../load/loadUnsdCountries";
@@ -33,9 +32,9 @@ const fakeFlights2019 = async (
       airportCodes: getRandomAirports(airportCodes, hubs),
       ref1: "93" + faker.random.numeric(6),
       ref2: faker.random.numeric(4),
-      country: getRandomElement(countries)["ISO-alpha3 Code"],
+      country: sample(countries)?.["ISO-alpha3 Code"] ?? "",
       emissions: +faker.random.numeric(4),
-      department: getRandomElement(departments).number,
+      department: sample(departments)?.number ?? 0,
     };
     return flight;
   });
@@ -48,10 +47,10 @@ const getRandomAirports = (
   hubs: string[]
 ): string[] => {
   const numberOfStops = Math.ceil(Math.pow(Math.random(), 24) * 4);
-  const originAirport = getRandomElement(airportCodes);
+  const originAirport = sample(airportCodes) as string;
   const stops = Array.from({ length: numberOfStops }).map(() => {
-    const sample = Math.random() < 0.99 ? hubs : airportCodes;
-    return getRandomElement(sample);
+    const pool = Math.random() < 0.99 ? hubs : airportCodes;
+    return sample(pool) as string;
   });
 
   const codes = [originAirport, ...stops];

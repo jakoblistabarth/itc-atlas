@@ -1,11 +1,10 @@
 import { faker } from "@faker-js/faker";
 import { ProjectClean } from "../clean/cleanProjects";
-import getRandomElement from "../../utilities/getRandomElement";
 import loadDepartments from "../load/loadDepartments";
 import loadUnsdCountries from "../load/loadUnsdCountries";
 import { ProjectStatus, ProjectType } from "@prisma/client";
 import addDays from "../../utilities/addDays";
-import { random, range, sampleSize } from "lodash";
+import { random, range, sample, sampleSize } from "lodash";
 
 const fakeProjects = async (number: number = 1600): Promise<ProjectClean[]> => {
   const departments = loadDepartments();
@@ -15,12 +14,12 @@ const fakeProjects = async (number: number = 1600): Promise<ProjectClean[]> => {
   const focusCountries = sampleSize(countriesSample, 7);
 
   const data = range(number).map((_, i) => {
-    const leadDepartment = getRandomElement(departments);
+    const leadDepartment = sample(departments);
     const otherDepartments = Array.from({
       length: random(1, 3),
     }).reduce((acc: string[], _) => {
-      const department = getRandomElement(departments).id;
-      if (!acc.includes(department) && department !== leadDepartment.id)
+      const department = sample(departments)?.id ?? "";
+      if (!acc.includes(department) && department !== leadDepartment?.id)
         acc.push(department);
       return acc;
     }, []);
@@ -30,7 +29,7 @@ const fakeProjects = async (number: number = 1600): Promise<ProjectClean[]> => {
     const end = addDays(start, durationInDays);
     const projectCountries = range(random(1, 3)).map((_) => {
       const pool = Math.random() < 0.5 ? focusCountries : countriesSample;
-      return getRandomElement(pool)["ISO-alpha3 Code"];
+      return sample(pool)?.["ISO-alpha3 Code"] as string;
     });
     const organizationNames = range(200).map((_) => faker.company.name());
     const project: ProjectClean = {
@@ -40,13 +39,13 @@ const fakeProjects = async (number: number = 1600): Promise<ProjectClean[]> => {
       description: faker.lorem.paragraphs(),
       dateStart: start.toISOString(),
       dateEnd: end.toISOString(),
-      leadDepartment: leadDepartment.id,
+      leadDepartment: leadDepartment?.id ?? "",
       otherDepartments: otherDepartments,
       allCountries: projectCountries,
-      type: getRandomElement(Object.values(ProjectType)),
-      status: getRandomElement(Object.values(ProjectStatus)),
-      leadOrganization: getRandomElement(organizationNames),
-      fundingOrganization: getRandomElement(organizationNames),
+      type: sample(Object.values(ProjectType)) ?? "",
+      status: sample(Object.values(ProjectStatus)) ?? "",
+      leadOrganization: sample(organizationNames) ?? "",
+      fundingOrganization: sample(organizationNames) ?? "",
       fundingType: "",
       countriesRegion: "",
       countriesRegionArr: [],

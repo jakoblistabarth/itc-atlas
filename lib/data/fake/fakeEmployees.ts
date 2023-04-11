@@ -1,9 +1,9 @@
 import { faker } from "@faker-js/faker";
 import { ApplicantClean } from "../../../types/ApplicantClean";
-import getRandomElement from "../../utilities/getRandomElement";
 import loadUnsdCountries from "../load/loadUnsdCountries";
-import { sampleSize, range } from "lodash";
+import { sample, sampleSize } from "lodash";
 import { EmployeeClean } from "../../../types/EmployeeClean";
+import { range } from "d3-array";
 
 type EmployeeFake = EmployeeClean & { applicantId?: string };
 
@@ -20,7 +20,7 @@ const fakeEmployees = async (
 
   const data = range(1, number).map((d) => {
     const countryPool = Math.random() > 0.5 ? countriesSample : focusCountries;
-    const country = getRandomElement(countryPool)["ISO-alpha3 Code"];
+    const country = sample(countryPool)?.["ISO-alpha3 Code"];
     if (Math.random() < 0.1) {
       const applicant = applicantSample.pop();
       const employee: EmployeeFake = {

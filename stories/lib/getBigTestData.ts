@@ -1,6 +1,6 @@
 import { faker } from "@faker-js/faker";
 import { range } from "d3-array";
-import getRandomElement from "../../lib/utilities/getRandomElement";
+import { sample } from "lodash";
 
 type TestRow = {
   name: string;
@@ -14,6 +14,6 @@ export default function getBigTestData(): TestRow[] {
   return range(400).map((record) => ({
     name: faker.name.fullName(),
     date: faker.date.between("1950", "2022").toISOString(),
-    job: getRandomElement(jobs),
+    job: sample(jobs) ?? "",
   }));
 }

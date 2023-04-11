@@ -1,7 +1,6 @@
 import { faker } from "@faker-js/faker";
 import { ApplicantClean } from "../../../types/ApplicantClean";
-import getRandomElement from "../../utilities/getRandomElement";
-import { range } from "lodash";
+import { range, sample } from "lodash";
 import { ApplicationClean } from "../../../types/ApplicationClean";
 import loadStatus from "../load/loadStatus";
 import addDays from "../../utilities/addDays";
@@ -46,25 +45,24 @@ const fakeApplications = async (
     const enrollmentStart = faker.date.between(new Date("1950"), new Date());
     const enrollmentEnd = addDays(
       enrollmentStart,
-      getRandomElement([14, 180, 365])
+      sample([14, 180, 365]) as number
     );
     const certificationDate = addDays(
       enrollmentEnd,
-      getRandomElement(range(2, 30))
+      sample(range(2, 30)) as number
     );
     const application: ApplicationClean = {
       id: String(d),
-      applicantId: getRandomElement(applicants).applicantId,
-      statusId: getRandomElement(status)?.id,
-      courseId: getRandomElement(courseIds),
+      applicantId: sample(applicants)?.applicantId ?? "",
+      statusId: sample(status)?.id ?? "",
+      courseId: sample(courseIds) ?? "",
       enrollmentStart: enrollmentStart,
       enrollmentEnd: enrollmentEnd,
       certificationDate: certificationDate,
       examYear: certificationDate.getFullYear(),
-      sponsor: Math.random() > 0.5 ? getRandomElement(sponsorNames) : "",
-      certificateType:
-        Math.random() > 0.2 ? getRandomElement(certificates) : "",
-      level: Math.random() > 0.1 ? getRandomElement(levels) : "",
+      sponsor: Math.random() > 0.5 ? sample(sponsorNames) ?? "" : "",
+      certificateType: Math.random() > 0.2 ? sample(certificates) ?? "" : "",
+      level: Math.random() > 0.1 ? sample(levels) : "",
     };
     return application;
   });

@@ -1,7 +1,6 @@
 import { faker } from "@faker-js/faker";
-import getRandomElement from "../../utilities/getRandomElement";
 import loadUnsdCountries from "../load/loadUnsdCountries";
-import { sampleSize, range } from "lodash";
+import { sampleSize, range, sample } from "lodash";
 import { PhdCandidate } from "../../../types/PhdCandidate";
 import loadStatus from "../load/loadStatus";
 import loadDepartments from "../load/loadDepartments";
@@ -21,22 +20,20 @@ const fakePhds = async (
 
   const organizationNames = range(200).map((_) => faker.company.name());
 
-  const data = range(number).map((d) => {
+  const data = range(number).map((_) => {
     const countryPool = Math.random() > 0.5 ? countriesSample : focusCountries;
-    const country = getRandomElement(countryPool)["ISO-alpha3 Code"];
+    const country = sample(countryPool)?.["ISO-alpha3 Code"];
     const start = faker.date.between(new Date("1960"), new Date());
     const graduation = addDays(start, 365 * 6);
     const phdCandidate: PhdCandidate = {
       itcStudentId:
-        Math.random() > 0.1
-          ? getRandomElement(applicants).itcStudentId ?? null
-          : null,
-      country: country,
-      status: getRandomElement(Object.values(status)).id,
-      department1: getRandomElement(departments).id,
-      department2: getRandomElement(departments).id,
+        Math.random() > 0.1 ? sample(applicants)?.itcStudentId ?? null : null,
+      country: country ?? "",
+      status: sample(Object.values(status))?.id ?? "",
+      department1: sample(departments)?.id ?? "",
+      department2: sample(departments)?.id ?? "",
       thesisTitle: faker.lorem.sentence(),
-      sponsor: getRandomElement(organizationNames),
+      sponsor: sample(organizationNames) ?? "",
       dateStart: start.toISOString(),
       dateGraduation: graduation.toISOString(),
       yearPromotion: graduation.getFullYear(),
