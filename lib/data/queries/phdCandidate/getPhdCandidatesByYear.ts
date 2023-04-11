@@ -1,8 +1,8 @@
-import { Prisma, PrismaClient } from "@prisma/client";
+import { Prisma } from "@prisma/client";
+import prisma from "../../../../prisma/client";
 
 //TODO add filter for status and level?
 const getPhdCandidatesByYear = async (isoAlpha3: string) => {
-  const prisma = new PrismaClient();
   return prisma.phdCandidate.groupBy({
     by: ["promotionYear"],
     _count: {

@@ -1,4 +1,4 @@
-import { PrismaClient } from "@prisma/client";
+import prisma from "../../prisma/client";
 import { max, min, scaleSqrt } from "d3";
 import { geoInterruptedMollweide } from "d3-geo-projection";
 import { nanoid } from "nanoid";
@@ -134,7 +134,6 @@ const PhdDepartments: NextPage<Props> = ({
 
 export const getStaticProps: GetStaticProps<Props> = async () => {
   const neCountriesTopoJson = getCountries();
-  const prisma = new PrismaClient();
   const [countries, phdsByCountryByDepartment] = await Promise.all([
     prisma.country.findMany(),
     getPhdCandidatesByCountryByDepartment(),

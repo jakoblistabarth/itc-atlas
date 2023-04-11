@@ -1,8 +1,8 @@
-import { Prisma, PrismaClient } from "@prisma/client";
+import prisma from "../../../../prisma/client";
+import { Prisma } from "@prisma/client";
 
 //TODO add filter for status and level?
 const getApplicationsByYear = async (isoAlpha3: string) => {
-  const prisma = new PrismaClient();
   return prisma.application.groupBy({
     by: ["examYear"],
     _count: {

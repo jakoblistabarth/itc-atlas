@@ -1,6 +1,6 @@
-import { PrismaClient } from "@prisma/client";
+import prisma from "./client";
 
-const resetDatabase = async (prisma: PrismaClient) => {
+const resetDatabase = async () => {
   await prisma.phdCandidate.deleteMany({});
   await prisma.$queryRaw`ALTER SEQUENCE IF EXISTS "PhdCandidate_id_seq" RESTART WITH 1;`;
   await prisma.department.deleteMany({});

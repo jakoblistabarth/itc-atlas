@@ -1,4 +1,5 @@
-import { Country, PrismaClient } from "@prisma/client";
+import { Country } from "@prisma/client";
+import prisma from "../../prisma/client";
 import * as d3 from "d3";
 import { geoBertin1953 } from "d3-geo-projection";
 import type { Feature, FeatureCollection, Point } from "geojson";
@@ -115,7 +116,6 @@ const StaffOrigin: NextPage<Props> = ({
 };
 
 export const getStaticProps: GetStaticProps<Props> = async () => {
-  const prisma = new PrismaClient();
   const [countryWithEmployeeCount, neCountriesTopoJson, countries] =
     await Promise.all([
       getCountryWithEmployeeCount(),

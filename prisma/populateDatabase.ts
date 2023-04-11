@@ -1,10 +1,10 @@
 import {
   Prisma,
-  PrismaClient,
   ProjectStatus,
   ProjectType,
   PurposeOfTravel,
 } from "@prisma/client";
+import prisma from "./client";
 import loadDepartments from "../lib/data/load/loadDepartments";
 import loadPhdCandidates from "../lib/data/load/loadPhdCandidates";
 import loadUnsdCountries from "../lib/data/load/loadUnsdCountries";
@@ -18,10 +18,8 @@ import loadBtors from "../lib/data/load/loadBtors";
 import loadFlights2019 from "../lib/data/load/loadFlights2019";
 import resetDatabase from "./resetDatabase";
 
-const prisma = new PrismaClient();
-
 async function main() {
-  await resetDatabase(prisma);
+  await resetDatabase();
 
   const [
     departments,

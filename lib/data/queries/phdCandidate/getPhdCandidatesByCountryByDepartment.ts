@@ -2,7 +2,7 @@ import { group, geoCentroid, descending } from "d3";
 import getCountries from "../../getCountries";
 import * as topojson from "topojson-client";
 import { pieDatum } from "../../../../components/map/ScaledPie";
-import { PrismaClient } from "@prisma/client";
+import prisma from "../../../../prisma/client";
 
 export type phdPerCountryDepartment = {
   countryId: number;
@@ -13,8 +13,6 @@ export type phdPerCountryDepartment = {
 const getPhdCandidatesByCountryByDepartment = async (
   onlyGraduates?: Boolean // TODO: refactor
 ) => {
-  const prisma = new PrismaClient();
-
   const filter = onlyGraduates ? { status: { id: { equals: "38" } } } : {};
   const phdsGrouped = await prisma.phdCandidate.groupBy({
     by: ["countryId", "departmentMainId"],

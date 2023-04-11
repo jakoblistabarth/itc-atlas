@@ -1,10 +1,10 @@
 import {
   Prisma,
-  PrismaClient,
   ProjectStatus,
   ProjectType,
   PurposeOfTravel,
 } from "@prisma/client";
+import prisma from "./client";
 import fakeFlights2019 from "../lib/data/fake/fakeFlights2019";
 import fakeBTORS from "../lib/data/fake/fakeBtors";
 import loadDepartments from "../lib/data/load/loadDepartments";
@@ -18,10 +18,8 @@ import fakePhds from "../lib/data/fake/fakePhds";
 import fakeEmployees from "../lib/data/fake/fakeEmployees";
 import fakeEmployments from "../lib/data/fake/fakeEmployments";
 
-const prisma = new PrismaClient();
-
 async function main() {
-  await resetDatabase(prisma);
+  await resetDatabase();
 
   const [
     departments,

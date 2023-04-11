@@ -1,8 +1,8 @@
-import { Prisma, PrismaClient } from "@prisma/client";
+import { Prisma } from "@prisma/client";
+import prisma from "../../../../prisma/client";
 
 //TODO add filter for status and level?
 const getCountryWithApplicantCount = async () => {
-  const prisma = new PrismaClient();
   return prisma.country.findMany({
     select: {
       isoAlpha3: true,

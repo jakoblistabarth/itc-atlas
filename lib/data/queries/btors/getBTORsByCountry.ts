@@ -1,7 +1,7 @@
-import { Prisma, PrismaClient } from "@prisma/client";
+import { Prisma } from "@prisma/client";
+import prisma from "../../../../prisma/client";
 
 export default async function getBtorsByCountry(isoAlpha3: string) {
-  const prisma = new PrismaClient();
   return await prisma.btor.findMany({
     include: {
       countries: {

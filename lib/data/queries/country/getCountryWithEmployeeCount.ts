@@ -1,7 +1,7 @@
-import { Prisma, PrismaClient } from "@prisma/client";
+import { Prisma } from "@prisma/client";
+import prisma from "../../../../prisma/client";
 
 const getCountryWithEmployeeCount = async () => {
-  const prisma = new PrismaClient();
   return prisma.country.findMany({
     select: {
       nameLongEn: true,
