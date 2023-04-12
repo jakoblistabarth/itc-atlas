@@ -7,14 +7,12 @@ import Heading, { Headings } from "../../components/Heading";
 import BlockDiagramm from "../../components/map-3d/BlockDiagram";
 import styles from "../../styles/Home.module.css";
 import useSWR from "swr";
-
 const ShaderTest: NextPage = () => {
   // TODO: get segements and side with custom hook from fetched data?
   const segments = 1000;
   const side = 4;
   const sur = useSWR("/api/data/elevation/Paramaribo");
   const aut = useSWR("/api/data/elevation/Grossglockner");
-
   return (
     <>
       <Head>
@@ -50,7 +48,7 @@ const ShaderTest: NextPage = () => {
             <BlockDiagramm
               side={side}
               yScale={0.0002}
-              zOffset={0.25}
+              zOffset={0.01}
               segments={segments}
               data={Float32Array.from(aut.data.elevation)}
             />
@@ -62,5 +60,4 @@ const ShaderTest: NextPage = () => {
     </>
   );
 };
-
 export default ShaderTest;
