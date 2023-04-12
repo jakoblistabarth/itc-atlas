@@ -13,7 +13,6 @@ const ShaderTest: NextPage = () => {
   const side = 4;
   const sur = useSWR("/api/data/elevation/Paramaribo");
   const aut = useSWR("/api/data/elevation/Grossglockner");
-
   return (
     <>
       <Head>

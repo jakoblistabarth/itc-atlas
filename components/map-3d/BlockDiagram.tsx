@@ -128,5 +128,4 @@ const BlockDiagramm: FC<Props> = ({
     </>
   );
 };
-
 export default BlockDiagramm;
