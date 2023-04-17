@@ -1,9 +1,8 @@
 import type { GetStaticProps, NextPage } from "next";
 import Head from "next/head";
 import Footer from "../../components/Footer";
-import Heading, { Headings } from "../../components/Heading";
+import { Container, Heading, Text } from "theme-ui";
 import getNfpCountries from "../../lib/data/getNfpCountries";
-import styles from "../../styles/Home.module.css";
 import * as d3 from "d3";
 import { geoBertin1953 } from "d3-geo-projection";
 import { NfpCountry } from "../../types/NfpCountry";
@@ -55,105 +54,115 @@ const NfpCountries: NextPage<Props> = ({ nfps, neCountriesTopoJson }) => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <main className={styles.main}>
-        <Heading Tag={Headings.H1}>NFP Countries</Heading>
+      <Container>
+        <main>
+          <Heading as="h1">NFP Countries</Heading>
 
-        <p className={styles.description}>Insights into NFP Countries.</p>
-        <svg width={width} height={200}>
-          <g transform={`translate(${margin}, ${margin})`}>
-            {d3
-              .range(
-                yearDomain[0]?.getFullYear() ?? 0,
-                (yearDomain[1]?.getFullYear() ?? 0) + 1,
-                1
-              )
-              .map((year) => {
-                const yearDate = new Date(year.toString());
-                const yearData = perYear.get(year);
-                return (
-                  <g
-                    key={nanoid()}
-                    transform={`translate(${scaleTime(yearDate)}, ${maxSize})`}
-                  >
-                    <circle
-                      cx={maxSize}
-                      cy={0}
-                      r={yearData ? scale(yearData.length) : 1}
-                      fill={yearData ? "black" : "lightgrey"}
-                      fillOpacity={yearData ? 0.2 : 1}
-                      stroke={yearData ? "black" : "none"}
-                    />
-                    <line
-                      x1={maxSize}
-                      y1={5}
-                      x2={maxSize}
-                      y2={maxSize / 2 + 5}
-                      strokeWidth={0.5}
-                      stroke={"grey"}
-                    />
-                    <text
-                      fontSize={"10"}
-                      textAnchor="middle"
-                      x={maxSize}
-                      y={maxSize / 2 + 20}
+          <Text variant="teaser">Insights into NFP Countries.</Text>
+          <svg width={width} height={200}>
+            <g transform={`translate(${margin}, ${margin})`}>
+              {d3
+                .range(
+                  yearDomain[0]?.getFullYear() ?? 0,
+                  (yearDomain[1]?.getFullYear() ?? 0) + 1,
+                  1
+                )
+                .map((year) => {
+                  const yearDate = new Date(year.toString());
+                  const yearData = perYear.get(year);
+                  return (
+                    <g
+                      key={nanoid()}
+                      transform={`translate(${scaleTime(
+                        yearDate
+                      )}, ${maxSize})`}
                     >
-                      {year}
-                    </text>
-                  </g>
-                );
-              })}
-          </g>
-        </svg>
-
-        <div
-          style={{
-            display: "grid",
-            gridTemplateColumns: "1fr 1fr 1fr",
-            gap: "1em 1em",
-          }}
-        >
-          {selection.map((selectedYear) => {
-            const nfpCountryCodes = selectedYear?.map((d) => d.countryISO);
-            const polygons = feature(
-              neCountriesTopoJson,
-              neCountriesTopoJson.objects.ne_admin_0_countries
-            ).features.filter((f) =>
-              nfpCountryCodes?.includes(f.properties.ADM0_A3_NL)
-            );
-
-            const projection = geoBertin1953();
-            const bounds = {
-              width: 300,
-              height: 275,
-              frame: { top: 0 },
-            };
-            return (
-              <MapLayout key={nanoid()} bounds={bounds} projection={projection}>
-                <MapLayoutHeader
-                  bounds={bounds}
-                  title={selectedYear ? selectedYear[0]?.year.toString() : " "}
-                />
-                <MapLayoutBody bounds={bounds}>
-                  <BaseLayer
-                    countries={neCountriesTopoJson}
-                    projection={projection}
-                  />
-                  <g>
-                    {polygons.map((p) => (
-                      <PolygonSymbol
-                        key={nanoid()}
-                        feature={p}
-                        projection={projection}
-                        style={{ fill: "black" }}
+                      <circle
+                        cx={maxSize}
+                        cy={0}
+                        r={yearData ? scale(yearData.length) : 1}
+                        fill={yearData ? "black" : "lightgrey"}
+                        fillOpacity={yearData ? 0.2 : 1}
+                        stroke={yearData ? "black" : "none"}
                       />
-                    ))}
-                  </g>
-                </MapLayoutBody>
-              </MapLayout>
-            );
-          })}
-        </div>
-      </main>
+                      <line
+                        x1={maxSize}
+                        y1={5}
+                        x2={maxSize}
+                        y2={maxSize / 2 + 5}
+                        strokeWidth={0.5}
+                        stroke={"grey"}
+                      />
+                      <text
+                        fontSize={"10"}
+                        textAnchor="middle"
+                        x={maxSize}
+                        y={maxSize / 2 + 20}
+                      >
+                        {year}
+                      </text>
+                    </g>
+                  );
+                })}
+            </g>
+          </svg>
+
+          <div
+            style={{
+              display: "grid",
+              gridTemplateColumns: "1fr 1fr 1fr",
+              gap: "1em 1em",
+            }}
+          >
+            {selection.map((selectedYear) => {
+              const nfpCountryCodes = selectedYear?.map((d) => d.countryISO);
+              const polygons = feature(
+                neCountriesTopoJson,
+                neCountriesTopoJson.objects.ne_admin_0_countries
+              ).features.filter((f) =>
+                nfpCountryCodes?.includes(f.properties.ADM0_A3_NL)
+              );
+
+              const projection = geoBertin1953();
+              const bounds = {
+                width: 300,
+                height: 275,
+                frame: { top: 0 },
+              };
+              return (
+                <MapLayout
+                  key={nanoid()}
+                  bounds={bounds}
+                  projection={projection}
+                >
+                  <MapLayoutHeader
+                    bounds={bounds}
+                    title={
+                      selectedYear ? selectedYear[0]?.year.toString() : " "
+                    }
+                  />
+                  <MapLayoutBody bounds={bounds}>
+                    <BaseLayer
+                      countries={neCountriesTopoJson}
+                      projection={projection}
+                    />
+                    <g>
+                      {polygons.map((p) => (
+                        <PolygonSymbol
+                          key={nanoid()}
+                          feature={p}
+                          projection={projection}
+                          style={{ fill: "black" }}
+                        />
+                      ))}
+                    </g>
+                  </MapLayoutBody>
+                </MapLayout>
+              );
+            })}
+          </div>
+        </main>
+      </Container>
 
       <Footer />
     </>

@@ -3,10 +3,9 @@ import { Canvas } from "@react-three/fiber";
 import type { GetStaticProps, NextPage } from "next";
 import Head from "next/head";
 import Footer from "../../components/Footer";
-import Heading, { Headings } from "../../components/Heading";
+import { Container, Heading } from "theme-ui";
 import Point3D from "../../components/map-3d/Point3D";
 import getCountries from "../../lib/data/getCountries";
-import styles from "../../styles/Home.module.css";
 import { SharedPageProps } from "../../types/Props";
 import * as topojson from "topojson-client";
 import { geoCentroid } from "d3-geo";
@@ -36,40 +35,43 @@ const ProjectExplorer3D: NextPage<Props> = ({ neCountriesTopoJson }) => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <main className={styles.main}>
-        <Heading Tag={Headings.H1}>Projects Explorer</Heading>
-        <div style={{ width: "100%", height: "500px" }}>
-          <Canvas camera={{ position: [0, 0, 5], fov: 30 }} shadows>
-            <Globe radius={earthRadius} texture={"explorer"}>
-              {world.features.map((country, i) => {
-                const centroid = geoCentroid(country);
-                const radius = scaleLinear()
-                  .domain([0, 1])
-                  .range([0.005, 0.03])(Math.random());
-                const pos = lonLatToXYZ(
-                  centroid[0],
-                  centroid[1],
-                  earthRadius,
-                  radius
-                );
-                return (
-                  <Point3D
-                    key={i}
-                    pos={pos}
-                    radius={radius}
-                    data={country.properties}
-                  />
-                );
-              })}
-            </Globe>
-            <OrbitControls enableZoom={false} enablePan={false} />
-          </Canvas>
-          <GlobeTexture
-            neCountriesTopoJson={neCountriesTopoJson}
-            ref={canvasRef}
-          />
-        </div>
-      </main>
+      <Container>
+        <main>
+          <Heading as="h1">Projects Explorer</Heading>
+          <div style={{ width: "100%", height: "500px" }}>
+            <Canvas camera={{ position: [0, 0, 5], fov: 30 }} shadows>
+              <Globe radius={earthRadius} texture={"explorer"}>
+                {world.features.map((country, i) => {
+                  const centroid = geoCentroid(country);
+                  const radius = scaleLinear()
+                    .domain([0, 1])
+                    .range([0.005, 0.03])(Math.random());
+                  const pos = lonLatToXYZ(
+                    centroid[0],
+                    centroid[1],
+                    earthRadius,
+                    radius
+                  );
+                  return (
+                    <Point3D
+                      key={i}
+                      pos={pos}
+                      radius={radius}
+                      data={country.properties}
+                    />
+                  );
+                })}
+              </Globe>
+              <OrbitControls enableZoom={false} enablePan={false} />
+            </Canvas>
+            <GlobeTexture
+              neCountriesTopoJson={neCountriesTopoJson}
+              ref={canvasRef}
+            />
+          </div>
+        </main>
+      </Container>
+
       <Footer />
     </>
   );

@@ -3,9 +3,8 @@ import { Canvas } from "@react-three/fiber";
 import type { GetStaticProps, NextPage } from "next";
 import Head from "next/head";
 import Footer from "../../components/Footer";
-import Heading, { Headings } from "../../components/Heading";
+import { Container, Heading } from "theme-ui";
 import getCountries from "../../lib/data/getCountries";
-import styles from "../../styles/Home.module.css";
 import { SharedPageProps } from "../../types/Props";
 import React from "react";
 import { group, rollup } from "d3";
@@ -78,30 +77,32 @@ const ProjectExplorer3D: NextPage<Props> = ({
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <main className={styles.main}>
-        <Heading Tag={Headings.H1}>Projects Space Time Cube</Heading>
-        <div style={{ width: "100%", height: "680px" }}>
-          <Canvas
-            style={{ background: "white" }}
-            orthographic
-            camera={{ position: [0, 0, 100], zoom: 50 }}
-            shadows
-          >
-            <SpaceTimeCube
-              topology={neCountriesTopoJson}
-              topologyObject="ne_admin_0_countries"
-              events={events}
-            />
-            <ambientLight args={[undefined, 0.1]} />
-            <hemisphereLight
-              color="#ffffff"
-              groundColor="#080820"
-              intensity={1.0}
-            />
-            <OrbitControls enableZoom={false} enablePan={false} />
-          </Canvas>
-        </div>
-      </main>
+      <Container>
+        <main>
+          <Heading as="h1">Projects Space Time Cube</Heading>
+          <div style={{ width: "100%", height: "680px" }}>
+            <Canvas
+              style={{ background: "white" }}
+              orthographic
+              camera={{ position: [0, 0, 100], zoom: 50 }}
+              shadows
+            >
+              <SpaceTimeCube
+                topology={neCountriesTopoJson}
+                topologyObject="ne_admin_0_countries"
+                events={events}
+              />
+              <ambientLight args={[undefined, 0.1]} />
+              <hemisphereLight
+                color="#ffffff"
+                groundColor="#080820"
+                intensity={1.0}
+              />
+              <OrbitControls enableZoom={false} enablePan={false} />
+            </Canvas>
+          </div>
+        </main>
+      </Container>
       <Footer />
     </>
   );

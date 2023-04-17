@@ -1,9 +1,8 @@
 import type { NextPage } from "next";
 import Head from "next/head";
 import Footer from "../../components/Footer";
-import Heading, { Headings } from "../../components/Heading";
+import { Container, Heading, Text } from "theme-ui";
 import SummaryTable from "../../components/SummaryTable";
-import styles from "../../styles/Home.module.css";
 import useSWR from "swr";
 import * as aq from "arquero";
 
@@ -18,15 +17,15 @@ const ApplicantsOverview: NextPage = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <main className={styles.main}>
-        <Heading Tag={Headings.H1}>ITC&apos;s applicants</Heading>
-        <p className={styles.description}>
-          Insights into ITC&apos;s applications.
-        </p>
-        {error && <div>failed to load</div>}
-        {isLoading && <div>Loading …</div>}
-        {!isLoading && !error && <SummaryTable data={aq.from(data)} />}
-      </main>
+      <Container>
+        <main>
+          <Heading as="h1">ITC&apos;s applicants</Heading>
+          <Text variant="teaser">Insights into ITC&apos;s applications.</Text>
+          {error && <div>failed to load</div>}
+          {isLoading && <div>Loading …</div>}
+          {!isLoading && !error && <SummaryTable data={aq.from(data)} />}
+        </main>
+      </Container>
 
       <Footer />
     </>

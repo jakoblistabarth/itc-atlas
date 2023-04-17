@@ -1,16 +1,26 @@
+/** @jsxImportSource theme-ui */
+
 import React, { FC } from "react";
 import { fDateMonthYear } from "../lib/utilities/formaters";
-import styles from "../styles/Home.module.css";
 import BackToHome from "./BackToHome";
 
 type Props = React.PropsWithChildren<{}>;
 
 const Footer: FC<Props> = ({ children }) => {
   return (
-    <footer className={styles.footer}>
+    <footer
+      sx={{
+        display: "flex",
+        flexFlow: "column wrap",
+        justifyContent: "center",
+        alignItems: "center",
+        rowGap: 2,
+        py: 5,
+      }}
+    >
       {children}
       <BackToHome />
-      <div style={{ marginTop: "2em" }}>{fDateMonthYear(new Date())}</div>
+      <div>{fDateMonthYear(new Date())}</div>
     </footer>
   );
 };

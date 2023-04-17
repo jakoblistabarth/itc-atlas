@@ -6,7 +6,7 @@ import Head from "next/head";
 import { Vector2 } from "three";
 import { feature } from "topojson-client";
 import Footer from "../../components/Footer";
-import Heading, { Headings } from "../../components/Heading";
+import { Container, Heading } from "theme-ui";
 import BaseLayer from "../../components/map/BaseLayer";
 import PointLabel from "../../components/map/PointLabel";
 import PointSymbol from "../../components/map/PointSymbol";
@@ -18,7 +18,6 @@ import getCountryCodes from "../../lib/data/queries/country/getCountryCodes";
 import getCountryWithApplicantCount, {
   CountryWithApplicantCount,
 } from "../../lib/data/queries/country/getCountryWithApplicantCount";
-import styles from "../../styles/Home.module.css";
 import { LabelPlacement } from "../../types/LabelPlacement";
 import { SharedPageProps } from "../../types/Props";
 import useMeasure from "react-use-measure";
@@ -118,104 +117,104 @@ const AlumniOrigin: NextPage<Props> = ({ applicants, neCountriesTopoJson }) => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <main className={styles.main}>
-        <Heading Tag={Headings.H1}>
-          ITC&apos;s MSc alumni country of origin
-        </Heading>
+      <Container>
+        <main>
+          <Heading as="h1">ITC&apos;s MSc alumni country of origin</Heading>
 
-        <div
-          style={{ padding: "0 1em", width: "100%", height: "100%" }}
-          ref={mapRef}
-        >
-          {dimension.width > 0 && (
-            <svg
-              width={"100%"}
-              height={"100%"}
-              viewBox={`0 0 ${dimension.width} ${dimension.height}`}
-            >
-              <BaseLayer
-                countries={neCountriesTopoJson}
-                projection={projection}
-              />
-              <g id="alumni-countries-symbols">
-                {points.features.map((point, idx) => (
-                  <Tooltip key={`tooltip-country-${idx}`}>
-                    <TooltipTrigger asChild>
-                      <g>
-                        <PointSymbol
-                          position={
-                            new Vector2(
-                              ...projection(point.geometry.coordinates)
-                            )
-                          }
-                          radius={scale(point.properties?.alumniCount)}
-                          fill={"teal"}
-                          stroke={"teal"}
-                          strokeWidth={0.5}
-                          fillOpacity={0.1}
-                          // TODO: check whether moving state back to point symbol improves behaviour (e.g. css transition)
-                          // seems like the transition is only working once the data is fetched by SWR
-                          onMouseEnter={() => {
-                            setCountry(point.properties?.ADM0_A3_NL);
-                          }}
-                          onMouseLeave={() => setCountry(null)}
-                          isActive={country === point.properties?.ADM0_A3_NL}
-                          interactive
-                        />
-                      </g>
-                    </TooltipTrigger>
-                    {data && (
-                      <TooltipContent>
-                        <div>
-                          <strong>{point.properties?.NAME_EN}</strong>
-                          <br />
-                          {point.properties?.alumniCount} M.Sc. alumni
-                        </div>
-                        <div>
-                          {dataClean && (
-                            <LineChart
-                              data={dataClean}
-                              width={100}
-                              height={30}
-                            />
-                          )}
-                        </div>
-                      </TooltipContent>
-                    )}
-                  </Tooltip>
-                ))}
-              </g>
-              <g id="alumni-country-labels">
-                {points.features.slice(0, 10).map((point, idx) => {
-                  const pos = new Vector2(
-                    ...projection(point.geometry.coordinates)
-                  );
-                  return (
-                    <PointLabel
-                      key={`label-${point.properties?.ADM0_A3_NL}-${idx}`}
-                      position={pos}
-                      placement={LabelPlacement.CENTER}
-                      fill={"teal"}
-                      fontSize={10}
-                    >
-                      {point.properties?.NAME_EN}
-                    </PointLabel>
-                  );
-                })}
-              </g>
-              <ProportionalCircleLegend
-                data={points.features
-                  .map((feature) => feature.properties?.alumniCount)
-                  .filter(isNumber)}
-                scaleRadius={scale}
-                title={"Graduates per country"}
-                unitLabel={"graduate"}
-                showFunction={false}
-              />
-            </svg>
-          )}
-        </div>
-      </main>
+          <div
+            style={{ padding: "0 1em", width: "100%", height: "100%" }}
+            ref={mapRef}
+          >
+            {dimension.width > 0 && (
+              <svg
+                width={"100%"}
+                height={"100%"}
+                viewBox={`0 0 ${dimension.width} ${dimension.height}`}
+              >
+                <BaseLayer
+                  countries={neCountriesTopoJson}
+                  projection={projection}
+                />
+                <g id="alumni-countries-symbols">
+                  {points.features.map((point, idx) => (
+                    <Tooltip key={`tooltip-country-${idx}`}>
+                      <TooltipTrigger asChild>
+                        <g>
+                          <PointSymbol
+                            position={
+                              new Vector2(
+                                ...projection(point.geometry.coordinates)
+                              )
+                            }
+                            radius={scale(point.properties?.alumniCount)}
+                            fill={"teal"}
+                            stroke={"teal"}
+                            strokeWidth={0.5}
+                            fillOpacity={0.1}
+                            // TODO: check whether moving state back to point symbol improves behaviour (e.g. css transition)
+                            // seems like the transition is only working once the data is fetched by SWR
+                            onMouseEnter={() => {
+                              setCountry(point.properties?.ADM0_A3_NL);
+                            }}
+                            onMouseLeave={() => setCountry(null)}
+                            isActive={country === point.properties?.ADM0_A3_NL}
+                            interactive
+                          />
+                        </g>
+                      </TooltipTrigger>
+                      {data && (
+                        <TooltipContent>
+                          <div>
+                            <strong>{point.properties?.NAME_EN}</strong>
+                            <br />
+                            {point.properties?.alumniCount} M.Sc. alumni
+                          </div>
+                          <div>
+                            {dataClean && (
+                              <LineChart
+                                data={dataClean}
+                                width={100}
+                                height={30}
+                              />
+                            )}
+                          </div>
+                        </TooltipContent>
+                      )}
+                    </Tooltip>
+                  ))}
+                </g>
+                <g id="alumni-country-labels">
+                  {points.features.slice(0, 10).map((point, idx) => {
+                    const pos = new Vector2(
+                      ...projection(point.geometry.coordinates)
+                    );
+                    return (
+                      <PointLabel
+                        key={`label-${point.properties?.ADM0_A3_NL}-${idx}`}
+                        position={pos}
+                        placement={LabelPlacement.CENTER}
+                        fill={"teal"}
+                        fontSize={10}
+                      >
+                        {point.properties?.NAME_EN}
+                      </PointLabel>
+                    );
+                  })}
+                </g>
+                <ProportionalCircleLegend
+                  data={points.features
+                    .map((feature) => feature.properties?.alumniCount)
+                    .filter(isNumber)}
+                  scaleRadius={scale}
+                  title={"Graduates per country"}
+                  unitLabel={"graduate"}
+                  showFunction={false}
+                />
+              </svg>
+            )}
+          </div>
+        </main>
+      </Container>
       <Footer />
     </>
   );

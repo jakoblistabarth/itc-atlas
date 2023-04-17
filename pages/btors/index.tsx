@@ -1,9 +1,8 @@
 import type { NextPage } from "next";
 import Head from "next/head";
-import styles from "../../styles/Home.module.css";
 import SummaryTable from "../../components/SummaryTable";
 import Footer from "../../components/Footer";
-import Heading, { Headings } from "../../components/Heading";
+import { Container, Heading, Text } from "theme-ui";
 import * as aq from "arquero";
 import useSWR from "swr";
 
@@ -18,18 +17,20 @@ const Btors: NextPage = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <main className={styles.main}>
-        <Heading Tag={Headings.H1}>Btors</Heading>
+      <Container>
+        <main>
+          <Heading as="h1">Btors</Heading>
 
-        <p className={styles.description}>
-          Insights into ITC&apos;s travels around the globe through the
-          &quot;Back to Office&quot; Reports.
-        </p>
+          <Text variant="teaser">
+            Insights into ITC&apos;s travels around the globe through the
+            &quot;Back to Office&quot; Reports.
+          </Text>
 
-        {error && <div>failed to load</div>}
-        {isLoading && <div>Loading …</div>}
-        {!isLoading && !error && <SummaryTable data={aq.from(data)} />}
-      </main>
+          {error && <div>failed to load</div>}
+          {isLoading && <div>Loading …</div>}
+          {!isLoading && !error && <SummaryTable data={aq.from(data)} />}
+        </main>
+      </Container>
 
       <Footer />
     </>

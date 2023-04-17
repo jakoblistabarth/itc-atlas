@@ -1,6 +1,5 @@
 import type { GetStaticProps, NextPage } from "next";
 import Head from "next/head";
-import styles from "../../styles/Home.module.css";
 import { geoSatellite } from "d3-geo-projection";
 import * as d3 from "d3";
 import * as topojson from "topojson-client";
@@ -9,7 +8,7 @@ import getCountryWithProjectCount, {
   CountryWithProjectCount,
 } from "../../lib/data/queries/country/getCountryWithProjectCount";
 import BaseLayer from "../../components/map/BaseLayer";
-import Heading, { Headings } from "../../components/Heading";
+import { Container, Heading } from "theme-ui";
 import { FeatureCollection, Feature, Point } from "geojson";
 import { nanoid } from "nanoid";
 import themes, { ThemeNames } from "../../lib/styles/themes";
@@ -114,57 +113,60 @@ const ProjectCountries: NextPage<Props> = ({
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <main className={styles.main}>
-        <Heading Tag={Headings.H1}>
-          ITC&apos;s projects in Sub-Saharan Africa
-        </Heading>
-        <svg width={mapOptions.bounds.width} height={mapOptions.bounds.height}>
-          <defs>
-            <PatternDots
-              style={mapOptions.theme.choropleth?.pattern}
-              angle={0}
-              spacing={2}
-              fill={"red"}
-            ></PatternDots>
-          </defs>
-          <BaseLayer
-            countries={neCountriesTopoJson}
-            projection={mapOptions.projection}
-            theme={mapOptions.theme}
-            labels
-          />
-          <g className="choroplethLayer">
-            {polygons.features.map((feature) => (
-              <ChoroplethSymbol
-                key={nanoid()}
-                projection={mapOptions.projection}
-                feature={feature}
-                fill={"url(#Dots)"}
-              />
-            ))}
-          </g>
-          <g className="symbolLayer">
-            {points.features.map((feature) => {
-              const xy = mapOptions.projection(
-                feature.geometry.coordinates as [number, number]
-              );
-              return (
-                xy && (
-                  <IsoUnit
-                    key={nanoid()}
-                    xy={xy}
-                    scale={scale}
-                    value={feature.properties?.projectCount}
-                    side={5}
-                    style={{ ...mapOptions.theme.symbol, fillOpacity: 1 }}
-                    label={true}
-                  />
-                )
-              );
-            })}
-          </g>
-        </svg>
-      </main>
+      <Container>
+        <main>
+          <Heading as="h1">ITC&apos;s projects in Sub-Saharan Africa</Heading>
+          <svg
+            width={mapOptions.bounds.width}
+            height={mapOptions.bounds.height}
+          >
+            <defs>
+              <PatternDots
+                style={mapOptions.theme.choropleth?.pattern}
+                angle={0}
+                spacing={2}
+                fill={"red"}
+              ></PatternDots>
+            </defs>
+            <BaseLayer
+              countries={neCountriesTopoJson}
+              projection={mapOptions.projection}
+              theme={mapOptions.theme}
+              labels
+            />
+            <g className="choroplethLayer">
+              {polygons.features.map((feature) => (
+                <ChoroplethSymbol
+                  key={nanoid()}
+                  projection={mapOptions.projection}
+                  feature={feature}
+                  fill={"url(#Dots)"}
+                />
+              ))}
+            </g>
+            <g className="symbolLayer">
+              {points.features.map((feature) => {
+                const xy = mapOptions.projection(
+                  feature.geometry.coordinates as [number, number]
+                );
+                return (
+                  xy && (
+                    <IsoUnit
+                      key={nanoid()}
+                      xy={xy}
+                      scale={scale}
+                      value={feature.properties?.projectCount}
+                      side={5}
+                      style={{ ...mapOptions.theme.symbol, fillOpacity: 1 }}
+                      label={true}
+                    />
+                  )
+                );
+              })}
+            </g>
+          </svg>
+        </main>
+      </Container>
     </>
   );
 };

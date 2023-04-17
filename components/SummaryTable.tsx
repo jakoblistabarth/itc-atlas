@@ -1,3 +1,5 @@
+/** @jsxImportSource theme-ui */
+
 import { nanoid } from "nanoid";
 import { FC } from "react";
 import { BiBracket } from "react-icons/bi";
@@ -9,11 +11,10 @@ import {
 } from "react-icons/md";
 import { fFloat, fPercentage } from "../lib/utilities/formaters";
 import { colorMap } from "../lib/summarytable/colorMap";
-import styles from "../styles/summarytable.module.css";
 import { ColumnDataType } from "../lib/summarytable/getColumnType";
 import SummaryTableCard from "./SummaryTableCard";
 import Snapshot from "./Snapshot";
-import Heading, { Headings } from "./Heading";
+import { Heading } from "theme-ui";
 import ColumnTable from "arquero/dist/types/table/column-table";
 import getSummaryTableData from "../lib/summarytable/getSummaryTableData";
 
@@ -39,12 +40,44 @@ const SummaryTable: FC<SummaryTableProps> = ({ data, title }) => {
   const stdata = getSummaryTableData(data);
   return (
     <>
-      {title && <Heading Tag={Headings.H2}>{title}</Heading>}
-      <div className={styles.summaryTableContainer}>
+      {title && <Heading as="h2">{title}</Heading>}
+      <div
+        sx={{
+          display: "grid",
+          gridTemplateColumns: "100px auto",
+          columnGap: "4",
+        }}
+      >
         <SummaryTableCard data={stdata} />
-        <div className={styles.summaryTable}>
-          <table>
-            <thead>
+        <div>
+          <table
+            sx={{
+              fontSize: 1,
+              borderCollapse: "collapse",
+              "td:first-of-type": {
+                padding: ".5em",
+              },
+              td: {
+                padding: "0.5em 2em 0.5em 0",
+                svg: {
+                  display: "flex",
+                },
+              },
+              tr: {
+                borderBottom: "1px solid lightgrey",
+              },
+            }}
+          >
+            <thead
+              sx={{
+                fontSize: 0,
+                fontWeight: "bold",
+                textAlign: "left",
+                th: {
+                  py: 2,
+                },
+              }}
+            >
               <tr>
                 <th></th>
                 <th>Column</th>
@@ -64,21 +97,34 @@ const SummaryTable: FC<SummaryTableProps> = ({ data, title }) => {
                 return (
                   <tr key={nanoid()}>
                     <td
-                      className={styles.icon}
-                      style={{ borderColor: color.baseColor }}
+                      sx={{
+                        borderColor: color.baseColor,
+                        borderLeftStyle: "solid",
+                        borderLeftWidth: "3px",
+                      }}
                     >
                       {getColumnIcon(column.type)}
                     </td>
-                    <td className={styles.label}>
-                      <div className={styles.scrollable}>{column.name}</div>
+                    <td sx={{ maxWidth: "160px" }}>
+                      <div
+                        sx={{
+                          overflowX: "auto",
+                          whiteSpace: "nowrap",
+                          scrollbarWidth: "none",
+                        }}
+                      >
+                        {column.name}
+                      </div>
                     </td>
                     <td>
                       <Snapshot column={column} />
                     </td>
                     <td
-                      className={
-                        column.stats?.missing > 0.5 ? styles.alert : undefined
-                      }
+                      sx={{
+                        color: column.stats?.missing > 0.5 ? "red" : undefined,
+                        fontWeight:
+                          column.stats?.missing > 0.5 ? "bold" : undefined,
+                      }}
                     >
                       {fPercentage(column.stats.missing)}
                     </td>

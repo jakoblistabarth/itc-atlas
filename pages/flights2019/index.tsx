@@ -1,10 +1,9 @@
 import type { NextPage } from "next";
 import Head from "next/head";
-import styles from "../../styles/Home.module.css";
 import SummaryTable from "../../components/SummaryTable";
 import Footer from "../../components/Footer";
-import Heading, { Headings } from "../../components/Heading";
-import LinkFramed from "../../components/LinkFramed";
+import { Container, Heading, Text, Grid } from "theme-ui";
+import CardLink from "../../components/CardLink";
 import { nanoid } from "nanoid";
 import * as aq from "arquero";
 import useSWR from "swr";
@@ -38,24 +37,26 @@ const Travels: NextPage = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <main className={styles.main}>
-        <Heading Tag={Headings.H1}>Flights 2019</Heading>
+      <Container>
+        <main>
+          <Heading as="h1">Flights 2019</Heading>
 
-        <p className={styles.description}>
-          Insights into ITC&apos;s travels in 2019.
-        </p>
+          <Text variant="teaser">
+            Insights into ITC&apos;s travels in 2019.
+          </Text>
 
-        <div className={styles.grid}>
-          {links.map((l) => (
-            <LinkFramed key={nanoid()} href={l.href}>
-              {l.children}
-            </LinkFramed>
-          ))}
-        </div>
-        {error && <div>failed to load</div>}
-        {isLoading && <div>Loading …</div>}
-        {!isLoading && !error && <SummaryTable data={aq.from(data)} />}
-      </main>
+          <Grid variant="navigation">
+            {links.map((l) => (
+              <CardLink key={nanoid()} href={l.href}>
+                <Heading as="h2">{l.children}</Heading>
+              </CardLink>
+            ))}
+          </Grid>
+          {error && <div>failed to load</div>}
+          {isLoading && <div>Loading …</div>}
+          {!isLoading && !error && <SummaryTable data={aq.from(data)} />}
+        </main>
+      </Container>
 
       <Footer />
     </>

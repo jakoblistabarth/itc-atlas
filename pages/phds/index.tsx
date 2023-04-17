@@ -1,10 +1,9 @@
 import type { NextPage } from "next";
 import Head from "next/head";
 import Footer from "../../components/Footer";
-import Heading, { Headings } from "../../components/Heading";
+import { Container, Grid, Heading, Text } from "theme-ui";
 import SummaryTable from "../../components/SummaryTable";
-import styles from "../../styles/Home.module.css";
-import LinkFramed from "../../components/LinkFramed";
+import CardLink from "../../components/CardLink";
 import * as aq from "arquero";
 import useSWR from "swr";
 import { useRouter } from "next/router";
@@ -21,23 +20,23 @@ const PhdOverview: NextPage = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <main className={styles.main}>
-        <Heading Tag={Headings.H1}>ITC&apos;s PhD candidates</Heading>
+      <Container>
+        <main>
+          <Heading as="h1">ITC&apos;s PhD candidates</Heading>
 
-        <p className={styles.description}>
-          Insights into ITC&apos;s PhD candidates.
-        </p>
+          <Text variant="teaser">Insights into ITC&apos;s PhD candidates.</Text>
 
-        <div className={styles.grid}>
-          <LinkFramed href={`${route}/departments`}>
-            Origin Per Country and Department
-          </LinkFramed>
-        </div>
+          <Grid variant="navigation">
+            <CardLink href={`${route}/departments`}>
+              <Heading as="h2">Origin Per Country and Department</Heading>
+            </CardLink>
+          </Grid>
 
-        {error && <div>failed to load</div>}
-        {isLoading && <div>Loading …</div>}
-        {!isLoading && !error && <SummaryTable data={aq.from(data)} />}
-      </main>
+          {error && <div>failed to load</div>}
+          {isLoading && <div>Loading …</div>}
+          {!isLoading && !error && <SummaryTable data={aq.from(data)} />}
+        </main>
+      </Container>
 
       <Footer />
     </>

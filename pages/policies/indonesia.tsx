@@ -1,11 +1,10 @@
 import type { GetStaticProps, NextPage } from "next";
 import Head from "next/head";
 import Footer from "../../components/Footer";
-import Heading, { Headings } from "../../components/Heading";
+import { Container, Heading } from "theme-ui";
 import getBTORsByCountry, {
   BtorsByCountry,
 } from "../../lib/data/queries/btors/getBTORsByCountry";
-import styles from "../../styles/Home.module.css";
 import { ProjectIndonesia } from "../../types/Project";
 import { TimelineEvent } from "../../types/TimelineEvent";
 import getDutchForeignAffairsMinisters from "../../lib/data/getDutchForeignAffairsMinisters";
@@ -300,468 +299,480 @@ const IndonesiaTimeline: NextPage<Props> = ({
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <main className={styles.main}>
-        <Heading Tag={Headings.H1}>ITC&apos;s Activities in Indonesia</Heading>
-        <div style={{ width: "100%", height: "100%", padding: "0 1em" }}>
-          <svg
-            ref={timelineRef}
-            width={"100%"}
-            height={"100%"}
-            fontSize="6"
-            fontFamily="Inter"
-            viewBox={`0 0 ${width} ${height}`}
-          >
-            <TimelineGrid scale={xScale} height={height} margin={margin} />
-            <TimelineSeparator
-              width={width}
-              strokeWidth={separatorHeight}
-              y={getSectionY(0)}
-            />
-            <TimelineSeparator
-              width={width}
-              strokeWidth={separatorHeight}
-              y={getSectionY(1)}
-            />
+      <Container>
+        <main>
+          <Heading as="h1">ITC&apos;s Activities in Indonesia</Heading>
+          <div style={{ width: "100%", height: "100%", padding: "0 1em" }}>
+            <svg
+              ref={timelineRef}
+              width={"100%"}
+              height={"100%"}
+              fontSize="6"
+              fontFamily="Inter"
+              viewBox={`0 0 ${width} ${height}`}
+            >
+              <TimelineGrid scale={xScale} height={height} margin={margin} />
+              <TimelineSeparator
+                width={width}
+                strokeWidth={separatorHeight}
+                y={getSectionY(0)}
+              />
+              <TimelineSeparator
+                width={width}
+                strokeWidth={separatorHeight}
+                y={getSectionY(1)}
+              />
 
-            <g id="itcContextEvents" transform={`translate(0 ${margin})`}>
-              <Group top={sectionHeaderHeight}>
-                <TimelineHeader fill={itcGreen} fontSize={sectionHeaderHeight}>
-                  ITC History
-                </TimelineHeader>
-                <g id="nameChanges" transform={`translate(0 ${getRowY(0, 0)})`}>
+              <g id="itcContextEvents" transform={`translate(0 ${margin})`}>
+                <Group top={sectionHeaderHeight}>
                   <TimelineHeader
                     fill={itcGreen}
-                    fontWeight={"bold"}
-                    fontSize={rowHeaderHeight}
+                    fontSize={sectionHeaderHeight}
                   >
-                    Name changes
+                    ITC History
                   </TimelineHeader>
-                  <Group top={rowHeaderHeight}>
-                    {renamingEvents.map((ne, idx) => {
-                      const isEven = idx % 2 === 0;
-                      return (
-                        <EventPeriod
-                          key={`renaming-${idx}`}
-                          dateStart={ne.dateStart}
-                          dateEnd={ne.dateEnd ?? new Date()}
-                          xScale={xScale}
-                          yOffset={0}
-                          height={1}
-                          fill={itcGreen}
-                        >
-                          {!isSSR && (
-                            <Text
-                              fontSize={6}
-                              fill={itcGreen}
-                              width={200}
-                              y={isEven ? 5 : -5}
-                              x={5}
-                              verticalAnchor={isEven ? "start" : "end"}
-                            >
-                              {ne.name}
-                            </Text>
-                          )}
-                          <line
-                            y2={10 * (isEven ? 1 : -1)}
-                            stroke={itcGreen}
-                            strokeWidth={0.5}
-                          />
-                          <PointSymbol
-                            position={new Vector2()}
-                            radius={2}
-                            stroke={itcGreen}
-                            fill={"white"}
-                            fillOpacity={1}
-                            interactive={false}
-                          />
-                        </EventPeriod>
-                      );
-                    })}
-                  </Group>
-                </g>
-                <g id="moves" transform={`translate(0 ${getRowY(0, 1)})`}>
-                  <TimelineHeader
-                    fill={itcGreen}
-                    fontWeight={"bold"}
-                    fontSize={rowHeaderHeight}
+                  <g
+                    id="nameChanges"
+                    transform={`translate(0 ${getRowY(0, 0)})`}
                   >
-                    Moves
-                  </TimelineHeader>
-                  <Group top={rowHeaderHeight}>
-                    {Array.from(ITClocations.keys()).map((d, idx) => {
-                      const currentLocation = ITClocations.get(d);
-                      if (!currentLocation) return <></>;
-                      const width = 70;
-                      const next = Array.from(ITClocations.entries())[idx + 1];
-                      const dateEnd = next
-                        ? next[1].moveInDate
-                        : new Date(2050, 0, 1);
-                      return (
-                        <g key={nanoid()}>
-                          <rect
-                            x={xScale(new Date(currentLocation.moveInDate))}
-                            y={width / 2 - 1}
-                            width={
-                              xScale(new Date(dateEnd)) -
-                              xScale(new Date(currentLocation.moveInDate))
-                            }
+                    <TimelineHeader
+                      fill={itcGreen}
+                      fontWeight={"bold"}
+                      fontSize={rowHeaderHeight}
+                    >
+                      Name changes
+                    </TimelineHeader>
+                    <Group top={rowHeaderHeight}>
+                      {renamingEvents.map((ne, idx) => {
+                        const isEven = idx % 2 === 0;
+                        return (
+                          <EventPeriod
+                            key={`renaming-${idx}`}
+                            dateStart={ne.dateStart}
+                            dateEnd={ne.dateEnd ?? new Date()}
+                            xScale={xScale}
+                            yOffset={0}
                             height={1}
                             fill={itcGreen}
-                          />
-                          <g
-                            transform={`translate(${xScale(
-                              new Date(currentLocation.moveInDate)
-                            )} 0)`}
                           >
+                            {!isSSR && (
+                              <Text
+                                fontSize={6}
+                                fill={itcGreen}
+                                width={200}
+                                y={isEven ? 5 : -5}
+                                x={5}
+                                verticalAnchor={isEven ? "start" : "end"}
+                              >
+                                {ne.name}
+                              </Text>
+                            )}
                             <line
-                              y1={width / 2}
-                              y2={width / 2 + 5}
+                              y2={10 * (isEven ? 1 : -1)}
                               stroke={itcGreen}
-                            />
-                            <Building
-                              position={new Vector2(0, width / 2 / 2)}
-                              color={itcGreen}
-                              width={width}
-                              location={d}
+                              strokeWidth={0.5}
                             />
                             <PointSymbol
-                              position={new Vector2(0, width / 2)}
-                              fillOpacity={1}
-                              fill={"white"}
+                              position={new Vector2()}
+                              radius={2}
                               stroke={itcGreen}
+                              fill={"white"}
+                              fillOpacity={1}
                               interactive={false}
                             />
-                            <PointLabel
-                              position={new Vector2(0, width / 2)}
-                              placement={LabelPlacement.BOTTOM}
+                          </EventPeriod>
+                        );
+                      })}
+                    </Group>
+                  </g>
+                  <g id="moves" transform={`translate(0 ${getRowY(0, 1)})`}>
+                    <TimelineHeader
+                      fill={itcGreen}
+                      fontWeight={"bold"}
+                      fontSize={rowHeaderHeight}
+                    >
+                      Moves
+                    </TimelineHeader>
+                    <Group top={rowHeaderHeight}>
+                      {Array.from(ITClocations.keys()).map((d, idx) => {
+                        const currentLocation = ITClocations.get(d);
+                        if (!currentLocation) return <></>;
+                        const width = 70;
+                        const next = Array.from(ITClocations.entries())[
+                          idx + 1
+                        ];
+                        const dateEnd = next
+                          ? next[1].moveInDate
+                          : new Date(2050, 0, 1);
+                        return (
+                          <g key={nanoid()}>
+                            <rect
+                              x={xScale(new Date(currentLocation.moveInDate))}
+                              y={width / 2 - 1}
+                              width={
+                                xScale(new Date(dateEnd)) -
+                                xScale(new Date(currentLocation.moveInDate))
+                              }
+                              height={1}
                               fill={itcGreen}
-                              fontSize={6}
+                            />
+                            <g
+                              transform={`translate(${xScale(
+                                new Date(currentLocation.moveInDate)
+                              )} 0)`}
                             >
-                              <tspan
-                                fontWeight={"bold"}
-                                fontFamily={"Fraunces"}
+                              <line
+                                y1={width / 2}
+                                y2={width / 2 + 5}
+                                stroke={itcGreen}
+                              />
+                              <Building
+                                position={new Vector2(0, width / 2 / 2)}
+                                color={itcGreen}
+                                width={width}
+                                location={d}
+                              />
+                              <PointSymbol
+                                position={new Vector2(0, width / 2)}
+                                fillOpacity={1}
+                                fill={"white"}
+                                stroke={itcGreen}
+                                interactive={false}
+                              />
+                              <PointLabel
+                                position={new Vector2(0, width / 2)}
+                                placement={LabelPlacement.BOTTOM}
+                                fill={itcGreen}
+                                fontSize={6}
                               >
-                                {d}
-                              </tspan>
-                              <tspan x="0" dy="7">
-                                {currentLocation.city}
-                              </tspan>
-                            </PointLabel>
+                                <tspan
+                                  fontWeight={"bold"}
+                                  fontFamily={"Fraunces"}
+                                >
+                                  {d}
+                                </tspan>
+                                <tspan x="0" dy="7">
+                                  {currentLocation.city}
+                                </tspan>
+                              </PointLabel>
+                            </g>
                           </g>
-                        </g>
-                      );
-                    })}
-                  </Group>
-                </g>
-              </Group>
-            </g>
-            <g
-              id="policyEvents"
-              fill={itcBlue}
-              transform={`translate(0 ${getSectionY(0)})`}
-            >
-              <Group top={sectionHeaderHeight}>
-                <TimelineHeader fill={itcBlue} fontSize={sectionHeaderHeight}>
-                  Government Context
-                </TimelineHeader>
-                <g id="ministers" transform={`translate(0 ${getRowY(1, 0)})`}>
-                  <TimelineHeader
-                    color={itcBlue}
-                    fontWeight={"bold"}
-                    fontSize={rowHeaderHeight}
-                  >
-                    Ministers in charge
+                        );
+                      })}
+                    </Group>
+                  </g>
+                </Group>
+              </g>
+              <g
+                id="policyEvents"
+                fill={itcBlue}
+                transform={`translate(0 ${getSectionY(0)})`}
+              >
+                <Group top={sectionHeaderHeight}>
+                  <TimelineHeader fill={itcBlue} fontSize={sectionHeaderHeight}>
+                    Government Context
                   </TimelineHeader>
-                  <Group top={rowHeaderHeight}>
-                    <NominalLegend
-                      entries={parties.map((d) => ({
-                        label: d,
-                        color: itcBlue,
-                        symbol: renderPartySymbol(d),
-                      }))}
-                      columns={4}
-                      columnWidth={35}
-                    />
-                    {ministerEvents.map((ce) => {
-                      return (
+                  <g id="ministers" transform={`translate(0 ${getRowY(1, 0)})`}>
+                    <TimelineHeader
+                      color={itcBlue}
+                      fontWeight={"bold"}
+                      fontSize={rowHeaderHeight}
+                    >
+                      Ministers in charge
+                    </TimelineHeader>
+                    <Group top={rowHeaderHeight}>
+                      <NominalLegend
+                        entries={parties.map((d) => ({
+                          label: d,
+                          color: itcBlue,
+                          symbol: renderPartySymbol(d),
+                        }))}
+                        columns={4}
+                        columnWidth={35}
+                      />
+                      {ministerEvents.map((ce) => {
+                        return (
+                          <EventPeriod
+                            key={nanoid()}
+                            dateStart={ce.dateStart}
+                            dateEnd={ce.dateEnd ?? new Date()}
+                            xScale={xScale}
+                            yOffset={0}
+                            height={1}
+                          >
+                            <g transform="rotate(-45) translate(2 0)">
+                              <PointLabel placement={LabelPlacement.RIGHT}>
+                                {ce.name}
+                              </PointLabel>
+                            </g>
+                            <Tooltip>
+                              <TooltipTrigger asChild>
+                                <g>
+                                  {ce.data?.party &&
+                                    renderPartySymbol(ce.data?.party as string)}
+                                </g>
+                              </TooltipTrigger>
+                              <TooltipContent>
+                                <h3>{ce.name}</h3>
+                                {ce.data?.party} <br />
+                                {ce.dateStart.getFullYear()}–
+                                {ce.dateEnd?.getFullYear()}
+                              </TooltipContent>
+                            </Tooltip>
+                          </EventPeriod>
+                        );
+                      })}
+                    </Group>
+                  </g>
+                  <g id="topics" transform={`translate(0, ${getRowY(1, 1)})`}>
+                    <TimelineHeader
+                      color={itcBlue}
+                      fontWeight={"bold"}
+                      fontSize={rowHeaderHeight}
+                    >
+                      Development aid priorities
+                    </TimelineHeader>
+                    <Group top={rowHeaderHeight}>
+                      <TopicPatterns color={itcBlue} />
+                      {topics.map((topic) => (
                         <EventPeriod
                           key={nanoid()}
-                          dateStart={ce.dateStart}
-                          dateEnd={ce.dateEnd ?? new Date()}
+                          dateStart={new Date(topic.dateStart)}
+                          dateEnd={new Date(topic.dateEnd)}
                           xScale={xScale}
-                          yOffset={0}
-                          height={1}
+                          yOffset={topicYScale(topic.name) ?? 0}
+                          height={topicYScale.bandwidth()}
+                          fill={`url(#${topicPatternScale(topic.name)})`}
+                        />
+                      ))}
+                      {firstTopicOccurences.map((topic) => (
+                        <PointLabel
+                          key={nanoid()}
+                          placement={LabelPlacement.LEFT}
+                          position={
+                            new Vector2(
+                              xScale(topic?.dateStart ?? 0),
+                              topicYScale(topic?.name ?? "")
+                            )
+                          }
                         >
-                          <g transform="rotate(-45) translate(2 0)">
-                            <PointLabel placement={LabelPlacement.RIGHT}>
-                              {ce.name}
-                            </PointLabel>
-                          </g>
-                          <Tooltip>
-                            <TooltipTrigger asChild>
-                              <g>
-                                {ce.data?.party &&
-                                  renderPartySymbol(ce.data?.party as string)}
-                              </g>
-                            </TooltipTrigger>
-                            <TooltipContent>
-                              <h3>{ce.name}</h3>
-                              {ce.data?.party} <br />
-                              {ce.dateStart.getFullYear()}–
-                              {ce.dateEnd?.getFullYear()}
-                            </TooltipContent>
-                          </Tooltip>
-                        </EventPeriod>
-                      );
-                    })}
-                  </Group>
-                </g>
-                <g id="topics" transform={`translate(0, ${getRowY(1, 1)})`}>
-                  <TimelineHeader
-                    color={itcBlue}
-                    fontWeight={"bold"}
-                    fontSize={rowHeaderHeight}
-                  >
-                    Development aid priorities
-                  </TimelineHeader>
-                  <Group top={rowHeaderHeight}>
-                    <TopicPatterns color={itcBlue} />
-                    {topics.map((topic) => (
-                      <EventPeriod
-                        key={nanoid()}
-                        dateStart={new Date(topic.dateStart)}
-                        dateEnd={new Date(topic.dateEnd)}
-                        xScale={xScale}
-                        yOffset={topicYScale(topic.name) ?? 0}
-                        height={topicYScale.bandwidth()}
-                        fill={`url(#${topicPatternScale(topic.name)})`}
-                      />
-                    ))}
-                    {firstTopicOccurences.map((topic) => (
-                      <PointLabel
-                        key={nanoid()}
-                        placement={LabelPlacement.LEFT}
-                        position={
-                          new Vector2(
-                            xScale(topic?.dateStart ?? 0),
-                            topicYScale(topic?.name ?? "")
-                          )
-                        }
-                      >
-                        {topic?.name}
-                      </PointLabel>
-                    ))}
-                  </Group>
-                </g>
-              </Group>
-            </g>
-            <g id="itcEvents" transform={`translate(0 ${getSectionY(1)})`}>
-              <Group top={sectionHeaderHeight}>
-                <TimelineHeader
-                  fill={indonesiaColor}
-                  fontSize={sectionHeaderHeight}
-                >
-                  Activities in Indonesia
-                </TimelineHeader>
-                <g transform={`translate(0,${getRowY(2, 0)})`}>
+                          {topic?.name}
+                        </PointLabel>
+                      ))}
+                    </Group>
+                  </g>
+                </Group>
+              </g>
+              <g id="itcEvents" transform={`translate(0 ${getSectionY(1)})`}>
+                <Group top={sectionHeaderHeight}>
                   <TimelineHeader
                     fill={indonesiaColor}
-                    fontWeight={"bold"}
-                    fontSize={rowHeaderHeight}
+                    fontSize={sectionHeaderHeight}
                   >
-                    Projects
+                    Activities in Indonesia
                   </TimelineHeader>
-                  <Group top={rowHeaderHeight}>
-                    {projectEvents.map((e) => (
-                      <EventPeriod
-                        key={nanoid()}
-                        dateStart={e.dateStart}
-                        dateEnd={e.dateEnd ?? new Date()}
-                        xScale={xScale}
-                        yOffset={projectsYScale(e.yOffset) ?? 0}
-                        height={2}
-                        fill={indonesiaColor}
-                      >
-                        {e.data?.projectPartner && (
-                          <g transform="translate(-6 0)">
-                            <circle r={4} fill={indonesiaColor} />
-                            <text
-                              textAnchor="middle"
-                              dy={6 / 2.5}
-                              fontWeight={"bold"}
-                              fill={"white"}
-                            >
-                              {partnersScale(
-                                (e.data?.projectPartner as string) ?? ""
-                              )}
-                            </text>
-                          </g>
-                        )}
-                      </EventPeriod>
-                    ))}
-                  </Group>
-                </g>
-
-                <g transform={`translate(0 ${getRowY(2, 1)})`}>
-                  <TimelineHeader
-                    fill={indonesiaColor}
-                    fontWeight={"bold"}
-                    fontSize={rowHeaderHeight}
-                  >
-                    Staff travels
-                  </TimelineHeader>
-                  <Group top={rowHeaderHeight}>
-                    {btorEvents.map((e) => (
-                      <EventPeriod
-                        key={nanoid()}
-                        dateStart={e.dateStart}
-                        dateEnd={e.dateEnd ?? new Date()}
-                        xScale={xScale}
-                        yOffset={0}
-                        height={2}
-                        fill={indonesiaColor}
-                        fillOpacity={0.2}
-                      />
-                    ))}
-                    <g transform={`translate(0 ${tlHeights.itc[1] / -2} )`}>
-                      {longTermMissionEvents.map((e) => (
+                  <g transform={`translate(0,${getRowY(2, 0)})`}>
+                    <TimelineHeader
+                      fill={indonesiaColor}
+                      fontWeight={"bold"}
+                      fontSize={rowHeaderHeight}
+                    >
+                      Projects
+                    </TimelineHeader>
+                    <Group top={rowHeaderHeight}>
+                      {projectEvents.map((e) => (
                         <EventPeriod
                           key={nanoid()}
                           dateStart={e.dateStart}
                           dateEnd={e.dateEnd ?? new Date()}
                           xScale={xScale}
-                          yOffset={ltmYScale(e.yOffset) ?? 0}
+                          yOffset={projectsYScale(e.yOffset) ?? 0}
+                          height={2}
+                          fill={indonesiaColor}
+                        >
+                          {e.data?.projectPartner && (
+                            <g transform="translate(-6 0)">
+                              <circle r={4} fill={indonesiaColor} />
+                              <text
+                                textAnchor="middle"
+                                dy={6 / 2.5}
+                                fontWeight={"bold"}
+                                fill={"white"}
+                              >
+                                {partnersScale(
+                                  (e.data?.projectPartner as string) ?? ""
+                                )}
+                              </text>
+                            </g>
+                          )}
+                        </EventPeriod>
+                      ))}
+                    </Group>
+                  </g>
+
+                  <g transform={`translate(0 ${getRowY(2, 1)})`}>
+                    <TimelineHeader
+                      fill={indonesiaColor}
+                      fontWeight={"bold"}
+                      fontSize={rowHeaderHeight}
+                    >
+                      Staff travels
+                    </TimelineHeader>
+                    <Group top={rowHeaderHeight}>
+                      {btorEvents.map((e) => (
+                        <EventPeriod
+                          key={nanoid()}
+                          dateStart={e.dateStart}
+                          dateEnd={e.dateEnd ?? new Date()}
+                          xScale={xScale}
+                          yOffset={0}
                           height={2}
                           fill={indonesiaColor}
                           fillOpacity={0.2}
                         />
                       ))}
-                    </g>
-                  </Group>
-                </g>
-
-                <g transform={`translate(0 ${getRowY(2, 2)})`}>
-                  <TimelineHeader
-                    fill={indonesiaColor}
-                    fontWeight={"bold"}
-                    fontSize={rowHeaderHeight}
-                  >
-                    Graduates & PhDs
-                  </TimelineHeader>
-                  <Group top={rowHeaderHeight}>
-                    {examEvents.map((e) => {
-                      const barWidth = width / 100;
-                      const height = (e.size ?? 0) / 3;
-                      return (
-                        <rect
-                          key={nanoid()}
-                          width={barWidth}
-                          height={height}
-                          x={xScale(e.dateStart) - barWidth / 2}
-                          y={height / -2}
-                          rx={1}
-                          fill={indonesiaColor}
-                        />
-                      );
-                    })}
-                    {phdGraduatesByYear
-                      .filter((d) => d.promotionYear)
-                      .map((d) => {
-                        const r = 2;
-                        const gap = r * 3;
-                        return range(0, d._count._all).map((_, idx) => {
-                          const hasEvenChilds = d._count._all % 2 === 0;
-                          const offset = hasEvenChilds ? gap / -2 : 0;
-                          const direction = idx % 2 ? 1 : -1;
-                          return (
-                            <circle
-                              key={nanoid()}
-                              r={r}
-                              cx={xScale(new Date(d.promotionYear + ""))}
-                              cy={offset + Math.ceil(idx / 2) * gap * direction}
-                              stroke={"black"}
-                              strokeWidth={1}
-                              fill={"white"}
-                            />
-                          );
-                        });
-                      })}
-                  </Group>
-                </g>
-              </Group>
-            </g>
-            <g id="annotations">
-              {!isSSR && (
-                <g id="annotation-travels">
-                  <g
-                    textAnchor="center"
-                    transform={`translate(${width / 2 + width / 10}, 370)`}
-                  >
-                    <Text fontFamily="Fraunces" fontWeight={"bold"}>
-                      Travels over time
-                    </Text>
-                    <Text
-                      verticalAnchor={"start"}
-                      width={max([width / 2, 300])}
-                      y={2}
-                    >
-                      The travels were comparatively long in the beginning and
-                      got much shorter in the current century. Darker shades of
-                      red indicate overlapping travels.
-                    </Text>
+                      <g transform={`translate(0 ${tlHeights.itc[1] / -2} )`}>
+                        {longTermMissionEvents.map((e) => (
+                          <EventPeriod
+                            key={nanoid()}
+                            dateStart={e.dateStart}
+                            dateEnd={e.dateEnd ?? new Date()}
+                            xScale={xScale}
+                            yOffset={ltmYScale(e.yOffset) ?? 0}
+                            height={2}
+                            fill={indonesiaColor}
+                            fillOpacity={0.2}
+                          />
+                        ))}
+                      </g>
+                    </Group>
                   </g>
-                  <LeaderLine
-                    sourcePos={new Vector2(xScale(new Date("2002")), 400)}
-                    targetPos={new Vector2(xScale(new Date("1990")), 418)}
-                    orientation="vertical"
-                    stroke="black"
-                    strokeWidth={0.5}
-                  />
-                  <LeaderLine
-                    sourcePos={new Vector2(xScale(new Date("2002")), 400)}
-                    targetPos={new Vector2(xScale(new Date("2010")), 425)}
-                    orientation="vertical"
-                    stroke="black"
-                    strokeWidth={0.5}
-                  />
-                </g>
-              )}
-            </g>
-          </svg>
-        </div>
-        <h2>Indonesia</h2>
-        <LocatorMap
-          neCountriesTopoJson={neCountries}
-          highlight={["IDN"]}
-          width={500}
-          markers={[
-            {
-              lng: 106.5,
-              lat: -6,
-              fill: "red",
-              labelColor: "white",
-              label: "A",
-              fontSize: 10,
-            },
-            {
-              lng: 106.8,
-              lat: -6.5,
-              fill: "darkred",
-              labelColor: "white",
-              fontSize: 10,
-              label: "B",
-            },
-            {
-              lng: 110,
-              lat: -7.5,
-              fill: "red",
-              labelColor: "white",
-              label: "C",
-              fontSize: 10,
-            },
-          ]}
-        />
-      </main>
+
+                  <g transform={`translate(0 ${getRowY(2, 2)})`}>
+                    <TimelineHeader
+                      fill={indonesiaColor}
+                      fontWeight={"bold"}
+                      fontSize={rowHeaderHeight}
+                    >
+                      Graduates & PhDs
+                    </TimelineHeader>
+                    <Group top={rowHeaderHeight}>
+                      {examEvents.map((e) => {
+                        const barWidth = width / 100;
+                        const height = (e.size ?? 0) / 3;
+                        return (
+                          <rect
+                            key={nanoid()}
+                            width={barWidth}
+                            height={height}
+                            x={xScale(e.dateStart) - barWidth / 2}
+                            y={height / -2}
+                            rx={1}
+                            fill={indonesiaColor}
+                          />
+                        );
+                      })}
+                      {phdGraduatesByYear
+                        .filter((d) => d.promotionYear)
+                        .map((d) => {
+                          const r = 2;
+                          const gap = r * 3;
+                          return range(0, d._count._all).map((_, idx) => {
+                            const hasEvenChilds = d._count._all % 2 === 0;
+                            const offset = hasEvenChilds ? gap / -2 : 0;
+                            const direction = idx % 2 ? 1 : -1;
+                            return (
+                              <circle
+                                key={nanoid()}
+                                r={r}
+                                cx={xScale(new Date(d.promotionYear + ""))}
+                                cy={
+                                  offset + Math.ceil(idx / 2) * gap * direction
+                                }
+                                stroke={"black"}
+                                strokeWidth={1}
+                                fill={"white"}
+                              />
+                            );
+                          });
+                        })}
+                    </Group>
+                  </g>
+                </Group>
+              </g>
+              <g id="annotations">
+                {!isSSR && (
+                  <g id="annotation-travels">
+                    <g
+                      textAnchor="center"
+                      transform={`translate(${width / 2 + width / 10}, 370)`}
+                    >
+                      <Text fontFamily="Fraunces" fontWeight={"bold"}>
+                        Travels over time
+                      </Text>
+                      <Text
+                        verticalAnchor={"start"}
+                        width={max([width / 2, 300])}
+                        y={2}
+                      >
+                        The travels were comparatively long in the beginning and
+                        got much shorter in the current century. Darker shades
+                        of red indicate overlapping travels.
+                      </Text>
+                    </g>
+                    <LeaderLine
+                      sourcePos={new Vector2(xScale(new Date("2002")), 400)}
+                      targetPos={new Vector2(xScale(new Date("1990")), 418)}
+                      orientation="vertical"
+                      stroke="black"
+                      strokeWidth={0.5}
+                    />
+                    <LeaderLine
+                      sourcePos={new Vector2(xScale(new Date("2002")), 400)}
+                      targetPos={new Vector2(xScale(new Date("2010")), 425)}
+                      orientation="vertical"
+                      stroke="black"
+                      strokeWidth={0.5}
+                    />
+                  </g>
+                )}
+              </g>
+            </svg>
+          </div>
+          <h2>Indonesia</h2>
+          <LocatorMap
+            neCountriesTopoJson={neCountries}
+            highlight={["IDN"]}
+            width={500}
+            markers={[
+              {
+                lng: 106.5,
+                lat: -6,
+                fill: "red",
+                labelColor: "white",
+                label: "A",
+                fontSize: 10,
+              },
+              {
+                lng: 106.8,
+                lat: -6.5,
+                fill: "darkred",
+                labelColor: "white",
+                fontSize: 10,
+                label: "B",
+              },
+              {
+                lng: 110,
+                lat: -7.5,
+                fill: "red",
+                labelColor: "white",
+                label: "C",
+                fontSize: 10,
+              },
+            ]}
+          />
+        </main>
+      </Container>
       <Footer />
     </>
   );

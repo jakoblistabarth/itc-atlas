@@ -1,3 +1,5 @@
+/** @jsxImportSource theme-ui */
+
 import type { FC, SVGProps } from "react";
 import { Vector2 } from "three";
 import Delft1 from "/public/images/building-kanaalweg.svg";
@@ -77,10 +79,10 @@ const Building: FC<Props> = ({
         <style>
           {`
           svg.building g,
-          svg.building path[stroke="#000"]  {
+          svg.building *[stroke="#000"]  {
                 stroke: ${color};
             }
-            svg.building svg path[opacity="0.1"],
+            svg.building svg *[opacity="0.1"],
             svg.building g[opacity="0.1"] {
                 fill: ${color};
                 display: ${shadow ? "block" : "none"}

@@ -2,11 +2,10 @@ import Wordcloud from "../../components/charts/WordCloud";
 import type { GetStaticProps, NextPage } from "next";
 import Head from "next/head";
 import Footer from "../../components/Footer";
-import Heading, { Headings } from "../../components/Heading";
+import { Container, Heading } from "theme-ui";
 import LocatorMap from "../../components/map/LocatorMap";
 import getCountries from "../../lib/data/getCountries";
 import getCountryCodes from "../../lib/data/queries/country/getCountryCodes";
-import styles from "../../styles/Home.module.css";
 import { SharedPageProps } from "../../types/Props";
 import getTextFromFile from "../../lib/data/getTextFromFile";
 import HierarchyTree, {
@@ -29,17 +28,20 @@ const Naivasha: NextPage<Props> = ({
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <main className={styles.main}>
-        <Heading Tag={Headings.H1}>Naivasha Region</Heading>
-        <LocatorMap
-          neCountriesTopoJson={neCountriesTopoJson}
-          highlight={["KEN"]}
-        />
-        <Heading Tag={Headings.H2}>Theory of Change</Heading>
-        <HierarchyTree height={600} hierarchy={hierarchy} />
-        <Heading Tag={Headings.H2}>Wordcloud</Heading>
-        <Wordcloud width={960} height={400} text={words} />
-      </main>
+      <Container>
+        <main>
+          <Heading as="h1">Naivasha Region</Heading>
+          <LocatorMap
+            neCountriesTopoJson={neCountriesTopoJson}
+            highlight={["KEN"]}
+          />
+          <Heading as="h2">Theory of Change</Heading>
+          <HierarchyTree height={600} hierarchy={hierarchy} />
+          <Heading as="h2">Wordcloud</Heading>
+          <Wordcloud width={960} height={400} text={words} />
+        </main>
+      </Container>
+
       <Footer />
     </>
   );

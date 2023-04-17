@@ -1,6 +1,10 @@
-import "../styles/globals.css";
 import type { AppProps } from "next/app";
 import { SWRConfig } from "swr";
+import { ThemeProvider } from "theme-ui";
+
+import { theme } from "../styles/theme";
+import "@fontsource/fraunces";
+import "@fontsource/inter";
 
 const MyApp = ({ Component, pageProps }: AppProps) => (
   <SWRConfig
@@ -9,7 +13,9 @@ const MyApp = ({ Component, pageProps }: AppProps) => (
         fetch(resource).then((res) => res.json()),
     }}
   >
-    <Component {...pageProps} />
+    <ThemeProvider theme={theme}>
+      <Component {...pageProps} />
+    </ThemeProvider>
   </SWRConfig>
 );
 

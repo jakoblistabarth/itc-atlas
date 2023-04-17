@@ -8,7 +8,7 @@ import type { GetStaticProps, NextPage } from "next";
 import Head from "next/head";
 import { Vector2 } from "three";
 import Footer from "../../components/Footer";
-import Heading, { Headings } from "../../components/Heading";
+import { Container, Heading } from "theme-ui";
 import BaseLayer from "../../components/map/BaseLayer";
 import PointSymbol from "../../components/map/PointSymbol";
 import ProportionalCircleLegend from "../../components/map/ProportionalCircleLegend";
@@ -18,7 +18,6 @@ import getCountries from "../../lib/data/getCountries";
 import getCountryWithEmployeeCount, {
   CountryWithEmployeeCount,
 } from "../../lib/data/queries/country/getCountryWithEmployeeCount";
-import styles from "../../styles/Home.module.css";
 import { NeCountriesTopoJson } from "../../types/NeTopoJson";
 import { SharedPageProps } from "../../types/Props";
 
@@ -84,32 +83,38 @@ const StaffOrigin: NextPage<Props> = ({
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <main className={styles.main}>
-        <Heading Tag={Headings.H1}>ITC&apos;s employee origin</Heading>
-        <svg width={dimension.width} height={dimension.height}>
-          <BaseLayer countries={neCountriesTopoJson} projection={projection} />
-          <g id="symbols">
-            {points.features.map((point) => {
-              const pos = projection(point.geometry.coordinates);
-              return (
-                <PointSymbol
-                  key={nanoid()}
-                  position={new Vector2(pos[0], pos[1])}
-                  radius={scale(point.properties?.employeeCount)}
-                />
-              );
-            })}
-          </g>
-          <ProportionalCircleLegend
-            data={points.features.map(
-              (feature) => feature.properties?.employeeCount
-            )}
-            scaleRadius={scale}
-            title={"Staff members per Country"}
-            unitLabel={"Staff member"}
-          />
-        </svg>
-      </main>
+      <Container>
+        <main>
+          <Heading as="h1">ITC&apos;s employee origin</Heading>
+          <svg width={dimension.width} height={dimension.height}>
+            <BaseLayer
+              countries={neCountriesTopoJson}
+              projection={projection}
+            />
+            <g id="symbols">
+              {points.features.map((point) => {
+                const pos = projection(point.geometry.coordinates);
+                return (
+                  <PointSymbol
+                    key={nanoid()}
+                    position={new Vector2(pos[0], pos[1])}
+                    radius={scale(point.properties?.employeeCount)}
+                  />
+                );
+              })}
+            </g>
+            <ProportionalCircleLegend
+              data={points.features.map(
+                (feature) => feature.properties?.employeeCount
+              )}
+              scaleRadius={scale}
+              title={"Staff members per Country"}
+              unitLabel={"Staff member"}
+            />
+          </svg>
+        </main>
+      </Container>
+
       <Footer />
     </>
   );

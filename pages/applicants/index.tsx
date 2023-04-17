@@ -1,12 +1,11 @@
 import type { NextPage } from "next";
 import Head from "next/head";
 import Footer from "../../components/Footer";
-import Heading, { Headings } from "../../components/Heading";
+import { Container, Heading, Grid, Text } from "theme-ui";
 import SummaryTable from "../../components/SummaryTable";
-import styles from "../../styles/Home.module.css";
 import useSWR from "swr";
 import { useRouter } from "next/router";
-import LinkFramed from "../../components/LinkFramed";
+import CardLink from "../../components/CardLink";
 import * as aq from "arquero";
 
 const ApplicantsOverview: NextPage = () => {
@@ -21,22 +20,22 @@ const ApplicantsOverview: NextPage = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <main className={styles.main}>
-        <Heading Tag={Headings.H1}>ITC&apos;s applications</Heading>
-        <p className={styles.description}>
-          Insights into ITC&apos;s applicants.
-        </p>
+      <Container>
+        <main>
+          <Heading as="h1">ITC&apos;s applications</Heading>
+          <Text variant="teaser">Insights into ITC&apos;s applicants.</Text>
 
-        <div className={styles.grid}>
-          <LinkFramed href={`${route}/origin-country`}>
-            Origin by Country
-          </LinkFramed>
-        </div>
+          <Grid variant="navigation">
+            <CardLink href={`${route}/origin-country`}>
+              <Heading as="h2">Origin by Country</Heading>
+            </CardLink>
+          </Grid>
 
-        {error && <div>failed to load</div>}
-        {isLoading && <div>Loading …</div>}
-        {!isLoading && !error && <SummaryTable data={aq.from(data)} />}
-      </main>
+          {error && <div>failed to load</div>}
+          {isLoading && <div>Loading …</div>}
+          {!isLoading && !error && <SummaryTable data={aq.from(data)} />}
+        </main>
+      </Container>
 
       <Footer />
     </>

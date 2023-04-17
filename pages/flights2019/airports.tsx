@@ -2,9 +2,8 @@ import * as d3 from "d3";
 import { geoBertin1953 } from "d3-geo-projection";
 import type { GetStaticProps, NextPage } from "next";
 import Head from "next/head";
-import styles from "../../styles/Home.module.css";
 import { FeatureCollection, Point } from "geojson";
-import Heading, { Headings } from "../../components/Heading";
+import { Container, Heading } from "theme-ui";
 import getCountries from "../../lib/data/getCountries";
 import BaseLayer from "../../components/map/BaseLayer";
 import PointLabel from "../../components/map/PointLabel";
@@ -22,6 +21,7 @@ import { TooltipTrigger } from "../../components/Tooltip/TooltipTrigger";
 import TooltipContent from "../../components/Tooltip/TooltipContent";
 import { fInt } from "../../lib/utilities/formaters";
 import ProportionalCircleLegend from "../../components/map/ProportionalCircleLegend";
+import Footer from "../../components/Footer";
 
 type Props = {
   airports: FeatureCollection<Point, AirportPropertiesWithCount>;
@@ -55,59 +55,67 @@ const Airports: NextPage<Props> = ({ airports, neCountriesTopoJson }) => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <main className={styles.main}>
-        <Heading Tag={Headings.H1}>Airports</Heading>
-        <svg width={1020} height={600}>
-          <BaseLayer countries={neCountriesTopoJson} projection={projection} />
-          {airportsGeo.features.map((airport) => {
-            const coords = projection(airport.geometry.coordinates);
-            return (
-              <Tooltip key={nanoid()}>
-                <TooltipContent>
-                  <strong>{airport.properties?.["iata_code"]}</strong>
-                  &nbsp;{airport.properties?.name}
-                  <br />
-                  {fInt(airport.properties?.value)} flights (incoming/outgoing)
-                </TooltipContent>
-                <TooltipTrigger asChild>
-                  <g>
-                    <PointSymbol
-                      position={new Vector2(coords[0], coords[1])}
-                      radius={scale(airport.properties?.value)}
-                      {...defaultTheme.symbol}
-                    />
-                  </g>
-                </TooltipTrigger>
-              </Tooltip>
-            );
-          })}
-          {airportsGeo.features.slice(0, 5).map((airport) => {
-            const coords = projection(airport.geometry.coordinates);
-            return (
-              <PointLabel
-                key={nanoid()}
-                position={new Vector2(coords[0], coords[1])}
-              >
-                <tspan fontWeight={"bold"}>
-                  {airport.properties?.["iata_code"]}
-                </tspan>
-                ({airport.properties?.value})
-              </PointLabel>
-            );
-          })}
-          <g>
-            <ProportionalCircleLegend
-              data={airports.features.map(
-                (feature) => feature.properties?.value
-              )}
-              scaleRadius={scale}
-              title={"Flights per Airport"}
-              unitLabel={"flight"}
-              showFunction={false}
+      <Container>
+        <main>
+          <Heading as="h1">Airports</Heading>
+          <svg width={1020} height={600}>
+            <BaseLayer
+              countries={neCountriesTopoJson}
+              projection={projection}
             />
-          </g>
-        </svg>
-      </main>
+            {airportsGeo.features.map((airport) => {
+              const coords = projection(airport.geometry.coordinates);
+              return (
+                <Tooltip key={nanoid()}>
+                  <TooltipContent>
+                    <strong>{airport.properties?.["iata_code"]}</strong>
+                    &nbsp;{airport.properties?.name}
+                    <br />
+                    {fInt(airport.properties?.value)} flights
+                    (incoming/outgoing)
+                  </TooltipContent>
+                  <TooltipTrigger asChild>
+                    <g>
+                      <PointSymbol
+                        position={new Vector2(coords[0], coords[1])}
+                        radius={scale(airport.properties?.value)}
+                        {...defaultTheme.symbol}
+                      />
+                    </g>
+                  </TooltipTrigger>
+                </Tooltip>
+              );
+            })}
+            {airportsGeo.features.slice(0, 5).map((airport) => {
+              const coords = projection(airport.geometry.coordinates);
+              return (
+                <PointLabel
+                  key={nanoid()}
+                  position={new Vector2(coords[0], coords[1])}
+                >
+                  <tspan fontWeight={"bold"}>
+                    {airport.properties?.["iata_code"]}
+                  </tspan>
+                  ({airport.properties?.value})
+                </PointLabel>
+              );
+            })}
+            <g>
+              <ProportionalCircleLegend
+                data={airports.features.map(
+                  (feature) => feature.properties?.value
+                )}
+                scaleRadius={scale}
+                title={"Flights per Airport"}
+                unitLabel={"flight"}
+                showFunction={false}
+              />
+            </g>
+          </svg>
+        </main>
+      </Container>
+
+      <Footer />
     </>
   );
 };

@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="9" height="10" viewBox="0 0 9 10">
+  <g id="Layer_1" data-name="Layer 1">
+    <g>
+      <g>
+        <path d="m2.11,8.34h0c1.07,0,1.93-.86,1.93-1.93v-2.77s-.03-.06-.06-.06h-1.87s-.06.03-.06.06v4.65s.03.06.06.06Z" fill="none" stroke="#000" stroke-linecap="round" stroke-miterlimit="10" stroke-width=".25"/>
+        <path d="m6.95,8.34h-.14c-2.63,0-4.76-2.13-4.76-4.76h0s4.9,0,4.9,0v4.76Z" fill="#fff" stroke="#000" stroke-linecap="round" stroke-miterlimit="10" stroke-width=".25"/>
+        <g>
+          <line x1="3.78" y1="7.14" x2="3.78" y2="8.89" fill="none" stroke="#000" stroke-linecap="round" stroke-miterlimit="10" stroke-width=".25"/>
+          <line x1="5.22" y1="7.14" x2="5.22" y2="8.89" fill="none" stroke="#000" stroke-linecap="round" stroke-miterlimit="10" stroke-width=".25"/>
+          <line x1="3.5" y1="8.89" x2="5.5" y2="8.89" fill="none" stroke="#000" stroke-linecap="round" stroke-miterlimit="10" stroke-width=".25"/>
+        </g>
+        <path d="m6.95,8.34h0c-1.35,0-2.45-1.1-2.45-2.45v-2.31s2.45,0,2.45,0v4.76Z" fill="#fff" stroke="#000" stroke-linecap="round" stroke-miterlimit="10" stroke-width=".25"/>
+        <path d="m6.2,6.3v1.11c-.56-.28-.95-.86-.95-1.53v-1.56" fill="none" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width=".25"/>
+        <path d="m5.09,1.13h-1.18c-1.03,0-1.86.83-1.86,1.86v.59c0,1.35,1.1,2.45,2.45,2.45h0c1.35,0,2.45-1.1,2.45-2.45v-.59c0-1.03-.83-1.86-1.86-1.86Z" fill="#fff" stroke="#000" stroke-linecap="round" stroke-miterlimit="10" stroke-width=".25"/>
+        <path d="m4.5,3.58c0-.96-.78-1.73-1.73-1.73" fill="none" stroke="#000" stroke-linecap="round" stroke-miterlimit="10" stroke-width=".25"/>
+        <path d="m4.5,3.58c0-.96.78-1.73,1.73-1.73" fill="none" stroke="#000" stroke-linecap="round" stroke-miterlimit="10" stroke-width=".25"/>
+        <g>
+          <line x1="3.4" y1="3.42" x2="3.4" y2="3.73" fill="none" stroke="#000" stroke-linecap="round" stroke-miterlimit="10" stroke-width=".25"/>
+          <line x1="5.6" y1="3.42" x2="5.6" y2="3.73" fill="none" stroke="#000" stroke-linecap="round" stroke-miterlimit="10" stroke-width=".25"/>
+        </g>
+      </g>
+      <path d="m5.09,1.13h-1.18c-1.03,0-1.86.83-1.86,1.86v.59h0s0,.03,0,.05c0,0,0,0,0,0v4.65s.03.06.06.06c.76,0,1.41-.44,1.72-1.08.82.66,1.85,1.08,2.98,1.08h.14V2.99c0-1.03-.83-1.86-1.86-1.86Z" fill="none" stroke="#1d1d1b" stroke-linecap="round" stroke-linejoin="round" stroke-width=".5"/>
+    </g>
+    <path d="m4.61,4.88l.17-.3c.05-.09-.01-.19-.11-.19h-.35c-.1,0-.16.11-.11.19l.17.3c.05.09.17.09.22,0Z" fill="none" stroke="#000" stroke-linecap="round" stroke-miterlimit="10" stroke-width=".25"/>
+  </g>
+  <g id="Isolation_Mode" data-name="Isolation Mode">
+    <path d="m1.9.98c0,.48.39.87.87.87" fill="none" stroke="#000" stroke-miterlimit="10" stroke-width=".25"/>
+    <path d="m7.1.98c0,.48-.39.87-.87.87" fill="none" stroke="#000" stroke-miterlimit="10" stroke-width=".25"/>
+  </g>
+</svg>

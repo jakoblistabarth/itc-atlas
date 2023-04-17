@@ -1,10 +1,9 @@
 import type { GetStaticProps, NextPage } from "next";
 import Head from "next/head";
-import styles from "../../styles/Home.module.css";
 import getTravels from "../../lib/data/getTravels";
 import SummaryTable from "../../components/SummaryTable";
 import Footer from "../../components/Footer";
-import Heading, { Headings } from "../../components/Heading";
+import { Container, Heading, Text } from "theme-ui";
 import type { Travel } from "../../types/Travels";
 import * as aq from "arquero";
 
@@ -21,15 +20,17 @@ const Travels: NextPage<Props> = ({ travels }) => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <main className={styles.main}>
-        <Heading Tag={Headings.H1}>Travels</Heading>
+      <Container>
+        <main>
+          <Heading as="h1">Travels</Heading>
 
-        <p className={styles.description}>
-          Insights into ITC&apos;s travels around the globe.
-        </p>
+          <Text variant="teaser">
+            Insights into ITC&apos;s travels around the globe.
+          </Text>
 
-        <SummaryTable data={aq.from(travels)} />
-      </main>
+          <SummaryTable data={aq.from(travels)} />
+        </main>
+      </Container>
 
       <Footer />
     </>

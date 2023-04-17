@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="Isolation_Mode" data-name="Isolation Mode" xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 10 10">
+  <g>
+    <g>
+      <rect x=".05" y="3.7" width="7.41" height="1.87" transform="translate(-2.18 4.01) rotate(-45)" fill="#fff" stroke="#000" stroke-linecap="round" stroke-miterlimit="10" stroke-width=".25"/>
+      <line x1="1.13" y1="7.26" x2="6.37" y2="2.01" fill="#fff" stroke="#000" stroke-miterlimit="10" stroke-width=".25"/>
+      <path d="m5.42,4.8l-1.51,1.51-1.2-1.2c-.42-.42-.42-1.09,0-1.51h0c.42-.42,1.09-.42,1.51,0l1.2,1.2Z" fill="#fff" stroke="#000" stroke-linecap="round" stroke-miterlimit="10" stroke-width=".25"/>
+      <polygon points="5.23 4.98 4.1 6.12 4.37 7.26 6.37 5.26 5.23 4.98" fill="#fff" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width=".25"/>
+      <line x1="2.71" y1="3.6" x2="3.58" y2="4.46" fill="#fff" stroke="#000" stroke-miterlimit="10" stroke-width=".25"/>
+      <line x1="3.53" y1="5.12" x2="3.89" y2="5.48" fill="#fff" stroke="#000" stroke-miterlimit="10" stroke-width=".25"/>
+      <line x1="3.04" y1="4.63" x2="3.19" y2="4.78" fill="#fff" stroke="#000" stroke-miterlimit="10" stroke-width=".25"/>
+      <line x1="3.76" y1="4.64" x2="3.9" y2="4.79" fill="#fff" stroke="#000" stroke-miterlimit="10" stroke-width=".25"/>
+    </g>
+    <path d="m4.67,5.55l.75-.75-.25-.25,1.87-1.87-1.32-1.32-1.98,1.98c-.35-.09-.74-.02-1.02.26-.28.28-.35.66-.26,1.02l-1.98,1.98,1.32,1.32,1.87-1.87.25.25.18-.18.27,1.14,2-2-1.14-.27-.57.57Z" fill="none" stroke="#1d1d1b" stroke-linejoin="round" stroke-width=".5"/>
+  </g>
+  <g>
+    <polyline points="6.13 7.02 7.18 8.57 7.64 7.61" fill="none" stroke="#000" stroke-linejoin="round" stroke-width=".25"/>
+    <polyline points="6.71 7.12 6.12 7.01 6 7.6" fill="none" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width=".25"/>
+  </g>
+  <line x1="8.62" y1="8.57" x2="8.18" y2="8.57" fill="#fff" stroke="#000" stroke-miterlimit="10" stroke-width=".5"/>
+  <line x1="3.18" y1="8.57" x2="6.18" y2="8.57" fill="#fff" stroke="#000" stroke-miterlimit="10" stroke-width=".5"/>
+  <g>
+    <line x1="8.46" y1="5.86" x2="8.46" y2="4.71" fill="none" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width=".25"/>
+    <line x1="8.46" y1="5.86" x2="9.36" y2="5.15" fill="none" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width=".25"/>
+    <line x1="8.46" y1="5.86" x2="9.58" y2="6.12" fill="none" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width=".25"/>
+    <line x1="8.46" y1="5.86" x2="8.96" y2="6.9" fill="none" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width=".25"/>
+    <line x1="8.46" y1="5.86" x2="7.96" y2="6.9" fill="none" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width=".25"/>
+    <line x1="8.46" y1="5.86" x2="7.33" y2="6.12" fill="none" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width=".25"/>
+    <line x1="8.46" y1="5.86" x2="7.56" y2="5.15" fill="none" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width=".25"/>
+  </g>
+  <circle cx="8.46" cy="5.87" r=".73" fill="#fff" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width=".25"/>
+</svg>

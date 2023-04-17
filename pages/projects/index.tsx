@@ -1,19 +1,17 @@
 import type { NextPage } from "next";
 import Head from "next/head";
-import styles from "../../styles/Home.module.css";
 import Footer from "../../components/Footer";
-import Heading, { Headings } from "../../components/Heading";
-import LinkFramed from "../../components/LinkFramed";
+import CardLink from "../../components/CardLink";
 import { nanoid } from "nanoid";
 import * as aq from "arquero";
 import SummaryTable from "../../components/SummaryTable";
-
 import { AgGridReact } from "ag-grid-react";
 import "ag-grid-community/styles/ag-grid.css";
 import "ag-grid-community/styles/ag-theme-material.css";
 import { ColDef } from "ag-grid-community";
 import { useRouter } from "next/router";
 import useSWR from "swr";
+import { Container, Text, Grid, Heading } from "theme-ui";
 
 const Travels: NextPage = () => {
   const { data, error, isLoading } = useSWR("/api/data/project/");
@@ -68,40 +66,37 @@ const Travels: NextPage = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <main className={styles.main}>
-        <Heading Tag={Headings.H1}>Projects</Heading>
+      <Container>
+        <main>
+          <Heading as="h1">Projects</Heading>
 
-        <p className={styles.description}>
-          Insights into ITC&apos;s projects around the globe.
-        </p>
+          <Text>Insights into ITC&apos;s projects around the globe.</Text>
 
-        <div className={styles.grid}>
-          {links.map((l) => (
-            <LinkFramed key={nanoid()} href={l.href}>
-              {l.children}
-            </LinkFramed>
-          ))}
-        </div>
+          <Grid variant={"navigation"}>
+            {links.map((l) => (
+              <CardLink key={nanoid()} href={l.href}>
+                <Heading as="h2">{l.children}</Heading>
+              </CardLink>
+            ))}
+          </Grid>
 
-        {error && <div>failed to load</div>}
-        {isLoading && <div>Loading …</div>}
-        {!isLoading && !error && (
-          <>
-            <SummaryTable data={aq.from(data)} />
-            <div
-              className="ag-theme-material"
-              style={{ width: 1280, height: 500 }}
-            >
-              <AgGridReact
-                rowData={data}
-                columnDefs={columnDefs}
-                defaultColDef={defaultColDef}
-                pagination={true}
-              />
-            </div>
-          </>
-        )}
-      </main>
+          {error && <div>failed to load</div>}
+          {isLoading && <div>Loading …</div>}
+          {!isLoading && !error && (
+            <>
+              <SummaryTable data={aq.from(data)} />
+              <div className="ag-theme-material" style={{ height: 500 }}>
+                <AgGridReact
+                  rowData={data}
+                  columnDefs={columnDefs}
+                  defaultColDef={defaultColDef}
+                  pagination={true}
+                />
+              </div>
+            </>
+          )}
+        </main>
+      </Container>
 
       <Footer />
     </>

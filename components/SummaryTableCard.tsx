@@ -1,8 +1,9 @@
-import styles from "../styles/summarytable.module.css";
+/** @jsxImportSource theme-ui */
+
 import { FC } from "react";
 import * as d3 from "d3";
 import { colorMap } from "../lib/summarytable/colorMap";
-import Heading, { Headings } from "./Heading";
+import { Heading } from "theme-ui";
 import { fInt } from "../lib/utilities/formaters";
 import { nanoid } from "nanoid";
 import { SummaryTableData } from "../lib/summarytable/getSummaryTableData";
@@ -33,8 +34,8 @@ const SummaryTableCard: FC<SummaryTableCardProps> = ({ data }) => {
     .round(true);
 
   return (
-    <div className={styles.summaryTableCard}>
-      <Heading Tag={Headings.H3} className={Headings.H5}>
+    <div>
+      <Heading as="h3" sx={{ fontSize: 1 }}>
         Dimensions
       </Heading>
       <svg>
