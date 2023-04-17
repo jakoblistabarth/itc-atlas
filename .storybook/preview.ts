@@ -1,4 +1,19 @@
-import "../styles/globals.css";
+import { ThemeProvider } from "theme-ui";
+import { withThemeFromJSXProvider } from "@storybook/addon-styling";
+import { theme } from "../styles/theme";
+import "@fontsource/fraunces";
+import "@fontsource/inter";
+
+export const decorators = [
+  //TODO: add switcher for theme-ui color modes
+  withThemeFromJSXProvider({
+    themes: {
+      default: theme,
+    },
+    defaultTheme: "default",
+    Provider: ThemeProvider,
+  }),
+];
 
 export const parameters = {
   actions: { argTypesRegex: "^on[A-Z].*" },
@@ -56,5 +71,3 @@ export const argTypes = {
     return acc;
   }, {}),
 };
-
-console.log(argTypes);

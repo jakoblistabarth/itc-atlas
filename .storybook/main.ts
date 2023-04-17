@@ -9,7 +9,7 @@ const config: StorybookConfig = {
     "@storybook/addon-links",
     "@storybook/addon-essentials",
     "@storybook/addon-interactions",
-    "storybook-css-modules-preset",
+    "@storybook/addon-styling",
     {
       name: "storybook-addon-swc",
       options: {
