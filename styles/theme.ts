@@ -9,7 +9,7 @@ export const theme: Theme = {
     background: "#fff",
     primary: itc_green,
     secondary: itc_blue,
-    muted: "rgb(240, 255, 255)",
+    muted: "rgb(235, 255, 255)",
   },
   fonts: {
     body: '"Inter", system-ui, sans-serif',
