@@ -11,7 +11,7 @@ import "ag-grid-community/styles/ag-theme-material.css";
 import { ColDef } from "ag-grid-community";
 import { useRouter } from "next/router";
 import useSWR from "swr";
-import { Container, Text, Grid, Heading } from "theme-ui";
+import { Container, Grid, Heading, Paragraph } from "theme-ui";
 
 const Travels: NextPage = () => {
   const { data, error, isLoading } = useSWR("/api/data/project/");
@@ -70,7 +70,9 @@ const Travels: NextPage = () => {
         <main>
           <Heading as="h1">Projects</Heading>
 
-          <Text>Insights into ITC&apos;s projects around the globe.</Text>
+          <Paragraph variant="teaser">
+            Insights into ITC&apos;s projects around the globe.
+          </Paragraph>
 
           <Grid variant={"navigation"}>
             {links.map((l) => (

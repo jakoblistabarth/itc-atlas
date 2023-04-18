@@ -1,20 +1,16 @@
 /** @jsxImportSource theme-ui */
 
 import type { NextPage } from "next";
-import Head from "next/head";
 import Footer from "../components/Footer";
-import { Container, Grid, Heading, Text } from "theme-ui";
-import CardLink from "../components/CardLink";
+import { Box, Container, Heading, Paragraph, Text } from "theme-ui";
 import { nanoid } from "nanoid";
 import Building, { ITClocations } from "../components/Building";
 import { Group } from "@visx/group";
 import useMeasure from "react-use-measure";
 import Link from "../components/Link";
-import IconResearch from "../public/images/icon_research.svg";
-import IconEducation from "../public/images/icon_education.svg";
-import IconProjects from "../public/images/icon_projects.svg";
-import IconIntroduction from "../public/images/icon_introduction.svg";
-import IconAppendix from "../public/images/icon_appendix.svg";
+import ChapterNavigation from "../components/ChapterNavigation";
+import Seo from "../components/Seo";
+import Header from "../components/Header";
 
 const Home: NextPage = () => {
   const links = [
@@ -39,7 +35,7 @@ const Home: NextPage = () => {
       description: "Insight into ITC's activity throughout the decades.",
     },
     {
-      href: "/policies/indonesia",
+      href: "/introduction/indonesia",
       children: "Policies",
       description: "Policy changes framing ITC's work.",
     },
@@ -75,94 +71,84 @@ const Home: NextPage = () => {
 
   return (
     <>
-      <Head>
-        <title>ITC Atlas</title>
-        <meta name="description" content="ITC Atlas" />
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
+      <Seo title="Home" />
+      <Header />
 
       <Container>
         <main>
-          <div
-            sx={{
-              width: "100%",
-              maxWidth: "960px",
-              height: "220px",
-              padding: "1em",
-            }}
-          >
-            <svg
-              ref={heroVizRef}
-              width="100%"
-              height="100%"
-              viewBox={`0 0 ${width} ${height}`}
+          <Box as="section" variant="layout.section">
+            <div
+              sx={{
+                width: "100%",
+                height: "220px",
+                padding: "1em",
+              }}
             >
-              <line
-                x2={"100%"}
-                y1={width / 5.4}
-                y2={width / 5.4}
-                stroke="teal"
-              />
-              {Array.from(ITClocations.entries()).map(([location], i) => {
-                const buildingWith = width / 4;
-                return (
-                  <Group
-                    key={location}
-                    top={buildingWith / 2}
-                    left={buildingWith + (i * buildingWith) / 2}
-                  >
-                    <Building
-                      width={buildingWith}
-                      location={location}
-                      color={"teal"}
-                    />
-                  </Group>
-                );
-              })}
-            </svg>
-          </div>
-          <Heading as="h1">Atlas of the world of ITC</Heading>
-          <Text>The impact of capacity development</Text>
+              <svg
+                ref={heroVizRef}
+                width="100%"
+                height="100%"
+                viewBox={`0 0 ${width} ${height}`}
+              >
+                <line
+                  x2={"100%"}
+                  y1={width / 5.4}
+                  y2={width / 5.4}
+                  stroke="teal"
+                />
+                {Array.from(ITClocations.entries()).map(([location], i) => {
+                  const buildingWith = width / 4;
+                  return (
+                    <Group
+                      key={location}
+                      top={buildingWith / 2}
+                      left={buildingWith + (i * buildingWith) / 2}
+                    >
+                      <Building
+                        width={buildingWith}
+                        location={location}
+                        color={"teal"}
+                      />
+                    </Group>
+                  );
+                })}
+              </svg>
+            </div>
+            <Heading as="h1">Atlas of the world of ITC</Heading>
+            <Text variant="teaser">The impact of capacity development</Text>
+          </Box>
 
-          <Heading as="h2">Chapters</Heading>
-          <Grid variant="navigation">
-            <CardLink href="/introduction">
-              <IconIntroduction width={"2em"} height={"2em"} opacity={0.2} />
-              <Heading as="h3">Introduction</Heading>
-            </CardLink>
-            <CardLink href="/research">
-              <IconResearch width={"2em"} height={"2em"} opacity={0.2} />
-              <Heading as="h3">Chapter Research</Heading>
-            </CardLink>
-            <CardLink href="/education">
-              <IconEducation width={"2em"} height={"2em"} opacity={0.2} />
-              <Heading as="h3">Chapter Education</Heading>
-            </CardLink>
-            <CardLink href="/projects">
-              <IconProjects width={"2em"} height={"2em"} opacity={0.2} />
-              <Heading as="h3">Chapter Projects</Heading>
-            </CardLink>
-            <CardLink href="/appendix">
-              <IconAppendix width={"2em"} height={"2em"} opacity={0.2} />
-              <Heading as="h3">Appendix</Heading>
-            </CardLink>
-          </Grid>
+          <Box as="section" variant="layout.section">
+            <Paragraph>
+              ITC’s mission is capacity development. We apply, share and
+              facilitate the effective use of geo-information and earth
+              observation knowledge and tools for tackling global wicked
+              problems. Our activities in education and research are applied in
+              our knowledge domains of Disaster Resilience, Resource
+              Security,Geohealth, and Geo-Ai.
+            </Paragraph>
+          </Box>
 
-          <Heading as="h2">Quicklinks</Heading>
-          <div
-            sx={{
-              mt: 3,
-              display: "grid",
-              gridTemplateColumns: "repeat(3, 1fr)",
-              gridGap: 2,
-            }}
-          >
-            {links.map((l) => (
-              <Link key={nanoid()} href={l.href}>
-                {l.children}
-              </Link>
-            ))}
-          </div>
+          <ChapterNavigation />
+
+          <Box as="section" variant="layout.section">
+            <Heading as="h2">Quicklinks</Heading>
+            <Paragraph variant="teaser">based on data sources</Paragraph>
+            <div
+              sx={{
+                mt: 3,
+                display: "grid",
+                gridTemplateColumns: "repeat(3, 1fr)",
+                gridGap: 2,
+              }}
+            >
+              {links.map((l) => (
+                <Link key={nanoid()} href={l.href}>
+                  {l.children}
+                </Link>
+              ))}
+            </div>
+          </Box>
         </main>
       </Container>
 

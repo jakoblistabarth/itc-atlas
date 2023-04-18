@@ -1,7 +1,7 @@
 import type { Theme } from "theme-ui";
 
-const itc_green = "#00877C";
-const itc_blue = "#002395";
+export const itc_green = "#00877C";
+export const itc_blue = "#002395";
 
 export const theme: Theme = {
   colors: {
@@ -9,7 +9,7 @@ export const theme: Theme = {
     background: "#fff",
     primary: itc_green,
     secondary: itc_blue,
-    muted: "lightgrey",
+    muted: "rgb(240, 255, 255)",
   },
   fonts: {
     body: '"Inter", system-ui, sans-serif',
@@ -20,8 +20,18 @@ export const theme: Theme = {
   fontWeights: {
     body: 400,
     heading: 400,
+    heavy: 900,
+  },
+  lineHeights: {
+    body: 1.5,
+    heading: 1.125,
+  },
+  letterSpacings: {
+    body: "normal",
+    caps: "0.2em",
   },
   radii: [0, 2, 5, 10, 40],
+  shadows: ["0 0 3px rgba(0,0,0,.2)"],
   sizes: {
     container: 960,
   },
@@ -31,12 +41,26 @@ export const theme: Theme = {
     },
     teaser: {
       fontFamily: "Fraunces",
-      fontSize: 4,
+      fontSize: 3,
+      fontStyle: "italic",
+    },
+    paragraph: {
+      mt: 2,
+      maxWidth: "40em",
     },
   },
   layout: {
     container: {
       pt: 5,
+    },
+    section: {
+      my: 4,
+    },
+    canvasStage: {
+      height: "500px",
+      boxShadow: 0,
+      borderRadius: 2,
+      my: 2,
     },
   },
   grids: {
@@ -53,7 +77,7 @@ export const theme: Theme = {
       transition: "transform .25s",
       p: 3,
       color: "text",
-      boxShadow: "0 0 5px rgba(0, 0, 0, .1)",
+      boxShadow: 0,
       borderRadius: 1,
     },
   },
