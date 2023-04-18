@@ -3,8 +3,9 @@ import { SWRConfig } from "swr";
 import { ThemeProvider } from "theme-ui";
 
 import { theme } from "../styles/theme";
-import "@fontsource/fraunces";
-import "@fontsource/inter";
+import "@fontsource/fraunces/variable.css";
+import "@fontsource/fraunces/variable-italic.css";
+import "@fontsource/inter/variable.css";
 
 const MyApp = ({ Component, pageProps }: AppProps) => (
   <SWRConfig
