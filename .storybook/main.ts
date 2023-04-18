@@ -1,9 +1,5 @@
 import type { StorybookConfig } from "@storybook/preset-react-webpack";
-
 const config: StorybookConfig = {
-  core: {
-    builder: "@storybook/builder-webpack5",
-  },
   stories: ["../stories/**/*.stories.@(ts|tsx|mdx)"],
   addons: [
     "@storybook/addon-links",
@@ -16,6 +12,7 @@ const config: StorybookConfig = {
         enableSwcMinify: false,
       },
     },
+    "@storybook/addon-mdx-gfm",
   ],
   staticDirs: ["../public", "../stories/assets", "../data/topographic"],
   framework: {
@@ -36,5 +33,4 @@ const config: StorybookConfig = {
     return config;
   },
 };
-
 export default config;
