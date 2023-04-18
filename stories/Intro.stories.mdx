@@ -1,24 +1,32 @@
-import { Meta } from '@storybook/addon-docs';
+import { Meta } from "@storybook/addon-docs";
 
-<Meta 
-    title="Intro"
-    parameters={{
-        viewMode: 'docs',
-        previewTabs: { 
-        canvas: { hidden: true } 
-        },
-    }} 
+<Meta
+  title="Intro"
+  parameters={{
+    viewMode: "docs",
+    previewTabs: {
+      canvas: { hidden: true },
+    },
+  }}
 />
 
 # ITC Atlas
 
 The atlas maps ITC's history and contemporary efforts towards capacity development around the globe.
+One aim of this project is to explore ways of streamlining the so far usually decoupled processes of publishing print and online atlases.
 
-## Get started 🚀
+## About
 
 The component library for the hybrid ITC atlas includes components aimed for print and online publishing.
 
 ### Types of components
 
-* vector graphics vs. pixel graphics
-* generic vs. adapative vs. targeted
+| property    | vector based                   | pixel based                                                                 |
+| ----------- | ------------------------------ | --------------------------------------------------------------------------- |
+| DOM element | `<svg>`                        | `<canvas>`                                                                  |
+| scalability | infite                         | limited by resolution                                                       |
+| editability | in any vector editing software | limited editability in raster editing software                              |
+| rendering   | [d3.js](d3js.org/)             | [three.js](threejs.org/)/[r3f](https://github.com/pmndrs/react-three-fiber) |
+
+- vector graphics vs. pixel graphics
+- generic vs. adapative vs. targeted

@@ -1,6 +1,7 @@
 import { ThemeProvider } from "theme-ui";
 import { withThemeFromJSXProvider } from "@storybook/addon-styling";
 import { theme } from "../styles/theme";
+import ITCAtlasTheme from "./ITCAtlasTheme";
 import "@fontsource/fraunces";
 import "@fontsource/inter";
 
@@ -24,6 +25,7 @@ export const parameters = {
     },
   },
   docs: {
+    theme: ITCAtlasTheme,
     source: {
       excludeDecorators: true,
     },
@@ -31,6 +33,7 @@ export const parameters = {
   options: {
     storySort: {
       order: [
+        "Intro",
         "Map Elements",
         "Map Layers",
         "Map Types",

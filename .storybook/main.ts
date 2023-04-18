@@ -1,4 +1,6 @@
 import type { StorybookConfig } from "@storybook/preset-react-webpack";
+import remarkGfm from "remark-gfm";
+
 const config: StorybookConfig = {
   stories: ["../stories/**/*.stories.@(ts|tsx|mdx)"],
   addons: [
@@ -12,7 +14,16 @@ const config: StorybookConfig = {
         enableSwcMinify: false,
       },
     },
-    "@storybook/addon-mdx-gfm",
+    {
+      name: "@storybook/addon-docs",
+      options: {
+        mdxPluginOptions: {
+          mdxCompileOptions: {
+            remarkPlugins: [remarkGfm],
+          },
+        },
+      },
+    },
   ],
   staticDirs: ["../public", "../stories/assets", "../data/topographic"],
   framework: {
