@@ -47,6 +47,7 @@ export const theme: Theme = {
     paragraph: {
       mt: 2,
       maxWidth: "40em",
+      textAlign: "justify",
     },
   },
   layout: {
