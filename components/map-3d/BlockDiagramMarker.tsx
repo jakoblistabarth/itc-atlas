@@ -11,8 +11,8 @@ type Props = {
 };
 const BlockDiagrammMarker: FC<Props> = ({
   name,
-  Latitude,
-  Lontitude,
+  latitude,
+  longitude,
   yScale,
   zOffset,
   height,
