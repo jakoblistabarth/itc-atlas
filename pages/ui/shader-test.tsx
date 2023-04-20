@@ -66,7 +66,7 @@ const ShaderTest: NextPage = () => {
               segments={segments}
               data={Float32Array.from(aut.data.elevation)}
             />
-            <BlockDiagrammMarker
+            <BlockDiagramMarker
                 name="aus"
                 Latitude={47.0725357}
                 Lontitude={12.7909824}
