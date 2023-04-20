@@ -30,7 +30,7 @@ const ShaderTest: NextPage = () => {
               data={Float32Array.from(sur.data.elevation)}
             />
             <BlockDiagramMarker
-                name="Par"
+                name="sur"
                 latitude={5.85}
                 longitude={-55.1}
                 yScale={0.01}
@@ -40,7 +40,7 @@ const ShaderTest: NextPage = () => {
                 bBox={sur.data.bBox}
               />
               <BlockDiagramMarker
-                name="Par"
+                name="sur"
                 latitude={5.8512}
                 longitude={-55.157}
                 yScale={0.01}

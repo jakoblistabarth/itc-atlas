@@ -20,12 +20,7 @@ const BlockDiagramMarker: FC<Props> = ({
   height,
   bBox,
 }) => {
-  var texture;
-  if (name == "Par") {
-    texture = new TextureLoader().load("/images/sur.jpg");
-  } else {
-    texture = new TextureLoader().load("/images/aus.jpg");
-  }
+  var texture=new TextureLoader().load("/images/"+name+".jpg");
   const stepLat = Math.abs(bBox[2] - bBox[0]) / gridSize;
   const stepLng = Math.abs(bBox[3] - bBox[1]) / gridSize;
   const position_y = Math.round((latitude - bBox[0]) / stepLat);
