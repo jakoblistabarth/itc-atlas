@@ -74,7 +74,7 @@ const ShaderTest: NextPage = () => {
                 zOffset={0.25}
                 height={aut.data.elevation}
               />
-              <BlockDiagrammMarker
+              <BlockDiagramMarker
                 name="aus"
                 Latitude={46.99}
                 Lontitude={13.01}
