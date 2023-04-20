@@ -59,7 +59,7 @@ const ShaderTest: NextPage = () => {
         <Canvas orthographic camera={{ zoom: 100 }}>
           {aut.data && (
             <>
-            <BlockDiagramm
+            <BlockDiagram
               side={side}
               yScale={0.0002}
               zOffset={0.25}
