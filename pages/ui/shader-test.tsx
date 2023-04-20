@@ -31,19 +31,23 @@ const ShaderTest: NextPage = () => {
             />
             <BlockDiagramMarker
                 name="Par"
-                Latitude={5.85}
-                Lontitude={-55.1}
+                latitude={5.85}
+                longitude={-55.1}
                 yScale={0.01}
+                gridSize={1001}
                 zOffset={0.01}
                 height={sur.data.elevation}
+                bBox={sur.data.bBox}
               />
               <BlockDiagramMarker
                 name="Par"
-                Latitude={5.8512}
-                Lontitude={-55.157}
+                latitude={5.8512}
+                longitude={-55.157}
                 yScale={0.01}
+                gridSize={1001}
                 zOffset={0.01}
                 height={sur.data.elevation}
+                bBox={sur.data.bBox}
               />
           </>
           )}
@@ -68,19 +72,23 @@ const ShaderTest: NextPage = () => {
             />
             <BlockDiagramMarker
                 name="aus"
-                Latitude={47.0725357}
-                Lontitude={12.7909824}
+                latitude={47.0725357}
+                longitude={12.7909824}
                 yScale={0.0002}
+                gridSize={1001}
                 zOffset={0.25}
                 height={aut.data.elevation}
+                bBox={aut.data.bBox}
               />
               <BlockDiagramMarker
                 name="aus"
-                Latitude={46.99}
-                Lontitude={13.01}
+                latitude={46.99}
+                longitude={13.01}
                 yScale={0.0002}
+                gridSize={1001}
                 zOffset={0.25}
                 height={aut.data.elevation}
+                bBox={aut.data.bBox}
               />
             </>
           )}

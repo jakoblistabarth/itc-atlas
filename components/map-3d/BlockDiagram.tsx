@@ -15,7 +15,7 @@ type Props = {
   data: Float32Array;
   zOffset?: number;
 };
-const BlockDiagramm: FC<Props> = ({
+const BlockDiagram: FC<Props> = ({
   side,
   segments,
   data,
@@ -128,4 +128,4 @@ const BlockDiagramm: FC<Props> = ({
     </>
   );
 };
-export default BlockDiagramm;
+export default BlockDiagram;
