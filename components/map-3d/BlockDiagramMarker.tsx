@@ -50,7 +50,7 @@ const BlockDiagrammMarker: FC<Props> = ({
         ]}
       >
         <cylinderGeometry args={[0.08, 0.01, 0.05, 64, 64, false]} />
-        <meshBasicMaterial map={texture} />
+        <meshStandardMaterial map={texture} />
       </mesh>
     </>
   );
