@@ -3,7 +3,7 @@
 import { OrbitControls } from "@react-three/drei";
 import { Canvas } from "@react-three/fiber";
 import type { NextPage } from "next";
-import BlockDiagramm from "../../components/map-3d/BlockDiagram";
+import BlockDiagram from "../../components/map-3d/BlockDiagram";
 import BlockDiagrammMarker from "../../components/map-3d/BlockDiagramMarker";
 import useSWR from "swr";
 import BasePage from "../../components/BasePage";
