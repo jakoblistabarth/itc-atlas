@@ -29,7 +29,7 @@ const ShaderTest: NextPage = () => {
               segments={segments}
               data={Float32Array.from(sur.data.elevation)}
             />
-            <BlockDiagrammMarker
+            <BlockDiagramMarker
                 name="Par"
                 Latitude={5.85}
                 Lontitude={-55.1}
