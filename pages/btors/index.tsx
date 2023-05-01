@@ -2,12 +2,15 @@ import type { NextPage } from "next";
 import Head from "next/head";
 import SummaryTable from "../../components/SummaryTable";
 import Footer from "../../components/Footer";
-import { Container, Heading, Text } from "theme-ui";
+import { Container, Grid, Heading, Text } from "theme-ui";
 import * as aq from "arquero";
 import useSWR from "swr";
+import CardLink from "../../components/CardLink";
+import { useRouter } from "next/router";
 
 const Btors: NextPage = () => {
   const { data, error, isLoading } = useSWR("/api/data/btor/");
+  const { route } = useRouter();
 
   return (
     <>
@@ -23,8 +26,14 @@ const Btors: NextPage = () => {
 
           <Text variant="teaser">
             Insights into ITC&apos;s travels around the globe through the
-            &quot;Back to Office&quot; Reports.
+            &quot;Back to Office&quot; reports.
           </Text>
+
+          <Grid variant="navigation">
+            <CardLink href={`introduction/travels-by-department`}>
+              <Heading as="h2">By department</Heading>
+            </CardLink>
+          </Grid>
 
           {error && <div>failed to load</div>}
           {isLoading && <div>Loading …</div>}
