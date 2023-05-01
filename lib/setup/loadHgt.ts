@@ -1,15 +1,45 @@
 import { writeFileSync } from "fs";
+import { geoBounds, geoGraticule, geoNaturalEarth1, geoPath } from "d3-geo";
 //@ts-ignore-error TODO: add types?
 import { SyncTileSet } from "srtm-elevation";
+import { extent } from "d3";
+import { FeatureCollection, Point } from "geojson";
 
 // Rough bounding box around Paramaribo
 const loadHgt = async (locations: [number, number][], name: string) => {
-  const lats = locations.map((l) => l[0]);
-  const lngs = locations.map((l) => l[1]);
-  const minLat = Math.min.apply(null, lats);
-  const maxLat = Math.max.apply(null, lats);
-  const minLng = Math.min.apply(null, lngs);
-  const maxLng = Math.max.apply(null, lngs);
+  const proj = geoNaturalEarth1();
+
+  const [minLat, maxLat] = extent(locations, (d) => d[0]);
+  const [minLng, maxLng] = extent(locations, (d) => d[1]);
+
+  const locationsFeatureCollection: FeatureCollection<Point> = {
+    type: "FeatureCollection",
+    features: locations.map((d) => ({
+      type: "Feature",
+      properties: {},
+      geometry: {
+        type: "Point",
+        coordinates: [d[1], d[0]],
+      },
+    })),
+  };
+
+  const areaGeoBounds = geoBounds(locationsFeatureCollection);
+  const [[w, s], [e, n]] = areaGeoBounds;
+  const areaBounds = geoPath(proj).bounds(locationsFeatureCollection);
+  const areaRectangle = geoGraticule()
+    .extentMajor([
+      [w, s],
+      [e, n],
+    ])
+    .outline();
+  const area = geoPath(proj).area(areaRectangle);
+
+  console.log({ w, s, e, n, areaGeoBounds, areaBounds, area });
+
+  const bBox = [minLat, minLng, maxLat, maxLng];
+  if (!minLat || !maxLat || !minLng || !maxLng)
+    throw new Error("invalid locations");
 
   const segments = 1000;
   const gridSize = segments + 1;
@@ -27,8 +57,6 @@ const loadHgt = async (locations: [number, number][], name: string) => {
     })
     .flat()
     .map((d) => d.map((c) => c.toFixed(6)));
-
-  const bBox = [minLat, minLng, maxLat, maxLng];
 
   const tileset = new SyncTileSet(
     "./data/",
