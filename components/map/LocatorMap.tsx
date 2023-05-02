@@ -50,7 +50,9 @@ const LocatorMap: FC<Props> = ({
 
   const projection = d3.geoOrthographic().rotate(rotation);
   const shadowRadius = dimension.width / 30;
-  dimension.height = getMapHeight(dimension.width, projection, shadowRadius);
+  dimension.height = getMapHeight(dimension.width, projection, {
+    marginBottom: shadowRadius,
+  });
 
   return (
     <>
