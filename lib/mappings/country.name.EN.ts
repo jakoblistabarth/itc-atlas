@@ -3,6 +3,7 @@ type TypeMapping = { [key: string]: string };
 const countryMapEN: TypeMapping = {
   Bangladesch: "Bangladesh",
   "Cape Verde": "Cabo Verde",
+  Crica: "Costa Rica",
   EMEA: "Europe, Africa, Western Asia",
   Benelux: "Belgium, Netherlands, Luxembourg",
   Kazakstan: "Kazakhstan",
