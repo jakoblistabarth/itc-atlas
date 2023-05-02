@@ -10,19 +10,29 @@ import getBtorsGroupedByCountry, {
   BtorsGroupedByCountry,
 } from "../../lib/data/queries/btors/getBtorsGroupedByCountry";
 import Caption from "../../components/Caption";
+import BtorsByYear from "../../components/visuals/BtorsByYear";
+import getBtorsGroupedByYear, {
+  BtorsGroupedByYear,
+} from "../../lib/data/queries/btors/getBtorsGroupedByYear";
+import { geoChamberlinAfrica } from "d3-geo-projection";
 
 type Props = {
   btorsByCountry: BtorsGroupedByCountry;
+  btorsByYear: BtorsGroupedByYear;
   neCountries: NeCountriesTopoJson;
 };
 
-const Page: NextPage<Props> = ({ btorsByCountry, neCountries }) => {
+const Page: NextPage<Props> = ({
+  btorsByCountry,
+  btorsByYear,
+  neCountries,
+}) => {
   const heroVisual = (
-    <TravelsByDepartment neCountries={neCountries} btors={btorsByCountry} />
+    <BtorsByYear neCountries={neCountries} btors={btorsByYear} />
   );
 
   return (
-    <HeroVisualPage title="Staff travels by department" heroVisual={heroVisual}>
+    <HeroVisualPage title="Staff travels over time" heroVisual={heroVisual}>
       <Paragraph variant="teaser">
         Where does ITC staff travel and what for? To answer this question we
         need to take a closer look on different travel destination, the
@@ -40,7 +50,10 @@ const Page: NextPage<Props> = ({ btorsByCountry, neCountries }) => {
               departments. The map above shows the following.
             </Paragraph>
             <Box>
-              {heroVisual}
+              <TravelsByDepartment
+                neCountries={neCountries}
+                btors={btorsByCountry}
+              />
               <Caption reference="Fig. 1">
                 This maps shows something specific.
               </Caption>
@@ -49,6 +62,16 @@ const Page: NextPage<Props> = ({ btorsByCountry, neCountries }) => {
               ITC staff travels for different purposes and for different
               departments. The map above shows the following.
             </Paragraph>
+            <Box>
+              <BtorsByYear
+                projection={geoChamberlinAfrica()}
+                neCountries={neCountries}
+                btors={btorsByYear}
+              />
+              <Caption reference="Fig. 2">
+                This map shows something else.
+              </Caption>
+            </Box>
           </Box>
         </Box>
       </Box>
@@ -59,14 +82,16 @@ const Page: NextPage<Props> = ({ btorsByCountry, neCountries }) => {
 export default Page;
 
 export const getStaticProps: GetStaticProps<Props> = async () => {
-  const [btorsByCountry, neCountries] = await Promise.all([
+  const [btorsByCountry, btorsByYear, neCountries] = await Promise.all([
     getBtorsGroupedByCountry(),
+    getBtorsGroupedByYear(),
     getCountries(),
   ]);
 
   return {
     props: {
       btorsByCountry,
+      btorsByYear,
       neCountries,
     },
   };

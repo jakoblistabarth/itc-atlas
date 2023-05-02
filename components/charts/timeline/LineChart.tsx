@@ -31,7 +31,7 @@ const LineChart: FC<Props> = ({ data, width, height, ...rest }) => {
           <stop offset="95%" stop-color="teal" />
         </linearGradient>
       </defs>
-      <g transform="translate(0,5)">
+      <g transform={`translate(0,${m})`}>
         <LinePath<typeof data>
           data={data}
           x={(d) => xScale(getX(d))}
