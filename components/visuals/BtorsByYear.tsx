@@ -4,7 +4,17 @@ import BaseLayer from "../map/BaseLayer";
 import useMeasure from "react-use-measure";
 import getMapHeight from "../../lib/cartographic/getMapHeight";
 import getCentroidByIsoCode from "../../lib/data/getCentroidByIsoCode";
-import { GeoProjection, ascending, groups, max, min, scaleLinear } from "d3";
+import {
+  ExtendedFeature,
+  ExtendedFeatureCollection,
+  GeoGeometryObjects,
+  GeoProjection,
+  ascending,
+  groups,
+  max,
+  min,
+  scaleLinear,
+} from "d3";
 import { Vector2 } from "three";
 import { BtorsGroupedByYear } from "../../lib/data/queries/btors/getBtorsGroupedByYear";
 import { LinePath } from "@visx/shape";
@@ -15,16 +25,19 @@ type Props = {
   neCountries: NeCountriesTopoJson;
   btors: BtorsGroupedByYear;
   projection?: GeoProjection;
+  extent?: GeoGeometryObjects | ExtendedFeatureCollection | ExtendedFeature;
 };
 
 const BtorsByYear: FC<Props> = ({
   btors,
   neCountries,
+  extent,
   projection = geoBertin1953(),
 }) => {
   const [mapRef, { width }] = useMeasure();
   //TODO: fix NaNs for centroids rendered before useMeasure()
-  const height = getMapHeight(width, projection);
+  const options = extent ? { extent } : undefined;
+  const height = getMapHeight(width, projection, options);
 
   const chartWidth = 50;
   const chartHeight = 50;

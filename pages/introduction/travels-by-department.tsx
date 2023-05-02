@@ -14,7 +14,7 @@ import BtorsByYear from "../../components/visuals/BtorsByYear";
 import getBtorsGroupedByYear, {
   BtorsGroupedByYear,
 } from "../../lib/data/queries/btors/getBtorsGroupedByYear";
-import { geoChamberlinAfrica } from "d3-geo-projection";
+import { ExtendedFeature } from "d3-geo";
 
 type Props = {
   btorsByCountry: BtorsGroupedByCountry;
@@ -30,6 +30,20 @@ const Page: NextPage<Props> = ({
   const heroVisual = (
     <BtorsByYear neCountries={neCountries} btors={btorsByYear} />
   );
+
+  const extent: ExtendedFeature = {
+    type: "Feature",
+    geometry: {
+      type: "MultiPoint",
+      coordinates: [
+        [-30, 60],
+        [48, 70],
+        [34, 36],
+        [-8, 35],
+      ],
+    },
+    properties: {},
+  };
 
   return (
     <HeroVisualPage title="Staff travels over time" heroVisual={heroVisual}>
@@ -64,12 +78,14 @@ const Page: NextPage<Props> = ({
             </Paragraph>
             <Box>
               <BtorsByYear
-                projection={geoChamberlinAfrica()}
                 neCountries={neCountries}
                 btors={btorsByYear}
+                extent={extent}
               />
               <Caption reference="Fig. 2">
-                This map shows something else.
+                This map shows travels over time with destinations within
+                Europe, showing a tendency to less travels over time across the
+                contintent.
               </Caption>
             </Box>
           </Box>
