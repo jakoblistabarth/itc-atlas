@@ -1,6 +1,6 @@
 import * as d3 from "d3";
 import { geoPath, GeoSphere, GeoProjection } from "d3-geo";
-import type { FC } from "react";
+import { FC, useId } from "react";
 import * as topojson from "topojson-client";
 import type {
   MultiPolygon as MultiPolygonT,
@@ -83,6 +83,11 @@ const BaseLayer: FC<Props> = ({
   const hasOutline = drawOutline ?? theme.hasOutline ?? false;
   const hasShadow = drawShadow ?? theme.hasShadow ?? false;
 
+  const id = useId();
+  const outlinePathId = `outline-${id}`;
+  const clipId = `clip-${id}`;
+  const oceanGradientId = `oceanGradient-${id}`;
+
   return (
     <>
       {hasShadow && pathSphere && (
@@ -92,16 +97,16 @@ const BaseLayer: FC<Props> = ({
           blur={30}
         />
       )}
-      <g className="base-map" clipPath="url(#clip)">
+      <g className="base-map" clipPath={`url(#${clipId})`}>
         {pathSphere && (
           <defs>
-            <path id="outline" d={pathSphere} />
-            <clipPath id="clip">
-              <use xlinkHref="#outline" />
+            <path id={outlinePathId} d={pathSphere} />
+            <clipPath id={clipId}>
+              <use xlinkHref={`#${outlinePathId}`} />
             </clipPath>
             {theme.background.gradient && (
               <RadialGradient
-                id={"oceanGradient"}
+                id={`#${oceanGradientId}`}
                 colorStops={theme.background.gradient}
               />
             )}
@@ -112,7 +117,7 @@ const BaseLayer: FC<Props> = ({
             d={pathSphere}
             fill={
               theme.background.gradient
-                ? "url(#oceanGradient)"
+                ? `url(#${oceanGradientId})`
                 : theme.background.fill
             }
           />
@@ -214,7 +219,7 @@ const BaseLayer: FC<Props> = ({
 
       {hasOutline && (
         <use
-          xlinkHref="#outline"
+          xlinkHref={`#${outlinePathId}`}
           stroke={theme.graticule.stroke}
           fill={"none"}
           strokeWidth={theme.graticule.strokeWidth}
