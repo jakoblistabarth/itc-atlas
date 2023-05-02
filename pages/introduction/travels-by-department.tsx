@@ -63,7 +63,7 @@ const Page: NextPage<Props> = ({
               ITC staff travels for different purposes and for different
               departments. The map above shows the following.
             </Paragraph>
-            <Box>
+            <Box variant="layout.inlineMap">
               <TravelsByDepartment
                 neCountries={neCountries}
                 btors={btorsByCountry}
@@ -76,7 +76,7 @@ const Page: NextPage<Props> = ({
               ITC staff travels for different purposes and for different
               departments. The map above shows the following.
             </Paragraph>
-            <Box>
+            <Box variant="layout.inlineMap">
               <BtorsByYear
                 neCountries={neCountries}
                 btors={btorsByYear}

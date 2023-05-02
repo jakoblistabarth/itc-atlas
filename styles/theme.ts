@@ -41,8 +41,9 @@ export const theme: Theme = {
     },
     teaser: {
       fontFamily: "Fraunces",
-      fontSize: 3,
+      fontSize: 4,
       fontStyle: "italic",
+      fontWeight: 1,
     },
     paragraph: {
       mt: 2,
@@ -55,6 +56,9 @@ export const theme: Theme = {
       pt: 5,
     },
     section: {
+      my: 4,
+    },
+    inlineMap: {
       my: 4,
     },
     canvasStage: {
