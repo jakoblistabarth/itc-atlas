@@ -13,6 +13,7 @@ import {
   groups,
   max,
   min,
+  range,
   scaleLinear,
 } from "d3";
 import { Vector2 } from "three";
@@ -83,6 +84,10 @@ const BtorsByYear: FC<Props> = ({
       <BaseLayer countries={neCountries} projection={projection} />
       {btorsByCountry.map((d) => {
         const [x, y] = projection([d.centroid.x, d.centroid.y]);
+        const data = range(minTime, maxTime).map((year) => ({
+          year,
+          count: d.data.find((d) => d.year === year)?.count ?? 0,
+        }));
         return (
           <g key={d.isoAlpha3} transform={`translate(${x} ${y})`}>
             <Group top={-chartHeight} left={chartWidth / -2}>
@@ -95,7 +100,7 @@ const BtorsByYear: FC<Props> = ({
                 strokeWidth={0.5}
               />
               <LinePath
-                data={d.data.sort((a, b) => ascending(a.year, b.year))}
+                data={data}
                 x={(d) => xScale(d.year)}
                 y={(d) => yScale(d.count)}
                 strokeLinejoin="round"
