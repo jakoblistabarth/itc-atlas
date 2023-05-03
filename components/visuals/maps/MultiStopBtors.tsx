@@ -1,12 +1,12 @@
 import { FC } from "react";
-import { NeCountriesTopoJson } from "../../types/NeTopoJson";
-import BaseLayer from "../map/BaseLayer";
+import { NeCountriesTopoJson } from "../../../types/NeTopoJson";
+import BaseLayer from "../../map/BaseLayer";
 import { geoBertin1953 } from "d3-geo-projection";
 import useMeasure from "react-use-measure";
-import getMapHeight from "../../lib/cartographic/getMapHeight";
-import getCentroidByIsoCode from "../../lib/data/getCentroidByIsoCode";
+import getMapHeight from "../../../lib/cartographic/getMapHeight";
+import getCentroidByIsoCode from "../../../lib/data/getCentroidByIsoCode";
 import { max, scaleLinear, scalePow } from "d3";
-import { BtorsGroupedByCountry } from "../../lib/data/queries/btors/getBtorsGroupedByCountry";
+import { BtorsGroupedByCountry } from "../../../lib/data/queries/btors/getBtorsGroupedByCountry";
 import { Vector2 } from "three";
 
 type Props = {

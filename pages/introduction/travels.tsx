@@ -5,12 +5,12 @@ import { Box, Paragraph } from "theme-ui";
 import getCountries from "../../lib/data/getCountries";
 import { NeCountriesTopoJson } from "../../types/NeTopoJson";
 import HeroVisualPage from "../../components/HeroVisualPage";
-import TravelsByDepartment from "../../components/visuals/TravelsByDepartment";
+import TravelsByDepartment from "../../components/visuals/maps/MultiStopBtors";
 import getBtorsGroupedByCountry, {
   BtorsGroupedByCountry,
 } from "../../lib/data/queries/btors/getBtorsGroupedByCountry";
 import Caption from "../../components/Caption";
-import BtorsByYear from "../../components/visuals/BtorsByYear";
+import BtorsByYear from "../../components/visuals/maps/BtorsByYear";
 import getBtorsGroupedByYear, {
   BtorsGroupedByYear,
 } from "../../lib/data/queries/btors/getBtorsGroupedByYear";

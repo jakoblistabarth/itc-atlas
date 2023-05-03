@@ -1,9 +1,9 @@
 import { FC } from "react";
-import { NeCountriesTopoJson } from "../../types/NeTopoJson";
-import BaseLayer from "../map/BaseLayer";
+import { NeCountriesTopoJson } from "../../../types/NeTopoJson";
+import BaseLayer from "../../map/BaseLayer";
 import useMeasure from "react-use-measure";
-import getMapHeight from "../../lib/cartographic/getMapHeight";
-import getCentroidByIsoCode from "../../lib/data/getCentroidByIsoCode";
+import getMapHeight from "../../../lib/cartographic/getMapHeight";
+import getCentroidByIsoCode from "../../../lib/data/getCentroidByIsoCode";
 import {
   ExtendedFeature,
   ExtendedFeatureCollection,
@@ -17,7 +17,7 @@ import {
   scaleLinear,
 } from "d3";
 import { Vector2 } from "three";
-import { BtorsGroupedByYear } from "../../lib/data/queries/btors/getBtorsGroupedByYear";
+import { BtorsGroupedByYear } from "../../../lib/data/queries/btors/getBtorsGroupedByYear";
 import { LinePath } from "@visx/shape";
 import { Group } from "@visx/group";
 import { geoBertin1953 } from "d3-geo-projection";
