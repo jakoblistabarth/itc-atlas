@@ -12,8 +12,8 @@ export const theme: Theme = {
     muted: "rgb(235, 255, 255)",
   },
   fonts: {
-    body: '"Inter", system-ui, sans-serif',
-    heading: '"Fraunces", serif',
+    body: '"InterVariable", system-ui, sans-serif',
+    heading: '"FrauncesVariable", serif',
     monospace: "Menlo, monospace",
   },
   fontSizes: [10, 14, 16, 20, 24, 32, 48, 64],
@@ -40,7 +40,7 @@ export const theme: Theme = {
       mb: 2,
     },
     teaser: {
-      fontFamily: "Fraunces",
+      fontFamily: "heading",
       fontSize: 4,
       fontStyle: "italic",
       fontWeight: 1,

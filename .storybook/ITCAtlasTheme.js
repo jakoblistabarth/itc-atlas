@@ -3,7 +3,7 @@ import { create } from "@storybook/theming";
 export default create({
   base: "light",
 
-  fontBase: '"Inter", serif',
+  fontBase: '"InterVariable", sans-serif',
   fontCode: "monospace",
 
   brandTitle: "ITC Atlas Component Library",
