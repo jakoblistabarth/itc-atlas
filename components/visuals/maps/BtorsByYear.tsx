@@ -9,7 +9,6 @@ import {
   ExtendedFeatureCollection,
   GeoGeometryObjects,
   GeoProjection,
-  ascending,
   groups,
   max,
   min,

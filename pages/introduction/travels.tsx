@@ -10,7 +10,8 @@ import getBtorsGroupedByCountry, {
   BtorsGroupedByCountry,
 } from "../../lib/data/queries/btors/getBtorsGroupedByCountry";
 import Caption from "../../components/Caption";
-import BtorsByYear from "../../components/visuals/maps/BtorsByYear";
+import BtorsByYearMap from "../../components/visuals/maps/BtorsByYear";
+import BtorsByYearChart from "../../components/visuals/charts/BtorsByYear";
 import getBtorsGroupedByYear, {
   BtorsGroupedByYear,
 } from "../../lib/data/queries/btors/getBtorsGroupedByYear";
@@ -28,7 +29,7 @@ const Page: NextPage<Props> = ({
   neCountries,
 }) => {
   const heroVisual = (
-    <BtorsByYear neCountries={neCountries} btors={btorsByYear} />
+    <BtorsByYearMap neCountries={neCountries} btors={btorsByYear} />
   );
 
   const extent: ExtendedFeature = {
@@ -60,8 +61,10 @@ const Page: NextPage<Props> = ({
         >
           <Box>
             <Paragraph>
-              ITC staff travels for different purposes and for different
-              departments. The map above shows the following.
+              Lorem ipsum dolor, sit amet consectetur adipisicing elit. Soluta
+              maiores debitis porro totam reiciendis, inventore quas, voluptatem
+              eveniet ipsam veniam ex corporis eligendi ea doloribus.
+              Consectetur vel aliquam id minus!
             </Paragraph>
             <Box variant="layout.inlineMap">
               <TravelsByDepartment
@@ -73,11 +76,25 @@ const Page: NextPage<Props> = ({
               </Caption>
             </Box>
             <Paragraph>
-              ITC staff travels for different purposes and for different
-              departments. The map above shows the following.
+              Lorem ipsum dolor sit amet consectetur, adipisicing elit. Eveniet,
+              quisquam itaque quis voluptas perspiciatis asperiores iusto
+              excepturi provident eaque magni similique consequuntur dignissimos
+              eos ullam vel sit veritatis sunt quod!
             </Paragraph>
             <Box variant="layout.inlineMap">
-              <BtorsByYear
+              <BtorsByYearChart btors={btorsByYear} />
+              <Caption reference="Fig. 2">
+                This chart shows travels over time across the world
+              </Caption>
+            </Box>
+            <Paragraph>
+              Lorem ipsum, dolor sit amet consectetur adipisicing elit. Amet
+              molestiae, sequi animi est dolor nihil qui id, aperiam assumenda
+              suscipit officia, veniam tenetur veritatis saepe! Recusandae animi
+              incidunt fuga perferendis!
+            </Paragraph>
+            <Box variant="layout.inlineMap">
+              <BtorsByYearMap
                 neCountries={neCountries}
                 btors={btorsByYear}
                 extent={extent}
