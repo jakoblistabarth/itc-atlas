@@ -17,7 +17,6 @@ type Props = {
 const MultiStopBtors: FC<Props> = ({ btors, neCountries }) => {
   const proj = geoBertin1953();
   const [mapRef, { width }] = useMeasure();
-  //TODO: fix NaNs for centroids rendered before useMeasure()
   const height = getMapHeight(width, proj);
 
   type BtorWithCentroids = (typeof btors)[number] & {
@@ -53,39 +52,40 @@ const MultiStopBtors: FC<Props> = ({ btors, neCountries }) => {
       viewBox={`0 0 ${width} ${height}`}
     >
       <BaseLayer countries={neCountries} projection={proj} />
-      {multipleStops.map((d) => {
-        const centroids = d.centroids;
-        return (
-          <g key={d.id} opacity={0.5}>
-            {d.centroids.map((c, i) => {
-              const coord = proj([c.x, c.y]);
-              return (
-                <circle
-                  key={i}
-                  cx={coord[0]}
-                  cy={coord[1]}
-                  r={scaleArea(d.count)}
-                />
-              );
-            })}
-            {d.centroids.slice(0, -1).map((c, i) => {
-              const start = proj([c.x, c.y]);
-              const end = proj([centroids[i + 1].x, centroids[i + 1].y]);
-              return (
-                <line
-                  key={i}
-                  x1={start[0]}
-                  y1={start[1]}
-                  x2={end[0]}
-                  y2={end[1]}
-                  strokeWidth={scaleWidth(d.count)}
-                  stroke="black"
-                />
-              );
-            })}
-          </g>
-        );
-      })}
+      {height &&
+        multipleStops.map((d) => {
+          const centroids = d.centroids;
+          return (
+            <g key={d.id} opacity={0.5}>
+              {d.centroids.map((c, i) => {
+                const coord = proj([c.x, c.y]);
+                return (
+                  <circle
+                    key={i}
+                    cx={coord[0]}
+                    cy={coord[1]}
+                    r={scaleArea(d.count)}
+                  />
+                );
+              })}
+              {d.centroids.slice(0, -1).map((c, i) => {
+                const start = proj([c.x, c.y]);
+                const end = proj([centroids[i + 1].x, centroids[i + 1].y]);
+                return (
+                  <line
+                    key={i}
+                    x1={start[0]}
+                    y1={start[1]}
+                    x2={end[0]}
+                    y2={end[1]}
+                    strokeWidth={scaleWidth(d.count)}
+                    stroke="black"
+                  />
+                );
+              })}
+            </g>
+          );
+        })}
     </svg>
   );
 };

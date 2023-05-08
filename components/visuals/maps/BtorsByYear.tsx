@@ -35,7 +35,6 @@ const BtorsByYear: FC<Props> = ({
   projection = geoBertin1953(),
 }) => {
   const [mapRef, { width }] = useMeasure();
-  //TODO: fix NaNs for centroids rendered before useMeasure()
   const options = extent ? { extent } : undefined;
   const height = getMapHeight(width, projection, options);
 
@@ -81,35 +80,36 @@ const BtorsByYear: FC<Props> = ({
       viewBox={`0 0 ${width} ${height}`}
     >
       <BaseLayer countries={neCountries} projection={projection} />
-      {btorsByCountry.map((d) => {
-        const [x, y] = projection([d.centroid.x, d.centroid.y]);
-        const data = range(minTime, maxTime).map((year) => ({
-          year,
-          count: d.data.find((d) => d.year === year)?.count ?? 0,
-        }));
-        return (
-          <g key={d.isoAlpha3} transform={`translate(${x} ${y})`}>
-            <Group top={-chartHeight} left={chartWidth / -2}>
-              <line
-                x1={xScale(minTime)}
-                y1={yScale(0)}
-                x2={xScale(maxTime)}
-                y2={yScale(0)}
-                stroke="grey"
-                strokeWidth={0.5}
-              />
-              <LinePath
-                data={data}
-                x={(d) => xScale(d.year)}
-                y={(d) => yScale(d.count)}
-                strokeLinejoin="round"
-                strokeWidth="1"
-                stroke="black"
-              />
-            </Group>
-          </g>
-        );
-      })}
+      {height &&
+        btorsByCountry.map((d) => {
+          const [x, y] = projection([d.centroid.x, d.centroid.y]);
+          const data = range(minTime, maxTime).map((year) => ({
+            year,
+            count: d.data.find((d) => d.year === year)?.count ?? 0,
+          }));
+          return (
+            <g key={d.isoAlpha3} transform={`translate(${x} ${y})`}>
+              <Group top={-chartHeight} left={chartWidth / -2}>
+                <line
+                  x1={xScale(minTime)}
+                  y1={yScale(0)}
+                  x2={xScale(maxTime)}
+                  y2={yScale(0)}
+                  stroke="grey"
+                  strokeWidth={0.5}
+                />
+                <LinePath
+                  data={data}
+                  x={(d) => xScale(d.year)}
+                  y={(d) => yScale(d.count)}
+                  strokeLinejoin="round"
+                  strokeWidth="1"
+                  stroke="black"
+                />
+              </Group>
+            </g>
+          );
+        })}
     </svg>
   );
 };
