@@ -5,7 +5,7 @@ const darkgrey = "#dcdcdc";
 const red = "#f00";
 
 const defaultTheme: MapTheme = {
-  fontFamily: "Inter",
+  fontFamily: "InterVariable",
   hasOutline: true,
   hasShadow: false,
   background: { fill: lightgrey },

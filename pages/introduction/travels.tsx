@@ -1,7 +1,7 @@
 /** @jsxImportSource theme-ui */
 
 import type { GetStaticProps, NextPage } from "next";
-import { Box, Paragraph } from "theme-ui";
+import { Box, Heading, Paragraph } from "theme-ui";
 import getCountries from "../../lib/data/getCountries";
 import { NeCountriesTopoJson } from "../../types/NeTopoJson";
 import HeroVisualPage from "../../components/HeroVisualPage";
@@ -11,21 +11,29 @@ import getBtorsGroupedByCountry, {
 } from "../../lib/data/queries/btors/getBtorsGroupedByCountry";
 import Caption from "../../components/Caption";
 import BtorsByYearMap from "../../components/visuals/maps/BtorsByYear";
-import BtorsByYearChart from "../../components/visuals/charts/BtorsByYear";
 import getBtorsGroupedByYear, {
   BtorsGroupedByYear,
 } from "../../lib/data/queries/btors/getBtorsGroupedByYear";
 import { ExtendedFeature } from "d3-geo";
+import getBhosCountries from "../../lib/data/getBhosCountries";
+import getDutchCabinets from "../../lib/data/getDutchCabinets";
+import { BhosCountry } from "../../types/BhosCountry";
+import BtorsAndCabinets from "../../components/visuals/BtorsAndCabinets";
+import { DutchCabinet } from "../../types/DutchCabinet";
 
 type Props = {
   btorsByCountry: BtorsGroupedByCountry;
   btorsByYear: BtorsGroupedByYear;
+  bhosCountries: BhosCountry[];
+  dutchCabinets: DutchCabinet[];
   neCountries: NeCountriesTopoJson;
 };
 
 const Page: NextPage<Props> = ({
   btorsByCountry,
   btorsByYear,
+  bhosCountries,
+  dutchCabinets,
   neCountries,
 }) => {
   const heroVisual = (
@@ -81,8 +89,21 @@ const Page: NextPage<Props> = ({
               excepturi provident eaque magni similique consequuntur dignissimos
               eos ullam vel sit veritatis sunt quod!
             </Paragraph>
+            <Heading as="h2">
+              Travels in the context of Dutch development policies
+            </Heading>
+            <Paragraph>
+              Dutch development policies change over time. According to the
+              cabinets in office the perspective and focus on development shifts
+              slighty, affecting ITC&apos;s work.
+            </Paragraph>
             <Box variant="layout.inlineMap">
-              <BtorsByYearChart btors={btorsByYear} />
+              <BtorsAndCabinets
+                neCountries={neCountries}
+                bhosCountries={bhosCountries}
+                btorsByYear={btorsByYear}
+                dutchCabinets={dutchCabinets}
+              />
               <Caption reference="Fig. 2">
                 This chart shows travels over time across the world
               </Caption>
@@ -115,9 +136,17 @@ const Page: NextPage<Props> = ({
 export default Page;
 
 export const getStaticProps: GetStaticProps<Props> = async () => {
-  const [btorsByCountry, btorsByYear, neCountries] = await Promise.all([
+  const [
+    btorsByCountry,
+    btorsByYear,
+    bhosCountries,
+    dutchCabinets,
+    neCountries,
+  ] = await Promise.all([
     getBtorsGroupedByCountry(),
     getBtorsGroupedByYear(),
+    getBhosCountries(),
+    getDutchCabinets(),
     getCountries(),
   ]);
 
@@ -125,6 +154,8 @@ export const getStaticProps: GetStaticProps<Props> = async () => {
     props: {
       btorsByCountry,
       btorsByYear,
+      bhosCountries,
+      dutchCabinets,
       neCountries,
     },
   };

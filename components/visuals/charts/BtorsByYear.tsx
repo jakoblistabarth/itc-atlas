@@ -2,7 +2,15 @@
 
 import { FC } from "react";
 import useMeasure from "react-use-measure";
-import { ascending, format, groups, max, min, scaleLinear } from "d3";
+import {
+  ScaleOrdinal,
+  ascending,
+  format,
+  groups,
+  max,
+  min,
+  scaleLinear,
+} from "d3";
 import { BtorsGroupedByYear } from "../../../lib/data/queries/btors/getBtorsGroupedByYear";
 import { LinePath } from "@visx/shape";
 import { Group } from "@visx/group";
@@ -10,12 +18,22 @@ import AxisX from "../../charts/Axis/AxisX";
 import AxisY from "../../charts/Axis/AxisY";
 import RuleY from "../../charts/RuleY";
 import { MdArrowUpward } from "react-icons/md";
+import { DutchCabinet } from "../../../types/DutchCabinet";
+import { BhosCountry } from "../../../types/BhosCountry";
 
 type Props = {
   btors: BtorsGroupedByYear;
+  activeCabinet?: DutchCabinet;
+  colorScale: ScaleOrdinal<string, string>;
+  bhosCountries: BhosCountry[];
 };
 
-const BtorsByYear: FC<Props> = ({ btors }) => {
+const BtorsByYear: FC<Props> = ({
+  btors,
+  activeCabinet,
+  colorScale,
+  bhosCountries,
+}) => {
   const [chartRef, { width }] = useMeasure();
 
   const chartHeight = 300;
@@ -25,6 +43,11 @@ const BtorsByYear: FC<Props> = ({ btors }) => {
     bottom: 20,
     left: 20,
   };
+
+  const [cabinetStart, cabinetEnd] = [
+    activeCabinet?.dateStart,
+    activeCabinet?.dateEnd,
+  ].map((d) => (d && d?.length > 0 ? new Date(d) : new Date()));
 
   const maxCount = max(btors, (d) => d.count) ?? 1;
   const minTime = min(btors, (d) => d.year) ?? 2000;
@@ -54,6 +77,18 @@ const BtorsByYear: FC<Props> = ({ btors }) => {
           No. of Travels per year
         </text>
       </g>
+      {cabinetStart && cabinetEnd && (
+        <rect
+          x={xScale(cabinetStart.getFullYear())}
+          y={yScale(maxCount)}
+          height={yScale(0) - yScale(maxCount)}
+          sx={{ fill: "muted" }}
+          width={
+            xScale(cabinetEnd.getFullYear()) -
+            xScale(cabinetStart.getFullYear())
+          }
+        />
+      )}
       <RuleY xScale={xScale} yScale={yScale} />
       <AxisX
         top={chartHeight - margin.bottom + 5}
@@ -61,21 +96,29 @@ const BtorsByYear: FC<Props> = ({ btors }) => {
         xScale={xScale}
       />
       <AxisY left={margin.left} yScale={yScale} />
-      {btorsByCountry.map((d) => {
-        return (
-          <Group key={d.isoAlpha3}>
-            <LinePath
-              data={d.data.sort((a, b) => ascending(a.year, b.year))}
-              x={(d) => xScale(d.year)}
-              y={(d) => yScale(d.count)}
-              strokeLinejoin="round"
-              strokeWidth="1"
-              stroke="black"
-              opacity={0.3}
-            />
-          </Group>
-        );
-      })}
+      <g>
+        {btorsByCountry.map((d) => {
+          const bhosCountry = bhosCountries
+            .filter((d) => d.cabinet === activeCabinet?.name)
+            .find((country) => country.isoAlpha3 === d.isoAlpha3);
+          const hasCategory = !!bhosCountry?.category;
+          return (
+            <Group key={d.isoAlpha3}>
+              <LinePath
+                data={d.data.sort((a, b) => ascending(a.year, b.year))}
+                x={(d) => xScale(d.year)}
+                y={(d) => yScale(d.count)}
+                strokeLinejoin="round"
+                strokeWidth={hasCategory ? 2 : 0.5}
+                stroke={
+                  hasCategory ? colorScale(bhosCountry.category) : "black"
+                }
+                opacity={hasCategory ? 1 : 0.2}
+              />
+            </Group>
+          );
+        })}
+      </g>
     </svg>
   );
 };

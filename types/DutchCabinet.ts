@@ -1,7 +1,7 @@
 export type DutchCabinet = {
   name: string;
-  dateStart: Date;
-  dateEnd: Date;
+  dateStart: string;
+  dateEnd: string;
   orientation: string;
   topics: string[];
 };

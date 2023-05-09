@@ -38,6 +38,9 @@ export const theme: Theme = {
   text: {
     heading: {
       mb: 2,
+      "p + &": {
+        mt: 4,
+      },
     },
     teaser: {
       fontFamily: "heading",
@@ -75,6 +78,22 @@ export const theme: Theme = {
       gridGap: 3,
       mt: 2,
       mb: 4,
+    },
+  },
+  buttons: {
+    primary: {
+      cursor: "pointer",
+      borderRadius: 2,
+    },
+    muted: {
+      cursor: "pointer",
+      borderRadius: 2,
+      p: 2,
+      background: "none",
+      color: "text",
+      "&:hover": {
+        background: "muted",
+      },
     },
   },
   cards: {
