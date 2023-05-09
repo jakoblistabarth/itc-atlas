@@ -32,6 +32,9 @@ const BtorsAndCabinets: FC<Props> = ({
 }) => {
   const rutteCabinets = dutchCabinets.filter((d) => /^Rutte/.test(d.name));
   const [activeCabinet, setActiveCabinet] = useState(rutteCabinets[0].name);
+  const [activeCountry, setActiveCountry] = useState<string | undefined>(
+    undefined
+  );
 
   const categories = bhosCountries.reduce((acc: string[], d) => {
     if (!acc.includes(d.category)) acc.push(d.category);
@@ -97,8 +100,8 @@ const BtorsAndCabinets: FC<Props> = ({
       </Flex>
       <MapLayout
         bounds={{
-          width: 600,
-          height: 200,
+          width: 700,
+          height: 275,
           frame: undefined,
           mapBody: undefined,
         }}
@@ -111,26 +114,39 @@ const BtorsAndCabinets: FC<Props> = ({
             feature={d}
             projection={projection}
             stroke="white"
+            cursor="pointer"
             fill={colorScale(d.properties?.category)}
+            onMouseOver={() => setActiveCountry(d.properties?.isoAlpha3)}
+            onMouseLeave={() => setActiveCountry(undefined)}
+            sx={{ transition: "opacity .5s" }}
+            opacity={
+              activeCountry && activeCountry !== d.properties?.isoAlpha3
+                ? 0.05
+                : 1
+            }
           />
         ))}
-        <g transform="translate(0 10)">
-          <NominalLegend
-            entries={colorScale
-              .domain()
-              .filter((d) => d)
-              .map((d) => ({
-                label: d,
-                color: colorScale(d),
-              }))}
-          />
-        </g>
+        <NominalLegend
+          transform="translate(0 10)"
+          fontSize={10}
+          entries={colorScale
+            .domain()
+            .filter((d) => d)
+            .map((d) => ({
+              label: d,
+              color: colorScale(d),
+            }))}
+        />
       </MapLayout>
       <BtorsByYear
         activeCabinet={dutchCabinets.find((d) => d.name === activeCabinet)}
+        activeCountry={activeCountry}
         btors={btorsByYear}
         colorScale={colorScale}
         bhosCountries={bhosCountries}
+        mouseEnterLeaveHandler={(isoAlpha3?: string) =>
+          setActiveCountry(isoAlpha3)
+        }
       />
     </div>
   );

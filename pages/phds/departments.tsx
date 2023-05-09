@@ -112,7 +112,7 @@ const PhdDepartments: NextPage<Props> = ({
               </g>
             )}
             <NominalLegend
-              title={"ITC&apos;s departments"}
+              title={"ITC's departments"}
               entries={legendEntries}
             />
             <g transform={`translate(${dimension.width - 170},0)`}>

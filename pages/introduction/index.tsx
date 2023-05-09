@@ -77,7 +77,7 @@ const Home: NextPage = () => {
                   href: "introduction/indonesia",
                   title: "ITC's impact in Indonesia",
                 },
-                { href: "", title: "ITC's history at a glance" },
+                { href: "introduction/travels", title: "ITC's travels" },
                 { href: "", title: "A brief history of GIS technology" },
               ].map(({ href, title }, i) => (
                 <li key={i}>

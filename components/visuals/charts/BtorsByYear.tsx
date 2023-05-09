@@ -24,13 +24,17 @@ import { BhosCountry } from "../../../types/BhosCountry";
 type Props = {
   btors: BtorsGroupedByYear;
   activeCabinet?: DutchCabinet;
+  activeCountry?: string;
   colorScale: ScaleOrdinal<string, string>;
   bhosCountries: BhosCountry[];
+  mouseEnterLeaveHandler: (isoAlpha3?: string) => void;
 };
 
 const BtorsByYear: FC<Props> = ({
   btors,
   activeCabinet,
+  activeCountry,
+  mouseEnterLeaveHandler,
   colorScale,
   bhosCountries,
 }) => {
@@ -110,10 +114,20 @@ const BtorsByYear: FC<Props> = ({
                 y={(d) => yScale(d.count)}
                 strokeLinejoin="round"
                 strokeWidth={hasCategory ? 2 : 0.5}
+                sx={{ transition: "opacity .5s" }}
+                cursor="pointer"
                 stroke={
                   hasCategory ? colorScale(bhosCountry.category) : "black"
                 }
-                opacity={hasCategory ? 1 : 0.2}
+                opacity={
+                  activeCountry && d.isoAlpha3 === activeCountry
+                    ? 1
+                    : !activeCountry && hasCategory
+                    ? 1
+                    : 0.05
+                }
+                onMouseEnter={() => mouseEnterLeaveHandler(d.isoAlpha3)}
+                onMouseLeave={() => mouseEnterLeaveHandler(undefined)}
               />
             </Group>
           );

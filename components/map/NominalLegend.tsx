@@ -3,19 +3,28 @@ import { FC, SVGProps } from "react";
 import sliceIntoChunks from "../../lib/utilities/sliceIntoChunks";
 import LegendTitle from "./LegendTitle";
 
-const NominalLegend: FC<{
+type Props = {
   entries: { label: string; color: string; symbol?: SVGProps<SVGGElement> }[];
   title?: string;
   columns?: number;
   columnWidth?: number;
-}> = ({ entries, title, columns = 1, columnWidth = 100 }) => {
-  const fontSize = 6;
+  fontSize?: number;
+} & SVGProps<SVGGElement>;
+
+const NominalLegend: FC<Props> = ({
+  entries,
+  title,
+  columns = 1,
+  columnWidth = 100,
+  fontSize = 6,
+  ...rest
+}) => {
   const symbolSize = fontSize * 1.2;
   const radius = symbolSize / 2;
   const columnLength = Math.ceil(entries.length / columns);
   const entriesByColumn = sliceIntoChunks(entries, columnLength);
   return (
-    <>
+    <g {...rest}>
       {title && <LegendTitle>{title}</LegendTitle>}
       {entriesByColumn.map((column, idx) => (
         <g key={nanoid()} transform={`translate(${idx * columnWidth} 0)`}>
@@ -44,7 +53,7 @@ const NominalLegend: FC<{
           ))}
         </g>
       ))}
-    </>
+    </g>
   );
 };
 
