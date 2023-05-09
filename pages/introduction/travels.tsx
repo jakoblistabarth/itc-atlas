@@ -26,6 +26,8 @@ import getBtorsGroupedByRegionByDepartment, {
 import BtorsByDepartment from "../../components/visuals/maps/BtorsByDepartment";
 import { SharedPageProps } from "../../types/Props";
 import getCountryCodes from "../../lib/data/queries/country/getCountryCodes";
+import MapLayoutFluid from "../../components/map/layout/MapLayoutFluid";
+import { geoBertin1953 } from "d3-geo-projection";
 
 type Props = SharedPageProps & {
   btorsByCountry: BtorsGroupedByCountry;
@@ -46,7 +48,9 @@ const Page: NextPage<Props> = ({
   countries,
 }) => {
   const heroVisual = (
-    <BtorsByYearMap neCountries={neCountriesTopoJson} btors={btorsByYear} />
+    <MapLayoutFluid projection={geoBertin1953()}>
+      <BtorsByYearMap neCountries={neCountriesTopoJson} btors={btorsByYear} />
+    </MapLayoutFluid>
   );
 
   const extent: ExtendedFeature = {
@@ -124,11 +128,12 @@ const Page: NextPage<Props> = ({
               incidunt fuga perferendis!
             </Paragraph>
             <Box variant="layout.inlineMap">
-              <BtorsByYearMap
-                neCountries={neCountriesTopoJson}
-                btors={btorsByYear}
-                extent={extent}
-              />
+              <MapLayoutFluid projection={geoBertin1953()} extent={extent}>
+                <BtorsByYearMap
+                  neCountries={neCountriesTopoJson}
+                  btors={btorsByYear}
+                />
+              </MapLayoutFluid>
               <Caption reference="Fig. 2">
                 This map shows travels over time with destinations within
                 Europe, showing a tendency to less travels over time across the
@@ -142,11 +147,13 @@ const Page: NextPage<Props> = ({
               incidunt fuga perferendis!
             </Paragraph>
             <Box variant="layout.inlineMap">
-              <BtorsByDepartment
-                neCountries={neCountriesTopoJson}
-                countryCodes={countries}
-                btors={btorsByDepartment}
-              />
+              <MapLayoutFluid projection={geoBertin1953()}>
+                <BtorsByDepartment
+                  neCountries={neCountriesTopoJson}
+                  countryCodes={countries}
+                  btors={btorsByDepartment}
+                />
+              </MapLayoutFluid>
               <Caption reference="Fig. 2">
                 This map shows travels per department.
               </Caption>

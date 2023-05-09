@@ -12,11 +12,19 @@ type Options = {
   extent?: GeoGeometryObjects | ExtendedFeature | ExtendedFeatureCollection;
 };
 
-function getMapHeight(
+/**
+ * Get the height of a map based on the projection and the width of the map container.
+ * It also scales the give projection according to the width and height!
+ * @param width The width of the map (in pixel).
+ * @param projection A D3 {@link GeoProjection}
+ * @param options Options regarding the map layout (see {@link Options}). Defaults to the world extent and a margin of 0.
+ * @returns The height of the map.
+ */
+const getMapHeight = (
   width: number,
   projection: GeoProjection,
   options?: Options
-) {
+) => {
   const defaults: Required<Options> = {
     extent: { type: "Sphere" },
     marginBottom: 0,
@@ -30,7 +38,7 @@ function getMapHeight(
     l = Math.min(Math.ceil(x1 - x0), dy);
   projection.scale((projection.scale() * (l - 1)) / l).precision(0.2);
   return dy + marginBottom;
-}
+};
 
 export default getMapHeight;
 

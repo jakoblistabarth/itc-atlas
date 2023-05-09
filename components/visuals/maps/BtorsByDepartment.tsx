@@ -4,14 +4,10 @@ import {
   ExtendedFeature,
   ExtendedFeatureCollection,
   GeoGeometryObjects,
-  GeoProjection,
   geoCentroid,
 } from "d3-geo";
-import { geoBertin1953 } from "d3-geo-projection";
-import { FC } from "react";
-import useMeasure from "react-use-measure";
+import { FC, useContext } from "react";
 import { Vector2 } from "three";
-import getMapHeight from "../../../lib/cartographic/getMapHeight";
 import getUnRegions from "../../../lib/data/getUnRegions";
 import { BtorsGroupedByRegionByDepartment } from "../../../lib/data/queries/btors/getBtorsGroupedByRegionByDepartment";
 import { departmentColorScale } from "../../../lib/styles/departmentColorScale";
@@ -20,26 +16,16 @@ import BaseLayer from "../../map/BaseLayer";
 import NominalLegend from "../../map/NominalLegend";
 import PolygonSymbol from "../../map/PolygonSymbol";
 import ScaledPie from "../../map/ScaledPie";
+import { MapContext } from "../../map/layout/MapContext";
 
 type Props = {
   neCountries: NeCountriesTopoJson;
   countryCodes: Country[];
   btors: BtorsGroupedByRegionByDepartment;
-  projection?: GeoProjection;
   extent?: GeoGeometryObjects | ExtendedFeatureCollection | ExtendedFeature;
 };
 
-const BtorsByDepartment: FC<Props> = ({
-  btors,
-  countryCodes,
-  neCountries,
-  extent,
-  projection = geoBertin1953(),
-}) => {
-  const [mapRef, { width }] = useMeasure();
-  const options = extent ? { extent } : undefined;
-  const height = getMapHeight(width, projection, options);
-
+const BtorsByDepartment: FC<Props> = ({ btors, countryCodes, neCountries }) => {
   const regions = getUnRegions(countryCodes, neCountries, "unSubRegionCode");
 
   const regionsWithData = regions.map((d) => {
@@ -67,51 +53,47 @@ const BtorsByDepartment: FC<Props> = ({
     };
   });
 
+  const { projection } = useContext(MapContext);
+
   return (
-    <svg
-      ref={mapRef}
-      width={"100%"}
-      height={"100%"}
-      viewBox={`0 0 ${width} ${height}`}
-    >
+    <>
       <BaseLayer countries={neCountries} projection={projection} />
-      {height && (
-        <g>
-          {regions.map((d) => (
-            <PolygonSymbol
-              key={d.properties?.region}
-              feature={d}
-              projection={projection}
-              stroke={"black"}
-              strokeWidth={0.5}
-              fill="transparent"
+      <g>
+        {regions.map((d) => (
+          <PolygonSymbol
+            key={d.properties?.region}
+            feature={d}
+            projection={projection}
+            stroke={"black"}
+            strokeWidth={0.5}
+            fill="transparent"
+          />
+        ))}
+        {regionsWithData.map((d) => {
+          const coords = projection(d.properties.centroid);
+          const position = coords ? new Vector2(...coords) : undefined;
+          if (!position?.x || !position.y)
+            return <g key={d.properties.region}></g>;
+          return (
+            <ScaledPie
+              key={d.properties.region}
+              position={position}
+              radius={radiusScale(d.properties.sum)}
+              innerRadius={radiusScale(d.properties.sum) / 4}
+              data={d.properties.data ?? []}
+              stroke={"white"}
+              colorScale={departmentColorScale}
             />
-          ))}
-          {regionsWithData.map((d) => {
-            const position = new Vector2(...projection(d.properties.centroid));
-            if (!position.x || !position.y)
-              return <g key={d.properties.region}></g>;
-            return (
-              <ScaledPie
-                key={d.properties.region}
-                position={position}
-                radius={radiusScale(d.properties.sum)}
-                innerRadius={radiusScale(d.properties.sum) / 4}
-                data={d.properties.data ?? []}
-                stroke={"white"}
-                colorScale={departmentColorScale}
-              />
-            );
-          })}
-        </g>
-      )}
+          );
+        })}
+      </g>
       <NominalLegend
         title="Departments"
         transform="translate(0 0)"
         fontSize={10}
         entries={legendEntries}
       />
-    </svg>
+    </>
   );
 };
 
