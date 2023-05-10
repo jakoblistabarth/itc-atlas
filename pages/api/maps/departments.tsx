@@ -85,9 +85,9 @@ export default async function handler(
                 key={nanoid()}
                 position={position}
                 radius={scale(d.totalCount)}
-                color={departmentColorScale}
+                colorScale={departmentColorScale}
                 data={d.departments}
-                style={theme?.scaledPie}
+                stroke="lightgrey"
               />
             );
           })}

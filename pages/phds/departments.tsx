@@ -103,9 +103,9 @@ const PhdDepartments: NextPage<Props> = ({
                       key={nanoid()}
                       position={new Vector2(pos[0], pos[1])}
                       radius={scale(country.totalCount)}
-                      color={departmentColorScale}
+                      colorScale={departmentColorScale}
                       data={country.departments}
-                      style={theme.scaledPie}
+                      stroke="lightgrey"
                     />
                   );
                 })}

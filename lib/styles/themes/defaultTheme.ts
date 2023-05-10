@@ -20,11 +20,6 @@ const defaultTheme: MapTheme = {
     fill: "black",
     fillOpacity: 0.1,
   },
-  scaledPie: {
-    fillOpacity: 1,
-    stroke: lightgrey,
-    strokeWidth: 2,
-  },
   flow: {
     stroke: "grey",
     opacity: 0.25,
