@@ -1,4 +1,9 @@
-import type { Topology, GeometryCollection } from "topojson-specification";
+import type {
+  Topology,
+  GeometryCollection,
+  Polygon,
+  MultiPolygon,
+} from "topojson-specification";
 
 export type NeScales = "10m" | "50m" | "110m";
 
@@ -11,9 +16,17 @@ export type CountryProperties = {
   ADM0_UN: string;
 };
 
-export type NeCountriesTopoJson = Topology<{
-  ne_admin_0_countries: GeometryCollection<CountryProperties>; //Question: is it correct that it is not possible to define the geometry type of the geometry
-}>;
+export interface NeCountriesTopoJson extends Topology {
+  objects: {
+    ne_admin_0_countries: {
+      type: "GeometryCollection";
+      geometries: (
+        | MultiPolygon<CountryProperties>
+        | Polygon<CountryProperties>
+      )[];
+    };
+  };
+}
 
 export type NeTopoProperties = {
   name_en: string;
