@@ -1,17 +1,25 @@
 import type { GeoProjection } from "d3";
-import { FC } from "react";
+import { FC, SVGProps } from "react";
 import type { TextAppearance } from "../../types/Appearance";
 import * as d3 from "d3";
 import GraticuleLabel from "./GraticuleLabel";
 import { GraticuleLabelOptions } from "../../types/GraticuleLableOptions";
 import { nanoid } from "nanoid";
 
-const GraticuleLabelLayer: FC<{
+type Props = {
   projection: GeoProjection;
   style?: TextAppearance;
   lonRange: GraticuleLabelOptions;
   latRange: GraticuleLabelOptions;
-}> = ({ projection, style, lonRange, latRange }) => {
+} & SVGProps<SVGGElement>;
+
+const GraticuleLabelLayer: FC<Props> = ({
+  projection,
+  style,
+  lonRange,
+  latRange,
+  ...rest
+}) => {
   const longitudes = d3.range(lonRange.min, lonRange.max + 1, lonRange.step);
   const latitudes = d3.range(latRange.min, latRange.max + 1, latRange.step);
   return (
@@ -21,6 +29,7 @@ const GraticuleLabelLayer: FC<{
       fontFamily={style?.fontFamily}
       fontStyle={style?.fontStyle}
       fontWeight={style?.fontWeight}
+      {...rest}
     >
       {longitudes.map((lon) => {
         const xyTop = projection([lon, 80]);

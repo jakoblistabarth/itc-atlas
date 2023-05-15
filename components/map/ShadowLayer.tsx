@@ -1,14 +1,16 @@
-import { FC } from "react";
+import { FC, SVGProps } from "react";
 import GaussianBlur from "../defs/filter/GaussianBlur";
 
-const ShadowLayer: FC<{
+type Props = {
   geoPath: string;
   blur: number;
   color: string;
-}> = ({ geoPath, blur, color }) => {
+} & SVGProps<SVGGElement>;
+
+const ShadowLayer: FC<Props> = ({ geoPath, blur, color, ...rest }) => {
   const filterId = "blurFilter";
   return (
-    <g>
+    <g {...rest}>
       <defs>
         <GaussianBlur id={filterId} blur={30} />
       </defs>

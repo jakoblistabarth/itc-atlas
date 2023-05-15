@@ -60,7 +60,7 @@ const BaseLayer: FC<Props> = ({
   const countriesGeoJson = topojson.feature(
     countries,
     countries.objects.ne_admin_0_countries
-  ) as FeatureCollection<MultiPolygon | Polygon>;
+  ) as FeatureCollection<MultiPolygon | Polygon, CountryProperties>;
   const borders = topojson.mesh(
     countries,
     countries.objects.ne_admin_0_countries,
@@ -92,12 +92,17 @@ const BaseLayer: FC<Props> = ({
     <>
       {hasShadow && pathSphere && (
         <ShadowLayer
+          id={`shadow_${id}`}
           geoPath={pathSphere}
           color={theme.background.fill ?? "black"}
           blur={30}
         />
       )}
-      <g className="base-map" clipPath={`url(#${clipId})`}>
+      <g
+        className="base-map"
+        id={`base-map-${id}`}
+        clipPath={`url(#${clipId})`}
+      >
         {pathSphere && (
           <defs>
             <path id={outlinePathId} d={pathSphere} />
@@ -113,32 +118,34 @@ const BaseLayer: FC<Props> = ({
           </defs>
         )}
         {pathSphere && (
-          <path
-            d={pathSphere}
-            fill={
-              theme.background.gradient
-                ? `url(#${oceanGradientId})`
-                : theme.background.fill
-            }
-          />
+          <g className="sphere" id={`sphere-${id}`}>
+            <path
+              d={pathSphere}
+              fill={
+                theme.background.gradient
+                  ? `url(#${oceanGradientId})`
+                  : theme.background.fill
+              }
+            />
+          </g>
         )}
 
         <Graticules projection={projection} />
 
         {landPath && (
-          <g className="countries">
+          <g className="landmasses" id={`landmasses-${id}`}>
             <path d={landPath} fill={theme.base.fill} />
           </g>
         )}
 
         {lakesPath && (
-          <g className="lakes">
+          <g className="lakes" id={`lakes-${id}`}>
             <path d={lakesPath} fill={theme.background.fill} />
           </g>
         )}
 
         {riversPath && (
-          <g className="rivers">
+          <g className="rivers" id={`rivers-${id}`}>
             <path
               d={riversPath}
               fill={"none"}
@@ -149,7 +156,7 @@ const BaseLayer: FC<Props> = ({
         )}
 
         {bordersPath && (
-          <g className="borders">
+          <g className="borders" id={`borders-${id}`}>
             <path
               d={bordersPath}
               fill="none"
@@ -160,21 +167,26 @@ const BaseLayer: FC<Props> = ({
           </g>
         )}
 
-        {countriesGeoJson &&
-          countriesGeoJson.features.map((country) => {
-            return (
-              <PolygonSymbol
-                key={nanoid()}
-                feature={country}
-                projection={projection}
-                style={{ ...theme.base, fill: "rgba(255,255,255,0)" }}
-              />
-            );
-          })}
+        <g className="countries" id={`countries-${id}`}>
+          {countriesGeoJson &&
+            countriesGeoJson.features.map((country) => {
+              return (
+                <PolygonSymbol
+                  id={`${country.properties.ADM0_A3_NL}-${id}`}
+                  key={nanoid()}
+                  feature={country}
+                  projection={projection}
+                  fill="none"
+                  stroke="whitesmoke"
+                />
+              );
+            })}
+        </g>
 
         {hasGraticuleLabels && (
-          <>
+          <g className="graticules" id={`graticules-${id}`}>
             <GraticuleLabelLayer
+              id={`graticule-labels-${id}`}
               style={theme.graticuleLabel}
               projection={projection}
               latRange={{ min: -60, max: 60, step: 10 }}
@@ -196,7 +208,7 @@ const BaseLayer: FC<Props> = ({
                 </BendedLabel>
               );
             })}
-          </>
+          </g>
         )}
 
         {labels &&
@@ -211,7 +223,7 @@ const BaseLayer: FC<Props> = ({
                 style={theme.label}
                 projection={projection}
               >
-                {country.properties?.name}
+                {country.properties?.NAME_EN}
               </BendedLabel>
             );
           })}

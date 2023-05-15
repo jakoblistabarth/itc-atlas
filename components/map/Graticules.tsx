@@ -1,5 +1,5 @@
 import { geoPath, GeoProjection } from "d3-geo";
-import { FC } from "react";
+import { FC, useId } from "react";
 import { geoGraticule10 } from "d3";
 import geoEquator from "../../lib/cartographic/geoEquator";
 import geoCirclesLat from "../../lib/cartographic/geoCirclesLat";
@@ -18,8 +18,10 @@ const Graticules: FC<Props> = ({ projection, theme = defaultTheme }) => {
   const equatorPath = path(geoEquator);
   const circlesPath = path(geoCirclesLat);
 
+  const id = useId();
+
   return (
-    <>
+    <g className="graticules" id={`graticules-${id}`}>
       {graticulePath && (
         <g className="graticule">
           <path
@@ -49,7 +51,7 @@ const Graticules: FC<Props> = ({ projection, theme = defaultTheme }) => {
           strokeWidth={(theme.graticule.strokeWidth ?? 0.5) * 2}
         />
       )}
-    </>
+    </g>
   );
 };
 

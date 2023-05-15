@@ -1,5 +1,5 @@
 import { GeoProjection } from "d3-geo";
-import type { FC } from "react";
+import { FC } from "react";
 import { setMapBounds } from "../../../lib/cartographic/getMapHeight";
 import defaultTheme from "../../../lib/styles/themes/defaultTheme";
 import { Bounds } from "../../../types/MapOptions";
@@ -27,8 +27,9 @@ const MapLayout: FC<Props> = ({
       xmlnsXlink="http://www.w3.org/1999/xlink"
       width={bounds.width}
       height={bounds.height}
+      fontFamily={theme.fontFamily ?? defaultTheme.fontFamily}
     >
-      <g fontFamily={theme.fontFamily ?? defaultTheme.fontFamily}>{children}</g>
+      {children}
       {debug && <LayoutDebug bounds={bounds} />}
     </svg>
   );

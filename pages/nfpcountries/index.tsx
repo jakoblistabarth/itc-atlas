@@ -127,7 +127,6 @@ const NfpCountries: NextPage<Props> = ({ nfps, neCountriesTopoJson }) => {
               const bounds = {
                 width: 300,
                 height: 275,
-                frame: { top: 0 },
               };
               return (
                 <MapLayout
