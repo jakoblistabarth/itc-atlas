@@ -25,14 +25,14 @@ const NominalLegend: FC<Props> = ({
   const entriesByColumn = sliceIntoChunks(entries, columnLength);
   return (
     <g {...rest}>
-      {title && <LegendTitle>{title}</LegendTitle>}
+      {title && <LegendTitle fontSize={fontSize}>{title}</LegendTitle>}
       {entriesByColumn.map((column, idx) => (
         <g key={nanoid()} transform={`translate(${idx * columnWidth} 0)`}>
           {column.map((entry, index) => (
             <g
               key={nanoid()}
               transform={`translate(0, ${
-                (title ? fontSize * 4 : 0) + index * fontSize * 1.75
+                (title ? fontSize * 3 : 0) + index * fontSize * 1.75
               })`}
             >
               <g transform={`translate(${symbolSize / 2} 0)`}>

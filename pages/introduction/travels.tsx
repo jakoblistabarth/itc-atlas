@@ -20,13 +20,20 @@ import getDutchCabinets from "../../lib/data/getDutchCabinets";
 import { BhosCountry } from "../../types/BhosCountry";
 import BtorsAndCabinets from "../../components/visuals/BtorsAndCabinets";
 import { DutchCabinet } from "../../types/DutchCabinet";
+import getBtorsGroupedByRegionByDepartment, {
+  BtorsGroupedByRegionByDepartment,
+} from "../../lib/data/queries/btors/getBtorsGroupedByRegionByDepartment";
+import BtorsByDepartment from "../../components/visuals/maps/BtorsByDepartment";
+import { SharedPageProps } from "../../types/Props";
+import getCountryCodes from "../../lib/data/queries/country/getCountryCodes";
 
-type Props = {
+type Props = SharedPageProps & {
   btorsByCountry: BtorsGroupedByCountry;
   btorsByYear: BtorsGroupedByYear;
   bhosCountries: BhosCountry[];
+  btorsByDepartment: BtorsGroupedByRegionByDepartment;
   dutchCabinets: DutchCabinet[];
-  neCountries: NeCountriesTopoJson;
+  neCountriesTopoJson: NeCountriesTopoJson;
 };
 
 const Page: NextPage<Props> = ({
@@ -34,10 +41,12 @@ const Page: NextPage<Props> = ({
   btorsByYear,
   bhosCountries,
   dutchCabinets,
-  neCountries,
+  btorsByDepartment,
+  neCountriesTopoJson,
+  countries,
 }) => {
   const heroVisual = (
-    <BtorsByYearMap neCountries={neCountries} btors={btorsByYear} />
+    <BtorsByYearMap neCountries={neCountriesTopoJson} btors={btorsByYear} />
   );
 
   const extent: ExtendedFeature = {
@@ -76,7 +85,7 @@ const Page: NextPage<Props> = ({
             </Paragraph>
             <Box variant="layout.inlineMap">
               <TravelsByDepartment
-                neCountries={neCountries}
+                neCountries={neCountriesTopoJson}
                 btors={btorsByCountry}
               />
               <Caption reference="Fig. 1">
@@ -99,7 +108,7 @@ const Page: NextPage<Props> = ({
             </Paragraph>
             <Box variant="layout.inlineMap">
               <BtorsAndCabinets
-                neCountries={neCountries}
+                neCountries={neCountriesTopoJson}
                 bhosCountries={bhosCountries}
                 btorsByYear={btorsByYear}
                 dutchCabinets={dutchCabinets}
@@ -116,7 +125,7 @@ const Page: NextPage<Props> = ({
             </Paragraph>
             <Box variant="layout.inlineMap">
               <BtorsByYearMap
-                neCountries={neCountries}
+                neCountries={neCountriesTopoJson}
                 btors={btorsByYear}
                 extent={extent}
               />
@@ -124,6 +133,22 @@ const Page: NextPage<Props> = ({
                 This map shows travels over time with destinations within
                 Europe, showing a tendency to less travels over time across the
                 contintent.
+              </Caption>
+            </Box>
+            <Paragraph>
+              Lorem ipsum, dolor sit amet consectetur adipisicing elit. Amet
+              molestiae, sequi animi est dolor nihil qui id, aperiam assumenda
+              suscipit officia, veniam tenetur veritatis saepe! Recusandae animi
+              incidunt fuga perferendis!
+            </Paragraph>
+            <Box variant="layout.inlineMap">
+              <BtorsByDepartment
+                neCountries={neCountriesTopoJson}
+                countryCodes={countries}
+                btors={btorsByDepartment}
+              />
+              <Caption reference="Fig. 2">
+                This map shows travels per department.
               </Caption>
             </Box>
           </Box>
@@ -139,24 +164,30 @@ export const getStaticProps: GetStaticProps<Props> = async () => {
   const [
     btorsByCountry,
     btorsByYear,
+    btorsByDepartment,
     bhosCountries,
     dutchCabinets,
-    neCountries,
+    neCountriesTopoJson,
+    countries,
   ] = await Promise.all([
     getBtorsGroupedByCountry(),
     getBtorsGroupedByYear(),
+    getBtorsGroupedByRegionByDepartment(),
     getBhosCountries(),
     getDutchCabinets(),
     getCountries(),
+    getCountryCodes(),
   ]);
 
   return {
     props: {
       btorsByCountry,
       btorsByYear,
+      btorsByDepartment,
       bhosCountries,
       dutchCabinets,
-      neCountries,
+      neCountriesTopoJson,
+      countries,
     },
   };
 };
