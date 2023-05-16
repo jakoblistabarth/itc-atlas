@@ -1,3 +1,5 @@
+/** @jsxImportSource theme-ui */
+
 import { descending, max, range, scaleSqrt } from "d3";
 import { geoBertin1953 } from "d3-geo-projection";
 import type { Feature, FeatureCollection, Point } from "geojson";
@@ -29,12 +31,23 @@ import { CountryProperties } from "../../types/NeTopoJson";
 import useSWR from "swr";
 import LineChart from "../../components/charts/timeline/LineChart";
 import getApplicationsByYear from "../../lib/data/queries/application/getApplicationsByYear";
+import getApplicationLevels, {
+  ApplicationLevels,
+} from "../../lib/data/queries/application/getApplicationLevels";
 
 type Props = {
   applicants: CountryWithApplicantCount;
+  levels: ApplicationLevels;
 } & SharedPageProps;
 
-const AlumniOrigin: NextPage<Props> = ({ applicants, neCountriesTopoJson }) => {
+const AlumniOrigin: NextPage<Props> = ({
+  applicants,
+  neCountriesTopoJson,
+  levels,
+}) => {
+  const [country, setCountry] = useState<string | null>(null);
+  const [level, setLevel] = useState<string | null>(null);
+
   const geographies = feature(
     neCountriesTopoJson,
     neCountriesTopoJson.objects.ne_admin_0_countries
@@ -43,6 +56,17 @@ const AlumniOrigin: NextPage<Props> = ({ applicants, neCountriesTopoJson }) => {
   type CountryPropertiesWithAlumniCount = CountryProperties & {
     alumniCount: number;
   };
+
+  const { data: sparklineData } = useSWR<
+    Awaited<ReturnType<typeof getApplicationsByYear>>
+  >("/api/data/application/groupByYear?country=" + country);
+
+  const { data: filteredApplicants, isLoading: filteredApplicantsIsLoading } =
+    useSWR<Awaited<ReturnType<typeof getCountryWithApplicantCount>>>(
+      "/api/data/country/count/applicant?level=" + level
+    );
+
+  const mapData = filteredApplicants ?? applicants;
 
   const points: FeatureCollection<Point, CountryPropertiesWithAlumniCount> = {
     type: "FeatureCollection",
@@ -59,8 +83,8 @@ const AlumniOrigin: NextPage<Props> = ({ applicants, neCountriesTopoJson }) => {
           properties: {
             ...country.properties,
             alumniCount:
-              applicants.find((d) => d.isoAlpha3 === isoCode)?._count
-                .applicants ?? 0,
+              mapData.find((d) => d.isoAlpha3 === isoCode)?._count.applicants ??
+              0,
           },
         };
         return feature;
@@ -74,17 +98,11 @@ const AlumniOrigin: NextPage<Props> = ({ applicants, neCountriesTopoJson }) => {
       ),
   };
 
-  const [country, setCountry] = useState<string | null>(null);
-
-  const { data, error, isLoading } = useSWR<
-    Awaited<ReturnType<typeof getApplicationsByYear>>
-  >("/api/data/application/groupByYear?country=" + country);
-
   const minX = 1950;
   const maxX = new Date().getFullYear();
-  const dataClean = range(minX, maxX).map((i) => ({
+  const sparklineDataFilled = range(minX, maxX).map((i) => ({
     x: i,
-    y: data?.find((d) => d.examYear === i)?._count._all ?? 0,
+    y: sparklineData?.find((d) => d.examYear === i)?._count._all ?? 0,
   }));
 
   const [mapRef, { width }] = useMeasure();
@@ -119,7 +137,26 @@ const AlumniOrigin: NextPage<Props> = ({ applicants, neCountriesTopoJson }) => {
 
       <Container>
         <main>
-          <Heading as="h1">ITC&apos;s MSc alumni country of origin</Heading>
+          <Heading as="h1">Where do ITC&apos;s alumni come from?</Heading>
+
+          <div sx={{ mb: 3 }}>
+            <label>
+              Select a level you want to filter for:
+              <select
+                sx={{ ml: 2 }}
+                name="level"
+                onChange={(event) => setLevel(event.target.value)}
+                placeholder={"none selected"}
+              >
+                <option value={""}>All levels</option>
+                {levels.map((d) => (
+                  <option value={d.level ?? ""} key={d.level}>
+                    {d.level}
+                  </option>
+                ))}
+              </select>
+            </label>
+          </div>
 
           <div
             style={{ padding: "0 1em", width: "100%", height: "100%" }}
@@ -136,70 +173,74 @@ const AlumniOrigin: NextPage<Props> = ({ applicants, neCountriesTopoJson }) => {
                   projection={projection}
                 />
                 <g id="alumni-countries-symbols">
-                  {points.features.map((point, idx) => (
-                    <Tooltip key={`tooltip-country-${idx}`}>
-                      <TooltipTrigger asChild>
-                        <g>
-                          <PointSymbol
-                            position={
-                              new Vector2(
-                                ...projection(point.geometry.coordinates)
-                              )
-                            }
-                            radius={scale(point.properties?.alumniCount)}
-                            fill={"teal"}
-                            stroke={"teal"}
-                            strokeWidth={0.5}
-                            fillOpacity={0.1}
-                            // TODO: check whether moving state back to point symbol improves behaviour (e.g. css transition)
-                            // seems like the transition is only working once the data is fetched by SWR
-                            onMouseEnter={() => {
-                              setCountry(point.properties?.ADM0_A3_NL);
-                            }}
-                            onMouseLeave={() => setCountry(null)}
-                            isActive={country === point.properties?.ADM0_A3_NL}
-                            interactive
-                          />
-                        </g>
-                      </TooltipTrigger>
-                      {data && (
-                        <TooltipContent>
-                          <div>
-                            <strong>{point.properties?.NAME_EN}</strong>
-                            <br />
-                            {point.properties?.alumniCount} M.Sc. alumni
-                          </div>
-                          <div>
-                            {dataClean && (
-                              <LineChart
-                                data={dataClean}
-                                width={100}
-                                height={30}
-                              />
-                            )}
-                          </div>
-                        </TooltipContent>
-                      )}
-                    </Tooltip>
-                  ))}
+                  {!filteredApplicantsIsLoading &&
+                    points.features.map((point, idx) => (
+                      <Tooltip key={`tooltip-country-${idx}`}>
+                        <TooltipTrigger asChild>
+                          <g>
+                            <PointSymbol
+                              position={
+                                new Vector2(
+                                  ...projection(point.geometry.coordinates)
+                                )
+                              }
+                              radius={scale(point.properties?.alumniCount)}
+                              fill={"teal"}
+                              stroke={"teal"}
+                              strokeWidth={0.5}
+                              fillOpacity={0.1}
+                              // TODO: check whether moving state back to point symbol improves behaviour (e.g. css transition)
+                              // seems like the transition is only working once the data is fetched by SWR
+                              onMouseEnter={() => {
+                                setCountry(point.properties?.ADM0_A3_NL);
+                              }}
+                              onMouseLeave={() => setCountry(null)}
+                              isActive={
+                                country === point.properties?.ADM0_A3_NL
+                              }
+                              interactive
+                            />
+                          </g>
+                        </TooltipTrigger>
+                        {sparklineData && (
+                          <TooltipContent>
+                            <div>
+                              <strong>{point.properties?.NAME_EN}</strong>
+                              <br />
+                              {point.properties?.alumniCount} M.Sc. alumni
+                            </div>
+                            <div>
+                              {sparklineDataFilled && (
+                                <LineChart
+                                  data={sparklineDataFilled}
+                                  width={100}
+                                  height={30}
+                                />
+                              )}
+                            </div>
+                          </TooltipContent>
+                        )}
+                      </Tooltip>
+                    ))}
                 </g>
                 <g id="alumni-country-labels">
-                  {points.features.slice(0, 10).map((point, idx) => {
-                    const pos = new Vector2(
-                      ...projection(point.geometry.coordinates)
-                    );
-                    return (
-                      <PointLabel
-                        key={`label-${point.properties?.ADM0_A3_NL}-${idx}`}
-                        position={pos}
-                        placement={LabelPlacement.CENTER}
-                        fill={"teal"}
-                        fontSize={10}
-                      >
-                        {point.properties?.NAME_EN}
-                      </PointLabel>
-                    );
-                  })}
+                  {!filteredApplicantsIsLoading &&
+                    points.features.slice(0, 10).map((point, idx) => {
+                      const pos = new Vector2(
+                        ...projection(point.geometry.coordinates)
+                      );
+                      return (
+                        <PointLabel
+                          key={`label-${point.properties?.ADM0_A3_NL}-${idx}`}
+                          position={pos}
+                          placement={LabelPlacement.CENTER}
+                          fill={"teal"}
+                          fontSize={10}
+                        >
+                          {point.properties?.NAME_EN}
+                        </PointLabel>
+                      );
+                    })}
                 </g>
                 <ProportionalCircleLegend
                   data={points.features
@@ -221,17 +262,20 @@ const AlumniOrigin: NextPage<Props> = ({ applicants, neCountriesTopoJson }) => {
 };
 
 export const getStaticProps: GetStaticProps<Props> = async () => {
-  const [applicants, neCountriesTopoJson, countries] = await Promise.all([
-    getCountryWithApplicantCount(),
-    getCountries(),
-    getCountryCodes(),
-  ]);
+  const [applicants, neCountriesTopoJson, countries, levels] =
+    await Promise.all([
+      getCountryWithApplicantCount(),
+      getCountries(),
+      getCountryCodes(),
+      getApplicationLevels(),
+    ]);
 
   return {
     props: {
       applicants,
       neCountriesTopoJson,
       countries,
+      levels,
     },
   };
 };

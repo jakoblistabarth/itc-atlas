@@ -27,7 +27,7 @@ const ApplicantsOverview: NextPage = () => {
 
           <Grid variant="navigation">
             <CardLink href={`${route}/origin-country`}>
-              <Heading as="h2">Origin by Country</Heading>
+              <Heading as="h2">Alumni by country</Heading>
             </CardLink>
           </Grid>
 
