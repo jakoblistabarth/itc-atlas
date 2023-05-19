@@ -22,7 +22,7 @@ const ApplicantsOverview: NextPage = () => {
 
       <Container>
         <main>
-          <Heading as="h1">ITC&apos;s applications</Heading>
+          <Heading as="h1">ITC&apos;s applicants</Heading>
           <Text variant="teaser">Insights into ITC&apos;s applicants.</Text>
 
           <Grid variant="navigation">

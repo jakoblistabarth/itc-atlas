@@ -42,12 +42,22 @@ const Home: NextPage = () => {
     {
       href: "/employees",
       children: "Employees",
-      description: "Insights into ITC's staff composition.",
+      description: "Insights into ITC's employee composition.",
+    },
+    {
+      href: "/employments",
+      children: "Employments",
+      description: "Insights into ITC's emplpoyments.",
     },
     {
       href: "/applicants",
       children: "Applicants",
       description: "ITC's applicants.",
+    },
+    {
+      href: "/applications",
+      children: "Applications",
+      description: "ITC's applications.",
     },
     {
       href: "/phds",

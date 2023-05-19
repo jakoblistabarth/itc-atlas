@@ -19,7 +19,7 @@ const ApplicantsOverview: NextPage = () => {
 
       <Container>
         <main>
-          <Heading as="h1">ITC&apos;s applicants</Heading>
+          <Heading as="h1">ITC&apos;s applications</Heading>
           <Text variant="teaser">Insights into ITC&apos;s applications.</Text>
           {error && <div>failed to load</div>}
           {isLoading && <div>Loading …</div>}
