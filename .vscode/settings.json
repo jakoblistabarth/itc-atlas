@@ -1,5 +1,8 @@
 {
   "editor.formatOnSave": true,
   "todohighlight.keywordsPattern": "TODO|todo|QUESTION|Question|FIXME|fixme",
-  "editor.defaultFormatter": "esbenp.prettier-vscode"
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "[prisma]": {
+    "editor.defaultFormatter": "Prisma.prisma"
+  }
 }
