@@ -21,6 +21,9 @@ export const loadApplications = async () => {
         aq.op.is_finite(aq.op.parse_int(d["YearCert_Exam_Dipl"], 10))
           ? aq.op.parse_int(d["YearCert_Exam_Dipl"], 10)
           : null,
+      certificationDate: aq.escape((d: ContactRaw) =>
+        d["Certificate Date"] ? ddmmyyyyToDate(d["Certificate Date"]) : null
+      ),
     })
     .rename({
       APPnr: "id",
@@ -43,6 +46,7 @@ export const loadApplications = async () => {
       "statusId",
       "examYear",
       "certificateType",
+      "certificationDate",
       "enrollmentStart",
       "enrollmentEnd",
       "sponsor"
