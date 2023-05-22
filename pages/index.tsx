@@ -15,11 +15,6 @@ import Header from "../components/Header";
 const Home: NextPage = () => {
   const links = [
     {
-      href: "/travels",
-      children: "Travels",
-      description: "Insights into ITC's travels around the globe.",
-    },
-    {
       href: "/btors",
       children: "Back to Office Reports",
       description: "Insights into ITC's travels around the globe.",
