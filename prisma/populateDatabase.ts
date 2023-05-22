@@ -213,16 +213,17 @@ async function main() {
     applications.map(async (d) => {
       const createArgs: Prisma.ApplicationCreateArgs = {
         data: {
-          id: d.id,
-          applicantId: d.applicantId,
+          id: d.id_r,
+          applicantId: d.applicantId_r,
           courseId: d.courseId,
           programmId: d.programmId,
           level: d.level,
           statusId: d.statusId,
           examYear: d.examYear,
-          enrollmentStart: d.enrollmentStart,
-          enrollmentEnd: d.enrollmentEnd,
-          certificationDate: d.certificationDate,
+          enrollmentStartYear: d.enrollmentStart?.getFullYear(),
+          enrollmentEndYear: d.enrollmentEnd?.getFullYear(),
+          certificationYear: d.certificationDate?.getFullYear(),
+          enrolledDays: d.enrolledDays,
           sponsor: d.sponsor,
           certificateType: d.certificateType,
         },

@@ -49,20 +49,21 @@ model Applicant {
 
 // TODO: add programm relation to application
 model Application {
-  id                String    @id
-  applicantId       String
-  applicant         Applicant @relation("ApplicantApplication", fields: [applicantId], references: [id])
-  courseId          String
-  programmId        String?
-  level             String?
-  statusId          String
-  status            Status    @relation("StatusApplication", fields: [statusId], references: [id])
-  examYear          Int?
-  enrollmentStart   DateTime? @db.Date
-  enrollmentEnd     DateTime? @db.Date
-  certificationDate DateTime? @db.Date
-  sponsor           String?
-  certificateType   String?
+  id                  String    @id
+  applicantId         String
+  applicant           Applicant @relation("ApplicantApplication", fields: [applicantId], references: [id])
+  courseId            String
+  programmId          String?
+  level               String?
+  statusId            String
+  status              Status    @relation("StatusApplication", fields: [statusId], references: [id])
+  examYear            Int?
+  enrollmentStartYear Int?
+  enrollmentEndYear   Int?
+  enrolledDays        Int?
+  certificationYear   Int?
+  sponsor             String?
+  certificateType     String?
 }
 
 model Phd {

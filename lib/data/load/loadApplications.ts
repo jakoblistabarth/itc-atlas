@@ -2,6 +2,8 @@ import loadContacts, { ContactRaw } from "./loadContacts";
 import * as aq from "arquero";
 import { ApplicationClean } from "../../../types/ApplicationClean";
 import { ddmmyyyyToDate } from "../../utilities/timeparser";
+import getDaysBetween from "../../utilities/getDaysBetween";
+import { nanoid } from "nanoid";
 
 export const loadApplications = async () => {
   const data = await loadContacts();
@@ -24,6 +26,16 @@ export const loadApplications = async () => {
       certificationDate: aq.escape((d: ContactRaw) =>
         d["Certificate Date"] ? ddmmyyyyToDate(d["Certificate Date"]) : null
       ),
+      id_r: () => nanoid(),
+      applicantId_r: () => nanoid(),
+    })
+    .derive({
+      enrolledDays: aq.escape(
+        (d: ContactRaw & { enrollmentStart?: Date; enrollmentEnd?: Date }) => {
+          if (!d.enrollmentStart || !d.enrollmentEnd) return undefined;
+          return getDaysBetween(d.enrollmentStart, d.enrollmentEnd);
+        }
+      ),
     })
     .rename({
       APPnr: "id",
@@ -34,8 +46,6 @@ export const loadApplications = async () => {
       Level: "level",
       Diploma: "certificateType",
       Sponsor: "sponsor",
-      "Start Date": "enrollmentStart",
-      "End Date": "enrollmentEnd",
     })
     .select(
       "id",
@@ -49,6 +59,7 @@ export const loadApplications = async () => {
       "certificationDate",
       "enrollmentStart",
       "enrollmentEnd",
+      "enrolledDays",
       "sponsor"
     );
 
