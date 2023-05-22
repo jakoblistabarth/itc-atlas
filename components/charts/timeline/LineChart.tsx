@@ -27,8 +27,8 @@ const LineChart: FC<Props> = ({ data, width, height, ...rest }) => {
     <svg width={width} height={height} {...rest}>
       <defs>
         <linearGradient id="myGradient" gradientTransform="rotate(90)">
-          <stop offset="5%" stop-color="turquoise" />
-          <stop offset="95%" stop-color="teal" />
+          <stop offset="5%" stopColor="turquoise" />
+          <stop offset="95%" stopColor="teal" />
         </linearGradient>
       </defs>
       <g transform={`translate(0,${m})`}>
