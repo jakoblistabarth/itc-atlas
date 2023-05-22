@@ -6,7 +6,7 @@ import {
 } from "@prisma/client";
 import prisma from "./client";
 import loadDepartments from "../lib/data/load/loadDepartments";
-import loadPhdCandidates from "../lib/data/load/loadPhdCandidates";
+import loadPhds from "../lib/data/load/loadPhds";
 import loadUnsdCountries from "../lib/data/load/loadUnsdCountries";
 import loadApplicants from "../lib/data/load/loadApplicants";
 import loadApplications from "../lib/data/load/loadApplications";
@@ -37,7 +37,7 @@ async function main() {
     loadDepartments(),
     loadStatus(),
     loadUnsdCountries(),
-    loadPhdCandidates(),
+    loadPhds(),
     loadApplicants(),
     loadApplications(),
     loadEmployees(),
@@ -248,7 +248,7 @@ async function main() {
 
       const country = countriesDB.find((c) => c.isoAlpha3 === d.country);
 
-      const createArgs: Prisma.PhdCandidateCreateArgs = {
+      const createArgs: Prisma.PhdCreateArgs = {
         data: {
           id: idx,
           itcStudentId: itcStudentId,
@@ -262,10 +262,10 @@ async function main() {
           countryId: country?.id,
         },
       };
-      return await prisma.phdCandidate.create(createArgs);
+      return await prisma.phd.create(createArgs);
     })
   );
-  console.log("Populated model PhdCandidate. 🌱");
+  console.log("Populated model Phd. 🌱");
 
   await Promise.all(
     employees.map(async (d) => {

@@ -2,8 +2,8 @@ import { Prisma } from "@prisma/client";
 import prisma from "../../../../prisma/client";
 
 //TODO add filter for status and level?
-const getPhdCandidatesByYear = async (isoAlpha3: string) => {
-  return prisma.phdCandidate.groupBy({
+const getPhdsByYear = async (isoAlpha3: string) => {
+  return prisma.phd.groupBy({
     by: ["promotionYear"],
     _count: {
       _all: true,
@@ -23,8 +23,8 @@ const getPhdCandidatesByYear = async (isoAlpha3: string) => {
   });
 };
 
-export type phdCandidateByYearWithCount = Prisma.PromiseReturnType<
-  typeof getPhdCandidatesByYear
+export type phdsByYearWithCount = Prisma.PromiseReturnType<
+  typeof getPhdsByYear
 >;
 
-export default getPhdCandidatesByYear;
+export default getPhdsByYear;

@@ -1,7 +1,7 @@
 import { faker } from "@faker-js/faker";
 import loadUnsdCountries from "../load/loadUnsdCountries";
 import { sampleSize, range, sample } from "lodash";
-import { PhdCandidate } from "../../../types/PhdCandidate";
+import { Phd } from "../../../types/Phd";
 import loadStatus from "../load/loadStatus";
 import loadDepartments from "../load/loadDepartments";
 import addDays from "../../utilities/addDays";
@@ -10,7 +10,7 @@ import { ApplicantClean } from "../../../types/ApplicantClean";
 const fakePhds = async (
   applicants: ApplicantClean[],
   number: number = 750
-): Promise<PhdCandidate[]> => {
+): Promise<Phd[]> => {
   const countries = await loadUnsdCountries();
   const status = loadStatus();
   const departments = loadDepartments();
@@ -25,7 +25,7 @@ const fakePhds = async (
     const country = sample(countryPool)?.["ISO-alpha3 Code"];
     const start = faker.date.between(new Date("1960"), new Date());
     const graduation = addDays(start, 365 * 6);
-    const phdCandidate: PhdCandidate = {
+    const phd: Phd = {
       itcStudentId:
         Math.random() > 0.1 ? sample(applicants)?.itcStudentId ?? null : null,
       country: country ?? "",
@@ -38,7 +38,7 @@ const fakePhds = async (
       dateGraduation: graduation.toISOString(),
       yearPromotion: graduation.getFullYear(),
     };
-    return phdCandidate;
+    return phd;
   });
 
   return data;

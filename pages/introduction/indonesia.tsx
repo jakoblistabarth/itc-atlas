@@ -14,9 +14,9 @@ import getApplicationsByYear, {
 import getBTORsByCountry, {
   BtorsByCountry,
 } from "../../lib/data/queries/btors/getBTORsByCountry";
-import getPhdCandidatesByYear, {
-  phdCandidateByYearWithCount,
-} from "../../lib/data/queries/phdCandidate/getPhdCandidatesByYear";
+import getPhdsByYear, {
+  phdsByYearWithCount,
+} from "../../lib/data/queries/phd/getPhdsByYear";
 import { LongTermMission } from "../../types/LongTermMission";
 import { Minister } from "../../types/Minister";
 import { NeCountriesTopoJson } from "../../types/NeTopoJson";
@@ -26,7 +26,7 @@ import HeroVisualPage from "../../components/HeroVisualPage";
 
 type Props = {
   projects: ProjectIndonesia[];
-  phdGraduatesByYear: phdCandidateByYearWithCount;
+  phdsByYear: phdsByYearWithCount;
   applications: ApplicationByYearWithCount;
   btors: BtorsByCountry;
   longTermMissions: LongTermMission[];
@@ -36,7 +36,7 @@ type Props = {
 
 const Page: NextPage<Props> = ({
   projects,
-  phdGraduatesByYear,
+  phdsByYear,
   applications,
   btors,
   longTermMissions,
@@ -46,7 +46,7 @@ const Page: NextPage<Props> = ({
   const heroVisual = (
     <IndonesiaTimeline
       projects={projects}
-      phdGraduatesByYear={phdGraduatesByYear}
+      phdsByYear={phdsByYear}
       applications={applications}
       btors={btors}
       longTermMissions={longTermMissions}
@@ -154,7 +154,7 @@ export default Page;
 export const getStaticProps: GetStaticProps<Props> = async () => {
   const [
     projects,
-    phdGraduatesByYear,
+    phdsByYear,
     btors,
     longTermMissions,
     applications,
@@ -162,7 +162,7 @@ export const getStaticProps: GetStaticProps<Props> = async () => {
     neCountries,
   ] = await Promise.all([
     getProjectsIndonesia(),
-    getPhdCandidatesByYear("IDN"),
+    getPhdsByYear("IDN"),
     getBTORsByCountry("IDN"),
     getLongTermMissions(),
     getApplicationsByYear("IDN"),
@@ -173,7 +173,7 @@ export const getStaticProps: GetStaticProps<Props> = async () => {
   return {
     props: {
       projects,
-      phdGraduatesByYear,
+      phdsByYear,
       btors,
       longTermMissions,
       applications,

@@ -244,7 +244,7 @@ async function main() {
 
       const country = countriesDB.find((c) => c.isoAlpha3 === d.country);
 
-      const createArgs: Prisma.PhdCandidateCreateArgs = {
+      const createArgs: Prisma.PhdCreateArgs = {
         data: {
           id: idx,
           itcStudentId: itcStudentId,
@@ -258,10 +258,10 @@ async function main() {
           countryId: country?.id,
         },
       };
-      return await prisma.phdCandidate.create(createArgs);
+      return await prisma.phd.create(createArgs);
     })
   );
-  console.log("Seeded model PhdCandidate. 🌱");
+  console.log("Seeded model Phd. 🌱");
 
   const employees = await fakeEmployees(applicants);
 

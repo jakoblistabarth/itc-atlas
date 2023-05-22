@@ -1,11 +1,11 @@
-import getPhdCandidates from "../load/loadPhdCandidates";
+import loadPhds from "../load/loadPhds";
 import * as aq from "arquero";
 import { describe, test, expect, beforeAll } from "@jest/globals";
 
-let phds: Awaited<ReturnType<typeof getPhdCandidates>>;
+let phds: Awaited<ReturnType<typeof loadPhds>>;
 
 beforeAll(async () => {
-  phds = await getPhdCandidates();
+  phds = await loadPhds();
 });
 
 describe("For Phds", () => {

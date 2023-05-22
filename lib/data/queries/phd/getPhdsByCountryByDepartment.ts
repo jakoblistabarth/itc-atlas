@@ -10,11 +10,11 @@ export type phdPerCountryDepartment = {
   count: number;
 };
 
-const getPhdCandidatesByCountryByDepartment = async (
+const getPhdsByCountryByDepartment = async (
   onlyGraduates?: Boolean // TODO: refactor
 ) => {
   const filter = onlyGraduates ? { status: { id: { equals: "38" } } } : {};
-  const phdsGrouped = await prisma.phdCandidate.groupBy({
+  const phdsGrouped = await prisma.phd.groupBy({
     by: ["countryId", "departmentMainId"],
     _count: {
       _all: true,
@@ -24,7 +24,7 @@ const getPhdCandidatesByCountryByDepartment = async (
   });
   const countries = await prisma.country.findMany();
 
-  const phdCandidateCount = phdsGrouped.map((d) => {
+  const phdCount = phdsGrouped.map((d) => {
     const c = countries.find((c) => c.id == d.countryId);
     return {
       countryIsoAlpha3: c?.isoAlpha3,
@@ -33,7 +33,7 @@ const getPhdCandidatesByCountryByDepartment = async (
       count: d._count._all,
     };
   });
-  const count = group(phdCandidateCount, (d) => d.countryIsoAlpha3);
+  const count = group(phdCount, (d) => d.countryIsoAlpha3);
 
   // TODO: replace by getCountriesCentroids()
   const neCountriesTopojson = getCountries();
@@ -81,4 +81,4 @@ const getPhdCandidatesByCountryByDepartment = async (
   return countriesWithDepartments;
 };
 
-export default getPhdCandidatesByCountryByDepartment;
+export default getPhdsByCountryByDepartment;

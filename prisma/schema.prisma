@@ -12,36 +12,36 @@ datasource db {
 }
 
 model Department {
-  id                     String         @id
-  name                   String
-  number                 Int?           @unique
-  phdCandidatesMain      PhdCandidate[] @relation("DepartmentPhdMain")
-  phdCandidatesSecondary PhdCandidate[] @relation("DepartmentPhdSecondary")
-  employments            Employment[]   @relation("DepartmentEmployment")
-  projectMain            Project[]      @relation("DepartmentProjectMain")
-  projectsSecondary      Project[]
-  btors                  Btor[]         @relation("BtorsDepartment")
-  flights2019            Flight2019[]   @relation("Flight2019Department")
+  id                String       @id
+  name              String
+  number            Int?         @unique
+  phdsMain          Phd[]        @relation("DepartmentPhdMain")
+  phdsSecondary     Phd[]        @relation("DepartmentPhdSecondary")
+  employments       Employment[] @relation("DepartmentEmployment")
+  projectMain       Project[]    @relation("DepartmentProjectMain")
+  projectsSecondary Project[]
+  btors             Btor[]       @relation("BtorsDepartment")
+  flights2019       Flight2019[] @relation("Flight2019Department")
 }
 
 model Status {
-  id            String         @id
-  label         String
-  applications  Application[]  @relation("StatusApplication")
-  phdCandidates PhdCandidate[] @relation("StatusPhdCandidate")
+  id           String        @id
+  label        String
+  applications Application[] @relation("StatusApplication")
+  phds         Phd[]         @relation("StatusPhd")
 }
 
 //TODO: add city
 model Applicant {
-  id           String         @id
-  itcStudentId String?        @unique
+  id           String        @id
+  itcStudentId String?       @unique
   gender       String?
-  dateOfBirth  DateTime?      @db.Date
+  dateOfBirth  DateTime?     @db.Date
   countryId    Int?
-  country      Country?       @relation("ApplicantNationality", fields: [countryId], references: [id])
-  phds         PhdCandidate[] @relation("ApplicantPhd")
-  employees    Employee[]     @relation("ApplicantEmployee")
-  applications Application[]  @relation("ApplicantApplication")
+  country      Country?      @relation("ApplicantNationality", fields: [countryId], references: [id])
+  phds         Phd[]         @relation("ApplicantPhd")
+  employees    Employee[]    @relation("ApplicantEmployee")
+  applications Application[] @relation("ApplicantApplication")
 }
 
 // TODO: add model programms
@@ -65,7 +65,7 @@ model Application {
   certificateType   String?
 }
 
-model PhdCandidate {
+model Phd {
   id                    Int         @id @default(autoincrement())
   itcStudentId          String?
   applicant             Applicant?  @relation("ApplicantPhd", fields: [itcStudentId], references: [itcStudentId])
@@ -78,7 +78,7 @@ model PhdCandidate {
   graduation            DateTime?   @db.Date
   promotionYear         Int?
   statusId              String?
-  status                Status?     @relation("StatusPhdCandidate", fields: [statusId], references: [id])
+  status                Status?     @relation("StatusPhd", fields: [statusId], references: [id])
   countryId             Int?
   country               Country?    @relation("PhdCountry", fields: [countryId], references: [id])
 }
@@ -104,24 +104,24 @@ model Employment {
 }
 
 model Country {
-  id                       Int            @id @default(autoincrement())
-  isoAlpha2                String         @db.Char(2)
-  isoAlpha3                String         @db.Char(3)
-  isoNum3                  String?        @db.Char(3)
+  id                       Int          @id @default(autoincrement())
+  isoAlpha2                String       @db.Char(2)
+  isoAlpha3                String       @db.Char(3)
+  isoNum3                  String?      @db.Char(3)
   nameEn                   String?
-  nameLongEn               String         @db.Text
-  unRegionCode             String         @db.Char(3)
-  unSubRegionCode          String         @db.Char(3)
-  unIntermediateRegionCode String?        @db.Char(3)
+  nameLongEn               String       @db.Text
+  unRegionCode             String       @db.Char(3)
+  unSubRegionCode          String       @db.Char(3)
+  unIntermediateRegionCode String?      @db.Char(3)
   ldc                      Boolean
   lldc                     Boolean
   sids                     Boolean
-  phdCandidates            PhdCandidate[] @relation("PhdCountry")
-  applicants               Applicant[]    @relation("ApplicantNationality")
-  employees                Employee[]     @relation("EmployeeCountry")
+  phds                     Phd[]        @relation("PhdCountry")
+  applicants               Applicant[]  @relation("ApplicantNationality")
+  employees                Employee[]   @relation("EmployeeCountry")
   projects                 Project[]
   btors                    Btor[]
-  flights2019              Flight2019[]   @relation("Flight2019Country")
+  flights2019              Flight2019[] @relation("Flight2019Country")
 }
 
 model Project {

@@ -1,7 +1,7 @@
 import xlsx from "xlsx";
-import { cleanPhdCandidates } from "../clean/cleanPhdCandidates";
+import { cleanPhds } from "../clean/cleanPhds";
 
-export type PhdCandidateRaw = {
+export type PhdRaw = {
   ITCStudentNo?: number;
   mnumber?: number;
   Surname?: string;
@@ -37,15 +37,15 @@ export type PhdCandidateRaw = {
   SpecialMention?: string;
 };
 
-export default async function loadCandidates() {
+export default async function loadPhds() {
   const filePath = "./data/itc/ITCPHDCANDIDATES.xlsx";
   const file = xlsx.readFile(filePath, {
     cellDates: true,
   });
   const data = xlsx.utils.sheet_to_json(file.Sheets[file.SheetNames[0]], {
     defval: null,
-  }) as PhdCandidateRaw[];
+  }) as PhdRaw[];
 
-  const cleaned = cleanPhdCandidates(data);
+  const cleaned = cleanPhds(data);
   return cleaned;
 }

@@ -13,7 +13,7 @@ import NominalLegend from "../../../components/map/NominalLegend";
 import ScaledPie from "../../../components/map/ScaledPie";
 import { setMapBounds } from "../../../lib/cartographic/getMapHeight";
 import getCountries from "../../../lib/data/getCountries";
-import getPhdCandidatesByCountryByDepartment from "../../../lib/data/queries/phdCandidate/getPhdCandidatesByCountryByDepartment";
+import getPhdsByCountryByDepartment from "../../../lib/data/queries/phd/getPhdsByCountryByDepartment";
 import { departmentColorScale } from "../../../lib/styles/departmentColorScale";
 import themes, { ThemeNames } from "../../../lib/styles/themes";
 import defaultTheme from "../../../lib/styles/themes/defaultTheme";
@@ -29,7 +29,7 @@ export default async function handler(
     res.status(400).json({ error: "invalid theme name" });
   }
   const neCountriesTopoJson = getCountries();
-  const data = await getPhdCandidatesByCountryByDepartment();
+  const data = await getPhdsByCountryByDepartment();
 
   const min = d3.min(data.map((d) => d.totalCount)) ?? 0;
   const max = d3.max(data.map((d) => d.totalCount)) ?? 1;
@@ -65,7 +65,7 @@ export default async function handler(
     >
       <MapLayoutHeader
         bounds={mapOptions.bounds}
-        title={"PhD candidates"}
+        title={"PhDs"}
         subtitle={"by ITC department"}
         theme={theme}
       />

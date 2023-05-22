@@ -34,7 +34,7 @@ import TopicPatterns from "./TopicPatterns";
 import { Vector2 } from "three";
 import LeaderLine from "./LeaderLine";
 import { ProjectIndonesia } from "../types/Project";
-import { phdCandidateByYearWithCount } from "../lib/data/queries/phdCandidate/getPhdCandidatesByYear";
+import { phdsByYearWithCount } from "../lib/data/queries/phd/getPhdsByYear";
 import { ApplicationByYearWithCount } from "../lib/data/queries/application/getApplicationsByYear";
 import { LongTermMission } from "../types/LongTermMission";
 import { Minister } from "../types/Minister";
@@ -45,7 +45,7 @@ type Props = PropsWithChildren<{
   btors: BtorsByCountry;
   longTermMissions: LongTermMission[];
   ministers: Minister[];
-  phdGraduatesByYear: phdCandidateByYearWithCount;
+  phdsByYear: phdsByYearWithCount;
   projects: ProjectIndonesia[];
 }>;
 
@@ -54,7 +54,7 @@ const IndonesiaTimeline: FC<Props> = ({
   btors,
   longTermMissions,
   ministers,
-  phdGraduatesByYear,
+  phdsByYear,
   projects,
 }) => {
   const [isSSR, setIsSSR] = useState(true);
@@ -630,7 +630,7 @@ const IndonesiaTimeline: FC<Props> = ({
                   />
                 );
               })}
-              {phdGraduatesByYear
+              {phdsByYear
                 .filter((d) => d.promotionYear)
                 .map((d) => {
                   const r = 2;

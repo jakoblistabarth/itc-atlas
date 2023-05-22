@@ -1,4 +1,4 @@
-export type PhdCandidate = {
+export type Phd = {
   itcStudentId: string | null;
   country: string | null;
   department1: string | null;
