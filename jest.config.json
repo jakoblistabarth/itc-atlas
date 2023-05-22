@@ -1,0 +1,4 @@
+{
+  "clearMocks": true,
+  "coverageDirectory": "coverage"
+}
