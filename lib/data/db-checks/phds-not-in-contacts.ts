@@ -2,12 +2,14 @@ import loadApplicants from "../load/loadApplicants";
 import * as aq from "arquero";
 import loadPhds from "../load/loadPhds";
 import { Phd } from "../../../types/Phd";
+import loadContactsEnriched from "../load/loadContactsEnriched";
 
 (async () => {
-  const contactData = await loadApplicants();
+  const contacts = await loadContactsEnriched();
+  const applicants = await loadApplicants(contacts);
   const phdData = await loadPhds();
 
-  const tb = aq.from(contactData).dedupe("itcStudentId").select("itcStudentId");
+  const tb = aq.from(applicants).dedupe("itcStudentId").select("itcStudentId");
   const res = tb.objects() as { itcStudentId?: string }[];
   const contactIds = res.map((d) => d.itcStudentId).filter((d) => d);
 

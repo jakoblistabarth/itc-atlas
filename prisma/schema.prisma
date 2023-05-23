@@ -36,7 +36,7 @@ model Applicant {
   id           String        @id
   itcStudentId String?       @unique
   gender       String?
-  dateOfBirth  DateTime?     @db.Date
+  yearOfBirth  Int?
   countryId    Int?
   country      Country?      @relation("ApplicantNationality", fields: [countryId], references: [id])
   phds         Phd[]         @relation("ApplicantPhd")

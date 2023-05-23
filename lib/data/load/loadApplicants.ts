@@ -1,38 +1,36 @@
-import loadContacts, { ContactRaw } from "./loadContacts";
+import { ContactEnriched } from "./loadContactsEnriched";
 import * as aq from "arquero";
-import { ddmmyyyyToDate } from "../../utilities/timeparser";
 import { ApplicantClean } from "../../../types/ApplicantClean";
 
-export const loadApplicants = async () => {
-  const data = await loadContacts();
-
+export const loadApplicants = async (contacts: ContactEnriched[]) => {
   const tb = aq
-    .from(data)
+    .from(contacts)
     .rename({
       ContactNo: "applicantId",
       ISONationality: "countryIsoAlpha3", //QUESTION: ask Menno-Jan whether we should use ?? d.CountryCodeOrigin as fallback
     })
     .dedupe("applicantId")
     .derive({
-      itcStudentId: aq.escape((d: ContactRaw) =>
-        d["ITC Student No."] === "[history-pre 2017]"
+      itcStudentId_actual: aq.escape((d: ContactEnriched) =>
+        d["ITC Student No._actual"] === "[history-pre 2017]"
           ? null
-          : d["ITC Student No."]
+          : d["ITC Student No._actual"]
       ),
-      dateOfBirth: aq.escape((d: ContactRaw) => {
-        if (!d["Date of Birth"]) return null;
-        if (d["Date of Birth"] === "01-01-1990") return null;
-        return ddmmyyyyToDate(d["Date of Birth"]);
-      }),
-      gender: aq.escape((d: ContactRaw) =>
+      yearOfBirth: (d: ContactEnriched) =>
+        aq.op.parse_int(aq.op.substring(d["Date of Birth"], 6, 10), 10),
+      gender: aq.escape((d: ContactEnriched) =>
         d.Gender === "Male" ? "m" : d.Gender === "Female" ? "f" : null
       ),
+    })
+    .rename({
+      "ITC Student No.": "itcStudentId",
     })
     .select(
       "applicantId",
       "itcStudentId",
+      "itcStudentId_actual",
       "gender",
-      "dateOfBirth",
+      "yearOfBirth",
       "countryIsoAlpha3"
     );
 

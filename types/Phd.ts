@@ -1,5 +1,5 @@
 export type Phd = {
-  itcStudentId: string | null;
+  itcStudentId: string | undefined;
   country: string | null;
   department1: string | null;
   department2: string | null;

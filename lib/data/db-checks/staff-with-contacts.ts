@@ -2,9 +2,11 @@ import loadApplicants from "../load/loadApplicants";
 import * as aq from "arquero";
 import { EmployeeClean } from "../../../types/EmployeeClean";
 import loadEmployees from "../load/loadEmployees";
+import loadContactsEnriched from "../load/loadContactsEnriched";
 
 (async () => {
-  const contactData = await loadApplicants();
+  const contacts = await loadContactsEnriched();
+  const applicants = await loadApplicants(contacts);
   const staffData = await loadEmployees();
 
   const tb = aq.from(staffData).dedupe("mId");
@@ -13,7 +15,7 @@ import loadEmployees from "../load/loadEmployees";
   const matches = res.reduce((acc: any[], s) => {
     if (s.dateOfBirth === null || s.gender === null || s.nationality === null)
       return acc;
-    const match = contactData.filter((c) => {
+    const match = applicants.filter((c) => {
       return (
         c.gender === s.gender &&
         c.dateOfBirth?.getTime() === s.dateOfBirth?.getTime() &&

@@ -193,7 +193,7 @@ async function main() {
           gender: d.gender,
           itcStudentId: d.itcStudentId,
           countryId: country?.id,
-          dateOfBirth: d.dateOfBirth,
+          yearOfBirth: d.dateOfBirth?.getFullYear(),
         },
       };
       return await prisma.applicant.create(createArgs);
@@ -214,9 +214,9 @@ async function main() {
           level: d.level,
           statusId: d.statusId,
           examYear: d.examYear,
-          enrollmentStart: d.enrollmentStart,
-          enrollmentEnd: d.enrollmentEnd,
-          certificationDate: d.certificationDate,
+          enrollmentStartYear: d.enrollmentStart?.getFullYear(),
+          enrollmentEndYear: d.enrollmentEnd?.getFullYear(),
+          certificationYear: d.certificationDate?.getFullYear(),
           sponsor: d.sponsor,
           certificateType: d.certificateType,
         },
@@ -238,9 +238,9 @@ async function main() {
     phds.map(async (d, idx) => {
       const itcStudentId = itcIdsInApplicants
         .map((d) => d.itcStudentId)
-        .includes(d.itcStudentId)
+        .includes(d.itcStudentId ?? null)
         ? d.itcStudentId
-        : null;
+        : undefined;
 
       const country = countriesDB.find((c) => c.isoAlpha3 === d.country);
 

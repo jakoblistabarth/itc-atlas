@@ -1,8 +1,7 @@
 export type ApplicationClean = {
   id: string;
-  id_r: string;
   applicantId: string;
-  applicantId_r: string;
+  applicantId_actual: string;
   programmId?: string;
   courseId: string;
   level?: string;

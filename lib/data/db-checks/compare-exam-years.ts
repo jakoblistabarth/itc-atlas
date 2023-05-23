@@ -1,10 +1,12 @@
 import loadApplications from "../load/loadApplications";
 import * as aq from "arquero";
 import xlsx from "xlsx";
+import loadContactsEnriched from "../load/loadContactsEnriched";
 
 (async () => {
-  const contacts = await loadApplications();
-  const tb = aq.from(contacts);
+  const contacts = await loadContactsEnriched();
+  const applications = await loadApplications(contacts);
+  const tb = aq.from(applications);
   const countContacts = tb.groupby("examYear").count();
 
   const filePath = "./data/itc/All Alumni until 2020_Anon_JMT.xlsx";

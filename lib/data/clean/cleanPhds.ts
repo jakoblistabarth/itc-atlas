@@ -20,7 +20,7 @@ export async function cleanPhds(data: PhdRaw[]) {
     .from(data)
     .derive({
       itcStudentId: aq.escape((d: PhdRaw) =>
-        d.ITCStudentNo ? d.ITCStudentNo + "" : null
+        d.ITCStudentNo ? d.ITCStudentNo + "" : undefined
       ),
       dateStart: aq.escape((d: PhdRaw) =>
         d?.PhDStart ? d.PhDStart.toISOString() : null

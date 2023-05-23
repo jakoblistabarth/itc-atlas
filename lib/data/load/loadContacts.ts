@@ -38,14 +38,14 @@ export type ContactRaw = {
   Diploma?: string;
 };
 
-export default async function loadContacts() {
+const loadContacts = async () => {
   const filePath = "./data/itc/STUDENTSALUMNIv4 (20230217).xlsx";
   const file = xlsx.readFile(filePath, {
     cellDates: true,
   });
-  const data = xlsx.utils.sheet_to_json(file.Sheets[file.SheetNames[0]], {
+  return xlsx.utils.sheet_to_json(file.Sheets[file.SheetNames[0]], {
     defval: null,
   }) as ContactRaw[];
+};
 
-  return data;
-}
+export default loadContacts;

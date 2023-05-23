@@ -54,6 +54,7 @@ const fakeApplications = async (
     const application: ApplicationClean = {
       id: String(d),
       applicantId: sample(applicants)?.applicantId ?? "",
+      applicantId_actual: "doesNotApply",
       statusId: sample(status)?.id ?? "",
       courseId: sample(courseIds) ?? "",
       enrollmentStart: enrollmentStart,

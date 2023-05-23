@@ -27,6 +27,7 @@
     "@floating-ui/react-dom-interactions": "^0.6.6",
     "@fontsource/fraunces": "^4.5.11",
     "@fontsource/inter": "^4.5.15",
+    "@paralleldrive/cuid2": "^2.2.0",
     "@prisma/client": "^4.14.1",
     "@react-spring/three": "^9.6.1",
     "@react-three/drei": "^9.56.8",

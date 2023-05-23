@@ -8,8 +8,6 @@ import prisma from "./client";
 import loadDepartments from "../lib/data/load/loadDepartments";
 import loadPhds from "../lib/data/load/loadPhds";
 import loadUnsdCountries from "../lib/data/load/loadUnsdCountries";
-import loadApplicants from "../lib/data/load/loadApplicants";
-import loadApplications from "../lib/data/load/loadApplications";
 import loadEmployees from "../lib/data/load/loadEmployees";
 import loadEmployments from "../lib/data/load/loadEmployments";
 import loadProjects from "../lib/data/load/loadProjects";
@@ -17,6 +15,8 @@ import loadStatus from "../lib/data/load/loadStatus";
 import loadBtors from "../lib/data/load/loadBtors";
 import loadFlights2019 from "../lib/data/load/loadFlights2019";
 import resetDatabase from "./resetDatabase";
+import loadApplicationsApplicants from "../lib/data/load/loadApplicationsApplicants";
+import { createId } from "@paralleldrive/cuid2";
 
 async function main() {
   await resetDatabase();
@@ -26,8 +26,7 @@ async function main() {
     status,
     countries,
     phds,
-    applicants,
-    applications,
+    { applications, applicants },
     employees,
     employments,
     projects,
@@ -38,8 +37,7 @@ async function main() {
     loadStatus(),
     loadUnsdCountries(),
     loadPhds(),
-    loadApplicants(),
-    loadApplications(),
+    loadApplicationsApplicants(),
     loadEmployees(),
     loadEmployments(),
     loadProjects(),
@@ -201,7 +199,7 @@ async function main() {
           gender: d.gender,
           itcStudentId: d.itcStudentId,
           countryId: country?.id,
-          dateOfBirth: d.dateOfBirth,
+          yearOfBirth: d.yearOfBirth,
         },
       };
       return await prisma.applicant.create(createArgs);
@@ -213,8 +211,8 @@ async function main() {
     applications.map(async (d) => {
       const createArgs: Prisma.ApplicationCreateArgs = {
         data: {
-          id: d.id_r,
-          applicantId: d.applicantId_r,
+          id: createId(),
+          applicantId: d.applicantId,
           courseId: d.courseId,
           programmId: d.programmId,
           level: d.level,
@@ -233,33 +231,33 @@ async function main() {
   );
   console.log("Populated model Application. 🌱");
 
-  const itcIdsInApplicants = await prisma.applicant.findMany({
-    select: {
-      itcStudentId: true,
-    },
-  });
+  const itcIdsInApplicants = applicants
+    .filter((d) => d.itcStudentId_actual)
+    .map((d) => d.itcStudentId_actual);
 
   await Promise.all(
-    phds.map(async (d, idx) => {
-      const itcStudentId = itcIdsInApplicants
-        .map((d) => d.itcStudentId)
-        .includes(d.itcStudentId)
-        ? d.itcStudentId
+    phds.map(async (phd, idx) => {
+      const itcStudentId = itcIdsInApplicants.includes(phd.itcStudentId)
+        ? phd.itcStudentId
         : null;
 
-      const country = countriesDB.find((c) => c.isoAlpha3 === d.country);
+      const applicantMatch = applicants.find(
+        (d) => itcStudentId && d.itcStudentId_actual === itcStudentId
+      );
+
+      const country = countriesDB.find((c) => c.isoAlpha3 === phd.country);
 
       const createArgs: Prisma.PhdCreateArgs = {
         data: {
           id: idx,
-          itcStudentId: itcStudentId,
-          departmentMainId: d.department1,
-          departmentSecondaryId: d.department2,
-          thesisTitle: d.thesisTitle,
-          statusId: d.status,
-          start: d.dateStart,
-          graduation: d.dateGraduation,
-          promotionYear: d.yearPromotion,
+          itcStudentId: applicantMatch?.itcStudentId,
+          departmentMainId: phd.department1,
+          departmentSecondaryId: phd.department2,
+          thesisTitle: phd.thesisTitle,
+          statusId: phd.status,
+          start: phd.dateStart,
+          graduation: phd.dateGraduation,
+          promotionYear: phd.yearPromotion,
           countryId: country?.id,
         },
       };
@@ -272,13 +270,15 @@ async function main() {
     employees.map(async (d) => {
       const country = countriesDB.find((c) => c.isoAlpha3 === d.nationality);
 
+      //TODO: rewrite with applicants data instead of database result
+      // so that we can still use the exact date and not only the year
       const applicant =
         d.dateOfBirth && d.gender && country?.id
           ? await prisma.applicant.findFirst({
               select: { id: true },
               where: {
-                dateOfBirth: {
-                  equals: d.dateOfBirth,
+                yearOfBirth: {
+                  equals: d.dateOfBirth.getFullYear(),
                 },
                 gender: {
                   equals: d.gender,

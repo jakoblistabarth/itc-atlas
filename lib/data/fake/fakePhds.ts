@@ -27,7 +27,9 @@ const fakePhds = async (
     const graduation = addDays(start, 365 * 6);
     const phd: Phd = {
       itcStudentId:
-        Math.random() > 0.1 ? sample(applicants)?.itcStudentId ?? null : null,
+        Math.random() > 0.1
+          ? sample(applicants)?.itcStudentId ?? undefined
+          : undefined,
       country: country ?? "",
       status: sample(Object.values(status))?.id ?? "",
       department1: sample(departments)?.id ?? "",

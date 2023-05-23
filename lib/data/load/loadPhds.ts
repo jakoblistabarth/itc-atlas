@@ -46,6 +46,6 @@ export default async function loadPhds() {
     defval: null,
   }) as PhdRaw[];
 
-  const cleaned = cleanPhds(data);
+  const cleaned = await cleanPhds(data);
   return cleaned;
 }
