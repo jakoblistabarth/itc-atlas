@@ -1,6 +1,6 @@
 import * as aq from "arquero";
 import Fuse from "fuse.js";
-import { Phd } from "../../../types/Phd";
+import { PhdClean } from "../../../types/PhdClean";
 import { mapCountries } from "../../mappings/country.name.EN";
 import { mapToDepartment } from "../../mappings/departments";
 import { PhdRaw } from "../load/loadPhds";
@@ -22,17 +22,12 @@ export async function cleanPhds(data: PhdRaw[]) {
       itcStudentId: aq.escape((d: PhdRaw) =>
         d.ITCStudentNo ? d.ITCStudentNo + "" : undefined
       ),
-      dateStart: aq.escape((d: PhdRaw) =>
-        d?.PhDStart ? d.PhDStart.toISOString() : null
-      ),
+      dateStart: aq.escape((d: PhdRaw) => (d?.PhDStart ? d.PhDStart : null)),
       dateGraduation: aq.escape((d: PhdRaw) =>
-        d?.SISGraduated ? d.SISGraduated.toISOString() : null
+        d?.SISGraduated ? d.SISGraduated : null
       ),
       yearPromotion: aq.escape((d: PhdRaw) =>
         d?.Promotion && d?.Promotion > 1950 ? d.Promotion : null
-      ),
-      dateEnd: aq.escape((d: PhdRaw) =>
-        d?.PhDEnd ? d.PhDEnd.toISOString() : null
       ),
       country: aq.escape((d: PhdRaw) => {
         const clean = d?.Country ? mapCountries(d.Country) : null;
@@ -70,5 +65,5 @@ export async function cleanPhds(data: PhdRaw[]) {
       "thesisTitle"
     );
 
-  return tb.objects() as Phd[];
+  return tb.objects() as PhdClean[];
 }

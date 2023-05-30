@@ -1,7 +1,7 @@
 import loadApplicants from "../load/loadApplicants";
 import * as aq from "arquero";
 import loadPhds from "../load/loadPhds";
-import { Phd } from "../../../types/Phd";
+import { Phd } from "../../../types/PhdClean";
 import loadContactsEnriched from "../load/loadContactsEnriched";
 
 (async () => {

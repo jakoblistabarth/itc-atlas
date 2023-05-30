@@ -17,6 +17,7 @@ import fakeApplications from "../lib/data/fake/fakeApplications";
 import fakePhds from "../lib/data/fake/fakePhds";
 import fakeEmployees from "../lib/data/fake/fakeEmployees";
 import fakeEmployments from "../lib/data/fake/fakeEmployments";
+import { createId } from "@paralleldrive/cuid2";
 
 async function main() {
   await resetDatabase();
@@ -246,14 +247,14 @@ async function main() {
 
       const createArgs: Prisma.PhdCreateArgs = {
         data: {
-          id: idx,
+          id: createId(),
           itcStudentId: itcStudentId,
           departmentMainId: d.department1,
           departmentSecondaryId: d.department2,
           thesisTitle: d.thesisTitle,
           statusId: d.status,
-          start: d.dateStart,
-          graduation: d.dateGraduation,
+          startYear: d.dateStart?.getFullYear(),
+          graduationYear: d.dateGraduation?.getFullYear(),
           promotionYear: d.yearPromotion,
           countryId: country?.id,
         },
@@ -274,7 +275,7 @@ async function main() {
         data: {
           id: d.mId,
           applicantId: d.applicantId,
-          dateOfBirth: d.dateOfBirth,
+          yearOfBirth: d.dateOfBirth?.getFullYear(),
           countryId: country?.id,
         },
       };

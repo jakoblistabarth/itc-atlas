@@ -67,7 +67,7 @@ model Application {
 }
 
 model Phd {
-  id                    Int         @id @default(autoincrement())
+  id                    String      @id
   itcStudentId          String?
   applicant             Applicant?  @relation("ApplicantPhd", fields: [itcStudentId], references: [itcStudentId])
   departmentMainId      String?
@@ -75,8 +75,8 @@ model Phd {
   departmentSecondaryId String?
   departmentSecondary   Department? @relation("DepartmentPhdSecondary", fields: [departmentSecondaryId], references: [id])
   thesisTitle           String?
-  start                 DateTime?   @db.Date
-  graduation            DateTime?   @db.Date
+  startYear             Int?
+  graduationYear        Int?
   promotionYear         Int?
   statusId              String?
   status                Status?     @relation("StatusPhd", fields: [statusId], references: [id])
@@ -88,7 +88,7 @@ model Employee {
   id          Int          @id
   applicantId String?
   applicant   Applicant?   @relation("ApplicantEmployee", fields: [applicantId], references: [id])
-  dateOfBirth DateTime?    @db.Date
+  yearOfBirth Int?
   countryId   Int?
   country     Country?     @relation("EmployeeCountry", fields: [countryId], references: [id])
   employment  Employment[]

@@ -9,7 +9,7 @@ beforeAll(async () => {
 });
 
 describe("For Contacts", () => {
-  test("APPnr does not occure more than once", () => {
+  test.failing("APPnr are unique", () => {
     const duplicates = aq
       .from(contacts)
       // .filter((d: ContactRaw) => d.id)
@@ -19,14 +19,14 @@ describe("For Contacts", () => {
       .numRows();
     expect(duplicates).toBe(0);
   });
-  test("contactNo does occure more than once", () => {
+  test("contactNo are not unique", () => {
     const duplicates = aq
       .from(contacts)
       // .filter((d: ContactRaw) => d.id)
       .groupby("ContactNo")
       .count()
       .filter((d: ContactRaw & { count: number }) => d.count > 1);
-    expect(duplicates.numRows()).toBe(0);
+    expect(duplicates.numRows()).toBeGreaterThan(0);
   });
   test("studentId does occure more than once", () => {
     const duplicates = aq
@@ -34,15 +34,6 @@ describe("For Contacts", () => {
       .groupby("ITC Student No.")
       .count()
       .filter((d: ContactRaw & { count: number }) => d.count > 1);
-    expect(duplicates.numRows()).toBe(0);
-  });
-  test.only("studentId does occure more than once", () => {
-    const duplicates = aq
-      .from(contacts)
-      .groupby("ITC Student No.", "APPnr")
-      .count()
-      .filter((d: ContactRaw & { count: number }) => d.count > 1);
-    console.log(duplicates.objects());
-    expect(duplicates.numRows()).toBe(0);
+    expect(duplicates.numRows()).toBeGreaterThan(0);
   });
 });

@@ -236,7 +236,7 @@ async function main() {
     .map((d) => d.itcStudentId_actual);
 
   await Promise.all(
-    phds.map(async (phd, idx) => {
+    phds.map(async (phd) => {
       const itcStudentId = itcIdsInApplicants.includes(phd.itcStudentId)
         ? phd.itcStudentId
         : null;
@@ -249,14 +249,14 @@ async function main() {
 
       const createArgs: Prisma.PhdCreateArgs = {
         data: {
-          id: idx,
+          id: createId(),
           itcStudentId: applicantMatch?.itcStudentId,
           departmentMainId: phd.department1,
           departmentSecondaryId: phd.department2,
           thesisTitle: phd.thesisTitle,
           statusId: phd.status,
-          start: phd.dateStart,
-          graduation: phd.dateGraduation,
+          startYear: phd.dateStart?.getFullYear(),
+          graduationYear: phd.dateGraduation?.getFullYear(),
           promotionYear: phd.yearPromotion,
           countryId: country?.id,
         },
@@ -270,32 +270,22 @@ async function main() {
     employees.map(async (d) => {
       const country = countriesDB.find((c) => c.isoAlpha3 === d.nationality);
 
-      //TODO: rewrite with applicants data instead of database result
-      // so that we can still use the exact date and not only the year
       const applicant =
         d.dateOfBirth && d.gender && country?.id
-          ? await prisma.applicant.findFirst({
-              select: { id: true },
-              where: {
-                yearOfBirth: {
-                  equals: d.dateOfBirth.getFullYear(),
-                },
-                gender: {
-                  equals: d.gender,
-                },
-                countryId: {
-                  equals: country?.id,
-                },
-              },
-            })
+          ? applicants.find(
+              (applicant) =>
+                applicant.dateOfBirth?.getTime() === d.dateOfBirth?.getTime() &&
+                applicant.gender === d.gender &&
+                applicant.countryIsoAlpha3 === country.isoAlpha3
+            )
           : null;
 
       // TODO: add unit end?
       const createArgs: Prisma.EmployeeCreateArgs = {
         data: {
           id: d.mId,
-          applicantId: applicant?.id,
-          dateOfBirth: d.dateOfBirth,
+          applicantId: applicant?.applicantId,
+          yearOfBirth: d.dateOfBirth?.getFullYear(),
           countryId: country?.id,
         },
       };
