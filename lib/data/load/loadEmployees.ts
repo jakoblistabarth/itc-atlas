@@ -2,11 +2,10 @@ import * as aq from "arquero";
 import Fuse from "fuse.js";
 import { countryMapNE } from "../../mappings/country.name.NL";
 import loadUnsdCountries from "./loadUnsdCountries";
-import loadStaff, { StaffRaw } from "../load/loadStaff";
 import { EmployeeClean } from "../../../types/EmployeeClean";
+import { StaffEnriched } from "./loadStaffEnriched";
 
-const loadEmployees = async () => {
-  const staff = await loadStaff();
+const loadEmployees = async (staff: StaffEnriched[]) => {
   const unsdCodes = await loadUnsdCountries();
   const options = {
     includeScore: true,
@@ -17,11 +16,12 @@ const loadEmployees = async () => {
 
   const tb = aq
     .from(staff)
-    .dedupe("Medewerker")
+    .dedupe("mId_actual")
     .derive({
-      mId: aq.escape((d: StaffRaw) => parseInt(d["Medewerker"], 10)),
-      gender: aq.escape((d: StaffRaw) => (d["Geslacht"] === "M" ? "m" : "f")),
-      nationality: aq.escape((d: StaffRaw) => {
+      gender: aq.escape((d: StaffEnriched) =>
+        d["Geslacht"] === "M" ? "m" : "f"
+      ),
+      nationality: aq.escape((d: StaffEnriched) => {
         const countryString = d["Nationaliteit"];
         if (!countryString) return null;
         const searchString = countryMapNE[countryString] ?? null;
@@ -38,7 +38,7 @@ const loadEmployees = async () => {
       "Soort Medewerker": "type",
       "Functieprofiel Omschrijving": "description",
     })
-    .select("mId", "dateOfBirth", "gender", "nationality");
+    .select("mId", "mId_actual", "dateOfBirth", "gender", "nationality");
 
   return tb.objects() as EmployeeClean[];
 };

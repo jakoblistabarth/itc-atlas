@@ -1,8 +1,10 @@
 export type EmploymentClean = {
-  mId: number;
-  employmentStart: Date;
-  employmentEnd: Date;
-  employmentUnitEnd: Date;
+  mId: string;
+  mId_actual: string;
+  startYear: number;
+  endYear: number;
+  employedDays?: number;
+  unitEndYear?: number;
   department?: string;
   type?: string;
   description?: string;

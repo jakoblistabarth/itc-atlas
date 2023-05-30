@@ -19,11 +19,13 @@ const fakeEmployments = async (
     const end = addDays(start, duration);
 
     const employment: EmploymentClean = {
-      mId: sample(employees)?.mId ?? 0,
+      mId: sample(employees)?.mId + "" ?? "0",
+      mId_actual: "does not apply",
       department: sample(departments)?.id,
-      employmentStart: start,
-      employmentEnd: end,
-      employmentUnitEnd: new Date(),
+      startYear: start.getFullYear(),
+      endYear: end.getFullYear(),
+      unitEndYear: undefined,
+      employedDays: duration,
       description: sample(descriptions),
     };
     return employment;

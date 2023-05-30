@@ -1,15 +1,15 @@
 import loadApplicants from "../load/loadApplicants";
 import * as aq from "arquero";
 import { EmployeeClean } from "../../../types/EmployeeClean";
-import loadEmployees from "../load/loadEmployees";
 import loadContactsEnriched from "../load/loadContactsEnriched";
+import loadEmploymentsEmployees from "../load/loadEmploymentsEmployees";
 
 (async () => {
   const contacts = await loadContactsEnriched();
   const applicants = await loadApplicants(contacts);
-  const staffData = await loadEmployees();
+  const { employees } = await loadEmploymentsEmployees();
 
-  const tb = aq.from(staffData).dedupe("mId");
+  const tb = aq.from(employees).dedupe("mId");
   const res = tb.objects() as EmployeeClean[];
 
   const matches = res.reduce((acc: any[], s) => {

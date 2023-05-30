@@ -8,8 +8,6 @@ import prisma from "./client";
 import loadDepartments from "../lib/data/load/loadDepartments";
 import loadPhds from "../lib/data/load/loadPhds";
 import loadUnsdCountries from "../lib/data/load/loadUnsdCountries";
-import loadEmployees from "../lib/data/load/loadEmployees";
-import loadEmployments from "../lib/data/load/loadEmployments";
 import loadProjects from "../lib/data/load/loadProjects";
 import loadStatus from "../lib/data/load/loadStatus";
 import loadBtors from "../lib/data/load/loadBtors";
@@ -17,6 +15,7 @@ import loadFlights2019 from "../lib/data/load/loadFlights2019";
 import resetDatabase from "./resetDatabase";
 import loadApplicationsApplicants from "../lib/data/load/loadApplicationsApplicants";
 import { createId } from "@paralleldrive/cuid2";
+import loadEmploymentsEmployees from "../lib/data/load/loadEmploymentsEmployees";
 
 async function main() {
   await resetDatabase();
@@ -27,8 +26,7 @@ async function main() {
     countries,
     phds,
     { applications, applicants },
-    employees,
-    employments,
+    { employments, employees },
     projects,
     btors,
     flights2019,
@@ -38,8 +36,7 @@ async function main() {
     loadUnsdCountries(),
     loadPhds(),
     loadApplicationsApplicants(),
-    loadEmployees(),
-    loadEmployments(),
+    loadEmploymentsEmployees(),
     loadProjects(),
     loadBtors(),
     loadFlights2019(),
@@ -295,7 +292,7 @@ async function main() {
   console.log("Populated model Employee. 🌱");
 
   await Promise.all(
-    employments.map(async (d, idx) => {
+    employments.map(async (d) => {
       const department = d.department
         ? await prisma.department.findFirst({
             select: { id: true },
@@ -310,10 +307,11 @@ async function main() {
       // TODO: add unit end?
       const createArgs: Prisma.EmploymentCreateArgs = {
         data: {
-          id: idx,
+          id: createId(),
           employeeId: d.mId,
-          start: d.employmentStart,
-          end: d.employmentEnd,
+          startYear: d.startYear,
+          endYear: d.endYear,
+          employedDays: d.employedDays,
           departmentId: department?.id,
         },
       };

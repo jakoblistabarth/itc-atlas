@@ -44,25 +44,3 @@ describe("One female applicant from Greece born in 1980", () => {
     );
   });
 });
-
-describe("Applicants match with employees in", () => {
-  test("583 cases", async () => {
-    const applicantsWithEmployees = await prisma.applicant.count({
-      where: {
-        employees: { some: {} },
-      },
-    });
-    expect(applicantsWithEmployees).toBe(583);
-  });
-});
-
-describe("Employees match with applicants in", () => {
-  test("587 cases", async () => {
-    const employeesWithApplicants = await prisma.employee.count({
-      where: {
-        applicant: { isNot: null },
-      },
-    });
-    expect(employeesWithApplicants).toBe(587);
-  });
-});

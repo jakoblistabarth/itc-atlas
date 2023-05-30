@@ -302,10 +302,11 @@ async function main() {
       // TODO: add unit end?
       const createArgs: Prisma.EmploymentCreateArgs = {
         data: {
-          id: idx,
+          id: createId(),
           employeeId: d.mId,
-          start: d.employmentStart,
-          end: d.employmentEnd,
+          startYear: d.startYear,
+          endYear: d.endYear,
+          employedDays: d.employedDays,
           departmentId: department?.id,
         },
       };

@@ -85,7 +85,7 @@ model Phd {
 }
 
 model Employee {
-  id          Int          @id
+  id          String       @id
   applicantId String?
   applicant   Applicant?   @relation("ApplicantEmployee", fields: [applicantId], references: [id])
   yearOfBirth Int?
@@ -95,10 +95,11 @@ model Employee {
 }
 
 model Employment {
-  id           Int         @id
-  start        DateTime?   @db.Date
-  end          DateTime?   @db.Date
-  employeeId   Int
+  id           String      @id
+  startYear    Int?
+  endYear      Int?
+  employedDays Int?
+  employeeId   String
   employee     Employee    @relation(fields: [employeeId], references: [id])
   departmentId String?
   department   Department? @relation("DepartmentEmployment", fields: [departmentId], references: [id])
