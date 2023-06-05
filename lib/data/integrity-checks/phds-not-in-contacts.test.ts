@@ -13,7 +13,7 @@ beforeAll(async () => {
   const contacts = await loadContactsEnriched();
   applicants = await loadApplicants(contacts);
   phds = await loadPhds();
-}, 17000);
+}, 15000);
 
 describe("For phds", () => {
   test.failing(
