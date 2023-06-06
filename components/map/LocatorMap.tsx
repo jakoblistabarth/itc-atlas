@@ -11,21 +11,27 @@ import { NeCountriesTopoJson } from "../../types/NeTopoJson";
 import BaseLayer from "./BaseLayer";
 import PolygonSymbol from "./PolygonSymbol";
 import RoundMarker from "./RoundMarker";
-
+import RectangleMarker from "./RectangleMarker";
 type Props = {
   neCountriesTopoJson: NeCountriesTopoJson;
   highlight?: string[];
   theme?: MapTheme;
   width?: number;
+  rectwidth?: number;
+  rectheight?: number;
   markers?: (Omit<React.ComponentProps<typeof RoundMarker>, "position"> & {
     lat: number;
     lng: number;
   })[];
+  rectanglehighlight?: number[][];
 };
 
 const LocatorMap: FC<Props> = ({
   neCountriesTopoJson,
   highlight,
+  rectanglehighlight,
+  rectwidth,
+  rectheight,
   markers,
   width = 300,
   theme = defaultTheme,
@@ -47,7 +53,6 @@ const LocatorMap: FC<Props> = ({
   };
   const centroid = d3.geoCentroid(highlightCountries);
   const rotation: [number, number] = [-centroid[0], -centroid[1]];
-
   const projection = d3.geoOrthographic().rotate(rotation);
   const shadowRadius = dimension.width / 30;
   dimension.height = getMapHeight(dimension.width, projection, {
@@ -75,7 +80,7 @@ const LocatorMap: FC<Props> = ({
               key={nanoid()}
               feature={feature}
               projection={projection}
-              style={{ ...defaultTheme.choropleth, stroke: "black" }}
+              style={{ ...defaultTheme.choropleth, fill: "lightgray" }}
             />
           ))}
         </g>
@@ -121,6 +126,20 @@ const LocatorMap: FC<Props> = ({
                   key={`marker-${idx}`}
                   position={new Vector2(p[0], p[1])}
                   {...d}
+                />
+              )
+            );
+          })}
+        {rectanglehighlight &&
+          rectanglehighlight?.map((d, idx) => {
+            const p = projection([d[1], d[0]]);
+            return (
+              p && (
+                <RectangleMarker
+                  key={`marker-${idx}`}
+                  position={new Vector2(p[0], p[1])}
+                  height={rectheight}
+                  width={rectwidth}
                 />
               )
             );
