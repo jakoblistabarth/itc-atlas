@@ -26,12 +26,12 @@ export type ContactRaw = {
   SpecialAwardMention?: string;
   FinalResult?: string;
   YearCert_Exam_Dipl?: string;
-  Comments?: null;
+  Comments?: string;
   "Certificate No."?: string;
   "Certificate Date"?: string;
-  Remarks?: null;
-  SponsorCategory?: null;
-  Sponsor?: null;
+  Remarks?: string;
+  SponsorCategory?: string;
+  Sponsor?: string;
   APPnr?: string;
   ContactNo?: string;
   COURSENO?: string;

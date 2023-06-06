@@ -4,6 +4,7 @@ import { ApplicationClean } from "../../../types/ApplicationClean";
 import { ddmmyyyyToDate } from "../../utilities/timeparser";
 import getDaysBetween from "../../utilities/getDaysBetween";
 import { createId } from "@paralleldrive/cuid2";
+import { mapToSponsor } from "../../mappings/application.sponsor";
 
 export const loadApplications = async (contacts: ContactEnriched[]) => {
   const tb = aq.from(contacts).dedupe("APPnr", "Start Date", "End Date");
@@ -32,6 +33,7 @@ export const loadApplications = async (contacts: ContactEnriched[]) => {
       certificationDate: aq.escape((d: ContactEnriched) =>
         d["Certificate Date"] ? ddmmyyyyToDate(d["Certificate Date"]) : null
       ),
+      sponsor: aq.escape((d: ContactEnriched) => mapToSponsor(d.Sponsor)),
     })
     .derive({
       enrolledDays: aq.escape(
