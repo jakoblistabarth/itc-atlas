@@ -1,5 +1,4 @@
 /** @jsxImportSource theme-ui */
-
 import { OrbitControls } from "@react-three/drei";
 import { Canvas } from "@react-three/fiber";
 import type { NextPage } from "next";
@@ -11,7 +10,7 @@ const ShaderTest: NextPage = () => {
   // TODO: get segements and side with custom hook from fetched data?
   const segments = 1000;
   const side = 4;
-  const sur = useSWR("/api/data/elevation/Paramaribo");
+  const sur = useSWR("/api/data/elevation/PParamaribo");
   const aut = useSWR("/api/data/elevation/Grossglockner");
   return (
     <BasePage title="Shader Test">
@@ -22,8 +21,8 @@ const ShaderTest: NextPage = () => {
           {sur.data && (
             <BlockDiagramm
               side={side}
-              yScale={0.01}
-              zOffset={0.01}
+              yScale={0.001}
+              zOffset={0.1}
               segments={segments}
               data={Float32Array.from(sur.data.elevation)}
             />
