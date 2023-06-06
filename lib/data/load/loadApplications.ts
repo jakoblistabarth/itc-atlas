@@ -3,11 +3,16 @@ import * as aq from "arquero";
 import { ApplicationClean } from "../../../types/ApplicationClean";
 import { ddmmyyyyToDate } from "../../utilities/timeparser";
 import getDaysBetween from "../../utilities/getDaysBetween";
+import { createId } from "@paralleldrive/cuid2";
 
 export const loadApplications = async (contacts: ContactEnriched[]) => {
-  const tb = aq
-    .from(contacts)
-    .dedupe("APPnr", "Start Date", "End Date")
+  const tb = aq.from(contacts).dedupe("APPnr", "Start Date", "End Date");
+  const uniqueCoursesIds = tb
+    .groupby("COURSENO")
+    .count()
+    .filter((d: { COURSENO: string; count: number }) => aq.op.equal(d.count, 1))
+    .array("COURSENO");
+  const applications = tb
     .derive({
       statusId: (d: ContactEnriched) =>
         aq.op.substring(d["Applicant status"], 0, 2),
@@ -16,6 +21,9 @@ export const loadApplications = async (contacts: ContactEnriched[]) => {
       ),
       enrollmentEnd: aq.escape((d: ContactEnriched) =>
         d["End Date"] ? ddmmyyyyToDate(d["End Date"]) : null
+      ),
+      courseId: aq.escape((d: ContactEnriched) =>
+        uniqueCoursesIds.includes(d.COURSENO) ? createId() : d.COURSENO
       ),
       examYear: (d: ContactEnriched) =>
         aq.op.is_finite(aq.op.parse_int(d["YearCert_Exam_Dipl"], 10))
@@ -39,7 +47,6 @@ export const loadApplications = async (contacts: ContactEnriched[]) => {
       APPnr: "id",
       ContactNo: "applicantId",
       ContactNo_actual: "applicantId_actual",
-      COURSENO: "courseId",
       Prog: "programmId",
       "Applicant status": "status",
       Level: "level",
@@ -63,7 +70,7 @@ export const loadApplications = async (contacts: ContactEnriched[]) => {
       "sponsor"
     );
 
-  return tb.objects() as ApplicationClean[];
+  return applications.objects() as ApplicationClean[];
 };
 
 export default loadApplications;
