@@ -1,17 +1,23 @@
 import { writeFileSync } from "fs";
 import { geoBounds, geoGraticule, geoNaturalEarth1, geoPath } from "d3-geo";
+import { geoMollweide } from "d3-geo-projection";
 //@ts-ignore-error TODO: add types?
 import { SyncTileSet } from "srtm-elevation";
 import { extent } from "d3";
 import { FeatureCollection, Point } from "geojson";
-
+import proj4 from "proj4";
 // Rough bounding box around Paramaribo
 const loadHgt = async (locations: [number, number][], name: string) => {
   const proj = geoNaturalEarth1();
-
-  const [minLat, maxLat] = extent(locations, (d) => d[0]);
-  const [minLng, maxLng] = extent(locations, (d) => d[1]);
-
+  
+  const [minLat1, maxLat1] = extent(locations, (d) => d[0]);
+  const [minLng1, maxLng1] = extent(locations, (d) => d[1]);
+  const moll =
+  "+proj=moll +lon_0=0 +x_0=0 +y_0=0 +datum=WGS84 +units=m +no_defs +type=crs";
+  
+ // console.log(proj4(moll).inverse([minLat, maxLng]));
+ // const InverseProj4 = proj4(moll).inverse(coordProj4);
+  //const coordD3geo = geoMollweide()([minLat??0, maxLat??0]);
   const locationsFeatureCollection: FeatureCollection<Point> = {
     type: "FeatureCollection",
     features: locations.map((d) => ({
@@ -34,9 +40,10 @@ const loadHgt = async (locations: [number, number][], name: string) => {
     ])
     .outline();
   const area = geoPath(proj).area(areaRectangle);
-
-  console.log({ w, s, e, n, areaGeoBounds, areaBounds, area });
-
+  const [minLng,minLat] = proj4(moll).forward([minLng1??0, minLat1??0]);
+  
+  const [maxLng, maxLat] = proj4(moll).forward([maxLng1??0, maxLat1??0]);
+  //console.log(minLat1,minLng1);
   const bBox = [minLat, minLng, maxLat, maxLng];
   if (!minLat || !maxLat || !minLng || !maxLng)
     throw new Error("invalid locations");
@@ -52,24 +59,26 @@ const loadHgt = async (locations: [number, number][], name: string) => {
       const lat = minLat + rowIdx * stepLat;
       return Array.from({ length: gridSize }).map((_, colIdx) => {
         const lng = minLng + colIdx * stepLng;
-        return [lat, lng];
+        return [lng, lat];
       });
     })
     .flat()
     .map((d) => d.map((c) => c.toFixed(6)));
-
+  const [minLng2,minLat2]=(proj4(moll).inverse([minLng, minLat]));
+  const [maxLng2,maxLat2]=(proj4(moll).inverse([maxLng, maxLat]));
+  //console.log(minLng2,minLat2,maxLng2,maxLat2);
   const tileset = new SyncTileSet(
     "./data/",
-    [minLat, minLng],
-    [maxLat, maxLng],
+    [minLat2, minLng2],
+    [maxLat2, maxLng2],
     function (err: string) {
       if (err) {
         console.log(err);
         return;
       }
-
       const elevation = pois.map((l) => {
-        const elevation = tileset.getElevation([l[0], l[1]]);
+        const[x,y]= proj4(moll).inverse([+l[0]??0, +l[1]??0]);
+        const elevation = tileset.getElevation([y+"", x+""]);
         return +elevation.toFixed(1);
       });
 
