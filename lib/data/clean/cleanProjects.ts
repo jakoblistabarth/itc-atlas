@@ -5,6 +5,7 @@ import loadUnsdCountries from "../load/loadUnsdCountries";
 import * as aq from "arquero";
 import { ProjectPre2019Raw, ProjectPost2019Raw } from "../load/loadProjects";
 import { mapToDepartment } from "../../mappings/departments";
+import { mapToSponsor } from "../../mappings/application.sponsor";
 
 export type ProjectClean = Omit<ProjectMerged, "id"> & {
   id: number;
@@ -86,14 +87,20 @@ const cleanProjects = async ({
 
   const post2019 = aq
     .from(projectsPost2019)
+    .derive({
+      fundingOrganization: aq.escape((d: ProjectPost2019Raw) =>
+        mapToSponsor(d.Client_FundingAgency)
+      ),
+      leadOrganization: aq.escape((d: ProjectPost2019Raw) =>
+        mapToSponsor(d.LeadOrganisation)
+      ),
+    })
     .rename({
       projectName: "name",
       projectShortName: "projectShortName",
-      Client_FundingAgency: "fundingOrganization",
       CountriesRegion: "countriesregion",
       descriptionProject: "description",
       LeadDepartment: "leadDepartment",
-      LeadOrganisation: "leadOrganization",
       projectID: "id",
       projecttype: "type",
       Status: "status",

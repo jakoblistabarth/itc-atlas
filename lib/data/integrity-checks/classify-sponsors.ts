@@ -19,8 +19,4 @@ import * as aq from "arquero";
   console.table(
     tb.groupby("sponsorGroup").count().orderby(aq.desc("count")).objects()
   );
-
-  console.table(
-    tb.groupby("SponsorCategory").count().orderby(aq.desc("count")).objects()
-  );
 })();
