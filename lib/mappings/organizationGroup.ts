@@ -1,4 +1,4 @@
-export const mapToSponsor = (str?: string) => {
+export const mapToOrganizationGroup = (str?: string) => {
   if (!str) return undefined;
   if (
     !!str.match(

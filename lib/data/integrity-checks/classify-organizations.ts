@@ -1,4 +1,4 @@
-import { mapToSponsor } from "../../mappings/application.sponsor";
+import { mapToOrganizationGroup } from "../../mappings/organizationGroup";
 import { ProjectClean } from "../clean/cleanProjects";
 import loadProjects from "../load/loadProjects";
 import * as aq from "arquero";
@@ -7,10 +7,10 @@ import * as aq from "arquero";
 (async () => {
   const tb = aq.from(await loadProjects()).derive({
     leadOrganizationGroup: aq.escape((d: ProjectClean) =>
-      mapToSponsor(d.leadOrganization)
+      mapToOrganizationGroup(d.leadOrganization)
     ),
     fundingOrganizationGroup: aq.escape((d: ProjectClean) =>
-      mapToSponsor(d.fundingOrganization)
+      mapToOrganizationGroup(d.fundingOrganization)
     ),
   });
 

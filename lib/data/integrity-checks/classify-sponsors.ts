@@ -1,4 +1,4 @@
-import { mapToSponsor } from "../../mappings/application.sponsor";
+import { mapToOrganizationGroup } from "../../mappings/organizationGroup";
 import loadContactsEnriched, {
   ContactEnriched,
 } from "../load/loadContactsEnriched";
@@ -7,7 +7,9 @@ import * as aq from "arquero";
 // Check classification of application sponsors
 (async () => {
   const tb = aq.from(await loadContactsEnriched()).derive({
-    sponsorGroup: aq.escape((d: ContactEnriched) => mapToSponsor(d.Sponsor)),
+    sponsorGroup: aq.escape((d: ContactEnriched) =>
+      mapToOrganizationGroup(d.Sponsor)
+    ),
   });
 
   const groupedBySponsor = tb
