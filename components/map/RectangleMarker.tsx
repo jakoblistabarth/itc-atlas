@@ -8,15 +8,17 @@ type Props = {
   height?: number;
 } & SVGProps<SVGCircleElement>;
 
-const RectangleMarker: FC<Props> = ({
-  position,
-  width,
-  height,
-  ...rest
-}) => {
+const RectangleMarker: FC<Props> = ({ position, width, height, ...rest }) => {
   return (
     <g transform={`translate(${position.x} ${position.y})`}>
-      <rect  width={width} height={height} fill='lightgrey' strokeWidth='1' stroke='black' />;
+      <rect
+        width={width}
+        height={height}
+        fill="lightgrey"
+        strokeWidth="1"
+        stroke="black"
+      />
+      ;
     </g>
   );
 };

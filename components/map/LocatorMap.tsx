@@ -17,8 +17,8 @@ type Props = {
   highlight?: string[];
   theme?: MapTheme;
   width?: number;
-  rectwidth?:number;
-  rectheight?:number;
+  rectwidth?: number;
+  rectheight?: number;
   markers?: (Omit<React.ComponentProps<typeof RoundMarker>, "position"> & {
     lat: number;
     lng: number;
@@ -53,7 +53,6 @@ const LocatorMap: FC<Props> = ({
   };
   const centroid = d3.geoCentroid(highlightCountries);
   const rotation: [number, number] = [-centroid[0], -centroid[1]];
-
   const projection = d3.geoOrthographic().rotate(rotation);
   const shadowRadius = dimension.width / 30;
   dimension.height = getMapHeight(dimension.width, projection, shadowRadius);
@@ -79,7 +78,7 @@ const LocatorMap: FC<Props> = ({
               key={nanoid()}
               feature={feature}
               projection={projection}
-              style={{ ...defaultTheme.choropleth,fill: "lightgray" }}
+              style={{ ...defaultTheme.choropleth, fill: "lightgray" }}
             />
           ))}
         </g>
@@ -129,7 +128,7 @@ const LocatorMap: FC<Props> = ({
               )
             );
           })}
-          {rectanglehighlight &&
+        {rectanglehighlight &&
           rectanglehighlight?.map((d, idx) => {
             const p = projection([d[1], d[0]]);
             return (
