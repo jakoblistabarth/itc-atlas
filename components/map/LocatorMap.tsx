@@ -12,27 +12,27 @@ import BaseLayer from "./BaseLayer";
 import PolygonSymbol from "./PolygonSymbol";
 import RoundMarker from "./RoundMarker";
 import RectangleMarker from "./RectangleMarker";
+
 type Props = {
   neCountriesTopoJson: NeCountriesTopoJson;
   highlight?: string[];
   theme?: MapTheme;
   width?: number;
-  rectwidth?: number;
-  rectheight?: number;
-  markers?: (Omit<React.ComponentProps<typeof RoundMarker>, "position"> & {
+  roundMarkers?: (Omit<React.ComponentProps<typeof RoundMarker>, "position"> & {
     lat: number;
     lng: number;
   })[];
-  rectanglehighlight?: number[][];
+  rectangleMarker?: Omit<
+    React.ComponentProps<typeof RectangleMarker>,
+    "projection"
+  >;
 };
 
 const LocatorMap: FC<Props> = ({
   neCountriesTopoJson,
   highlight,
-  rectanglehighlight,
-  rectwidth,
-  rectheight,
-  markers,
+  roundMarkers,
+  rectangleMarker,
   width = 300,
   theme = defaultTheme,
 }) => {
@@ -117,8 +117,8 @@ const LocatorMap: FC<Props> = ({
             </text>
           </g>
         )}
-        {markers &&
-          markers?.map((d, idx) => {
+        {roundMarkers &&
+          roundMarkers?.map((d, idx) => {
             const p = projection([d.lng, d.lat]);
             return (
               p && (
@@ -130,20 +130,14 @@ const LocatorMap: FC<Props> = ({
               )
             );
           })}
-        {rectanglehighlight &&
-          rectanglehighlight?.map((d, idx) => {
-            const p = projection([d[1], d[0]]);
-            return (
-              p && (
-                <RectangleMarker
-                  key={`marker-${idx}`}
-                  position={new Vector2(p[0], p[1])}
-                  height={rectheight}
-                  width={rectwidth}
-                />
-              )
-            );
-          })}
+        {rectangleMarker && (
+          <RectangleMarker
+            projection={projection}
+            position={rectangleMarker.position}
+            height={rectangleMarker.height}
+            width={rectangleMarker.width}
+          />
+        )}
       </svg>
     </>
   );

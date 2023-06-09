@@ -15,17 +15,14 @@ export default async function handler(
   if (!highlightCountries) {
     res.status(400).json({ error: "invalid iso-3-code name" });
   }
-  const marker = [lat, lng];
-  var position: number[][] = [marker];
-  var highlights: string[] = [highlightCountries ?? ""];
+  const position = [lng, lat] as [number, number];
+  const highlights: string[] = [highlightCountries ?? ""];
   const neCountriesTopoJson = getCountries();
   const svg = ReactDOMServer.renderToStaticMarkup(
     <LocatorMap
       neCountriesTopoJson={neCountriesTopoJson}
       highlight={highlights}
-      rectwidth={width}
-      rectheight={height}
-      rectanglehighlight={position}
+      rectangleMarker={{ width, height, position }}
     ></LocatorMap>
   );
 

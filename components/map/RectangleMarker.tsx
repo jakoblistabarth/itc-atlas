@@ -1,25 +1,32 @@
 import { FC, SVGProps } from "react";
-import { Vector2 } from "three";
-import { Text } from "@visx/text";
+import { GeoProjection } from "d3-geo";
 
 type Props = {
-  position: Vector2;
-  width?: number;
-  height?: number;
-} & SVGProps<SVGCircleElement>;
+  projection: GeoProjection;
+  position: [number, number];
+  width: number;
+  height: number;
+} & SVGProps<SVGRectElement>;
 
-const RectangleMarker: FC<Props> = ({ position, width, height, ...rest }) => {
+const RectangleMarker: FC<Props> = ({
+  projection,
+  position,
+  width,
+  height,
+  ...rest
+}) => {
+  const projectedPosition = projection(position);
+  const [x, y] = projectedPosition ? projectedPosition : [0, 0];
   return (
-    <g transform={`translate(${position.x} ${position.y})`}>
-      <rect
-        width={width}
-        height={height}
-        fill="lightgrey"
-        strokeWidth="1"
-        stroke="black"
-      />
-      ;
-    </g>
+    <rect
+      transform={`translate(${x} ${y})`}
+      width={width}
+      height={height}
+      fill="lightgrey"
+      strokeWidth="1"
+      stroke="black"
+      {...rest}
+    />
   );
 };
 
