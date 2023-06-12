@@ -58,7 +58,7 @@ const SpaceTimeCube: FC<PropTypes> = ({
               position={[0, timeScale(t), 0]}
               rotation={[-Math.PI / 2, 0, 0]}
             >
-              <planeBufferGeometry args={[side, side]} />
+              <planeGeometry args={[side, side]} />
               <meshStandardMaterial transparent opacity={0} />
               <Edges color={"white"} />
             </mesh> */}

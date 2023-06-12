@@ -32,7 +32,7 @@ const Flow3D: FC<{
         castShadow
         receiveShadow
       >
-        <tubeBufferGeometry args={[curve, 60, radius, 16, false]} />
+        <tubeGeometry args={[curve, 60, radius, 16, false]} />
         <meshStandardMaterial color={hover ? "lightgrey" : "white"} />
       </mesh>
     </>
