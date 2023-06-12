@@ -10,7 +10,7 @@ const ShaderTest: NextPage = () => {
   // TODO: get segements and side with custom hook from fetched data?
   const segments = 1000;
   const side = 4;
-  const sur = useSWR("/api/data/elevation/PParamaribo");
+  const sur = useSWR("/api/data/elevation/Paramaribo");
   const aut = useSWR("/api/data/elevation/Grossglockner");
   return (
     <BasePage title="Shader Test">
