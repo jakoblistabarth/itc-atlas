@@ -51,6 +51,7 @@
     "d3-geo-projection": "^4.0.0",
     "dotenv-cli": "^7.0.0",
     "eslint-plugin-import": "^2.27.5",
+    "exceljs": "^4.3.0",
     "fuse.js": "^6.6.2",
     "lodash": "^4.17.21",
     "mapshaper": "^0.6.24",
@@ -70,8 +71,7 @@
     "three": "^0.149.0",
     "topojson-client": "^3.1.0",
     "topojson-simplify": "^3.0.3",
-    "tsx": "^3.12.6",
-    "xlsx": "^0.18.5"
+    "tsx": "^3.12.6"
   },
   "devDependencies": {
     "@babel/core": "^7.20.12",

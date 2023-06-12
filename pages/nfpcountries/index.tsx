@@ -164,7 +164,7 @@ const NfpCountries: NextPage<Props> = ({ nfps, neCountriesTopoJson }) => {
 };
 
 export const getStaticProps: GetStaticProps<Props> = async () => {
-  const nfps = getNfpCountries();
+  const nfps = await getNfpCountries();
   const neCountriesTopoJson = getCountries();
   const countries = await getCountryCodes();
   return {
