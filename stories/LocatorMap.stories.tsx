@@ -66,7 +66,7 @@ export const DifferentHemispheres: Story = {
 export const WithMarkers: Story = {
   args: {
     highlight: ["IDN"],
-    markers: [
+    roundMarkers: [
       [106.5, -6],
       [110, -7.5],
     ].map((d, i) => ({
@@ -76,6 +76,15 @@ export const WithMarkers: Story = {
       fill: "red",
       labelColor: "white",
       fontSize: 7,
+    })),
+    rectangleMarker: [[108, 30, 114, 24]].map((d, i) => ({
+      minlng: d[0],
+      maxlat: d[1],
+      maxlng: d[2],
+      minlat: d[3],
+      fill: "lightgrey",
+      stroke: "black",
+      strokeWidth: "1",
     })),
   },
 };
