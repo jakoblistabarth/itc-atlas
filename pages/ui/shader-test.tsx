@@ -7,6 +7,7 @@ import BlockDiagramm from "../../components/map-3d/BlockDiagram";
 import useSWR from "swr";
 import BasePage from "../../components/BasePage";
 import { Box, Heading, Text } from "theme-ui";
+
 const ShaderTest: NextPage = () => {
   // TODO: get segements and side with custom hook from fetched data?
   const segments = 1000;

@@ -8,6 +8,7 @@ import {
   Uniform,
 } from "three";
 import * as d3 from "d3";
+
 type Props = {
   side: number;
   segments: number;
@@ -15,6 +16,7 @@ type Props = {
   data: Float32Array;
   zOffset?: number;
 };
+
 const BlockDiagramm: FC<Props> = ({
   side,
   segments,
