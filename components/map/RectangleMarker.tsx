@@ -1,33 +1,25 @@
 import { FC, SVGProps } from "react";
-import { GeoProjection } from "d3-geo";
-
+import { Vector4 } from "three";
 type Props = {
-  projection: GeoProjection;
-  position: [number, number];
-  width: number;
-  height: number;
-} & SVGProps<SVGRectElement>;
+  bounds: Vector4;
+} & SVGProps<SVGPathElement>;
 
-const RectangleMarker: FC<Props> = ({
-  projection,
-  position,
-  width,
-  height,
-  ...rest
-}) => {
-  const projectedPosition = projection(position);
-  const [x, y] = projectedPosition ? projectedPosition : [0, 0];
+const PathRectangleMarker: FC<Props> = ({ bounds, ...rest }) => {
+  const leftTop = [bounds.x, bounds.y];
+  const rightBottom = [bounds.z, bounds.w];
+  const [x, y] = leftTop ? leftTop : [0, 0];
+  const [x1, y1] = rightBottom ? rightBottom : [0, 0];
   return (
-    <rect
-      transform={`translate(${x} ${y})`}
-      width={width}
-      height={height}
-      fill="lightgrey"
-      strokeWidth="1"
-      stroke="black"
-      {...rest}
-    />
+    <g>
+      <path
+        d={`M${x} ${y} L${x1} ${y} L${x1} ${y1} L${x} ${y1} Z`}
+        fill="lightgrey"
+        strokeWidth="1"
+        stroke="black"
+        {...rest}
+      />
+    </g>
   );
 };
 
-export default RectangleMarker;
+export default PathRectangleMarker;

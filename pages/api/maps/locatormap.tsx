@@ -8,21 +8,26 @@ export default async function handler(
   res: NextApiResponse
 ) {
   const highlightCountries = req.query.country?.toString();
-  const lat = Number(req.query.lat?.toString());
-  const lng = Number(req.query.lng?.toString());
-  const width = Number(req.query.width?.toString());
-  const height = Number(req.query.height?.toString());
+  const bounds = req.query.bounds?.toString().split(" ").map(Number) ?? [
+    0, 0, 0, 0,
+  ];
   if (!highlightCountries) {
     res.status(400).json({ error: "invalid iso-3-code name" });
   }
-  const position = [lng, lat] as [number, number];
   const highlights: string[] = [highlightCountries ?? ""];
   const neCountriesTopoJson = getCountries();
   const svg = ReactDOMServer.renderToStaticMarkup(
     <LocatorMap
       neCountriesTopoJson={neCountriesTopoJson}
       highlight={highlights}
-      rectangleMarker={{ width, height, position }}
+      rectangleMarker={[
+        {
+          minlng: bounds[0],
+          maxlat: bounds[1],
+          maxlng: bounds[2],
+          minlat: bounds[3],
+        },
+      ]}
     ></LocatorMap>
   );
 

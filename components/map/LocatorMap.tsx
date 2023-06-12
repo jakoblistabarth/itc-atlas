@@ -2,7 +2,7 @@ import * as d3 from "d3";
 import { FeatureCollection } from "geojson";
 import { nanoid } from "nanoid";
 import { FC } from "react";
-import { Vector2 } from "three";
+import { Vector2, Vector4 } from "three";
 import * as topojson from "topojson-client";
 import getMapHeight from "../../lib/cartographic/getMapHeight";
 import defaultTheme from "../../lib/styles/themes/defaultTheme";
@@ -22,10 +22,10 @@ type Props = {
     lat: number;
     lng: number;
   })[];
-  rectangleMarker?: Omit<
+  rectangleMarker?: (Omit<
     React.ComponentProps<typeof RectangleMarker>,
-    "projection"
-  >;
+    "bounds"
+  > & { minlng: number; maxlat: number; maxlng: number; minlat: number })[];
 };
 
 const LocatorMap: FC<Props> = ({
@@ -130,14 +130,17 @@ const LocatorMap: FC<Props> = ({
               )
             );
           })}
-        {rectangleMarker && (
-          <RectangleMarker
-            projection={projection}
-            position={rectangleMarker.position}
-            height={rectangleMarker.height}
-            width={rectangleMarker.width}
-          />
-        )}
+        {rectangleMarker &&
+          rectangleMarker?.map((d, idx) => {
+            const p = projection([d.minlng, d.maxlat]) ?? [0, 0];
+            const p1 = projection([d.maxlng, d.minlat]) ?? [10, 10];
+            const bounds = new Vector4(p[0], p[1], p1[0], p1[1]);
+            return (
+              bounds && (
+                <RectangleMarker key={`marker-${idx}`} bounds={bounds} {...d} />
+              )
+            );
+          })}
       </svg>
     </>
   );
