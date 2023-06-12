@@ -13,7 +13,7 @@ type Props = {
 };
 
 const GlobeTexture = React.forwardRef<HTMLCanvasElement, Props>(
-  (
+  function GlobeTexture(
     {
       neCountriesTopoJson,
       sphereColor = "white",
@@ -22,7 +22,7 @@ const GlobeTexture = React.forwardRef<HTMLCanvasElement, Props>(
       strokeColor = "white",
     },
     ref
-  ) => {
+  ) {
     const world = feature(
       neCountriesTopoJson,
       neCountriesTopoJson.objects.ne_admin_0_countries
