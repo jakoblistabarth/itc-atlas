@@ -1,5 +1,4 @@
 import * as d3 from "d3";
-import { nanoid } from "nanoid";
 import { FC } from "react";
 import { colorMap } from "../lib/summarytable/colorMap";
 import { fDateShort, fFloat, fPercentage } from "../lib/utilities/formaters";
@@ -91,7 +90,7 @@ const SnapshotHistogram: FC<Props> = ({ column }) => {
               <TooltipTrigger asChild>
                 <g>
                   <SnapshotCell
-                    key={nanoid()}
+                    key={`cell-${column.name}-${idx}`}
                     fill={colorMap.get(column.type)?.baseColor ?? "black"}
                     x={xScale(bin.x0) + dimension.barInset}
                     y={yScale(bin.length)}
@@ -158,7 +157,7 @@ const SnapshotHistogram: FC<Props> = ({ column }) => {
         {stats &&
           stats.map((stat, i) => (
             <line
-              key={nanoid()}
+              key={i}
               x1={xScale(stat.value ?? 0)}
               x2={xScale(stat.value ?? 0)}
               y1={dimension.height - dimension.margin.bottom}

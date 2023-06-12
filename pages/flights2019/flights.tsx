@@ -1,6 +1,5 @@
 import * as d3 from "d3";
 import { geoBertin1953 } from "d3-geo-projection";
-import { nanoid } from "nanoid";
 import type { NextPage } from "next";
 import Head from "next/head";
 import { Container, Heading } from "theme-ui";
@@ -107,7 +106,7 @@ const Flights: NextPage<Props> = ({ odMatrix, neCountriesTopoJson }) => {
               return (
                 labelPosition && (
                   <PointLabel
-                    key={nanoid()}
+                    key={d.properties.od}
                     position={new Vector2(labelPosition[0], labelPosition[1])}
                   >
                     <tspan fontWeight="bold">{d.properties?.od}</tspan>(

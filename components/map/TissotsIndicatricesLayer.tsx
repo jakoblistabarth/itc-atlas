@@ -1,6 +1,5 @@
 import { GeoProjection } from "d3";
 import { FC } from "react";
-import { nanoid } from "nanoid";
 import defaultTheme from "../../lib/styles/themes/defaultTheme";
 import getTissotsIndicatrices from "../../lib/cartographic/getTissotsIndicatrices";
 import { geoPath } from "d3-geo";
@@ -24,12 +23,12 @@ const TissotsIndicatricesLayer: FC<{
   const path = geoPath(projection);
   return (
     <g id="tissotIndicatrices-Layer" clipPath="url(#clip)">
-      {indicatrices.features.map((tissotsIndex) => {
+      {indicatrices.features.map((tissotsIndex, idx) => {
         const featurePath = path(tissotsIndex);
         return (
           featurePath && (
             <path
-              key={nanoid()}
+              key={idx}
               d={featurePath}
               stroke={strokeColor}
               fill={fillColor}

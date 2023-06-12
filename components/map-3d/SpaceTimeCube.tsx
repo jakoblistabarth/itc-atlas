@@ -1,7 +1,6 @@
 import { Edges, Text3D } from "@react-three/drei";
 import { max, min, scaleTime } from "d3";
 import { geoBertin1953 } from "d3-geo-projection";
-import { nanoid } from "nanoid";
 import React, { FC } from "react";
 import lonLatTimeToXYZ from "../../lib/cartographic/lonLatTimeToXYZ";
 import { fDateYear } from "../../lib/utilities/formaters";
@@ -50,9 +49,9 @@ const SpaceTimeCube: FC<PropTypes> = ({
         <meshStandardMaterial opacity={0} transparent />
         <Edges color={"white"} />
       </mesh> */}
-      {timeScale.ticks().map((t) => {
+      {timeScale.ticks().map((t, idx) => {
         return (
-          <group key={nanoid()}>
+          <group key={`${t.getDate()}-${idx}`}>
             {/* <mesh
               receiveShadow
               castShadow
@@ -77,13 +76,13 @@ const SpaceTimeCube: FC<PropTypes> = ({
                 curveSegments={2}
               >
                 {fDateYear(t)}
-                <meshStandardMaterial key={nanoid()} color={"white"} />
+                <meshStandardMaterial color={"white"} />
               </Text3D>
             </mesh>
           </group>
         );
       })}
-      {events.map((e) => {
+      {events.map((e, idx) => {
         const pos = lonLatTimeToXYZ(
           e.coordinates,
           e.dateStart,
@@ -91,7 +90,7 @@ const SpaceTimeCube: FC<PropTypes> = ({
           projection
         );
         return (
-          <mesh key={nanoid()} position={pos}>
+          <mesh key={`${e.name}-${idx}`} position={pos}>
             <boxGeometry
               args={[(e.size ?? 1) / 200, eventSide / 5, (e.size ?? 1) / 200]}
             />

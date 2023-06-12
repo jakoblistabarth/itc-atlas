@@ -2,7 +2,6 @@ import { FC } from "react";
 import { Appearance } from "../../types/Appearance";
 import PointLabel from "./PointLabel";
 import { ScaleLinear } from "d3";
-import { nanoid } from "nanoid";
 import defaultTheme from "../../lib/styles/themes/defaultTheme";
 import { Vector2 } from "three";
 import { LabelPlacement } from "../../types/LabelPlacement";
@@ -64,7 +63,7 @@ const IsoUnit: FC<{
       )}
       {faces.map((face) => (
         <path
-          key={nanoid()}
+          key={face}
           transform={`translate(0, ${-height + side / 2})`}
           d={face}
           fill={style?.fill ?? defaultTheme.symbol?.fill}

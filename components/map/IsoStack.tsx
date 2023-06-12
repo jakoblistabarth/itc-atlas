@@ -3,7 +3,6 @@ import { Appearance } from "../../types/Appearance";
 import type { Position } from "geojson";
 import IsoUnit from "./IsoUnit";
 import { range, scaleLinear } from "d3";
-import { nanoid } from "nanoid";
 
 type Props = {
   xy: Position;
@@ -30,7 +29,7 @@ const IsoStack: FC<Props> = ({ xy, value, side, maxUnits, style, label }) => {
       {range(0, -unitNo, -1).map((no) => {
         return (
           <IsoUnit
-            key={nanoid()}
+            key={no}
             scale={unitScale}
             value={side}
             xy={[0, side * no]}

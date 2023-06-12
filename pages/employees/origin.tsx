@@ -3,7 +3,6 @@ import prisma from "../../prisma/client";
 import * as d3 from "d3";
 import { geoBertin1953 } from "d3-geo-projection";
 import type { Feature, FeatureCollection, Point } from "geojson";
-import { nanoid } from "nanoid";
 import type { GetStaticProps, NextPage } from "next";
 import Head from "next/head";
 import { Vector2 } from "three";
@@ -92,11 +91,11 @@ const StaffOrigin: NextPage<Props> = ({
               projection={projection}
             />
             <g id="symbols">
-              {points.features.map((point) => {
+              {points.features.map((point, idx) => {
                 const pos = projection(point.geometry.coordinates);
                 return (
                   <PointSymbol
-                    key={nanoid()}
+                    key={idx}
                     position={new Vector2(pos[0], pos[1])}
                     radius={scale(point.properties?.employeeCount)}
                   />

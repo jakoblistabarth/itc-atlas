@@ -1,4 +1,3 @@
-import { nanoid } from "nanoid";
 import { FC, SVGProps } from "react";
 import sliceIntoChunks from "../../lib/utilities/sliceIntoChunks";
 import LegendTitle from "./LegendTitle";
@@ -27,12 +26,12 @@ const NominalLegend: FC<Props> = ({
     <g {...rest}>
       {title && <LegendTitle fontSize={fontSize}>{title}</LegendTitle>}
       {entriesByColumn.map((column, idx) => (
-        <g key={nanoid()} transform={`translate(${idx * columnWidth} 0)`}>
-          {column.map((entry, index) => (
+        <g key={idx} transform={`translate(${idx * columnWidth} 0)`}>
+          {column.map((entry, idx) => (
             <g
-              key={nanoid()}
+              key={`${entry.label}-${idx}`}
               transform={`translate(0, ${
-                (title ? fontSize * 3 : 0) + index * fontSize * 1.75
+                (title ? fontSize * 3 : 0) + idx * fontSize * 1.75
               })`}
             >
               <g transform={`translate(${symbolSize / 2} 0)`}>

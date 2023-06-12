@@ -4,7 +4,6 @@ import { ScaleLinear } from "d3";
 import { fInt } from "../../lib/utilities/formaters";
 import { Appearance } from "../../types/Appearance";
 import LegendTitle from "./LegendTitle";
-import { nanoid } from "nanoid";
 import defaultTheme from "../../lib/styles/themes/defaultTheme";
 
 const FlowLegend: FC<{
@@ -44,11 +43,11 @@ const FlowLegend: FC<{
     <g id="legend" transform={`translate(${x}, ${y})`}>
       <LegendTitle>{title}</LegendTitle>
       <g id="entries" transform="translate(0, 40)">
-        {entries.map((entry, index) => {
+        {entries.map((entry, idx) => {
           const fontSize = 10;
 
           return (
-            <g key={nanoid()} transform={`translate(10, ${index * 30})`}>
+            <g key={idx} transform={`translate(10, ${idx * 30})`}>
               <path
                 d={linePath}
                 stroke={style?.stroke ?? defaultTheme.flow?.stroke}

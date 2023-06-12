@@ -1,7 +1,6 @@
 import prisma from "../../prisma/client";
 import { max, min, scaleSqrt } from "d3";
 import { geoInterruptedMollweide } from "d3-geo-projection";
-import { nanoid } from "nanoid";
 import type { GetStaticProps, NextPage } from "next";
 import Head from "next/head";
 import { Vector2 } from "three";
@@ -100,7 +99,7 @@ const PhdDepartments: NextPage<Props> = ({
                   const pos = projection(country.coordinates);
                   return (
                     <ScaledPie
-                      key={nanoid()}
+                      key={country.isoAlpha3}
                       position={new Vector2(pos[0], pos[1])}
                       radius={scale(country.totalCount)}
                       colorScale={departmentColorScale}
