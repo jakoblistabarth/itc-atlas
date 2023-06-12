@@ -4,7 +4,7 @@ type Props = {
   bounds: Vector4;
 } & SVGProps<SVGPathElement>;
 
-const PathRectangleMarker: FC<Props> = ({ bounds, ...rest }) => {
+const RectangleMarker: FC<Props> = ({ bounds, ...rest }) => {
   const leftTop = [bounds.x, bounds.y];
   const rightBottom = [bounds.z, bounds.w];
   const [x, y] = leftTop ? leftTop : [0, 0];
@@ -22,4 +22,4 @@ const PathRectangleMarker: FC<Props> = ({ bounds, ...rest }) => {
   );
 };
 
-export default PathRectangleMarker;
+export default RectangleMarker;
