@@ -26,14 +26,15 @@ const loadHgt = async (locations: [number, number][], name: string) => {
   const stepX = Math.abs(east - west) / gridSize;
   const pois = Array.from({ length: gridSize })
     .map((_, rowIdx) => {
-      const y = south + rowIdx * stepY;
+      const y = north - rowIdx * stepY;
       return Array.from({ length: gridSize }).map((_, colIdx) => {
         const x = west + colIdx * stepX;
         return [x, y];
       });
     })
     .flat()
-    .map((d) => d.map((c) => c.toFixed(6)));
+    .map((d) => d.map((c) => c.toFixed(6)))
+    .reverse();
   const tileset = new SyncTileSet(
     "./data/",
     [minLat, minLng],
