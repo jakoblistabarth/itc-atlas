@@ -8,9 +8,7 @@ export default async function handler(
   res: NextApiResponse
 ) {
   const highlightCountries = req.query.country?.toString();
-  const bounds = req.query.bounds?.toString().split(" ").map(Number) ?? [
-    0, 0, 0, 0,
-  ];
+  const bounds = req.query.bounds?.toString().split(",").map(Number);
   if (!highlightCountries) {
     res.status(400).json({ error: "invalid iso-3-code name" });
   }
