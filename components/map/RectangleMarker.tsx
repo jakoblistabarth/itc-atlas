@@ -14,7 +14,7 @@ const RectangleMarker: FC<Props> = ({ bounds, projection, ...rest }) => {
     <g>
       <path
         d={`M${x} ${y} L${x1} ${y} L${x1} ${y1} L${x} ${y1} Z`}
-        fill="lightgrey"
+        fill="none"
         strokeWidth="1"
         stroke="black"
         {...rest}
