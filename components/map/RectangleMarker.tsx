@@ -1,13 +1,14 @@
 import { FC, SVGProps } from "react";
-import { Vector4 } from "three";
+import { GeoProjection } from "d3-geo";
+
 type Props = {
-  bounds: {minLng: number, maxLng: number, minLat: number, maxLat: number};
+  bounds: { minLng: number; maxLat: number; maxLng: number; minLat: number };
   projection: GeoProjection;
 } & SVGProps<SVGPathElement>;
 
 const RectangleMarker: FC<Props> = ({ bounds, projection, ...rest }) => {
-  const leftTop = [bounds.x, bounds.y];
-  const rightBottom = [bounds.z, bounds.w];
+  const leftTop = projection([bounds.minLng, bounds.maxLat]);
+  const rightBottom = projection([bounds.maxLng, bounds.minLat]);
   const [x, y] = leftTop ?? [0, 0];
   const [x1, y1] = rightBottom ?? [0, 0];
   return (

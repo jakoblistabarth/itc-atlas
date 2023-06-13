@@ -2,7 +2,7 @@ import * as d3 from "d3";
 import { FeatureCollection } from "geojson";
 import { nanoid } from "nanoid";
 import { FC } from "react";
-import { Vector2, Vector4 } from "three";
+import { Vector2 } from "three";
 import * as topojson from "topojson-client";
 import getMapHeight from "../../lib/cartographic/getMapHeight";
 import defaultTheme from "../../lib/styles/themes/defaultTheme";
@@ -22,17 +22,17 @@ type Props = {
     lat: number;
     lng: number;
   })[];
-  rectangleMarker?: (Omit<
+  rectangleMarkers?: (Omit<
     React.ComponentProps<typeof RectangleMarker>,
-    "bounds"
-  > & { minlng: number; maxlat: number; maxlng: number; minlat: number })[];
+    "projection" | "bounds"
+  > & { minLng: number; maxLat: number; maxLng: number; minLat: number })[];
 };
 
 const LocatorMap: FC<Props> = ({
   neCountriesTopoJson,
   highlight,
   roundMarkers,
-  rectangleMarker,
+  rectangleMarkers,
   width = 300,
   theme = defaultTheme,
 }) => {
@@ -130,14 +130,22 @@ const LocatorMap: FC<Props> = ({
               )
             );
           })}
-        {rectangleMarker &&
-          rectangleMarker?.map((d, idx) => {
-            const p = projection([d.minlng, d.maxlat]) ?? [0, 0];
-            const p1 = projection([d.maxlng, d.minlat]) ?? [10, 10];
-            const bounds = new Vector4(p[0], p[1], p1[0], p1[1]);
+        {rectangleMarkers &&
+          rectangleMarkers?.map((d, idx) => {
+            const bounds = {
+              minLng: d.minLng,
+              maxLat: d.maxLat,
+              maxLng: d.maxLng,
+              minLat: d.minLat,
+            };
             return (
               bounds && (
-                <RectangleMarker key={`marker-${idx}`} bounds={bounds} {...d} />
+                <RectangleMarker
+                  key={`marker-${idx}`}
+                  bounds={bounds}
+                  projection={projection}
+                  {...d}
+                />
               )
             );
           })}
