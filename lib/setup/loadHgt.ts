@@ -3,14 +3,21 @@ import { writeFileSync } from "fs";
 import { SyncTileSet } from "srtm-elevation";
 import { extent } from "d3";
 import proj4 from "proj4";
+
 // Rough bounding box around Paramaribo
 const loadHgt = async (locations: [number, number][], name: string) => {
   const [minLat, maxLat] = extent(locations, (d) => d[0]);
   const [minLng, maxLng] = extent(locations, (d) => d[1]);
   const moll =
     "+proj=moll +lon_0=0 +x_0=0 +y_0=0 +datum=WGS84 +units=m +no_defs +type=crs";
-  const [west, south] = proj4(moll).forward([minLng ?? 0, minLat ?? 0]);
-  const [east, north] = proj4(moll).forward([maxLng ?? 0, maxLat ?? 0]);
+  const [west, south] = proj4(moll).forward([
+    minLng ?? -Infinity,
+    minLat ?? Infinity,
+  ]);
+  const [east, north] = proj4(moll).forward([
+    maxLng ?? Infinity,
+    maxLat ?? Infinity,
+  ]);
   const bBox = [south, west, north, east];
   if (!south || !west || !north || !east) throw new Error("invalid locations");
   const segments = 1000;
