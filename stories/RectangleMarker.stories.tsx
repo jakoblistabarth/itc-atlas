@@ -29,6 +29,5 @@ export const RedRectangleHighlightMarker: Story = {
   args: {
     fill: "red",
     stroke: "darkred",
-    strokeWidth: 1,
   },
 };
