@@ -77,11 +77,13 @@ export const WithMarkers: Story = {
       labelColor: "white",
       fontSize: 7,
     })),
-    rectangleMarker: [[108, 30, 114, 24]].map((d) => ({
-      minlng: d[0],
-      maxlat: d[1],
-      maxlng: d[2],
-      minlat: d[3],
+    rectangleMarkers: [
+      { minLng: 108, maxLat: 30, maxLng: 114, minLat: 24 },
+    ].map((d) => ({
+      minLng: d.minLng,
+      maxLat: d.maxLat,
+      maxLng: d.maxLng,
+      minLat: d.minLat,
       fill: "lightgrey",
       stroke: "black",
       strokeWidth: "1",

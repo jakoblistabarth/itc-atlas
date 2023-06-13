@@ -1,13 +1,16 @@
 import { Meta, StoryObj } from "@storybook/react";
-import { Vector4 } from "three";
+import * as d3 from "d3";
 import RectangleMarker from "../components/map/RectangleMarker";
 
-const side = 300;
+const rotation: [number, number] = [-150, -20];
+const projection = d3.geoOrthographic().rotate(rotation);
+const side = 500;
 const meta = {
   title: "Map Elements/Symbols/RectangleMarker",
   component: RectangleMarker,
   args: {
-    bounds: new Vector4(50, side / 2, side / 2, 50),
+    bounds: { minLng: 120, maxLat: 34, maxLng: 134, minLat: 24 },
+    projection: projection,
   },
   argTypes: {},
   decorators: [
