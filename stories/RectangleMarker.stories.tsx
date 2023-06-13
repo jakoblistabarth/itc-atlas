@@ -8,9 +8,6 @@ const meta = {
   component: RectangleMarker,
   args: {
     bounds: new Vector4(50, side / 2, side / 2, 50),
-    fill: "lightgrey",
-    stroke: "black",
-    strokeWidth: 1,
   },
   argTypes: {},
   decorators: [
