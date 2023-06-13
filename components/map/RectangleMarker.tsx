@@ -1,10 +1,11 @@
 import { FC, SVGProps } from "react";
 import { Vector4 } from "three";
 type Props = {
-  bounds: Vector4;
+  bounds: {minLng: number, maxLng: number, minLat: number, maxLat: number};
+  projection: GeoProjection;
 } & SVGProps<SVGPathElement>;
 
-const RectangleMarker: FC<Props> = ({ bounds, ...rest }) => {
+const RectangleMarker: FC<Props> = ({ bounds, projection, ...rest }) => {
   const leftTop = [bounds.x, bounds.y];
   const rightBottom = [bounds.z, bounds.w];
   const [x, y] = leftTop ?? [0, 0];
