@@ -7,8 +7,8 @@ type Props = {
 const RectangleMarker: FC<Props> = ({ bounds, ...rest }) => {
   const leftTop = [bounds.x, bounds.y];
   const rightBottom = [bounds.z, bounds.w];
-  const [x, y] = leftTop ? leftTop : [0, 0];
-  const [x1, y1] = rightBottom ? rightBottom : [0, 0];
+  const [x, y] = leftTop ?? [0, 0];
+  const [x1, y1] = rightBottom ?? [0, 0];
   return (
     <g>
       <path
