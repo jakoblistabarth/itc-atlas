@@ -3,7 +3,6 @@ import { writeFileSync } from "fs";
 import { SyncTileSet } from "srtm-elevation";
 import { extent } from "d3";
 import proj4 from "proj4";
-
 // Rough bounding box around Paramaribo
 const loadHgt = async (locations: [number, number][], name: string) => {
   const [minLat, maxLat] = extent(locations, (d) => d[0]);

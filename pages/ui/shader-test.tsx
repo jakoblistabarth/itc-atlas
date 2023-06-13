@@ -1,4 +1,5 @@
 /** @jsxImportSource theme-ui */
+
 import { OrbitControls } from "@react-three/drei";
 import { Canvas } from "@react-three/fiber";
 import type { NextPage } from "next";
@@ -6,6 +7,7 @@ import BlockDiagramm from "../../components/map-3d/BlockDiagram";
 import useSWR from "swr";
 import BasePage from "../../components/BasePage";
 import { Box, Heading, Text } from "theme-ui";
+
 const ShaderTest: NextPage = () => {
   // TODO: get segements and side with custom hook from fetched data?
   const segments = 1000;
