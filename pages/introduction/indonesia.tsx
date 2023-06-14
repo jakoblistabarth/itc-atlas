@@ -115,7 +115,7 @@ const Page: NextPage<Props> = ({
               neCountriesTopoJson={neCountries}
               highlight={["IDN"]}
               width={250}
-              markers={[
+              roundMarkers={[
                 {
                   lng: 106.5,
                   lat: -6,
