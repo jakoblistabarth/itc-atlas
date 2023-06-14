@@ -33,7 +33,7 @@ const loadHgt = async (locations: [number, number][], name: string) => {
       });
     })
     .flat()
-    .map((d) => d.map((c) => Number(c.toFixed(6))));
+    .map((d) => d.map((c) => +c.toFixed(6)));
   const tileset = new SyncTileSet(
     "./data/",
     [minLat, minLng],
@@ -44,7 +44,7 @@ const loadHgt = async (locations: [number, number][], name: string) => {
         return;
       }
       const elevation = pois.map(([x, y]) => {
-        const [lng, lat] = proj4(moll).inverse([x ?? 0, y ?? 0]);
+        const [lng, lat] = proj4(moll).inverse([x, y]);
         const elevation = tileset.getElevation([lat, lng]);
         return +elevation.toFixed(1);
       });
