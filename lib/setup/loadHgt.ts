@@ -1,35 +1,39 @@
 import { writeFileSync } from "fs";
 //@ts-ignore-error TODO: add types?
 import { SyncTileSet } from "srtm-elevation";
+import { extent } from "d3";
+import proj4 from "proj4";
 
 // Rough bounding box around Paramaribo
 const loadHgt = async (locations: [number, number][], name: string) => {
-  const lats = locations.map((l) => l[0]);
-  const lngs = locations.map((l) => l[1]);
-  const minLat = Math.min.apply(null, lats);
-  const maxLat = Math.max.apply(null, lats);
-  const minLng = Math.min.apply(null, lngs);
-  const maxLng = Math.max.apply(null, lngs);
-
+  const [minLat, maxLat] = extent(locations, (d) => d[0]);
+  const [minLng, maxLng] = extent(locations, (d) => d[1]);
+  const moll =
+    "+proj=moll +lon_0=0 +x_0=0 +y_0=0 +datum=WGS84 +units=m +no_defs +type=crs";
+  const [west, south] = proj4(moll).forward([
+    minLng ?? -Infinity,
+    minLat ?? Infinity,
+  ]);
+  const [east, north] = proj4(moll).forward([
+    maxLng ?? Infinity,
+    maxLat ?? Infinity,
+  ]);
+  const bBox = [south, west, north, east];
+  if (!south || !west || !north || !east) throw new Error("invalid locations");
   const segments = 1000;
   const gridSize = segments + 1;
-
-  const stepLat = Math.abs(maxLat - minLat) / gridSize;
-  const stepLng = Math.abs(maxLng - minLng) / gridSize;
-
+  const stepY = Math.abs(north - south) / gridSize;
+  const stepX = Math.abs(east - west) / gridSize;
   const pois = Array.from({ length: gridSize })
     .map((_, rowIdx) => {
-      const lat = minLat + rowIdx * stepLat;
+      const y = north - rowIdx * stepY;
       return Array.from({ length: gridSize }).map((_, colIdx) => {
-        const lng = minLng + colIdx * stepLng;
-        return [lat, lng];
+        const x = west + colIdx * stepX;
+        return [x, y];
       });
     })
     .flat()
-    .map((d) => d.map((c) => c.toFixed(6)));
-
-  const bBox = [minLat, minLng, maxLat, maxLng];
-
+    .map((d) => d.map((c) => +c.toFixed(6)));
   const tileset = new SyncTileSet(
     "./data/",
     [minLat, minLng],
@@ -39,9 +43,9 @@ const loadHgt = async (locations: [number, number][], name: string) => {
         console.log(err);
         return;
       }
-
-      const elevation = pois.map((l) => {
-        const elevation = tileset.getElevation([l[0], l[1]]);
+      const elevation = pois.map(([x, y]) => {
+        const [lng, lat] = proj4(moll).inverse([x, y]);
+        const elevation = tileset.getElevation([lat, lng]);
         return +elevation.toFixed(1);
       });
 
