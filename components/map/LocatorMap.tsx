@@ -10,22 +10,28 @@ import { NeCountriesTopoJson } from "../../types/NeTopoJson";
 import BaseLayer from "./BaseLayer";
 import PolygonSymbol from "./PolygonSymbol";
 import RoundMarker from "./RoundMarker";
+import RectangleMarker from "./RectangleMarker";
 
 type Props = {
   neCountriesTopoJson: NeCountriesTopoJson;
   highlight?: string[];
   theme?: MapTheme;
   width?: number;
-  markers?: (Omit<React.ComponentProps<typeof RoundMarker>, "position"> & {
+  roundMarkers?: (Omit<React.ComponentProps<typeof RoundMarker>, "position"> & {
     lat: number;
     lng: number;
   })[];
+  rectangleMarkers?: Omit<
+    React.ComponentProps<typeof RectangleMarker>,
+    "projection"
+  >[];
 };
 
 const LocatorMap: FC<Props> = ({
   neCountriesTopoJson,
   highlight,
-  markers,
+  roundMarkers,
+  rectangleMarkers,
   width = 300,
   theme = defaultTheme,
 }) => {
@@ -46,7 +52,6 @@ const LocatorMap: FC<Props> = ({
   };
   const centroid = d3.geoCentroid(highlightCountries);
   const rotation: [number, number] = [-centroid[0], -centroid[1]];
-
   const projection = d3.geoOrthographic().rotate(rotation);
   const shadowRadius = dimension.width / 30;
   dimension.height = getMapHeight(dimension.width, projection, {
@@ -74,7 +79,7 @@ const LocatorMap: FC<Props> = ({
               key={idx}
               feature={feature}
               projection={projection}
-              style={{ ...defaultTheme.choropleth, stroke: "black" }}
+              style={{ ...defaultTheme.choropleth, fill: "lightgray" }}
             />
           ))}
         </g>
@@ -111,8 +116,8 @@ const LocatorMap: FC<Props> = ({
             </text>
           </g>
         )}
-        {markers &&
-          markers?.map((d, idx) => {
+        {roundMarkers &&
+          roundMarkers?.map((d, idx) => {
             const p = projection([d.lng, d.lat]);
             return (
               p && (
@@ -122,6 +127,16 @@ const LocatorMap: FC<Props> = ({
                   {...d}
                 />
               )
+            );
+          })}
+        {rectangleMarkers &&
+          rectangleMarkers?.map((d, idx) => {
+            return (
+              <RectangleMarker
+                key={`marker-${idx}`}
+                projection={projection}
+                {...d}
+              />
             );
           })}
       </svg>
