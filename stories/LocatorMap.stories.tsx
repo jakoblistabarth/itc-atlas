@@ -69,24 +69,21 @@ export const WithMarkers: Story = {
     roundMarkers: [
       [106.5, -6],
       [110, -7.5],
-    ].map((d, i) => ({
-      lng: d[0],
-      lat: d[1],
+    ].map(([lng, lat], i) => ({
+      lng,
+      lat,
       label: i.toFixed(),
       fill: "red",
       labelColor: "white",
       fontSize: 7,
     })),
     rectangleMarkers: [
-      { minLng: 108, maxLat: 30, maxLng: 114, minLat: 24 },
-    ].map((d) => ({
-      minLng: d.minLng,
-      maxLat: d.maxLat,
-      maxLng: d.maxLng,
-      minLat: d.minLat,
-      fill: "lightgrey",
-      stroke: "black",
-      strokeWidth: "1",
-    })),
+      {
+        bounds: { minLng: 108, maxLat: 30, maxLng: 114, minLat: 24 },
+        fill: "lightgrey",
+        stroke: "black",
+        strokeWidth: "1",
+      },
+    ],
   },
 };

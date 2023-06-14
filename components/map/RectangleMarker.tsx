@@ -2,7 +2,7 @@ import { FC, SVGProps } from "react";
 import { GeoProjection } from "d3-geo";
 
 type Props = {
-  bounds: { minLng: number; maxLat: number; maxLng: number; minLat: number };
+  bounds: { minLng: number; maxLng: number; minLat: number; maxLat: number };
   projection: GeoProjection;
 } & SVGProps<SVGPathElement>;
 

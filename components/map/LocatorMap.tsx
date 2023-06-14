@@ -22,10 +22,10 @@ type Props = {
     lat: number;
     lng: number;
   })[];
-  rectangleMarkers?: (Omit<
+  rectangleMarkers?: Omit<
     React.ComponentProps<typeof RectangleMarker>,
-    "projection" | "bounds"
-  > & { minLng: number; maxLat: number; maxLng: number; minLat: number })[];
+    "projection"
+  >[];
 };
 
 const LocatorMap: FC<Props> = ({
@@ -132,21 +132,12 @@ const LocatorMap: FC<Props> = ({
           })}
         {rectangleMarkers &&
           rectangleMarkers?.map((d, idx) => {
-            const bounds = {
-              minLng: d.minLng,
-              maxLat: d.maxLat,
-              maxLng: d.maxLng,
-              minLat: d.minLat,
-            };
             return (
-              bounds && (
-                <RectangleMarker
-                  key={`marker-${idx}`}
-                  bounds={bounds}
-                  projection={projection}
-                  {...d}
-                />
-              )
+              <RectangleMarker
+                key={`marker-${idx}`}
+                projection={projection}
+                {...d}
+              />
             );
           })}
       </svg>

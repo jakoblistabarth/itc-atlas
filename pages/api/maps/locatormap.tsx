@@ -8,21 +8,22 @@ export default async function handler(
   res: NextApiResponse
 ) {
   const highlightCountries = req.query.country?.toString();
-  const bounds = req.query.bounds?.toString().split(",").map(Number) ?? [];
+  const [minLng, maxLat, maxLng, minLat] =
+    req.query.bounds?.toString().split(",").map(Number) ?? [];
   if (!highlightCountries) {
     res.status(400).json({ error: "invalid iso-3-code name" });
   }
   if (
-    bounds[0] < -180.0 &&
-    bounds[1] > 90.0 &&
-    bounds[2] > 180.0 &&
-    bounds[3] < -90.0 &&
-    bounds[0]! < bounds[2] &&
-    bounds[1]! > bounds[3]
+    minLng < -180.0 &&
+    maxLat > 90.0 &&
+    maxLng > 180.0 &&
+    minLat < -90.0 &&
+    minLng! < maxLng &&
+    maxLat! > minLat
   ) {
     res
       .status(400)
-      .json({ error: "Please enter in order:minLng,maxLat,maxLng,minLat" });
+      .json({ error: "Please enter in order: minLng, maxLat, maxLng, minLat" });
   }
   const highlights: string[] = [highlightCountries ?? ""];
   const neCountriesTopoJson = getCountries();
@@ -32,10 +33,12 @@ export default async function handler(
       highlight={highlights}
       rectangleMarkers={[
         {
-          minLng: bounds[0],
-          maxLat: bounds[1],
-          maxLng: bounds[2],
-          minLat: bounds[3],
+          bounds: {
+            minLng,
+            maxLat,
+            maxLng,
+            minLat,
+          },
         },
       ]}
     ></LocatorMap>
