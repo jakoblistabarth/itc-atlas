@@ -1,6 +1,5 @@
 /** @jsxImportSource theme-ui */
 
-import { nanoid } from "nanoid";
 import { FC } from "react";
 import { BiBracket } from "react-icons/bi";
 import {
@@ -89,13 +88,13 @@ const SummaryTable: FC<SummaryTableProps> = ({ data, title }) => {
               </tr>
             </thead>
             <tbody>
-              {stdata.map((column) => {
+              {stdata.map((column, idx) => {
                 const color = colorMap.get(column.type);
                 {
                   if (!color) return;
                 }
                 return (
-                  <tr key={nanoid()}>
+                  <tr key={`${column.name}-${idx}`}>
                     <td
                       sx={{
                         borderColor: color.baseColor,

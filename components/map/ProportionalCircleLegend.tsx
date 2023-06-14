@@ -3,7 +3,6 @@ import { min, max, median, mean, line, ScalePower } from "d3";
 import { fInt } from "../../lib/utilities/formaters";
 import { Appearance } from "../../types/Appearance";
 import LegendTitle from "./LegendTitle";
-import { nanoid } from "nanoid";
 import ProportionalSymbolScaleFunction from "./ProportionalSymbolScaleFunction";
 
 const ProportionalCircleLegend: FC<{
@@ -56,7 +55,7 @@ const ProportionalCircleLegend: FC<{
       <LegendTitle fontSize={titleFontSize}>{title}</LegendTitle>
       <g transform={`translate(1, ${titleFontSize * 2 + maxDiameter / 2})`}>
         <g id="legendEntries">
-          {entries.map((entry) => {
+          {entries.map((entry, idx) => {
             const entryRadius = scaleRadius(entry);
             const suffix = entry > 1 ? "s" : "";
             const label = fInt(entry) + " " + unitLabel + suffix;
@@ -66,7 +65,7 @@ const ProportionalCircleLegend: FC<{
             ]);
             if (!linePath) return null;
             return (
-              <g key={nanoid()}>
+              <g key={`${entry}-${idx}`}>
                 <circle
                   cx={maxRadius}
                   cy={maxRadius - entryRadius}

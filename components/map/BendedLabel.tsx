@@ -1,5 +1,4 @@
-import type { FC } from "react";
-import { nanoid } from "nanoid";
+import { useId, type FC } from "react";
 import getGraticuleTextPath from "../../lib/cartographic/getGraticuleTextPath";
 import type { GeoProjection } from "d3-geo";
 import type { TextAppearance } from "../../types/Appearance";
@@ -34,7 +33,7 @@ const BendedLabel: FC<Props> = ({
       : [degree, textOriginDegree];
   const domain = graticuleType == "lon" ? [-90, 90] : [-180, 180];
   const scaleOffset = scaleLinear().domain(domain).range([0, 100]);
-  const id = nanoid();
+  const id = useId();
   return (
     <g>
       {/* {[1, 20].map((r, i) => (

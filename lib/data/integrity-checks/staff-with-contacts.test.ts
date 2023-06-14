@@ -45,7 +45,7 @@ beforeAll(async () => {
     });
     return acc;
   }, []);
-}, 16000);
+}, 90000);
 
 describe("Employees match with", () => {
   test("applicants in 587 cases", () => {

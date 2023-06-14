@@ -1,8 +1,9 @@
 import * as aq from "arquero";
-import xlsx from "xlsx";
 import getApplicationsByYear from "../queries/application/getApplicationsByYear";
 import { describe, test, expect, beforeAll } from "@jest/globals";
 import ColumnTable from "arquero/dist/types/table/column-table";
+import workbookFromXlsx from "../workbookFromXlsx";
+import sheetToJson from "../sheetToJson";
 
 type AlumniCount = { "Exam Year": number | null; count: number };
 
@@ -15,12 +16,8 @@ beforeAll(async () => {
   }));
 
   const filePath = "./data/itc/All Alumni until 2020_Anon_JMT.xlsx";
-  const file = xlsx.readFile(filePath, {
-    cellDates: true,
-  });
-  const alumni = xlsx.utils.sheet_to_json(file.Sheets[file.SheetNames[0]], {
-    defval: null,
-  });
+  const workbook = await workbookFromXlsx(filePath);
+  const alumni = sheetToJson<any>(workbook.worksheets[0]);
   const tb2 = aq.from(alumni);
   countAlumni = tb2
     .filter((d: any) => d.Country === "Indonesia")

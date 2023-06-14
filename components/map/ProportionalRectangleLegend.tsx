@@ -1,8 +1,7 @@
 import { FC, SVGProps } from "react";
-import { min, max, median, mean, line, ScaleLinear, scaleBand } from "d3";
+import { min, max, median, mean, ScaleLinear, scaleBand } from "d3";
 import { fInt } from "../../lib/utilities/formaters";
 import LegendTitle from "./LegendTitle";
-import { nanoid } from "nanoid";
 import LeaderLine from "../LeaderLine";
 import { Vector2 } from "three";
 
@@ -61,7 +60,7 @@ const ProportionalRectangleLegend: FC<
               labelYscale(idx.toString())
             );
             return (
-              <g key={nanoid()}>
+              <g key={`${entry}-${idx}`}>
                 <rect
                   x={entrySymbolWidth * idx}
                   y={maxHeight / 2 + entrySymbolHeight / -2}

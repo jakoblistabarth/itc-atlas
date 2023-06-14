@@ -5,7 +5,6 @@ import * as d3 from "d3";
 import { colorMap } from "../lib/summarytable/colorMap";
 import { Heading } from "theme-ui";
 import { fInt } from "../lib/utilities/formaters";
-import { nanoid } from "nanoid";
 import { SummaryTableData } from "../lib/summarytable/getSummaryTableData";
 
 type SummaryTableCardProps = {
@@ -57,8 +56,8 @@ const SummaryTableCard: FC<SummaryTableCardProps> = ({ data }) => {
           transform={`translate(${dimension.margin.left},${dimension.margin.top})`}
         >
           <g>
-            {data.map((column) => (
-              <g className="column" key={nanoid()}>
+            {data.map((column, idx) => (
+              <g className="column" key={`${column.name}-${idx}`}>
                 <rect
                   y={0}
                   x={scale(column.name)}

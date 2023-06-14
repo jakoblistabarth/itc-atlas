@@ -1,6 +1,5 @@
 import * as d3 from "d3";
 import { FeatureCollection } from "geojson";
-import { nanoid } from "nanoid";
 import { FC } from "react";
 import { Vector2 } from "three";
 import * as topojson from "topojson-client";
@@ -70,9 +69,9 @@ const LocatorMap: FC<Props> = ({
           theme={theme}
         />
         <g>
-          {highlightCountries.features.map((feature) => (
+          {highlightCountries.features.map((feature, idx) => (
             <PolygonSymbol
-              key={nanoid()}
+              key={idx}
               feature={feature}
               projection={projection}
               style={{ ...defaultTheme.choropleth, stroke: "black" }}

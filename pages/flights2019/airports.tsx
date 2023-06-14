@@ -10,7 +10,6 @@ import PointLabel from "../../components/map/PointLabel";
 import PointSymbol from "../../components/map/PointSymbol";
 import defaultTheme from "../../lib/styles/themes/defaultTheme";
 import { SharedPageProps } from "../../types/Props";
-import { nanoid } from "nanoid";
 import { Vector2 } from "three";
 import getCountryCodes from "../../lib/data/queries/country/getCountryCodes";
 import getFlightsPerAirport, {
@@ -66,7 +65,7 @@ const Airports: NextPage<Props> = ({ airports, neCountriesTopoJson }) => {
             {airportsGeo.features.map((airport) => {
               const coords = projection(airport.geometry.coordinates);
               return (
-                <Tooltip key={nanoid()}>
+                <Tooltip key={airport.properties.iata_code}>
                   <TooltipContent>
                     <strong>{airport.properties?.["iata_code"]}</strong>
                     &nbsp;{airport.properties?.name}
@@ -90,7 +89,7 @@ const Airports: NextPage<Props> = ({ airports, neCountriesTopoJson }) => {
               const coords = projection(airport.geometry.coordinates);
               return (
                 <PointLabel
-                  key={nanoid()}
+                  key={airport.properties.iata_code}
                   position={new Vector2(coords[0], coords[1])}
                 >
                   <tspan fontWeight={"bold"}>

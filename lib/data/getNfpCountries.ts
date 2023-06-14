@@ -1,14 +1,12 @@
-import xlsx from "xlsx";
+import sheetToJson from "./sheetToJson";
+import workbookFromXlsx from "./workbookFromXlsx";
 import { NfpCountry } from "../../types/NfpCountry";
 
-export default function getNfpCountries() {
-  const filePath = "./data/static/nfpCountries.xlsx";
-  const file = xlsx.readFile(filePath, {
-    cellDates: true,
-  });
-  const data = xlsx.utils.sheet_to_json(file.Sheets[file.SheetNames[0]], {
-    defval: null,
-  });
+const filePath = "./data/static/nfpCountries.xlsx";
 
-  return data as NfpCountry[];
-}
+export const getNfpCountries = async () => {
+  const workbook = await workbookFromXlsx(filePath);
+  return sheetToJson<NfpCountry[]>(workbook.worksheets[0]);
+};
+
+export default getNfpCountries;

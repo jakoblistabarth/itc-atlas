@@ -22,7 +22,6 @@ import TimelineSeparator from "./charts/timeline/TimelineSeparator";
 import TimelineHeader from "./charts/timeline/TimelineHeader";
 import EventPeriod from "./charts/timeline/EventPeriod";
 import PointSymbol from "./map/PointSymbol";
-import { nanoid } from "nanoid";
 import Building, { ITClocations } from "./Building";
 import PointLabel from "./map/PointLabel";
 import NominalLegend from "./map/NominalLegend";
@@ -370,7 +369,7 @@ const IndonesiaTimeline: FC<Props> = ({
                   ? next[1].moveInDate
                   : new Date(2050, 0, 1);
                 return (
-                  <g key={nanoid()}>
+                  <g key={d}>
                     <rect
                       x={xScale(new Date(currentLocation.moveInDate))}
                       y={width / 2 - 1}
@@ -452,10 +451,10 @@ const IndonesiaTimeline: FC<Props> = ({
                 columns={4}
                 columnWidth={35}
               />
-              {ministerEvents.map((ce) => {
+              {ministerEvents.map((ce, idx) => {
                 return (
                   <EventPeriod
-                    key={nanoid()}
+                    key={`${ce.name}-${idx}`}
                     dateStart={ce.dateStart}
                     dateEnd={ce.dateEnd ?? new Date()}
                     xScale={xScale}
@@ -495,9 +494,9 @@ const IndonesiaTimeline: FC<Props> = ({
             </TimelineHeader>
             <Group top={rowHeaderHeight}>
               <TopicPatterns color={itcBlue} />
-              {topics.map((topic) => (
+              {topics.map((topic, idx) => (
                 <EventPeriod
-                  key={nanoid()}
+                  key={`topic-${idx}`}
                   dateStart={new Date(topic.dateStart)}
                   dateEnd={new Date(topic.dateEnd)}
                   xScale={xScale}
@@ -506,9 +505,9 @@ const IndonesiaTimeline: FC<Props> = ({
                   fill={`url(#${topicPatternScale(topic.name)})`}
                 />
               ))}
-              {firstTopicOccurences.map((topic) => (
+              {firstTopicOccurences.map((topic, idx) => (
                 <PointLabel
-                  key={nanoid()}
+                  key={`topic-${idx}`}
                   placement={LabelPlacement.LEFT}
                   position={
                     new Vector2(
@@ -538,9 +537,9 @@ const IndonesiaTimeline: FC<Props> = ({
               Projects
             </TimelineHeader>
             <Group top={rowHeaderHeight}>
-              {projectEvents.map((e) => (
+              {projectEvents.map((e, idx) => (
                 <EventPeriod
-                  key={nanoid()}
+                  key={`${e.name}-${idx}`}
                   dateStart={e.dateStart}
                   dateEnd={e.dateEnd ?? new Date()}
                   xScale={xScale}
@@ -577,9 +576,9 @@ const IndonesiaTimeline: FC<Props> = ({
               Staff travels
             </TimelineHeader>
             <Group top={rowHeaderHeight}>
-              {btorEvents.map((e) => (
+              {btorEvents.map((e, idx) => (
                 <EventPeriod
-                  key={nanoid()}
+                  key={`${e.name}-${idx}`}
                   dateStart={e.dateStart}
                   dateEnd={e.dateEnd ?? new Date()}
                   xScale={xScale}
@@ -590,9 +589,9 @@ const IndonesiaTimeline: FC<Props> = ({
                 />
               ))}
               <g transform={`translate(0 ${tlHeights.itc[1] / -2} )`}>
-                {longTermMissionEvents.map((e) => (
+                {longTermMissionEvents.map((e, idx) => (
                   <EventPeriod
-                    key={nanoid()}
+                    key={`${e.name}-${idx}`}
                     dateStart={e.dateStart}
                     dateEnd={e.dateEnd ?? new Date()}
                     xScale={xScale}
@@ -615,12 +614,12 @@ const IndonesiaTimeline: FC<Props> = ({
               Graduates & PhDs
             </TimelineHeader>
             <Group top={rowHeaderHeight}>
-              {examEvents.map((e) => {
+              {examEvents.map((e, idx) => {
                 const barWidth = width / 100;
                 const height = (e.size ?? 0) / 3;
                 return (
                   <rect
-                    key={nanoid()}
+                    key={`${e.name}-${idx}`}
                     width={barWidth}
                     height={height}
                     x={xScale(e.dateStart) - barWidth / 2}
@@ -632,7 +631,7 @@ const IndonesiaTimeline: FC<Props> = ({
               })}
               {phdsByYear
                 .filter((d) => d.promotionYear)
-                .map((d) => {
+                .map((d, idx) => {
                   const r = 2;
                   const gap = r * 3;
                   return range(0, d._count._all).map((_, idx) => {
@@ -641,7 +640,7 @@ const IndonesiaTimeline: FC<Props> = ({
                     const direction = idx % 2 ? 1 : -1;
                     return (
                       <circle
-                        key={nanoid()}
+                        key={`${d.promotionYear}-${idx}`}
                         r={r}
                         cx={xScale(new Date(d.promotionYear + ""))}
                         cy={offset + Math.ceil(idx / 2) * gap * direction}

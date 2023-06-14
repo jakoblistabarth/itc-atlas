@@ -11,7 +11,6 @@ import GraticuleLabelLayer from "./GraticuleLabelLayer";
 import geoCirclesLat from "../../lib/cartographic/geoCirclesLat";
 import ShadowLayer from "./ShadowLayer";
 import BendedLabel from "./BendedLabel";
-import { nanoid } from "nanoid";
 import RadialGradient from "../defs/RadialGradient";
 import defaultTheme from "../../lib/styles/themes/defaultTheme";
 import type { FeatureCollection, Polygon, MultiPolygon } from "geojson";
@@ -169,11 +168,11 @@ const BaseLayer: FC<Props> = ({
 
         <g className="countries" id={`countries-${id}`}>
           {countriesGeoJson &&
-            countriesGeoJson.features.map((country) => {
+            countriesGeoJson.features.map((country, idx) => {
               return (
                 <PolygonSymbol
                   id={`${country.properties.ADM0_A3_NL}-${id}`}
-                  key={nanoid()}
+                  key={`${country.properties.ADM0_A3_NL}-${idx}`}
                   feature={country}
                   projection={projection}
                   fill="none"
@@ -192,10 +191,10 @@ const BaseLayer: FC<Props> = ({
               latRange={{ min: -60, max: 60, step: 10 }}
               lonRange={{ min: -180, max: 180, step: 30 }}
             />
-            {geoCirclesLat.features.map((circle) => {
+            {geoCirclesLat.features.map((circle, idx) => {
               return (
                 <BendedLabel
-                  key={nanoid()}
+                  key={idx}
                   graticuleType="lat"
                   textAnchor={"middle"}
                   degree={circle.properties?.lat}
@@ -212,10 +211,10 @@ const BaseLayer: FC<Props> = ({
         )}
 
         {labels &&
-          countriesGeoJson.features.map((country) => {
+          countriesGeoJson.features.map((country, idx) => {
             return (
               <BendedLabel
-                key={nanoid()}
+                key={`${(country.properties.ADM0_A3_NL, idx)}`}
                 graticuleType="lat"
                 degree={d3.geoCentroid(country.geometry)[1]}
                 textOriginDegree={d3.geoCentroid(country.geometry)[0]}

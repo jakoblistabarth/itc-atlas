@@ -2,7 +2,6 @@ import type { NextPage } from "next";
 import Head from "next/head";
 import Footer from "../../components/Footer";
 import CardLink from "../../components/CardLink";
-import { nanoid } from "nanoid";
 import * as aq from "arquero";
 import SummaryTable from "../../components/SummaryTable";
 import { AgGridReact } from "ag-grid-react";
@@ -75,8 +74,8 @@ const Travels: NextPage = () => {
           </Paragraph>
 
           <Grid variant={"navigation"}>
-            {links.map((l) => (
-              <CardLink key={nanoid()} href={l.href}>
+            {links.map((l, idx) => (
+              <CardLink key={idx} href={l.href}>
                 <Heading as="h2">{l.children}</Heading>
               </CardLink>
             ))}

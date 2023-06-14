@@ -5,7 +5,6 @@ import type { Appearance } from "../../types/Appearance";
 import Flow from "./Flow";
 import PointSymbol from "./PointSymbol";
 import ArrowHead from "../defs/marker/ArrowHead";
-import { nanoid } from "nanoid";
 import defaultTheme from "../../lib/styles/themes/defaultTheme";
 import { Vector2 } from "three";
 
@@ -35,7 +34,7 @@ const FlowLayer: FC<{
         return (
           position && (
             <PointSymbol
-              key={nanoid()}
+              key={feature.properties.name}
               position={new Vector2(position[0], position[1])}
               radius={1}
               {...pointStyle}
@@ -45,7 +44,7 @@ const FlowLayer: FC<{
       })}
       {data.flows.features.map((feature) => (
         <Flow
-          key={nanoid()}
+          key={feature.properties.od}
           projection={projection}
           datum={feature}
           scale={scaleWidth}

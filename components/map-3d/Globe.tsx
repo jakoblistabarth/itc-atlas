@@ -51,7 +51,7 @@ const Globe: FC<PropTypes> = ({
         args={["white", 0.75]}
       />
       <mesh castShadow receiveShadow position={position}>
-        <sphereBufferGeometry args={[radius, 512, 256]} />
+        <sphereGeometry args={[radius, 512, 256]} />
         <meshPhongMaterial
           displacementScale={displacementScale}
           bumpScale={bumpScale}

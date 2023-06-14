@@ -4,10 +4,11 @@ type Props = React.PropsWithChildren<{
   outline?: Boolean;
 }>;
 
-const Button = forwardRef<HTMLButtonElement, Props>(
-  ({ outline, children }, ref) => {
-    return <button ref={ref ?? undefined}>{children}</button>;
-  }
-);
+const Button = forwardRef<HTMLButtonElement, Props>(function Button(
+  { outline, children },
+  ref
+) {
+  return <button ref={ref ?? undefined}>{children}</button>;
+});
 
 export default Button;

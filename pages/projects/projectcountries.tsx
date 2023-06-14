@@ -1,6 +1,5 @@
 import { geoBertin1953 } from "d3-geo-projection";
 import { FeatureCollection, Point } from "geojson";
-import { nanoid } from "nanoid";
 import type { GetStaticProps, NextPage } from "next";
 import Head from "next/head";
 import PatternLines from "../../components/defs/patterns/PatternLines";
@@ -73,7 +72,7 @@ const ProjectCountries: NextPage<Props> = ({
             <g className="choroplethLayer">
               {highlightCountries.features.map((feature) => (
                 <PolygonSymbol
-                  key={nanoid()}
+                  key={feature.properties.ADM0_A3}
                   projection={projection}
                   feature={feature}
                   fill={`url(#${theme.choropleth?.pattern?.id})`}
@@ -81,12 +80,12 @@ const ProjectCountries: NextPage<Props> = ({
               ))}
             </g>
             <g className="symbolLayer">
-              {data.features.map((feature) => {
+              {data.features.map((feature, idx) => {
                 const coordinates = projection(feature.geometry.coordinates);
                 const position = new Vector2(coordinates[0], coordinates[1]);
                 return (
                   <PointSymbol
-                    key={nanoid()}
+                    key={idx}
                     position={position}
                     radius={scale(feature.properties?.projectCount)}
                     {...theme.symbol}
@@ -96,7 +95,6 @@ const ProjectCountries: NextPage<Props> = ({
               })}
             </g>
             <ProportionalCircleLegend
-              key={nanoid()}
               data={data.features.map(
                 (feature) => feature.properties?.projectCount ?? 0
               )}

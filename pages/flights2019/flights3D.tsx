@@ -1,7 +1,6 @@
 import { OrbitControls } from "@react-three/drei";
 import { Canvas } from "@react-three/fiber";
 import * as d3 from "d3";
-import { nanoid } from "nanoid";
 import type { NextPage } from "next";
 import Head from "next/head";
 import { Container, Heading } from "theme-ui";
@@ -46,7 +45,7 @@ const Flights: NextPage<Props> = ({ odMatrix }) => {
                   const destination = flow.geometry.coordinates[1];
                   return (
                     <Flow3D
-                      key={nanoid()}
+                      key={flow.properties.od}
                       origin={origin}
                       destination={destination}
                       value={scaleWidth(flow.properties?.value)}

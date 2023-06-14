@@ -1,5 +1,6 @@
-import xlsx from "xlsx";
 import { cleanPhds } from "../clean/cleanPhds";
+import sheetToJson from "../sheetToJson";
+import workbookFromXlsx from "../workbookFromXlsx";
 
 export type PhdRaw = {
   ITCStudentNo?: number;
@@ -39,12 +40,8 @@ export type PhdRaw = {
 
 export default async function loadPhds() {
   const filePath = "./data/itc/ITCPHDCANDIDATES.xlsx";
-  const file = xlsx.readFile(filePath, {
-    cellDates: true,
-  });
-  const data = xlsx.utils.sheet_to_json(file.Sheets[file.SheetNames[0]], {
-    defval: null,
-  }) as PhdRaw[];
+  const workbook = await workbookFromXlsx(filePath);
+  const data = sheetToJson<PhdRaw[]>(workbook.worksheets[0]);
 
   const cleaned = await cleanPhds(data);
   return cleaned;

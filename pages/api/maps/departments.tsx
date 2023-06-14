@@ -1,6 +1,5 @@
 import * as d3 from "d3";
 import { geoInterruptedMollweide } from "d3-geo-projection";
-import { nanoid } from "nanoid";
 import type { NextApiRequest, NextApiResponse } from "next";
 import ReactDOMServer from "react-dom/server";
 import { Vector2 } from "three";
@@ -82,7 +81,7 @@ export default async function handler(
             const position = xy ? new Vector2(xy[0], xy[1]) : new Vector2();
             return (
               <ScaledPie
-                key={nanoid()}
+                key={d.isoAlpha3}
                 position={position}
                 radius={scale(d.totalCount)}
                 colorScale={departmentColorScale}

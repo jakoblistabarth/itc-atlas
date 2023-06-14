@@ -29,7 +29,7 @@ type ProjectMerged = {
   fundingOrganization: string;
   leadOrganization: string;
   leadDepartment: string;
-  otherDepartments: string[];
+  otherDepartments?: string[];
   countriesRegion: string;
   dateStart: string;
   dateEnd: string;
@@ -48,9 +48,11 @@ const cleanProjects = async ({
     .from(projectsPre2019)
     .derive({
       leadDepartment: (d: ProjectPre2019Raw) =>
-        aq.op.split(d["Division"], /, ?| ?\/ ?/, 10)[0],
-      otherDepartments: (d: ProjectPre2019Raw) =>
-        aq.op.split(d["Division"], /, ?| ?\/ ?/, 10).slice(1),
+        aq.op.split(d["Division"], /,\s?|\s?\/\s?/, 10)[0],
+      otherDepartments: aq.escape((d: ProjectPre2019Raw) => {
+        const list = aq.op.split(d["Division"], /,\s?|\s?\/\s?/, 10);
+        return aq.op.slice(list, 1, list.length);
+      }),
     })
     .rename({
       Project_ID: "id",
@@ -107,7 +109,7 @@ const cleanProjects = async ({
     })
     .derive({
       otherDepartments: (d: ProjectPost2019Raw) =>
-        aq.op.split(d.OtherDepartments, /,\s?/, null),
+        aq.op.split(d.OtherDepartments, /,\s?/, 10),
     });
 
   const merged = pre2019
@@ -144,13 +146,17 @@ const cleanProjects = async ({
       leadDepartment: aq.escape((row: ProjectMerged) =>
         mapToDepartment(row.leadDepartment)
       ),
-      otherDepartments: aq.escape((row: ProjectMerged) =>
-        Array.isArray(row.otherDepartments)
-          ? row.otherDepartments.map((d) => mapToDepartment(d))
-          : []
-      ),
       countriesRegion: aq.escape((row: ProjectMerged) =>
         mapCountries(row.countriesRegion)
+      ),
+    })
+    .derive({
+      otherDepartments: aq.escape((row: ProjectMerged) =>
+        Array.isArray(row.otherDepartments) && row.otherDepartments[0]
+          ? row.otherDepartments
+              .map((d) => mapToDepartment(d))
+              .filter((d) => d != row.leadDepartment)
+          : undefined
       ),
     })
     .filter(

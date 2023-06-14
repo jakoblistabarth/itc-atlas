@@ -3,7 +3,6 @@
 import type { NextPage } from "next";
 import Footer from "../components/Footer";
 import { Box, Container, Heading, Paragraph, Text } from "theme-ui";
-import { nanoid } from "nanoid";
 import Building, { ITClocations } from "../components/Building";
 import { Group } from "@visx/group";
 import useMeasure from "react-use-measure";
@@ -147,8 +146,8 @@ const Home: NextPage = () => {
                 gridGap: 2,
               }}
             >
-              {links.map((l) => (
-                <Link key={nanoid()} href={l.href}>
+              {links.map((l, idx) => (
+                <Link key={idx} href={l.href}>
                   {l.children}
                 </Link>
               ))}
