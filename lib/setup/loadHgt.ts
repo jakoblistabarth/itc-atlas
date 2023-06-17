@@ -33,8 +33,7 @@ const loadHgt = async (locations: [number, number][], name: string) => {
       });
     })
     .flat()
-    .map((d) => d.map((c) => c.toFixed(6)))
-    .reverse();
+    .map((d) => d.map((c) => c.toFixed(6)));
   const tileset = new SyncTileSet(
     "./data/",
     [minLat, minLng],
