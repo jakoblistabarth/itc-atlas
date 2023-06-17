@@ -4,7 +4,6 @@ import lonLatToXYZ from "../../lib/cartographic/lonLatToXYZ";
 import Point3D from "./Point3D";
 import getFlowCurve3D from "../../lib/cartographic/getFlowCurve3D";
 import { scaleLinear } from "d3";
-import { nanoid } from "nanoid";
 import type { GeoJsonProperties } from "geojson";
 
 const Flow3D: FC<{
@@ -23,13 +22,8 @@ const Flow3D: FC<{
 
   return (
     <>
-      {od.map((pos) => (
-        <Point3D
-          key={nanoid()}
-          pos={pos}
-          radius={0.005}
-          data={{ name: "od" }}
-        />
+      {od.map((pos, idx) => (
+        <Point3D key={idx} pos={pos} radius={0.005} data={{ name: "od" }} />
       ))}
       <mesh
         onPointerEnter={() => setHover(true)}
@@ -38,7 +32,7 @@ const Flow3D: FC<{
         castShadow
         receiveShadow
       >
-        <tubeBufferGeometry args={[curve, 60, radius, 16, false]} />
+        <tubeGeometry args={[curve, 60, radius, 16, false]} />
         <meshStandardMaterial color={hover ? "lightgrey" : "white"} />
       </mesh>
     </>

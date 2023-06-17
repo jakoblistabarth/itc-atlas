@@ -6,7 +6,7 @@ let contacts: ContactRaw[];
 
 beforeAll(async () => {
   contacts = await loadContacts();
-});
+}, 65000);
 
 describe("For Contacts", () => {
   test.failing("APPnr are unique", () => {

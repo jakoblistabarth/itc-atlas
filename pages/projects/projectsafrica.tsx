@@ -10,7 +10,6 @@ import getCountryWithProjectCount, {
 import BaseLayer from "../../components/map/BaseLayer";
 import { Container, Heading } from "theme-ui";
 import { FeatureCollection, Feature, Point } from "geojson";
-import { nanoid } from "nanoid";
 import themes, { ThemeNames } from "../../lib/styles/themes";
 import ChoroplethSymbol from "../../components/map/PolygonSymbol";
 import { MapOptions } from "../../types/MapOptions";
@@ -135,9 +134,9 @@ const ProjectCountries: NextPage<Props> = ({
               labels
             />
             <g className="choroplethLayer">
-              {polygons.features.map((feature) => (
+              {polygons.features.map((feature, idx) => (
                 <ChoroplethSymbol
-                  key={nanoid()}
+                  key={`${feature.properties.ADM0_A3_NL}-${idx}`}
                   projection={mapOptions.projection}
                   feature={feature}
                   fill={"url(#Dots)"}
@@ -145,14 +144,14 @@ const ProjectCountries: NextPage<Props> = ({
               ))}
             </g>
             <g className="symbolLayer">
-              {points.features.map((feature) => {
+              {points.features.map((feature, idx) => {
                 const xy = mapOptions.projection(
                   feature.geometry.coordinates as [number, number]
                 );
                 return (
                   xy && (
                     <IsoUnit
-                      key={nanoid()}
+                      key={idx}
                       xy={xy}
                       scale={scale}
                       value={feature.properties?.projectCount}

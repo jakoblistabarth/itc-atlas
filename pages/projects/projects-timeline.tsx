@@ -1,5 +1,4 @@
 import { ascending, max, min, scalePoint, scaleTime } from "d3";
-import { nanoid } from "nanoid";
 import type { NextPage } from "next";
 import Head from "next/head";
 import { Vector2 } from "three";
@@ -83,13 +82,13 @@ const projectsTimeline: NextPage<projectsTimelineProps> = ({ projects }) => {
                   margin={margin.top}
                 />
                 <g id="project-events">
-                  {events.map((e) => {
+                  {events.map((e, idx) => {
                     const labelText =
                       e.name.length > 20 ? e.name.slice(0, 20) + "…" : e.name;
 
                     return (
                       <EventPeriod
-                        key={nanoid()}
+                        key={`${labelText}-${e.dateStart.getMilliseconds()}-${e.dateEnd?.getMilliseconds()}-${idx}`}
                         dateStart={e.dateStart}
                         dateEnd={e.dateEnd ?? new Date()}
                         xScale={xScale}

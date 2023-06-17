@@ -167,12 +167,11 @@ async function main() {
           start: d.dateStart,
           end: d.dateEnd,
           departmentMainId: d.leadDepartment,
-          departmentsSecondary:
-            Array.isArray(d.otherDepartments) && d.otherDepartments.length > 1
-              ? {
-                  connect: d.otherDepartments.map((d) => ({ id: d })),
-                }
-              : undefined,
+          departmentsSecondary: d.otherDepartments
+            ? {
+                connect: d.otherDepartments.map((d) => ({ id: d })),
+              }
+            : undefined,
           leadOrganization: d.leadOrganization,
           fundingOrganization: d.fundingOrganization,
           type: d.type as ProjectType,

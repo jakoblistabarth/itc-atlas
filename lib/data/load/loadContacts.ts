@@ -1,4 +1,5 @@
-import xlsx from "xlsx";
+import workbookFromXlsx from "../workbookFromXlsx";
+import sheetToJson from "../sheetToJson";
 
 export type ContactRaw = {
   "ITC code"?: string;
@@ -40,12 +41,8 @@ export type ContactRaw = {
 
 const loadContacts = async () => {
   const filePath = "./data/itc/STUDENTSALUMNIv4 (20230217).xlsx";
-  const file = xlsx.readFile(filePath, {
-    cellDates: true,
-  });
-  return xlsx.utils.sheet_to_json(file.Sheets[file.SheetNames[0]], {
-    defval: null,
-  }) as ContactRaw[];
+  const workbook = await workbookFromXlsx(filePath);
+  return sheetToJson<ContactRaw[]>(workbook.worksheets[0]);
 };
 
 export default loadContacts;

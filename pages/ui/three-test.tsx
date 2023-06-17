@@ -18,7 +18,7 @@ const ThreeTest: NextPage = () => {
             intensity={1.0}
           />
           <mesh>
-            <boxBufferGeometry />
+            <boxGeometry />
             <meshStandardMaterial color={"red"} />
           </mesh>
           <OrbitControls />

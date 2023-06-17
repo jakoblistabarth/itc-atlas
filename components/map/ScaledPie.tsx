@@ -1,7 +1,6 @@
 import * as d3 from "d3";
 import type { PieArcDatum, ScaleOrdinal } from "d3";
 import type { FC, SVGProps } from "react";
-import { nanoid } from "nanoid";
 import { Vector2 } from "three";
 
 export type pieDatum = {
@@ -46,9 +45,9 @@ const ScaledPie: FC<Props> = ({
       className="scaled-pie"
       transform={`translate(${position.x},${position.y})`}
     >
-      {pieData.map((sector) => (
+      {pieData.map((sector, idx) => (
         <path
-          key={nanoid()}
+          key={`${sector.data.label}-${idx}`}
           d={arcGenerator(sector) ?? undefined}
           fill={colorScale(sector.data.label)}
           paintOrder="stroke"

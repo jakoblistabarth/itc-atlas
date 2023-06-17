@@ -1,5 +1,6 @@
-import xlsx from "xlsx";
 import cleanProjects, { ProjectClean } from "../clean/cleanProjects";
+import workbookFromXlsx from "../workbookFromXlsx";
+import sheetToJson from "../sheetToJson";
 
 export type ProjectPre2019Raw = {
   Project_ID: string;
@@ -121,16 +122,13 @@ export type ProjectPost2019Raw = {
 
 export default async function loadProjects(): Promise<ProjectClean[]> {
   const filePath = "./data/itc/ITCPROJECTS (V2_20230217).xlsx";
-  const file = xlsx.readFile(filePath, {
-    cellDates: true,
-  });
-  const sheetNames = file.SheetNames;
-  const projectsPre2019 = xlsx.utils.sheet_to_json(
-    file.Sheets[sheetNames[1]]
-  ) as unknown as ProjectPre2019Raw[];
-  const projectsPost2019 = xlsx.utils.sheet_to_json(
-    file.Sheets[sheetNames[0]]
-  ) as unknown as ProjectPost2019Raw[];
+  const workbook = await workbookFromXlsx(filePath);
+  const projectsPre2019 = sheetToJson<ProjectPre2019Raw[]>(
+    workbook.worksheets[1]
+  );
+  const projectsPost2019 = sheetToJson<ProjectPost2019Raw[]>(
+    workbook.worksheets[0]
+  );
 
   return await cleanProjects({ projectsPre2019, projectsPost2019 });
 }

@@ -12,7 +12,7 @@ const meta = {
     sourcePos: new Vector2(side / 2 - 50, side / 2 - 50),
     targetPos: new Vector2(side / 2 + 50, side / 2 + 50),
     stroke: "teal",
-    strokeWidth: "1",
+    strokeWidth: 1,
   },
   decorators: [
     (Story) => (
