@@ -10,7 +10,7 @@ import BasePage from "../../components/BasePage";
 import { Box, Heading, Text } from "theme-ui";
 const ShaderTest: NextPage = () => {
   // TODO: get segements and side with custom hook from fetched data?
-  const segments = 1000;
+  //const segments = 1000;
   const side = 4;
   const sur = useSWR("/api/data/elevation/Paramaribo");
   const aut = useSWR("/api/data/elevation/Grossglockner");
@@ -23,16 +23,17 @@ const ShaderTest: NextPage = () => {
           {sur.data && (
           <>
             <BlockDiagram
+              name="par"
               side={side}
               yScale={0.01}
               zOffset={0.01}
-              segments={segments}
+              segments={Math.sqrt(Float32Array.from(sur.data.elevation).length)-1}
               data={Float32Array.from(sur.data.elevation)}
             />
             <BlockDiagramMarker
                 name="sur"
-                latitude={5.85}
-                longitude={-55.1}
+                latitude={5.920616894}
+                longitude={-55.2499057923}
                 yScale={0.01}
                 gridSize={1001}
                 zOffset={0.01}
@@ -64,10 +65,11 @@ const ShaderTest: NextPage = () => {
           {aut.data && (
             <>
             <BlockDiagram
+              name="blo"
               side={side}
               yScale={0.0002}
               zOffset={0.25}
-              segments={segments}
+              segments={Math.sqrt(Float32Array.from(aut.data.elevation).length)-1}
               data={Float32Array.from(aut.data.elevation)}
             />
             <BlockDiagramMarker

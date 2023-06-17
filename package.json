@@ -50,6 +50,7 @@
     "d3-geo-projection": "^4.0.0",
     "dotenv-cli": "^7.0.0",
     "fuse.js": "^6.6.2",
+    "lamina": "^1.1.23",
     "lodash": "^4.17.21",
     "mapshaper": "^0.6.24",
     "nanoid": "^4.0.0",
