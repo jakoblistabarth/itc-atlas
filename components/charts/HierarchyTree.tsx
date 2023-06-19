@@ -50,7 +50,12 @@ const HierarchyTree: FC<Props> = ({ hierarchy, height }) => {
 
   return (
     <div style={{ width: "100%" }} ref={containerRef}>
-      <svg width={"100%"} height={"100%"} viewBox={`0 0 ${width} ${height}`}>
+      <svg
+        className={"hierarchy-tree"}
+        width={"100%"}
+        height={"100%"}
+        viewBox={`0 0 ${width} ${height}`}
+      >
         <defs>
           <linearGradient id="gradient" gradientTransform="rotate(90)">
             <stop offset="30%" stopColor="PaleTurquoise" />
@@ -121,7 +126,7 @@ const HierarchyTree: FC<Props> = ({ hierarchy, height }) => {
                   titleFontSize={10}
                   titleProps={{
                     textAnchor: "middle",
-                    fontFamily: "Fraunces",
+                    fontFamily: "FrauncesVariable",
                     fill: isProject ? "white" : "teal",
                   }}
                   title={d.label}

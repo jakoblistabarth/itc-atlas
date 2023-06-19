@@ -13,8 +13,7 @@ export default async function handler(
   // TODO: use a env variable with the absolute url of the website here?
   await page.goto("http://localhost:3000/projects/naivasha");
 
-  await new Promise((r) => setTimeout(r, 5000));
-  const selector = "#wordcloud svg";
+  const selector = "svg.hierarchy-tree";
   await page.waitForSelector(selector);
   const node = await page.$(selector);
   await node?.waitForSelector(".visx-group");
