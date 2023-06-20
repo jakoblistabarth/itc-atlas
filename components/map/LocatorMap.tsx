@@ -1,6 +1,6 @@
 import * as d3 from "d3";
 import { FeatureCollection } from "geojson";
-import { FC } from "react";
+import { FC, useId } from "react";
 import { Vector2 } from "three";
 import * as topojson from "topojson-client";
 import getMapHeight from "../../lib/cartographic/getMapHeight";
@@ -58,6 +58,9 @@ const LocatorMap: FC<Props> = ({
     marginBottom: shadowRadius,
   });
 
+  const outlineId = `outline-${useId()}`;
+  const shadowMaskId = `shadow-mask-${useId()}`;
+
   return (
     <>
       <svg width={dimension.width} height={dimension.height}>
@@ -84,19 +87,20 @@ const LocatorMap: FC<Props> = ({
           ))}
         </g>
         <defs>
-          <mask id="shadow-mask">
-            <use xlinkHref="#outline" fill="white"></use>
+          <circle id={outlineId} cx={width / 2} cy={width / 2} r={width / 2} />
+          <mask id={shadowMaskId}>
+            <use xlinkHref={`#${outlineId}`} fill="white" />
             <use
               transform={`translate(${dimension.width * -0.35}, ${
                 dimension.height * -0.5
               }) scale(1.4)`}
-              xlinkHref="#outline"
+              xlinkHref={`#${outlineId}`}
               fill="black"
-            ></use>
+            />
           </mask>
         </defs>
-        <g mask="url(#shadow-mask)">
-          <use xlinkHref="#outline" fill={"black"} fillOpacity={0.05} />
+        <g mask={`url(#${shadowMaskId})`}>
+          <use xlinkHref={`#${outlineId}`} fill={"black"} fillOpacity={0.05} />
         </g>
         {!highlight?.length && (
           <g>
