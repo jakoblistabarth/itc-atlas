@@ -22,7 +22,8 @@ const nextConfig = {
       config.plugins.push(
         new ESLintWebpackPlugin({
           context: "./",
-          outputReport: true,
+          extensions: ["js", "jsx", "ts", "tsx"],
+          exclude: ["node_modules"],
         })
       );
     }
