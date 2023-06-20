@@ -6,6 +6,7 @@ import * as aq from "arquero";
 import { ProjectPre2019Raw, ProjectPost2019Raw } from "../load/loadProjects";
 import { mapToDepartment } from "../../mappings/departments";
 import { mapToOrganizationGroup } from "../../mappings/organizationGroup";
+import mapToProjectStatus from "../../mappings/project.status";
 
 export type ProjectClean = Omit<ProjectMerged, "id"> & {
   id: number;
@@ -129,12 +130,7 @@ const cleanProjects = async ({
         !row.dateEnd || row.dateEnd === "NULL" ? null : row.dateEnd
       ),
       status: aq.escape((row: ProjectMerged) => {
-        if (!row.status) return undefined;
-        if (!!row.status.match(/Finished|Completed|Finalized/g))
-          return "Finished";
-        if (!!row.status.match(/Proposal|Awaiting contract/g))
-          return "Proposed";
-        return "Ongoing";
+        return mapToProjectStatus(row.status);
       }),
       type: aq.escape((row: ProjectMerged) => {
         if (!row.type) return undefined;
