@@ -1,15 +1,15 @@
 import { FC, SVGProps } from "react";
 import { GeoProjection, geoPath } from "d3-geo";
 import { range } from "d3";
-import { Feature, Polygon } from "geojson";
+import { Feature, Polygon, BBox } from "geojson";
 
 type Props = {
-  bounds: { minLng: number; maxLng: number; minLat: number; maxLat: number };
+  bounds: BBox;
   projection: GeoProjection;
 } & SVGProps<SVGPathElement>;
 
 const RectangleMarker: FC<Props> = ({ bounds, projection, ...rest }) => {
-  const { minLng, maxLng, minLat, maxLat } = bounds;
+  const [minLng, maxLat, maxLng, minLat] = bounds;
 
   const top = [
     [minLng, maxLat],

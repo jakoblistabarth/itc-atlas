@@ -79,7 +79,7 @@ export const WithMarkers: Story = {
     })),
     rectangleMarkers: [
       {
-        bounds: { minLng: 108, maxLat: 30, maxLng: 114, minLat: 24 },
+        bounds: [108, 30, 114, 24],
         stroke: "black",
         strokeWidth: "1",
       },
@@ -92,12 +92,12 @@ export const WithMultipleRectangleMarkers: Story = {
     highlight: ["ITA"],
     rectangleMarkers: [
       {
-        bounds: { minLng: -10, maxLat: 60, maxLng: 35, minLat: 35 },
+        bounds: [-10, 60, 35, 35],
         stroke: "black",
         strokeWidth: "1",
       },
       {
-        bounds: { minLng: 40, maxLat: 20, maxLng: 50, minLat: 10 },
+        bounds: [40, 20, 50, 10],
         stroke: "black",
         strokeWidth: "1",
       },
@@ -110,12 +110,12 @@ export const WithRectanglesInSouthernHemisphere: Story = {
     highlight: ["CHL"],
     rectangleMarkers: [
       {
-        bounds: { minLng: -78, maxLat: -15, maxLng: -65, minLat: -58 },
+        bounds: [-78, -15, -65, -58],
         stroke: "black",
         strokeWidth: "1",
       },
       {
-        bounds: { minLng: -82, maxLat: 3, maxLng: -75, minLat: -6 },
+        bounds: [-82, 3, -75, -6],
         stroke: "black",
         strokeWidth: "1",
       },

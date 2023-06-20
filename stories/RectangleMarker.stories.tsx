@@ -9,7 +9,7 @@ const meta = {
   title: "Map Elements/Symbols/RectangleMarker",
   component: RectangleMarker,
   args: {
-    bounds: { minLng: 120, maxLat: 34, maxLng: 134, minLat: 24 },
+    bounds: [120, 34, 134, 24],
     projection: projection,
   },
   argTypes: {},

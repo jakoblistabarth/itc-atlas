@@ -25,9 +25,10 @@ export default async function handler(
     minLng < maxLng &&
     maxLat > minLat
   ) {
-    res
-      .status(400)
-      .json({ error: "Please enter in order: minLng, maxLat, maxLng, minLat" });
+    res.status(400).json({
+      error:
+        "Please enter the coordinates in the following order: 'most southwesterly point, most northeasterly point' or 'minLng, maxLat, maxLng, minLat'",
+    });
   }
   const highlights: string[] = [highlightCountries ?? ""];
   const neCountriesTopoJson = getCountries();
@@ -38,12 +39,7 @@ export default async function handler(
       width={width}
       rectangleMarkers={[
         {
-          bounds: {
-            minLng,
-            maxLat,
-            maxLng,
-            minLat,
-          },
+          bounds: [minLng, maxLat, maxLng, minLat],
         },
       ]}
     ></LocatorMap>
