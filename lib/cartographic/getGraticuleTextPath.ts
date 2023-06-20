@@ -1,6 +1,6 @@
 import * as d3 from "d3";
 import type { GeoProjection } from "d3-geo";
-import type { Position, Feature, LineString } from "geojson";
+import type { Position, LineString } from "geojson";
 
 const getGraticuleTextPath = (
   type: "lat" | "lon",

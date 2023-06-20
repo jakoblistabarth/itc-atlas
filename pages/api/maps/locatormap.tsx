@@ -18,8 +18,8 @@ export default async function handler(
     maxLat > 90.0 &&
     maxLng > 180.0 &&
     minLat < -90.0 &&
-    minLng! < maxLng &&
-    maxLat! > minLat
+    minLng < maxLng &&
+    maxLat > minLat
   ) {
     res
       .status(400)

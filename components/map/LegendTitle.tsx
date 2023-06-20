@@ -13,6 +13,7 @@ const LegendTitle: FC<Props> = ({ fontSize = 9, children, ...rest }) => {
       fontWeight={"bold"}
       fontSize={fontSize}
       dy={fontSize}
+      {...rest}
     >
       {children}
     </text>

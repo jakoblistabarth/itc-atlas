@@ -1,7 +1,7 @@
 import * as d3 from "d3";
 
 type StackItem = {
-  value: any; //TODO: more specific typing?
+  value: number | string | Date | [];
   count: number;
   start: number;
   end: number;

@@ -12,6 +12,7 @@ import sheetToJson from "../sheetToJson";
 
   const filePath = "./data/itc/All Alumni until 2020_Anon_JMT.xlsx";
   const workbook = await workbookFromXlsx(filePath);
+  // eslint-disable-next-line
   const alumni = sheetToJson<any>(workbook.worksheets[0]);
   const tb2 = aq.from(alumni);
   const countAlumni = tb2.groupby("Exam Year").count();

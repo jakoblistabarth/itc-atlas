@@ -1,4 +1,4 @@
-import { FC, PropsWithChildren, SVGProps } from "react";
+import { FC, PropsWithChildren } from "react";
 
 type Props = PropsWithChildren<{
   name?: string;

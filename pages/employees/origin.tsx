@@ -29,7 +29,6 @@ type Props = {
 const StaffOrigin: NextPage<Props> = ({
   countryWithEmployeeCount,
   neCountriesTopoJson,
-  countries,
 }) => {
   const dimension = {
     width: 1280,

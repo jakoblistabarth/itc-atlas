@@ -5,7 +5,7 @@ import { Vector2 } from "three";
 const getFlowPoints = (
   flow: Feature<LineString>,
   projection?: GeoProjection,
-  bend: number = 0.3
+  bend = 0.3
 ) => {
   const o = flow.geometry.coordinates[0];
   const d = flow.geometry.coordinates[1];

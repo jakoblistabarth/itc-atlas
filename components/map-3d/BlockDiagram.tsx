@@ -1,12 +1,5 @@
 import { FC, useEffect, useRef } from "react";
-import {
-  BackSide,
-  BufferAttribute,
-  Mesh,
-  PlaneGeometry,
-  ShaderMaterial,
-  Uniform,
-} from "three";
+import { BackSide, BufferAttribute, PlaneGeometry, Uniform } from "three";
 import * as d3 from "d3";
 
 type Props = {

@@ -11,7 +11,6 @@ type Props = {
   base: number;
   side: number;
   style?: Appearance;
-  label?: boolean;
   silhouette?: boolean;
 };
 
@@ -21,7 +20,6 @@ const IsoCube: FC<Props> = ({
   side,
   base = 3,
   style,
-  label,
   silhouette = true,
 }) => {
   const unitNoScale = scaleLinear()

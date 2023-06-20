@@ -1,9 +1,9 @@
-import { FC, SVGProps } from "react";
+import { FC, ReactNode, SVGProps } from "react";
 import sliceIntoChunks from "../../lib/utilities/sliceIntoChunks";
 import LegendTitle from "./LegendTitle";
 
 type Props = {
-  entries: { label: string; color: string; symbol?: SVGProps<SVGGElement> }[];
+  entries: { label: string; color: string; symbol?: ReactNode }[];
   title?: string;
   columns?: number;
   columnWidth?: number;

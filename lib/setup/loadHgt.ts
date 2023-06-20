@@ -1,5 +1,5 @@
 import { writeFileSync } from "fs";
-//@ts-ignore-error TODO: add types?
+//@ts-expect-error srtm-elevation is not typed
 import { SyncTileSet } from "srtm-elevation";
 import { extent } from "d3";
 import proj4 from "proj4";

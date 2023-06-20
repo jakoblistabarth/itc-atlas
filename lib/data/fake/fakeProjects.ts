@@ -6,7 +6,7 @@ import { ProjectStatus, ProjectType } from "@prisma/client";
 import addDays from "../../utilities/addDays";
 import { random, range, sample, sampleSize } from "lodash";
 
-const fakeProjects = async (number: number = 1600): Promise<ProjectClean[]> => {
+const fakeProjects = async (number = 1600): Promise<ProjectClean[]> => {
   const departments = loadDepartments();
   const countries = await loadUnsdCountries();
 
@@ -17,7 +17,7 @@ const fakeProjects = async (number: number = 1600): Promise<ProjectClean[]> => {
     const leadDepartment = sample(departments);
     const otherDepartments = Array.from({
       length: random(1, 3),
-    }).reduce((acc: string[], _) => {
+    }).reduce((acc: string[]) => {
       const department = sample(departments)?.id ?? "";
       if (!acc.includes(department) && department !== leadDepartment?.id)
         acc.push(department);
@@ -27,11 +27,11 @@ const fakeProjects = async (number: number = 1600): Promise<ProjectClean[]> => {
     const durationInDays = random(30, 365 * 3);
     const start = faker.date.between(new Date("2000"), new Date("2022"));
     const end = addDays(start, durationInDays);
-    const projectCountries = range(random(1, 3)).map((_) => {
+    const projectCountries = range(random(1, 3)).map(() => {
       const pool = Math.random() < 0.5 ? focusCountries : countriesSample;
       return sample(pool)?.["ISO-alpha3 Code"] as string;
     });
-    const organizationNames = range(200).map((_) => faker.company.name());
+    const organizationNames = range(200).map(() => faker.company.name());
     const project: ProjectClean = {
       id: i,
       name: faker.lorem.sentence(),

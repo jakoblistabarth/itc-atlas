@@ -86,7 +86,7 @@ export default function Example({
         isSSR ? (
           <g></g>
         ) : (
-          cloudWords.map((w, i) => (
+          cloudWords.map((w) => (
             <Text
               key={w.text}
               fill={"teal"}

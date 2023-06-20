@@ -27,24 +27,11 @@ const BendedLabel: FC<Props> = ({
   children,
 }) => {
   const path = getGraticuleTextPath(graticuleType, degree, projection);
-  const textOrigin =
-    graticuleType === "lat"
-      ? [textOriginDegree, degree]
-      : [degree, textOriginDegree];
   const domain = graticuleType == "lon" ? [-90, 90] : [-180, 180];
   const scaleOffset = scaleLinear().domain(domain).range([0, 100]);
   const id = useId();
   return (
     <g>
-      {/* {[1, 20].map((r, i) => (
-        <circle
-          cx={projection(textOrigin)[0]}
-          cy={projection(textOrigin)[1]}
-          r={20}
-          stroke={"red"}
-          fill={"white"}
-        />
-      ))} */}
       {path && (
         <path
           id={id}
@@ -63,7 +50,6 @@ const BendedLabel: FC<Props> = ({
       >
         <textPath
           startOffset={`${scaleOffset(textOriginDegree)}%`}
-          // side={degree < 0 && graticuleType === "lon" ? "right" : "left"}
           xlinkHref={`#${id}`}
         >
           {children}

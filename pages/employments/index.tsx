@@ -4,11 +4,9 @@ import SummaryTable from "../../components/SummaryTable";
 import Footer from "../../components/Footer";
 import { Container, Heading, Text } from "theme-ui";
 import useSWR from "swr";
-import { useRouter } from "next/router";
 import * as aq from "arquero";
 
 const Page: NextPage = () => {
-  const { route } = useRouter();
   const { data, error, isLoading } = useSWR("/api/data/employment/");
 
   return (

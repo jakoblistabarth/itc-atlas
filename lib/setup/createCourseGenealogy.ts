@@ -69,7 +69,7 @@ const createCourseGenealogy = async () => {
           yOffset: code,
           dateStart: new Date(year),
           size: value as number,
-          data: { code, year, value, stem } as Struct,
+          data: { code, year, value, stem, description } as Struct,
           fill: stem,
         };
       })

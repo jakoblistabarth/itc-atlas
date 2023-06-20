@@ -8,12 +8,12 @@ import { sample } from "lodash";
 
 const fakeEmployments = async (
   employees: EmployeeClean[],
-  number: number = 6000
+  number = 6000
 ): Promise<EmploymentClean[]> => {
   const departments = loadDepartments();
-  const descriptions = range(100).map((_) => faker.name.jobTitle());
+  const descriptions = range(100).map(() => faker.name.jobTitle());
 
-  const data = range(1, number).map((d) => {
+  const data = range(1, number).map(() => {
     const start = faker.date.between(new Date("1960"), new Date("2022"));
     const duration = randomInt(30 * 5, 365 * 10)();
     const end = addDays(start, duration);

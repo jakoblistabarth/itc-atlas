@@ -1,11 +1,9 @@
 import React, { forwardRef } from "react";
 
-type Props = React.PropsWithChildren<{
-  outline?: Boolean;
-}>;
+type Props = React.PropsWithChildren;
 
 const Button = forwardRef<HTMLButtonElement, Props>(function Button(
-  { outline, children },
+  { children },
   ref
 ) {
   return <button ref={ref ?? undefined}>{children}</button>;

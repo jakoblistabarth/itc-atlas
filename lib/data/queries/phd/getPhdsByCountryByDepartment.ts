@@ -11,7 +11,7 @@ export type phdPerCountryDepartment = {
 };
 
 const getPhdsByCountryByDepartment = async (
-  onlyGraduates?: Boolean // TODO: refactor
+  onlyGraduates?: boolean // TODO: refactor
 ) => {
   const filter = onlyGraduates ? { status: { id: { equals: "38" } } } : {};
   const phdsGrouped = await prisma.phd.groupBy({

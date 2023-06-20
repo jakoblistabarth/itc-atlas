@@ -9,7 +9,7 @@ import { ApplicantClean } from "../../../types/ApplicantClean";
 
 const fakePhds = async (
   applicants: ApplicantClean[],
-  number: number = 750
+  number = 750
 ): Promise<PhdClean[]> => {
   const countries = await loadUnsdCountries();
   const status = loadStatus();
@@ -18,9 +18,9 @@ const fakePhds = async (
   const countriesSample = sampleSize(countries, 50);
   const focusCountries = sampleSize(countriesSample, 12);
 
-  const organizationNames = range(200).map((_) => faker.company.name());
+  const organizationNames = range(200).map(() => faker.company.name());
 
-  const data = range(number).map((_) => {
+  const data = range(number).map(() => {
     const countryPool = Math.random() > 0.5 ? countriesSample : focusCountries;
     const country = sample(countryPool)?.["ISO-alpha3 Code"];
     const start = faker.date.between(new Date("1960"), new Date());

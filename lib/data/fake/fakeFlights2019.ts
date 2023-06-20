@@ -5,9 +5,7 @@ import getAirports from "../getAirports";
 import loadDepartments from "../load/loadDepartments";
 import loadUnsdCountries from "../load/loadUnsdCountries";
 
-const fakeFlights2019 = async (
-  number: number = 900
-): Promise<Flight2019Clean[]> => {
+const fakeFlights2019 = async (number = 900): Promise<Flight2019Clean[]> => {
   // TODO: use a set of origin-destination combinations to make fake data more realistic
   // hubs improved the results but still too many different combinations
   const airportCodes = (await getAirports()).json

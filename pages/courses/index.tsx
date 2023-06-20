@@ -4,7 +4,6 @@ import {
   groups,
   linkHorizontal,
   max,
-  path,
   range,
   rollups,
   scaleBand,
@@ -34,7 +33,6 @@ import getCourseGenealogy from "../../lib/data/getCourseGenealogy";
 import toInt from "../../lib/utilities/toInt";
 import { CourseGenealogy } from "../../types/CourseGenealogy";
 import { LabelPlacement } from "../../types/LabelPlacement";
-import { TimelineEvent } from "../../types/TimelineEvent";
 
 type Props = {
   courseGenealogy: CourseGenealogy;
@@ -135,44 +133,6 @@ const CourseGenealogyPage: NextPage<Props> = ({ courseGenealogy }) => {
   const yearStack = stack().keys(stems);
   const graduatesStack = yearStack(coursesPerYear);
 
-  // QUESTION: where should I put this? use a customHook? or probably just a utils function?
-  const getConnectionPath = (
-    node: TimelineEvent,
-    previousNode: TimelineEvent | undefined,
-    connectionWidth: number
-  ) => {
-    const height = heightScale(node.size ?? 1);
-    const x =
-      xScale(node.dateStart) - xScale2.bandwidth() / 2 + connectionWidth;
-    const y = yScale(node.yOffset) ?? 0;
-    if (!previousNode) {
-      const endPath = path();
-      endPath.moveTo(x, y - height);
-      endPath.lineTo(x - connectionWidth, y);
-      endPath.lineTo(x, y + height);
-      endPath.closePath();
-      return endPath;
-    }
-    const xPrev =
-      xScale(previousNode.dateStart) +
-      xScale2.bandwidth() / 2 -
-      connectionWidth;
-    const heightPrev = heightScale(previousNode.size ?? 1);
-    const connectionPath = path();
-    connectionPath.moveTo(
-      xPrev,
-      (yScale(previousNode.yOffset) ?? 0) - heightPrev
-    );
-    connectionPath.lineTo(x, (yScale(node.yOffset) ?? 0) - height);
-    connectionPath.lineTo(x, (yScale(node.yOffset) ?? 0) + height);
-    connectionPath.lineTo(
-      xPrev,
-      (yScale(previousNode.yOffset) ?? 0) + heightPrev
-    );
-    connectionPath.closePath();
-    return connectionPath;
-  };
-
   return (
     <>
       <Head>
@@ -205,20 +165,6 @@ const CourseGenealogyPage: NextPage<Props> = ({ courseGenealogy }) => {
                       y: yScale(node.yOffset),
                     } as Vector2;
                     const height = heightScale(node.size ?? 1);
-                    const connectionWidth = 0;
-                    const width = xScale2.bandwidth() - 2 * connectionWidth;
-                    const prevYear = year - 1;
-                    const prevNode = courseGenealogy.nodes.find((n) => {
-                      return (
-                        n.name === node.name &&
-                        n.dateStart.getFullYear() == prevYear
-                      );
-                    });
-                    const connectionPath = getConnectionPath(
-                      node,
-                      prevNode,
-                      connectionWidth
-                    );
                     return node.data?.value === "-" ? (
                       <Cross
                         key={idx}

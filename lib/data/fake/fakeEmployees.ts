@@ -7,10 +7,7 @@ import { range } from "d3-array";
 
 type EmployeeFake = EmployeeClean & { applicantId?: string };
 
-const fakeEmployees = async (
-  applicants: ApplicantClean[],
-  number: number = 3000
-) => {
+const fakeEmployees = async (applicants: ApplicantClean[], number = 3000) => {
   const countries = await loadUnsdCountries();
 
   const countriesSample = sampleSize(countries, 75);

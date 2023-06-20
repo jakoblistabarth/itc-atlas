@@ -161,7 +161,7 @@ const cleanProjects = async ({
     })
     .filter(
       aq.escape(
-        (row: any) =>
+        (row: ProjectMerged) =>
           row.dateEnd === null ||
           new Date(row.dateStart) < new Date(row.dateEnd)
       )

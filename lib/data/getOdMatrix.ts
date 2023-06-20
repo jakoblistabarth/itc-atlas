@@ -42,8 +42,7 @@ const getODFlows = async (): Promise<
       od: code + "-" + codes[index + 1],
       props: d,
     }));
-    acc.push.apply(acc, routes);
-    return acc;
+    return [...acc, ...routes];
   }, []);
 
   const features = d3

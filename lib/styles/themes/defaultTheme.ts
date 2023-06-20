@@ -2,7 +2,6 @@ import { MapTheme } from "../../../types/MapTheme";
 
 const lightgrey = "#f0f0f0";
 const darkgrey = "#dcdcdc";
-const red = "#f00";
 
 const defaultTheme: MapTheme = {
   fontFamily: "InterVariable",

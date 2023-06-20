@@ -1,4 +1,4 @@
-import { FC, SVGProps, useState } from "react";
+import { FC, SVGProps } from "react";
 import defaultTheme from "../../lib/styles/themes/defaultTheme";
 import { Vector2 } from "three";
 import toInt from "../../lib/utilities/toInt";

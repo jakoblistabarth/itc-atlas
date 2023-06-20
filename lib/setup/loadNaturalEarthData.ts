@@ -1,6 +1,6 @@
 import os from "os";
 import admZip from "adm-zip";
-// @ts-ignore
+// @ts-expect-error mapShaper is not typed
 import mapShaper from "mapshaper";
 import axios from "axios";
 import { NeScales } from "../../types/NeTopoJson";

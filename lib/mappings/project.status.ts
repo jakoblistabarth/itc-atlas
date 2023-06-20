@@ -17,3 +17,5 @@ const type: StatusMapping = {
   "LoI submitted": ProjectStatus.Undone,
   Approved: ProjectStatus.Undone,
 };
+
+export default type;

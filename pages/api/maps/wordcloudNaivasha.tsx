@@ -12,7 +12,7 @@ export default async function handler(
   );
 
   const svg = ReactDOMServer.renderToStaticMarkup(
-    <WordCloud width={960} height={600} text={"das ist ein text"} />
+    <WordCloud width={960} height={600} text={words} />
   );
 
   res

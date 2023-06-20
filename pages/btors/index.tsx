@@ -6,11 +6,9 @@ import { Container, Grid, Heading, Text } from "theme-ui";
 import * as aq from "arquero";
 import useSWR from "swr";
 import CardLink from "../../components/CardLink";
-import { useRouter } from "next/router";
 
 const Btors: NextPage = () => {
   const { data, error, isLoading } = useSWR("/api/data/btor/");
-  const { route } = useRouter();
 
   return (
     <>

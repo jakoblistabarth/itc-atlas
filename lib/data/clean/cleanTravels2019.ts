@@ -13,7 +13,7 @@ export type Flight2019Clean = {
   airportCodes: string[];
 };
 
-const cleanTravelData2019 = async (data: any) => {
+const cleanTravelData2019 = async (data: Travels2019Raw[]) => {
   const unsdCodes = await loadUnsdCountries();
   const tb = aq
     .from(data)

@@ -3,6 +3,7 @@ import { TimelineEvent } from "./TimelineEvent";
 export type Node = {
   code: string;
   description: string;
+  [key: number]: number;
 };
 
 export type Link = {

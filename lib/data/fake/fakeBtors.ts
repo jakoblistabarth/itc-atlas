@@ -7,7 +7,7 @@ import addDays from "../../utilities/addDays";
 import { sample, sampleSize } from "lodash";
 import { range, randomInt } from "d3";
 
-const fakeBtors = async (number: number = 5000): Promise<BtorClean[]> => {
+const fakeBtors = async (number = 5000): Promise<BtorClean[]> => {
   const departments = loadDepartments();
   const countries = await loadUnsdCountries();
   const countriesSelection = sampleSize(countries, 30);

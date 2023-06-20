@@ -52,10 +52,11 @@ const SnapshotBar: FC<Props> = ({ column }) => {
           {stack.map((d, idx) => {
             const nRows = Math.ceil(total * d.count);
             const rowLabel = nRows === 1 ? "row" : "rows";
+            const text = String(d.value);
             return (
               <Tooltip key={`tooltip-${column.name}-${idx}`}>
                 <TooltipContent>
-                  <strong>{d.value}</strong>
+                  <strong>{text}</strong>
                   <br />
                   {fInt(nRows)} {rowLabel}, {fPercentage(d.count)}
                 </TooltipContent>

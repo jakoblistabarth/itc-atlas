@@ -1,4 +1,4 @@
-import { Edges, Text3D } from "@react-three/drei";
+import { Text3D } from "@react-three/drei";
 import { max, min, scaleTime } from "d3";
 import { geoBertin1953 } from "d3-geo-projection";
 import React, { FC } from "react";
@@ -44,11 +44,6 @@ const SpaceTimeCube: FC<PropTypes> = ({
 
   return (
     <>
-      {/* <mesh castShadow receiveShadow>
-        <boxGeometry args={[side, height, side]} />
-        <meshStandardMaterial opacity={0} transparent />
-        <Edges color={"white"} />
-      </mesh> */}
       {timeScale.ticks().map((t, idx) => {
         return (
           <group key={`${t.getDate()}-${idx}`}>

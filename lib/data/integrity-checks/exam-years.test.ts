@@ -17,9 +17,10 @@ beforeAll(async () => {
 
   const filePath = "./data/itc/All Alumni until 2020_Anon_JMT.xlsx";
   const workbook = await workbookFromXlsx(filePath);
-  const alumni = sheetToJson<any>(workbook.worksheets[0]);
+  const alumni = sheetToJson<[]>(workbook.worksheets[0]);
   const tb2 = aq.from(alumni);
   countAlumni = tb2
+    // eslint-disable-next-line
     .filter((d: any) => d.Country === "Indonesia")
     .groupby("Exam Year")
     .count();
@@ -28,10 +29,12 @@ beforeAll(async () => {
 describe("Alumni numbers of database and Menno-Jan's spreadsheet match for Indonesia", () => {
   test("in 2013", async () => {
     expect(
+      // eslint-disable-next-line
       countAlumni.filter((d: any) => d["Exam Year"] === 2013).object()
     ).toStrictEqual(
       aq
         .from(countAlumniDB)
+        // eslint-disable-next-line
         .filter((d: any) => d["Exam Year"] === 2013)
         .object()
     );
@@ -40,10 +43,12 @@ describe("Alumni numbers of database and Menno-Jan's spreadsheet match for Indon
   //TODO: Fix or accept, as valid?
   test.failing("in 2020", async () => {
     expect(
+      // eslint-disable-next-line
       countAlumni.filter((d: any) => d["Exam Year"] === 2020).object()
     ).toStrictEqual(
       aq
         .from(countAlumniDB)
+        // eslint-disable-next-line
         .filter((d: any) => d["Exam Year"] === 2020)
         .object()
     );

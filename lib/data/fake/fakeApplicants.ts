@@ -3,9 +3,7 @@ import { ApplicantClean } from "../../../types/ApplicantClean";
 import loadUnsdCountries from "../load/loadUnsdCountries";
 import { sampleSize, range, sample } from "lodash";
 
-const fakeApplicants = async (
-  number: number = 4000
-): Promise<ApplicantClean[]> => {
+const fakeApplicants = async (number = 4000): Promise<ApplicantClean[]> => {
   const countries = await loadUnsdCountries();
 
   const countriesSample = sampleSize(countries, 75);

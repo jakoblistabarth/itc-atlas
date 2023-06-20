@@ -631,7 +631,7 @@ const IndonesiaTimeline: FC<Props> = ({
               })}
               {phdsByYear
                 .filter((d) => d.promotionYear)
-                .map((d, idx) => {
+                .map((d) => {
                   const r = 2;
                   const gap = r * 3;
                   return range(0, d._count._all).map((_, idx) => {

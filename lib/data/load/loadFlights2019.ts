@@ -39,6 +39,6 @@ export type Travels2019Raw = {
 export default async function loadFlights2019() {
   const filePath = "./data/itc/UT.01jan-31dec2019-ITConly.xlsx";
   const workbook = await workbookFromXlsx(filePath);
-  const data = sheetToJson<any>(workbook.worksheets[0]);
+  const data = sheetToJson<Travels2019Raw[]>(workbook.worksheets[0]);
   return cleanTravelData2019(data);
 }
