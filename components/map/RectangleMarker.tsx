@@ -21,7 +21,7 @@ const RectangleMarker: FC<Props> = ({ bounds, projection, ...rest }) => {
   ];
   const bottom = [
     [maxLng, minLat],
-    ...range(Math.ceil(maxLng), Math.floor(minLng), -1).map((d) => [d, minLat]),
+    ...range(Math.floor(maxLng), Math.ceil(minLng), -1).map((d) => [d, minLat]),
   ];
   const left = [
     [minLng, minLat],

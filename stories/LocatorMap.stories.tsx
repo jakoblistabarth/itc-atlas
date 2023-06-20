@@ -79,7 +79,7 @@ export const WithMarkers: Story = {
     })),
     rectangleMarkers: [
       {
-        bounds: [108, 30, 114, 24],
+        bounds: [108, 3, 114, -3],
         stroke: "black",
         strokeWidth: "1",
       },
