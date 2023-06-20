@@ -1,5 +1,7 @@
 import { FC, SVGProps } from "react";
-import { GeoProjection } from "d3-geo";
+import { GeoProjection, geoPath } from "d3-geo";
+import { range } from "d3";
+import { Feature, Polygon } from "geojson";
 
 type Props = {
   bounds: { minLng: number; maxLng: number; minLat: number; maxLat: number };
@@ -7,14 +9,39 @@ type Props = {
 } & SVGProps<SVGPathElement>;
 
 const RectangleMarker: FC<Props> = ({ bounds, projection, ...rest }) => {
-  const leftTop = projection([bounds.minLng, bounds.maxLat]);
-  const rightBottom = projection([bounds.maxLng, bounds.minLat]);
-  const [x, y] = leftTop ?? [0, 0];
-  const [x1, y1] = rightBottom ?? [0, 0];
+  const { minLng, maxLng, minLat, maxLat } = bounds;
+
+  const top = [
+    [minLng, maxLat],
+    ...range(Math.ceil(minLng), Math.floor(maxLng)).map((d) => [d, maxLat]),
+  ];
+  const right = [
+    [maxLng, maxLat],
+    ...range(Math.ceil(minLat), Math.floor(maxLat)).map((d) => [maxLng, d]),
+  ];
+  const bottom = [
+    [maxLng, minLat],
+    ...range(Math.ceil(maxLng), Math.floor(minLng), -1).map((d) => [d, minLat]),
+  ];
+  const left = [
+    [minLng, minLat],
+    ...range(Math.ceil(minLat), Math.floor(maxLat)).map((d) => [minLng, d]),
+  ];
+  const detailedCoordinates = [[...top, ...right, ...bottom, ...left]];
+
+  const feature: Feature<Polygon> = {
+    type: "Feature",
+    properties: {},
+    geometry: {
+      type: "Polygon",
+      coordinates: detailedCoordinates,
+    },
+  };
+  const path = geoPath(projection);
   return (
     <g>
       <path
-        d={`M${x} ${y} L${x1} ${y} L${x1} ${y1} L${x} ${y1} Z`}
+        d={path(feature) ?? ""}
         fill="none"
         strokeWidth="1"
         stroke="black"
