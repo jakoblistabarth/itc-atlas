@@ -1,3 +1,6 @@
+// eslint-disable-next-line
+const ESLintWebpackPlugin = require("eslint-webpack-plugin");
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
@@ -14,10 +17,15 @@ const nextConfig = {
       },
     ];
   },
-  typescript: {
-    // ignoreBuildErrors: true,
-  },
-  webpack: (config) => {
+  webpack: (config, { dev }) => {
+    if (dev) {
+      config.plugins.push(
+        new ESLintWebpackPlugin({
+          context: "./",
+          outputReport: true,
+        })
+      );
+    }
     config.module.rules.push({
       test: /\.svg$/,
       use: {
