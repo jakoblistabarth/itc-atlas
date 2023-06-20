@@ -7,6 +7,10 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
+  const width = req.query.width ? Number(req.query.width) : undefined;
+  if (Number.isNaN(width)) {
+    return res.status(400).json({ error: "invalid width parameter" });
+  }
   const highlightCountries = req.query.country?.toString();
   const [minLng, maxLat, maxLng, minLat] =
     req.query.bounds?.toString().split(",").map(Number) ?? [];
@@ -31,6 +35,7 @@ export default async function handler(
     <LocatorMap
       neCountriesTopoJson={neCountriesTopoJson}
       highlight={highlights}
+      width={width}
       rectangleMarkers={[
         {
           bounds: {
