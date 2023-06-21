@@ -108,8 +108,7 @@ async function main() {
             : undefined,
           departure: d.departure,
           arrival: d.arrival,
-          ref1: d.ref1,
-          ref2: d.ref2,
+          type: d.type,
           department: d.department
             ? {
                 connect: {

@@ -182,15 +182,20 @@ enum PurposeOfTravel {
 }
 
 model Flight2019 {
-  id           Int         @id @default(autoincrement())
-  departure    DateTime?   @db.Date
-  arrival      DateTime?   @db.Date
-  ref1         String? //TODO: ref1 is the OFI no.? 3rd digit -> external/internal, digit 4-5 -> department
-  ref2         String? //TODO: ref2 courseNo?
+  id           Int             @id @default(autoincrement())
+  departure    DateTime?       @db.Date
+  arrival      DateTime?       @db.Date
+  type         Flight2019Type?
   emissions    Float
   airportCodes String[]
   countryId    Int?
   departmentId String?
-  department   Department? @relation("Flight2019Department", fields: [departmentId], references: [id])
-  country      Country?    @relation("Flight2019Country", fields: [countryId], references: [id])
+  department   Department?     @relation("Flight2019Department", fields: [departmentId], references: [id])
+  country      Country?        @relation("Flight2019Country", fields: [countryId], references: [id])
+}
+
+enum Flight2019Type {
+  ProjectRelated
+  NonProjectRelated
+  StudentPhdRelated
 }
