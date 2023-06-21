@@ -235,7 +235,7 @@ async function main() {
   const phds = await fakePhds(applicants);
 
   await Promise.all(
-    phds.map(async (d, idx) => {
+    phds.map(async (d) => {
       const itcStudentId = itcIdsInApplicants
         .map((d) => d.itcStudentId)
         .includes(d.itcStudentId ?? null)
@@ -286,7 +286,7 @@ async function main() {
   const employments = await fakeEmployments(employees);
 
   await Promise.all(
-    employments.map(async (d, idx) => {
+    employments.map(async (d) => {
       const department = d.department
         ? await prisma.department.findFirst({
             select: { id: true },
