@@ -5,9 +5,9 @@ import { AirportProperties } from "../../../types/Travels";
 
 /**
  * @swagger
- * /api/data/airport:
+ * /api/data/airports:
  *   get:
- *     description: Returns airport json
+ *     description: Returns airports json
  *     responses:
  *       200:
  *         description: response success
