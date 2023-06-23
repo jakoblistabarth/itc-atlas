@@ -3,6 +3,22 @@ import ReactDOMServer from "react-dom/server";
 import LocatorMap from "../../../components/map/LocatorMap";
 import getCountries from "../../../lib/data/getCountries";
 
+/**
+ * @swagger
+ * /api/maps/locatormap:
+ *   get:
+ *     description: Returns locatormap svg, "width" and "country" are query parameters, please using Json object
+ *     parameters:
+ *        - in: query
+ *          name: params
+ *          schema:
+ *            type: object
+ *          style: form
+ *          explode: true
+ *     responses:
+ *       200:
+ *         description: response success
+ */
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse

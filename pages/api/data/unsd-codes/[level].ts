@@ -2,6 +2,20 @@ import type { NextApiRequest, NextApiResponse } from "next";
 import loadUnsdCodes from "../../../../lib/data/load/loadUnsdCodes";
 import { UnLevel } from "../../../../types/UnsdCodes";
 
+/**
+ * @swagger
+ *  /api/data/unsd-codes/{level}:
+ *   get:
+ *     description: Returns unsd-codes json, "level" is the path parameter, please specify the level ("countries", "regions","subRegions" or "intermediateRegions")
+ *     parameters:
+ *       - in: path
+ *         name: level
+ *         required: true
+ *         type: string
+ *     responses:
+ *       200:
+ *         description: response success
+ */
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse

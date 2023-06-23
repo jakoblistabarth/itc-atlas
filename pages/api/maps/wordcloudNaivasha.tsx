@@ -1,6 +1,15 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import getBrowser from "../../../puppeteer/browser";
 
+/**
+ * @swagger
+ * /api/maps/wordcloudNaivasha:
+ *   get:
+ *     description: Returns wordcloudNaivasha svg
+ *     responses:
+ *       200:
+ *         description: response success
+ */
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse

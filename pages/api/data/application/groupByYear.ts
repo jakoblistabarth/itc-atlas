@@ -4,6 +4,19 @@ import getApplicationsByYear, {
 } from "../../../../lib/data/queries/application/getApplicationsByYear";
 import { ResponseError } from "../../../../types/ResponseErrors";
 
+/**
+ * @swagger
+ * /api/data/application/groupByYear:
+ *   get:
+ *     description: Returns groupByYear json, "country" is the query parameter, please specify the country
+ *     parameters:
+ *        - in: query
+ *          name: country
+ *          type: string
+ *     responses:
+ *       200:
+ *         description: response success
+ */
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse<ApplicationByYearWithCount | ResponseError>

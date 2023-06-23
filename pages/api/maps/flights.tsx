@@ -15,6 +15,19 @@ import * as d3 from "d3";
 import defaultTheme from "../../../lib/styles/themes/defaultTheme";
 import getOdMatrix from "../../../lib/data/getOdMatrix";
 
+/**
+ * @swagger
+ * /api/maps/flights:
+ *   get:
+ *     description: Returns flights svg, "theme" is the query parameter, please specify the theme
+ *     parameters:
+ *        - in: query
+ *          name: theme
+ *          type: string
+ *     responses:
+ *       200:
+ *         description: response success
+ */
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
