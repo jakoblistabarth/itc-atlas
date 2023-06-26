@@ -13,7 +13,7 @@ export const getStaticProps: GetStaticProps = async () => {
   const spec = createSwaggerSpec({
     apiFolder: "pages/api", // define api folder under app folder
     definition: {
-      openapi: "3.0.0",
+      openapi: "3.1.0",
       info: {
         title: "ITC Atlas API Documentation",
         version: "1.0",
