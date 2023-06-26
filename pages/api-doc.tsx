@@ -13,7 +13,7 @@ const ApiDoc: NextPage<Props> = ({ spec }) => <SwaggerUI spec={spec} />;
 
 export const getStaticProps: GetStaticProps = async () => {
   const spec = createSwaggerSpec({
-    apiFolder: "pages/api", // define api folder under app folder
+    apiFolder: "pages/api/maps"
     definition: {
       openapi: "3.1.0",
       info: {
