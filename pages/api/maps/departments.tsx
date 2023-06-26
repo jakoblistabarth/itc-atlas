@@ -30,6 +30,8 @@ import { MapOptions } from "../../../types/MapOptions";
  *        - in: query
  *          name: theme
  *          type: string
+ *          example: ETH
+ *          deprecated: true
  *     responses:
  *       200:
  *         description: response success
