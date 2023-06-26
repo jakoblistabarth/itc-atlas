@@ -5,7 +5,7 @@ import getBrowser from "../../../puppeteer/browser";
  * @swagger
  * /api/maps/flights3D:
  *   get:
- *     summary: 3D map on ITC filghts of 2019.
+ *     summary: 3D map on ITC flights of 2019.
  *     description: Returns ITC flights 3D image
  *     tags:
  *       - JPEG
