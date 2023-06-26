@@ -20,18 +20,19 @@ export const getStaticProps: GetStaticProps = async () => {
         url: "https://atlas.itc.utwente.nl/api",
         description: "Production Server",
         version: "1.0",
-  },
-  tags: [
-    {
-      name: "SVG",
-      description: "Endpoints returning `SVG`-based components as `SVG` file.",
-    },
-    {
-      name: "JPEG",
-      description:
-        "Endpoints returning canvas-rendered components as `JPEG`-Image.",
-    },
-  ],
+      },
+      tags: [
+        {
+          name: "SVG",
+          description:
+            "Endpoints returning `SVG`-based components as `SVG` file.",
+        },
+        {
+          name: "JPEG",
+          description:
+            "Endpoints returning canvas-rendered components as `JPEG`-Image.",
+        },
+      ],
     },
   });
 
