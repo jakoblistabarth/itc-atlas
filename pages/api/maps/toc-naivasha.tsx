@@ -12,8 +12,6 @@ import getBrowser from "../../../puppeteer/browser";
  *     responses:
  *       200:
  *         description: response success
- *       404:
- *         description: bad request
  */
 export default async function handler(
   req: NextApiRequest,
