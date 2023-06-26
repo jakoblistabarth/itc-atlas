@@ -8,7 +8,7 @@ import getBrowser from "../../../puppeteer/browser";
  *     summary: 3D map on ITC filghts of 2019.
  *     description: Returns ITC flights 3D image
  *     tags:
- *       - Image
+ *       - JPEG
  *     responses:
  *       200:
  *         description: response success
