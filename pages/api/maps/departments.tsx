@@ -22,7 +22,10 @@ import { MapOptions } from "../../../types/MapOptions";
  * @swagger
  * /api/maps/departments:
  *   get:
- *     description: Returns departments svg, "theme" is the query parameter, please specify the theme
+ *     summary: 2D map on PhD's country of origin per departments.
+ *     description: Returns a 2D proportional symbol map  showing the country of origin for all PhD's grouped by departments.
+ *     tags:
+ *        - SVG
  *     parameters:
  *        - in: query
  *          name: theme
