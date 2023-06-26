@@ -7,17 +7,35 @@ import getCountries from "../../../lib/data/getCountries";
  * @swagger
  * /api/maps/locatormap:
  *   get:
- *     description: Returns locatormap svg, "width" and "country" are query parameters, please using Json object
+ *     summary: 2D Locatormap, with focus.
+ *     description: Returns a 2D locator map of the focused country as a `SVG`.
+ *     tags:
+ *        - SVG
  *     parameters:
  *        - in: query
- *          name: params
+ *          name: width
+ *          description: The width of the `SVG`.
  *          schema:
- *            type: object
- *          style: form
- *          explode: true
+ *            type: integer
+ *          example: 400
+ *        - in: query
+ *          name: country
+ *          description: The country to highlight in the locator map.
+ *          required: true
+ *          schema:
+ *            type: string
+ *          example: "NLD"
+ *        - in: query
+ *          name: bounds
+ *          description: The bounds of a rectangular area to highlight on the locator map.
+ *          schema:
+ *            type: string
+ *          example: "-3,60,3,50"
  *     responses:
  *       200:
- *         description: response success
+ *         description: OK
+ *       400:
+ *         description: Bad request.
  */
 export default async function handler(
   req: NextApiRequest,
