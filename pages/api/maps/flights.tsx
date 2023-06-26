@@ -19,14 +19,21 @@ import getOdMatrix from "../../../lib/data/getOdMatrix";
  * @swagger
  * /api/maps/flights:
  *   get:
- *     description: Returns flights svg, "theme" is the query parameter, please specify the theme
+ *     summary: 2D map on ITC flights of 2019.
+ *     description: Returns flights map of ITC staff of 2019, including projects and examinations
+ *     tags:
+ *        - SVG
  *     parameters:
  *        - in: query
  *          name: theme
+ *          example: ETH
+ *          deprecated: true
  *          type: string
  *     responses:
  *       200:
  *         description: response success
+ *       400:
+ *         description: bad request
  */
 export default async function handler(
   req: NextApiRequest,

@@ -25,14 +25,21 @@ import { Vector2 } from "three";
  * @swagger
  * /api/maps/projectcountries:
  *   get:
- *     description: Returns projectcountries svg, "theme" is the query parameter, please specify the theme
+ *     summary: 2D map of projectcountries.
+ *     description: Returns 2D map of projectcountries
+ *     tags:
+ *        - SVG
  *     parameters:
  *        - in: query
  *          name: theme
  *          type: string
+ *          example: ETH
+ *          deprecated: true
  *     responses:
  *       200:
  *         description: response success
+ *       400:
+ *         description: bad request
  */
 export default async function handler(
   req: NextApiRequest,

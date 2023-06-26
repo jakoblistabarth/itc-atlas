@@ -5,10 +5,15 @@ import getBrowser from "../../../puppeteer/browser";
  * @swagger
  * /api/maps/wordcloudNaivasha:
  *   get:
- *     description: Returns wordcloudNaivasha svg
+ *     summary: 2D map of wordcloudNaivasha.
+ *     description: Returns wordcloudNaivasha map
+ *     tags:
+ *       - SVG
  *     responses:
  *       200:
  *         description: response success
+ *       404:
+ *         description: bad request
  */
 export default async function handler(
   req: NextApiRequest,

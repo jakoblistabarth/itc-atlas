@@ -13,7 +13,10 @@ import { readFileSync } from "fs";
  * @swagger
  * /api/maps/toc-naivasha-static:
  *   get:
- *     description: Returns toc-naivasha-static svg
+ *     summary: 2D map of toc-naivasha-static.
+ *     description: Returns toc-naivasha-static map
+ *     tags:
+ *       - SVG
  *     responses:
  *       200:
  *         description: response success

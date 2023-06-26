@@ -5,10 +5,15 @@ import getBrowser from "../../../puppeteer/browser";
  * @swagger
  * /api/maps/toc-naivasha:
  *   get:
- *     description: Returns toc-naivasha svg
+ *     summary: 2D map of toc-naivasha.
+ *     description: Returns toc-naivasha map
+ *     tags:
+ *       - SVG
  *     responses:
  *       200:
  *         description: response success
+ *       404:
+ *         description: bad request
  */
 export default async function handler(
   req: NextApiRequest,

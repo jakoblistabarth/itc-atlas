@@ -5,7 +5,10 @@ import getBrowser from "../../../puppeteer/browser";
  * @swagger
  * /api/maps/flights3D:
  *   get:
- *     description: Returns flights3D image
+ *     summary: 3D map on ITC filghts of 2019.
+ *     description: Returns ITC flights 3D image
+ *     tags:
+ *       - Image
  *     responses:
  *       200:
  *         description: response success
@@ -30,7 +33,7 @@ export default async function handler(
   const selector = "canvas";
   await page.waitForSelector(selector); // wait for the selector to load
   // TODO: use a method of puppeter to define timeout instead of manually defining a time?
-  await new Promise((r) => setTimeout(r, 800));
+  await new Promise((r) => setTimeout(r, 5000));
   const canvas = await page.$(selector);
   // TODO: wait for selector fails after 30s, how to improve error message?
   if (!canvas) return;
