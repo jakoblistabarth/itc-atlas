@@ -23,7 +23,7 @@ import { MapOptions } from "../../../types/MapOptions";
  * /api/maps/departments:
  *   get:
  *     summary: 2D map on PhD's country of origin per departments.
- *     description: Returns a 2D proportional symbol map sshowing the country of origin for all PhD's grouped by departments.
+ *     description: Returns a 2D proportional symbol map showing the country of origin for all PhD's grouped by departments.
  *     tags:
  *        - SVG
  *     parameters:
