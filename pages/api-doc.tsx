@@ -16,7 +16,9 @@ export const getStaticProps: GetStaticProps = async () => {
     definition: {
       openapi: "3.1.0",
       info: {
-        title: "ITC Atlas API Documentation",
+        title: "ITC atlas API documentation",
+        url: "https://atlas.itc.utwente.nl/api",
+        description: "Production Server",
         version: "1.0",
       },
     },
