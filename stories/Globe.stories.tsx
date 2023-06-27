@@ -5,6 +5,7 @@ import { Canvas } from "@react-three/fiber";
 import { OrbitControls } from "@react-three/drei";
 import GlobeTexture from "../components/map-3d/GlobeTexture";
 import getCountries from "../lib/data/getCountries";
+import GlobeEnvironment from "../components/map-3d/GlobeEnvironment";
 
 const countries = getCountries();
 
@@ -49,6 +50,7 @@ const meta = {
             enablePan={false}
             maxPolarAngle={Math.PI / 2}
           />
+          <GlobeEnvironment />
         </Canvas>
         <GlobeTexture
           ref={canvasRef}

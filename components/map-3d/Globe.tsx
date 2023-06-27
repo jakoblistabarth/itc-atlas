@@ -1,4 +1,4 @@
-import { ContactShadows, useTexture } from "@react-three/drei";
+import { useTexture } from "@react-three/drei";
 import React, { FC, RefObject } from "react";
 import { Vector3, FrontSide, DoubleSide } from "three";
 
@@ -45,12 +45,6 @@ const Globe: FC<PropTypes> = ({
 
   return (
     <>
-      <ambientLight args={[undefined, 0.3]} />
-      <directionalLight
-        castShadow
-        position={[10, 10, 0]}
-        args={["white", 0.75]}
-      />
       <mesh castShadow receiveShadow position={position}>
         <sphereGeometry args={[radius, 512, 256]} />
         <meshStandardMaterial
@@ -71,14 +65,15 @@ const Globe: FC<PropTypes> = ({
         </meshStandardMaterial>
       </mesh>
       {children}
-      <ContactShadows
-        frames={1}
-        opacity={0.2}
-        blur={2}
-        position={[0, -1.1, 0]}
-      />
     </>
   );
 };
 
 export default Globe;
+
+export const FallBackGlobe: FC<{ radius: number }> = ({ radius }) => (
+  <mesh castShadow receiveShadow>
+    <sphereGeometry args={[radius, 64, 64]} />
+    <meshStandardMaterial color="white" />
+  </mesh>
+);

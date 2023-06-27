@@ -5,10 +5,12 @@ import type { NextPage } from "next";
 import Head from "next/head";
 import { Container, Heading } from "theme-ui";
 import Flow3D from "../../components/map-3d/Flow3D";
-import Globe from "../../components/map-3d/Globe";
+import Globe, { FallBackGlobe } from "../../components/map-3d/Globe";
 import getOdMatrix from "../../lib/data/getOdMatrix";
 import type { OdMatrix } from "../../types/OdMatrix";
 import Footer from "../../components/Footer";
+import { Suspense } from "react";
+import GlobeEnvironment from "../../components/map-3d/GlobeEnvironment";
 
 type Props = {
   odMatrix: OdMatrix;
@@ -38,22 +40,27 @@ const Flights: NextPage<Props> = ({ odMatrix }) => {
         <main>
           <Heading as="h1">ITC&apos;s travel activity</Heading>
           <div style={{ width: "100%", height: "700px" }}>
-            <Canvas camera={{ position: [0, 0, 5], fov: 30 }} shadows>
-              <Globe radius={earthRadius} texture={"explorer"}>
-                {odMatrix.flows.features.map((flow) => {
-                  const origin = flow.geometry.coordinates[0];
-                  const destination = flow.geometry.coordinates[1];
-                  return (
-                    <Flow3D
-                      key={flow.properties.od}
-                      origin={origin}
-                      destination={destination}
-                      value={scaleWidth(flow.properties?.value)}
-                      data={flow.properties}
-                    />
-                  );
-                })}
-              </Globe>
+            <Canvas
+              camera={{ position: [0, 0, 5], fov: 30 }}
+              shadows
+            >
+              <Suspense fallback={<FallBackGlobe radius={earthRadius} />}>
+                <Globe radius={earthRadius} texture={"explorer"} />
+              </Suspense>
+              <GlobeEnvironment />
+              {odMatrix.flows.features.map((flow) => {
+                const origin = flow.geometry.coordinates[0];
+                const destination = flow.geometry.coordinates[1];
+                return (
+                  <Flow3D
+                    key={flow.properties.od}
+                    origin={origin}
+                    destination={destination}
+                    value={scaleWidth(flow.properties?.value)}
+                    data={flow.properties}
+                  />
+                );
+              })}
               <OrbitControls enableZoom={false} enablePan={false} />
             </Canvas>
           </div>
