@@ -1,6 +1,18 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import getBrowser from "../../../puppeteer/browser";
 
+/**
+ * @swagger
+ * /api/maps/toc-naivasha:
+ *   get:
+ *     summary: 2D map of toc-naivasha.
+ *     description: Returns toc-naivasha map
+ *     tags:
+ *       - SVG
+ *     responses:
+ *       200:
+ *         description: response success
+ */
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse

@@ -18,6 +18,26 @@ import themes, { ThemeNames } from "../../../lib/styles/themes";
 import defaultTheme from "../../../lib/styles/themes/defaultTheme";
 import { MapOptions } from "../../../types/MapOptions";
 
+/**
+ * @swagger
+ * /api/maps/departments:
+ *   get:
+ *     summary: 2D map on PhD's country of origin per departments.
+ *     description: Returns a 2D proportional symbol map showing the country of origin for all PhD's grouped by departments.
+ *     tags:
+ *        - SVG
+ *     parameters:
+ *        - in: query
+ *          name: theme
+ *          type: string
+ *          example: ETH
+ *          deprecated: true
+ *     responses:
+ *       200:
+ *         description: response success
+ *       400:
+ *         description: bad request
+ */
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse

@@ -2,6 +2,19 @@ import type { NextApiRequest, NextApiResponse } from "next";
 import getLakes from "../../../../lib/data/getLakes";
 import { NeLakes } from "../../../../types/NeTopoJson";
 
+/**
+ * @swagger
+ * /api/data/geo/lakes:
+ *   get:
+ *     description: Returns geo-lakes json, "scale" is the query parameter, please specify the scale
+ *     parameters:
+ *        - in: query
+ *          name: scale
+ *          type: string
+ *     responses:
+ *       200:
+ *         description: response success
+ */
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse<NeLakes | { error: string }>

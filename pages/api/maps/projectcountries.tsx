@@ -21,6 +21,26 @@ import MapLayout from "../../../components/map/layout/MapLayout";
 import { setMapBounds } from "../../../lib/cartographic/getMapHeight";
 import { Vector2 } from "three";
 
+/**
+ * @swagger
+ * /api/maps/projectcountries:
+ *   get:
+ *     summary: 2D map of projectcountries.
+ *     description: Returns 2D map of projectcountries
+ *     tags:
+ *        - SVG
+ *     parameters:
+ *        - in: query
+ *          name: theme
+ *          type: string
+ *          example: ETH
+ *          deprecated: true
+ *     responses:
+ *       200:
+ *         description: response success
+ *       400:
+ *         description: bad request
+ */
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
