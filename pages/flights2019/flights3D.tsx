@@ -9,7 +9,7 @@ import Globe, { FallBackGlobe } from "../../components/map-3d/Globe";
 import getOdMatrix from "../../lib/data/getOdMatrix";
 import type { OdMatrix } from "../../types/OdMatrix";
 import Footer from "../../components/Footer";
-import { Suspense } from "react";
+import { Suspense, useState } from "react";
 import GlobeEnvironment from "../../components/map-3d/GlobeEnvironment";
 
 type Props = {
@@ -29,6 +29,8 @@ const Flights: NextPage<Props> = ({ odMatrix }) => {
     .domain([min ?? 0, max ?? 100])
     .range([0, 100]);
 
+  const [ready, setReady] = useState(false);
+
   return (
     <>
       <Head>
@@ -43,6 +45,8 @@ const Flights: NextPage<Props> = ({ odMatrix }) => {
             <Canvas
               camera={{ position: [0, 0, 5], fov: 30 }}
               shadows
+              onCreated={() => setReady(true)}
+              data-ready={ready}
             >
               <Suspense fallback={<FallBackGlobe radius={earthRadius} />}>
                 <Globe radius={earthRadius} texture={"explorer"} />

@@ -30,10 +30,8 @@ export default async function handler(
   // TODO: use a env variable with the absolute url of the website here?
   await page.goto("http://localhost:3000/flights2019/flights3D");
 
-  const selector = "canvas";
+  const selector = "div[data-ready='true'] canvas";
   await page.waitForSelector(selector); // wait for the selector to load
-  // TODO: use a method of puppeter to define timeout instead of manually defining a time?
-  await new Promise((r) => setTimeout(r, 5000));
   const canvas = await page.$(selector);
   // TODO: wait for selector fails after 30s, how to improve error message?
   if (!canvas) return;
