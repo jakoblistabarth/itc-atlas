@@ -1,16 +1,12 @@
 import type { NextPage } from "next";
 import Head from "next/head";
-import SummaryTable from "../../components/SummaryTable";
 import Footer from "../../components/Footer";
 import { Container, Grid, Heading, Text } from "theme-ui";
 import CardLink from "../../components/CardLink";
-import useSWR from "swr";
 import { useRouter } from "next/router";
-import * as aq from "arquero";
 
-const EmployeesPage: NextPage = () => {
+const Page: NextPage = () => {
   const { route } = useRouter();
-  const { data, error, isLoading } = useSWR("/api/data/employee/");
 
   return (
     <>
@@ -30,10 +26,6 @@ const EmployeesPage: NextPage = () => {
               <Heading as="h2">Origin</Heading>
             </CardLink>
           </Grid>
-
-          {error && <div>failed to load</div>}
-          {isLoading && <div>Loading …</div>}
-          {!isLoading && !error && <SummaryTable data={aq.from(data)} />}
         </main>
       </Container>
 
@@ -42,4 +34,4 @@ const EmployeesPage: NextPage = () => {
   );
 };
 
-export default EmployeesPage;
+export default Page;

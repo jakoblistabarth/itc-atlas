@@ -2,15 +2,11 @@ import type { NextPage } from "next";
 import Head from "next/head";
 import Footer from "../../components/Footer";
 import { Container, Grid, Heading, Text } from "theme-ui";
-import SummaryTable from "../../components/SummaryTable";
 import CardLink from "../../components/CardLink";
-import * as aq from "arquero";
-import useSWR from "swr";
 import { useRouter } from "next/router";
 
-const PhdOverview: NextPage = () => {
+const Page: NextPage = () => {
   const { route } = useRouter();
-  const { data, error, isLoading } = useSWR("/api/data/phd/");
 
   return (
     <>
@@ -31,10 +27,6 @@ const PhdOverview: NextPage = () => {
               <Heading as="h2">Per country of origin and department</Heading>
             </CardLink>
           </Grid>
-
-          {error && <div>failed to load</div>}
-          {isLoading && <div>Loading …</div>}
-          {!isLoading && !error && <SummaryTable data={aq.from(data)} />}
         </main>
       </Container>
 
@@ -43,4 +35,4 @@ const PhdOverview: NextPage = () => {
   );
 };
 
-export default PhdOverview;
+export default Page;
