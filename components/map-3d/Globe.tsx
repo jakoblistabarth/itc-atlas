@@ -40,6 +40,7 @@ const Globe: FC<PropTypes> = ({
     map: "/textures/" + textureFile,
     displacementMap: "/textures/gebco_08_rev_elev_2000x1000.png",
     bumpMap: "/textures/gebco_08_rev_elev_2000x1000.png",
+    roughnessMap: "/textures/gebco_08_rev_bath_3600x1800_color.jpg",
   });
 
   return (
@@ -52,11 +53,12 @@ const Globe: FC<PropTypes> = ({
       />
       <mesh castShadow receiveShadow position={position}>
         <sphereGeometry args={[radius, 512, 256]} />
-        <meshPhongMaterial
+        <meshStandardMaterial
           displacementScale={displacementScale}
           bumpScale={bumpScale}
           {...(!canvasTexture && textureProps)}
           transparent
+          roughness={0.7}
           side={transparent ? DoubleSide : FrontSide}
         >
           {canvasTexture && canvasRef?.current && (
@@ -66,7 +68,7 @@ const Globe: FC<PropTypes> = ({
               anisotropy={4}
             />
           )}
-        </meshPhongMaterial>
+        </meshStandardMaterial>
       </mesh>
       {children}
       <ContactShadows
