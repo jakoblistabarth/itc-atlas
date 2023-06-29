@@ -78,7 +78,7 @@ export default function Example({
       fontSize={fontSizeSetter}
       fontWeight={fontWeightSetter}
       padding={2}
-      font={"Fraunces"}
+      font={"FrauncesVariable"}
       rotate={rotationSetter}
       random={fixedValueGenerator}
     >
@@ -86,7 +86,7 @@ export default function Example({
         isSSR ? (
           <g></g>
         ) : (
-          cloudWords.map((w, i) => (
+          cloudWords.map((w) => (
             <Text
               key={w.text}
               fill={"teal"}

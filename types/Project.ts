@@ -1,8 +1,4 @@
-export enum ProjectStatus {
-  Undone = "undone",
-  Completed = "completed",
-  Ongoing = "ongoing",
-}
+import { ProjectStatus } from "@prisma/client";
 
 export enum ProjectType {
   Consulting = "Consulting",

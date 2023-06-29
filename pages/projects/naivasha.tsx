@@ -38,7 +38,9 @@ const Naivasha: NextPage<Props> = ({
           <Heading as="h2">Theory of Change</Heading>
           <HierarchyTree height={600} hierarchy={hierarchy} />
           <Heading as="h2">Wordcloud</Heading>
-          <Wordcloud width={960} height={400} text={words} />
+          <div id="wordcloud">
+            <Wordcloud width={960} height={400} text={words} />
+          </div>
         </main>
       </Container>
 

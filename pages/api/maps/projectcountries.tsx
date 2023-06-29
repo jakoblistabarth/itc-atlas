@@ -1,5 +1,4 @@
 import { geoBertin1953 } from "d3-geo-projection";
-import { nanoid } from "nanoid";
 import type { NextApiRequest, NextApiResponse } from "next";
 import PatternLines from "../../../components/defs/patterns/PatternLines";
 import BaseLayer from "../../../components/map/BaseLayer";
@@ -22,6 +21,26 @@ import MapLayout from "../../../components/map/layout/MapLayout";
 import { setMapBounds } from "../../../lib/cartographic/getMapHeight";
 import { Vector2 } from "three";
 
+/**
+ * @swagger
+ * /api/maps/projectcountries:
+ *   get:
+ *     summary: 2D map of projectcountries.
+ *     description: Returns 2D map of projectcountries
+ *     tags:
+ *        - SVG
+ *     parameters:
+ *        - in: query
+ *          name: theme
+ *          type: string
+ *          example: ETH
+ *          deprecated: true
+ *     responses:
+ *       200:
+ *         description: response success
+ *       400:
+ *         description: bad request
+ */
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
@@ -72,7 +91,6 @@ export default async function handler(
       />
       <MapLayoutAside xOffset={0} yOffset={mapOptions.bounds?.frame?.top}>
         <ProportionalCircleLegend
-          key={nanoid()}
           data={data.features.map(
             (feature) => feature.properties?.projectCount ?? 0
           )}
@@ -98,7 +116,7 @@ export default async function handler(
           </defs>
           {highlightCountries.features.map((feature) => (
             <ChoroplethSymbol
-              key={nanoid()}
+              key={feature.properties.ADM0_ISO}
               projection={mapOptions.projection}
               feature={feature}
               fill={"url(#Lines)"}
@@ -106,14 +124,14 @@ export default async function handler(
           ))}
         </g>
         <g className="symbolLayer">
-          {data.features.map((feature) => {
+          {data.features.map((feature, idx) => {
             const xy = mapOptions.projection(
               feature.geometry.coordinates as [number, number]
             );
             return (
               xy && (
                 <PointSymbol
-                  key={nanoid()}
+                  key={idx}
                   position={new Vector2(xy[0], xy[1])}
                   radius={scale(feature.properties?.projectCount)}
                   {...theme?.symbol}

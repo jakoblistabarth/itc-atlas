@@ -1,7 +1,7 @@
 import prisma from "./client";
 
 async function main() {
-  const res = await prisma.phdCandidate.findMany({
+  const res = await prisma.phd.findMany({
     where: {
       departmentMain: {
         is: {

@@ -7,11 +7,11 @@ import addDays from "../../utilities/addDays";
 
 const fakeApplications = async (
   applicants: ApplicantClean[],
-  number: number = 7000
+  number = 7000
 ): Promise<ApplicationClean[]> => {
   const status = loadStatus();
-  const courseIds = range(3000).map((d) => "C00" + faker.random.numeric(4));
-  const sponsorNames = range(100).map((_) => faker.company.name());
+  const courseIds = range(3000).map(() => "C00" + faker.random.numeric(4));
+  const sponsorNames = range(100).map(() => faker.company.name());
   const certificates = [
     "Certificate of Attendance",
     "Diploma",
@@ -54,6 +54,7 @@ const fakeApplications = async (
     const application: ApplicationClean = {
       id: String(d),
       applicantId: sample(applicants)?.applicantId ?? "",
+      applicantId_actual: "doesNotApply",
       statusId: sample(status)?.id ?? "",
       courseId: sample(courseIds) ?? "",
       enrollmentStart: enrollmentStart,

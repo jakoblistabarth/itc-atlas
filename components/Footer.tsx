@@ -4,7 +4,7 @@ import React, { FC } from "react";
 import { fDateMonthYear } from "../lib/utilities/formaters";
 import BackToHome from "./BackToHome";
 
-type Props = React.PropsWithChildren<{}>;
+type Props = React.PropsWithChildren;
 
 const Footer: FC<Props> = ({ children }) => {
   return (

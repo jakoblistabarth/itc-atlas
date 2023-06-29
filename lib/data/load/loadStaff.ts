@@ -1,4 +1,5 @@
-import xlsx from "xlsx";
+import workbookFromXlsx from "../workbookFromXlsx";
+import sheetToJson from "../sheetToJson";
 
 export type StaffRaw = {
   "M-Nr": number;
@@ -29,12 +30,6 @@ export type StaffRaw = {
 
 export default async function loadStaff() {
   const filePath = "./data/itc/ITCHRDWH.xlsx";
-  const file = xlsx.readFile(filePath, {
-    cellDates: true,
-  });
-  const data = xlsx.utils.sheet_to_json(file.Sheets[file.SheetNames[0]], {
-    defval: null,
-  }) as StaffRaw[];
-
-  return data;
+  const workbook = await workbookFromXlsx(filePath);
+  return sheetToJson<StaffRaw[]>(workbook.worksheets[0]);
 }

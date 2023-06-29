@@ -4,7 +4,6 @@ import {
   groups,
   linkHorizontal,
   max,
-  path,
   range,
   rollups,
   scaleBand,
@@ -16,7 +15,6 @@ import {
   sum,
   timeYear,
 } from "d3";
-import { nanoid } from "nanoid";
 import type { GetStaticProps, NextPage } from "next";
 import Head from "next/head";
 import useMeasure from "react-use-measure";
@@ -35,7 +33,6 @@ import getCourseGenealogy from "../../lib/data/getCourseGenealogy";
 import toInt from "../../lib/utilities/toInt";
 import { CourseGenealogy } from "../../types/CourseGenealogy";
 import { LabelPlacement } from "../../types/LabelPlacement";
-import { TimelineEvent } from "../../types/TimelineEvent";
 
 type Props = {
   courseGenealogy: CourseGenealogy;
@@ -136,44 +133,6 @@ const CourseGenealogyPage: NextPage<Props> = ({ courseGenealogy }) => {
   const yearStack = stack().keys(stems);
   const graduatesStack = yearStack(coursesPerYear);
 
-  // QUESTION: where should I put this? use a customHook? or probably just a utils function?
-  const getConnectionPath = (
-    node: TimelineEvent,
-    previousNode: TimelineEvent | undefined,
-    connectionWidth: number
-  ) => {
-    const height = heightScale(node.size ?? 1);
-    const x =
-      xScale(node.dateStart) - xScale2.bandwidth() / 2 + connectionWidth;
-    const y = yScale(node.yOffset) ?? 0;
-    if (!previousNode) {
-      const endPath = path();
-      endPath.moveTo(x, y - height);
-      endPath.lineTo(x - connectionWidth, y);
-      endPath.lineTo(x, y + height);
-      endPath.closePath();
-      return endPath;
-    }
-    const xPrev =
-      xScale(previousNode.dateStart) +
-      xScale2.bandwidth() / 2 -
-      connectionWidth;
-    const heightPrev = heightScale(previousNode.size ?? 1);
-    const connectionPath = path();
-    connectionPath.moveTo(
-      xPrev,
-      (yScale(previousNode.yOffset) ?? 0) - heightPrev
-    );
-    connectionPath.lineTo(x, (yScale(node.yOffset) ?? 0) - height);
-    connectionPath.lineTo(x, (yScale(node.yOffset) ?? 0) + height);
-    connectionPath.lineTo(
-      xPrev,
-      (yScale(previousNode.yOffset) ?? 0) + heightPrev
-    );
-    connectionPath.closePath();
-    return connectionPath;
-  };
-
   return (
     <>
       <Head>
@@ -199,40 +158,25 @@ const CourseGenealogyPage: NextPage<Props> = ({ courseGenealogy }) => {
                   margin={margin.t}
                 />
                 <g id={"nodes"} opacity={0.8}>
-                  {courseGenealogy.nodes.map((node) => {
+                  {courseGenealogy.nodes.map((node, idx) => {
                     const year = node.dateStart.getFullYear();
                     const pos = {
                       x: xScale(node.dateStart),
                       y: yScale(node.yOffset),
                     } as Vector2;
                     const height = heightScale(node.size ?? 1);
-                    const connectionWidth = 0;
-                    const width = xScale2.bandwidth() - 2 * connectionWidth;
-                    const prevYear = year - 1;
-                    const prevNode = courseGenealogy.nodes.find((n) => {
-                      return (
-                        n.name === node.name &&
-                        n.dateStart.getFullYear() == prevYear
-                      );
-                    });
-                    const connectionPath = getConnectionPath(
-                      node,
-                      prevNode,
-                      connectionWidth
-                    );
                     return node.data?.value === "-" ? (
                       <Cross
-                        key={nanoid()}
+                        key={idx}
                         position={pos}
                         length={2}
                         halos={[{ size: 4, color: "white" }]}
                       />
                     ) : (
-                      <Tooltip key={nanoid()}>
+                      <Tooltip key={idx}>
                         <TooltipTrigger asChild>
                           <g fill={colorScale(node.fill ?? "")}>
                             <rect
-                              key={nanoid()}
                               x={pos.x - xScale2.bandwidth() / 2}
                               y={pos.y - height / 2}
                               width={xScale2.bandwidth()}
@@ -262,10 +206,11 @@ const CourseGenealogyPage: NextPage<Props> = ({ courseGenealogy }) => {
                       yScale(link.target) ?? 1
                     );
                     return (
-                      <g key={nanoid()}>
+                      <g
+                        key={`${link.start}-${link.end}-${link.source}-${link.target}`}
+                      >
                         <g opacity={0.25}>
                           <path
-                            key={nanoid()}
                             stroke={"black"}
                             strokeWidth={0.5}
                             d={
@@ -276,9 +221,9 @@ const CourseGenealogyPage: NextPage<Props> = ({ courseGenealogy }) => {
                             }
                             fill={"none"}
                           />
-                          {[sourcePos, targetPos].map((p) => (
+                          {[sourcePos, targetPos].map((p, idx) => (
                             <circle
-                              key={nanoid()}
+                              key={idx}
                               cx={p.x}
                               cy={p.y}
                               fill={"black"}
@@ -291,7 +236,6 @@ const CourseGenealogyPage: NextPage<Props> = ({ courseGenealogy }) => {
                           <PointLabel
                             position={sourcePos}
                             placement={LabelPlacement.LEFT}
-                            key={nanoid()}
                             fontSize={6}
                             fontFamily={"Fraunces"}
                             fill={"black"}
@@ -321,9 +265,8 @@ const CourseGenealogyPage: NextPage<Props> = ({ courseGenealogy }) => {
                   </g>
                   <g id="axis">
                     {yScaleSum.ticks().map((tick) => (
-                      <g key={nanoid()}>
+                      <g key={tick}>
                         <line
-                          key={nanoid()}
                           stroke={"lightgrey"}
                           y1={yScaleSum(tick)}
                           y2={yScaleSum(tick)}
@@ -340,12 +283,10 @@ const CourseGenealogyPage: NextPage<Props> = ({ courseGenealogy }) => {
                                 )
                               }
                               placement={LabelPlacement.RIGHT}
-                              key={nanoid()}
                             >
                               {tick}
                             </PointLabel>
                             <line
-                              key={nanoid()}
                               stroke={"lightgrey"}
                               strokeWidth={0.5}
                               y1={yScaleSum(tick)}
@@ -361,9 +302,9 @@ const CourseGenealogyPage: NextPage<Props> = ({ courseGenealogy }) => {
                   <g id="bars">
                     {graduatesStack.map((s) => {
                       const stem = s.key;
-                      return s.map((y) => (
+                      return s.map((y, idx) => (
                         <rect
-                          key={nanoid()}
+                          key={`${idx}`}
                           fill={colorScale(stem)}
                           x={
                             xScale(new Date(y.data.year, 0, 1)) -

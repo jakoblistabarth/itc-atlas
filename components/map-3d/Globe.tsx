@@ -1,4 +1,4 @@
-import { ContactShadows, useTexture } from "@react-three/drei";
+import { useTexture } from "@react-three/drei";
 import React, { FC, RefObject } from "react";
 import { Vector3, FrontSide, DoubleSide } from "three";
 
@@ -40,23 +40,19 @@ const Globe: FC<PropTypes> = ({
     map: "/textures/" + textureFile,
     displacementMap: "/textures/gebco_08_rev_elev_2000x1000.png",
     bumpMap: "/textures/gebco_08_rev_elev_2000x1000.png",
+    roughnessMap: "/textures/gebco_08_rev_bath_3600x1800_color.jpg",
   });
 
   return (
     <>
-      <ambientLight args={[undefined, 0.3]} />
-      <directionalLight
-        castShadow
-        position={[10, 10, 0]}
-        args={["white", 0.75]}
-      />
       <mesh castShadow receiveShadow position={position}>
-        <sphereBufferGeometry args={[radius, 512, 256]} />
-        <meshPhongMaterial
+        <sphereGeometry args={[radius, 512, 256]} />
+        <meshStandardMaterial
           displacementScale={displacementScale}
           bumpScale={bumpScale}
           {...(!canvasTexture && textureProps)}
           transparent
+          roughness={0.7}
           side={transparent ? DoubleSide : FrontSide}
         >
           {canvasTexture && canvasRef?.current && (
@@ -66,17 +62,18 @@ const Globe: FC<PropTypes> = ({
               anisotropy={4}
             />
           )}
-        </meshPhongMaterial>
+        </meshStandardMaterial>
       </mesh>
       {children}
-      <ContactShadows
-        frames={1}
-        opacity={0.2}
-        blur={2}
-        position={[0, -1.1, 0]}
-      />
     </>
   );
 };
 
 export default Globe;
+
+export const FallBackGlobe: FC<{ radius: number }> = ({ radius }) => (
+  <mesh castShadow receiveShadow>
+    <sphereGeometry args={[radius, 64, 64]} />
+    <meshStandardMaterial color="white" />
+  </mesh>
+);

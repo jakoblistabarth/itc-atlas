@@ -1,29 +1,37 @@
-import { nanoid } from "nanoid";
-import { FC, SVGProps } from "react";
+import { FC, ReactNode, SVGProps } from "react";
 import sliceIntoChunks from "../../lib/utilities/sliceIntoChunks";
 import LegendTitle from "./LegendTitle";
 
-const NominalLegend: FC<{
-  entries: { label: string; color: string; symbol?: SVGProps<SVGGElement> }[];
+type Props = {
+  entries: { label: string; color: string; symbol?: ReactNode }[];
   title?: string;
   columns?: number;
   columnWidth?: number;
-}> = ({ entries, title, columns = 1, columnWidth = 100 }) => {
-  const fontSize = 6;
+  fontSize?: number;
+} & SVGProps<SVGGElement>;
+
+const NominalLegend: FC<Props> = ({
+  entries,
+  title,
+  columns = 1,
+  columnWidth = 100,
+  fontSize = 6,
+  ...rest
+}) => {
   const symbolSize = fontSize * 1.2;
   const radius = symbolSize / 2;
   const columnLength = Math.ceil(entries.length / columns);
   const entriesByColumn = sliceIntoChunks(entries, columnLength);
   return (
-    <>
-      {title && <LegendTitle>{title}</LegendTitle>}
+    <g {...rest}>
+      {title && <LegendTitle fontSize={fontSize}>{title}</LegendTitle>}
       {entriesByColumn.map((column, idx) => (
-        <g key={nanoid()} transform={`translate(${idx * columnWidth} 0)`}>
-          {column.map((entry, index) => (
+        <g key={idx} transform={`translate(${idx * columnWidth} 0)`}>
+          {column.map((entry, idx) => (
             <g
-              key={nanoid()}
+              key={`${entry.label}-${idx}`}
               transform={`translate(0, ${
-                (title ? fontSize * 4 : 0) + index * fontSize * 1.75
+                (title ? fontSize * 3 : 0) + idx * fontSize * 1.75
               })`}
             >
               <g transform={`translate(${symbolSize / 2} 0)`}>
@@ -44,7 +52,7 @@ const NominalLegend: FC<{
           ))}
         </g>
       ))}
-    </>
+    </g>
   );
 };
 

@@ -1,8 +1,6 @@
 import * as d3 from "d3";
 import type { PieArcDatum, ScaleOrdinal } from "d3";
-import type { FC } from "react";
-import type { Appearance } from "../../types/Appearance";
-import { nanoid } from "nanoid";
+import type { FC, SVGProps } from "react";
 import { Vector2 } from "three";
 
 export type pieDatum = {
@@ -10,22 +8,24 @@ export type pieDatum = {
   label: string;
 };
 
-const ScaledPie: FC<{
+type Props = {
   position: Vector2;
   radius: number;
+  innerRadius?: number;
   data: pieDatum[];
-  color?: ScaleOrdinal<string, string, undefined>;
-  style?: Appearance;
-}> = ({
+  colorScale?: ScaleOrdinal<string, string>;
+} & SVGProps<SVGPathElement>;
+
+const ScaledPie: FC<Props> = ({
   position,
-  style,
   radius,
+  innerRadius = radius / 2,
   data,
-  color = d3.scaleOrdinal().range(d3.schemeCategory10) as ScaleOrdinal<
-    string,
-    string,
-    undefined
-  >,
+  colorScale = d3
+    .scaleOrdinal()
+    .domain(data.map((d) => d.label))
+    .range(d3.schemeCategory10) as ScaleOrdinal<string, string>,
+  ...rest
 }) => {
   const angleGenerator = d3
     .pie<{ label: string; value: number }>()
@@ -35,7 +35,7 @@ const ScaledPie: FC<{
   const arcGenerator = d3
     .arc<PieArcDatum<{ label: string }>>()
     .cornerRadius(2)
-    .innerRadius(radius / 2) // TODO: set 0 if smaller than threshold value
+    .innerRadius(innerRadius > 2 ? innerRadius : 0)
     .outerRadius(radius);
 
   const pieData = angleGenerator(data);
@@ -45,17 +45,16 @@ const ScaledPie: FC<{
       className="scaled-pie"
       transform={`translate(${position.x},${position.y})`}
     >
-      {pieData.map((sector) => (
+      {pieData.map((sector, idx) => (
         <path
-          key={nanoid()}
+          key={`${sector.data.label}-${idx}`}
           d={arcGenerator(sector) ?? undefined}
-          fill={color(sector.data.label)}
-          fillOpacity={style?.fillOpacity ?? 1}
-          paintOrder={"stroke"}
-          stroke={style?.stroke ?? style?.fill ?? "black"}
-          strokeOpacity={style?.strokeOpacity ?? 1}
-          strokeWidth={style?.strokeWidth ?? 0}
-          strokeLinejoin={style?.strokeLineJoin ?? "round"}
+          fill={colorScale(sector.data.label)}
+          paintOrder="stroke"
+          strokeWidth={2}
+          stroke="transparent"
+          strokeLinejoin="round"
+          {...rest}
         />
       ))}
     </g>

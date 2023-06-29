@@ -4,10 +4,9 @@ import { Flight2019Clean } from "../../data/clean/cleanTravels2019";
 import getAirports from "../getAirports";
 import loadDepartments from "../load/loadDepartments";
 import loadUnsdCountries from "../load/loadUnsdCountries";
+import { Flight2019Type } from "@prisma/client";
 
-const fakeFlights2019 = async (
-  number: number = 900
-): Promise<Flight2019Clean[]> => {
+const fakeFlights2019 = async (number = 900): Promise<Flight2019Clean[]> => {
   // TODO: use a set of origin-destination combinations to make fake data more realistic
   // hubs improved the results but still too many different combinations
   const airportCodes = (await getAirports()).json
@@ -30,8 +29,7 @@ const fakeFlights2019 = async (
       departure: departureDate.toISOString(),
       arrival: arrivalDate.toISOString(),
       airportCodes: getRandomAirports(airportCodes, hubs),
-      ref1: "93" + faker.random.numeric(6),
-      ref2: faker.random.numeric(4),
+      type: sample(Object.values(Flight2019Type)),
       country: sample(countries)?.["ISO-alpha3 Code"] ?? "",
       emissions: +faker.random.numeric(4),
       department: sample(departments)?.number ?? 0,

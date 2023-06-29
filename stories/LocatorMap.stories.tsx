@@ -66,16 +66,59 @@ export const DifferentHemispheres: Story = {
 export const WithMarkers: Story = {
   args: {
     highlight: ["IDN"],
-    markers: [
+    roundMarkers: [
       [106.5, -6],
       [110, -7.5],
-    ].map((d, i) => ({
-      lng: d[0],
-      lat: d[1],
+    ].map(([lng, lat], i) => ({
+      lng,
+      lat,
       label: i.toFixed(),
       fill: "red",
       labelColor: "white",
       fontSize: 7,
     })),
+    rectangleMarkers: [
+      {
+        bounds: [108, 3, 114, -3],
+        stroke: "black",
+        strokeWidth: "1",
+      },
+    ],
+  },
+};
+
+export const WithMultipleRectangleMarkers: Story = {
+  args: {
+    highlight: ["ITA"],
+    rectangleMarkers: [
+      {
+        bounds: [-10, 60, 35, 35],
+        stroke: "black",
+        strokeWidth: "1",
+      },
+      {
+        bounds: [40, 20, 50, 10],
+        stroke: "black",
+        strokeWidth: "1",
+      },
+    ],
+  },
+};
+
+export const WithRectanglesInSouthernHemisphere: Story = {
+  args: {
+    highlight: ["CHL"],
+    rectangleMarkers: [
+      {
+        bounds: [-78, -15, -65, -58],
+        stroke: "black",
+        strokeWidth: "1",
+      },
+      {
+        bounds: [-82, 3, -75, -6],
+        stroke: "black",
+        strokeWidth: "1",
+      },
+    ],
   },
 };

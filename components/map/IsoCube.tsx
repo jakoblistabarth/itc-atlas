@@ -1,6 +1,5 @@
 import { range, scaleLinear } from "d3";
 import type { Position } from "geojson";
-import { nanoid } from "nanoid";
 import { FC } from "react";
 import { Vector2 } from "three";
 import { Appearance } from "../../types/Appearance";
@@ -12,7 +11,6 @@ type Props = {
   base: number;
   side: number;
   style?: Appearance;
-  label?: boolean;
   silhouette?: boolean;
 };
 
@@ -22,14 +20,12 @@ const IsoCube: FC<Props> = ({
   side,
   base = 3,
   style,
-  label,
   silhouette = true,
 }) => {
   const unitNoScale = scaleLinear()
     .domain([0, 100])
     .range([0, Math.pow(base, 3)]);
   const unitNo = Math.ceil(unitNoScale(value));
-  console.log("value: ", value, "base: ", base, "->", unitNo);
   const unitScale = scaleLinear().domain([0, 10]).range([0, 10]);
   const l = new Vector2(0, -side);
   const r = new Vector2((-Math.sqrt(3) * side) / 2, side / 2);
@@ -62,7 +58,7 @@ const IsoCube: FC<Props> = ({
               return (
                 count++ < unitNo && (
                   <IsoUnit
-                    key={nanoid()}
+                    key={`${level}-${row}-${column}`}
                     scale={unitScale}
                     value={side}
                     xy={pos.toArray()}

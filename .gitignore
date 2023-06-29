@@ -42,3 +42,6 @@ yarn-error.log*
 
 # storybook
 storybook-static/
+
+# cache directory for puppeteer's chrome installation
+.cache

@@ -1,4 +1,3 @@
-import { nanoid } from "nanoid";
 import { FC } from "react";
 
 type ColorStop = {
@@ -12,9 +11,9 @@ const RadialGradient: FC<{
 }> = ({ colorStops, id }) => {
   return (
     <radialGradient id={id}>
-      {colorStops.map((colorStop) => (
+      {colorStops.map((colorStop, idx) => (
         <stop
-          key={nanoid()}
+          key={idx}
           offset={`${colorStop.stop}%`}
           stopColor={colorStop.color}
         />

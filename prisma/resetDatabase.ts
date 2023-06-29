@@ -1,8 +1,7 @@
 import prisma from "./client";
 
 const resetDatabase = async () => {
-  await prisma.phdCandidate.deleteMany({});
-  await prisma.$queryRaw`ALTER SEQUENCE IF EXISTS "PhdCandidate_id_seq" RESTART WITH 1;`;
+  await prisma.phd.deleteMany({});
   await prisma.department.deleteMany({});
   await prisma.employment.deleteMany({});
   await prisma.employee.deleteMany({});

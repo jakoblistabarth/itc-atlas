@@ -1,5 +1,6 @@
-import xlsx from "xlsx";
 import cleanTravelData2019 from "../clean/cleanTravels2019";
+import sheetToJson from "../sheetToJson";
+import workbookFromXlsx from "../workbookFromXlsx";
 
 export type Travels2019Raw = {
   "Passenger Name": string;
@@ -37,11 +38,7 @@ export type Travels2019Raw = {
 
 export default async function loadFlights2019() {
   const filePath = "./data/itc/UT.01jan-31dec2019-ITConly.xlsx";
-  const file = xlsx.readFile(filePath, {
-    cellDates: true,
-  });
-  const data = xlsx.utils.sheet_to_json(file.Sheets[file.SheetNames[0]], {
-    defval: null,
-  });
+  const workbook = await workbookFromXlsx(filePath);
+  const data = sheetToJson<Travels2019Raw[]>(workbook.worksheets[0]);
   return cleanTravelData2019(data);
 }

@@ -6,7 +6,6 @@ import getNfpCountries from "../../lib/data/getNfpCountries";
 import * as d3 from "d3";
 import { geoBertin1953 } from "d3-geo-projection";
 import { NfpCountry } from "../../types/NfpCountry";
-import { nanoid } from "nanoid";
 import MapLayout from "../../components/map/layout/MapLayout";
 import MapLayoutBody from "../../components/map/layout/MapLayoutBody";
 import BaseLayer from "../../components/map/BaseLayer";
@@ -72,7 +71,7 @@ const NfpCountries: NextPage<Props> = ({ nfps, neCountriesTopoJson }) => {
                   const yearData = perYear.get(year);
                   return (
                     <g
-                      key={nanoid()}
+                      key={year}
                       transform={`translate(${scaleTime(
                         yearDate
                       )}, ${maxSize})`}
@@ -114,7 +113,7 @@ const NfpCountries: NextPage<Props> = ({ nfps, neCountriesTopoJson }) => {
               gap: "1em 1em",
             }}
           >
-            {selection.map((selectedYear) => {
+            {selection.map((selectedYear, idx) => {
               const nfpCountryCodes = selectedYear?.map((d) => d.countryISO);
               const polygons = feature(
                 neCountriesTopoJson,
@@ -127,14 +126,9 @@ const NfpCountries: NextPage<Props> = ({ nfps, neCountriesTopoJson }) => {
               const bounds = {
                 width: 300,
                 height: 275,
-                frame: { top: 0 },
               };
               return (
-                <MapLayout
-                  key={nanoid()}
-                  bounds={bounds}
-                  projection={projection}
-                >
+                <MapLayout key={idx} bounds={bounds} projection={projection}>
                   <MapLayoutHeader
                     bounds={bounds}
                     title={
@@ -147,9 +141,9 @@ const NfpCountries: NextPage<Props> = ({ nfps, neCountriesTopoJson }) => {
                       projection={projection}
                     />
                     <g>
-                      {polygons.map((p) => (
+                      {polygons.map((p, idx) => (
                         <PolygonSymbol
-                          key={nanoid()}
+                          key={`${p.properties.ADM0_A3}-${idx}`}
                           feature={p}
                           projection={projection}
                           style={{ fill: "black" }}
@@ -170,7 +164,7 @@ const NfpCountries: NextPage<Props> = ({ nfps, neCountriesTopoJson }) => {
 };
 
 export const getStaticProps: GetStaticProps<Props> = async () => {
-  const nfps = getNfpCountries();
+  const nfps = await getNfpCountries();
   const neCountriesTopoJson = getCountries();
   const countries = await getCountryCodes();
   return {

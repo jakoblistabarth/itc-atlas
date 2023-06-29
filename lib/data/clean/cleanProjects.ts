@@ -5,6 +5,8 @@ import loadUnsdCountries from "../load/loadUnsdCountries";
 import * as aq from "arquero";
 import { ProjectPre2019Raw, ProjectPost2019Raw } from "../load/loadProjects";
 import { mapToDepartment } from "../../mappings/departments";
+import { mapToOrganizationGroup } from "../../mappings/organizationGroup";
+import mapToProjectStatus from "../../mappings/project.status";
 
 export type ProjectClean = Omit<ProjectMerged, "id"> & {
   id: number;
@@ -28,7 +30,7 @@ type ProjectMerged = {
   fundingOrganization: string;
   leadOrganization: string;
   leadDepartment: string;
-  otherDepartments: string[];
+  otherDepartments?: string[];
   countriesRegion: string;
   dateStart: string;
   dateEnd: string;
@@ -47,9 +49,11 @@ const cleanProjects = async ({
     .from(projectsPre2019)
     .derive({
       leadDepartment: (d: ProjectPre2019Raw) =>
-        aq.op.split(d["Division"], /, ?| ?\/ ?/, 10)[0],
-      otherDepartments: (d: ProjectPre2019Raw) =>
-        aq.op.split(d["Division"], /, ?| ?\/ ?/, 10).slice(1),
+        aq.op.split(d["Division"], /,\s?|\s?\/\s?/, 10)[0],
+      otherDepartments: aq.escape((d: ProjectPre2019Raw) => {
+        const list = aq.op.split(d["Division"], /,\s?|\s?\/\s?/, 10);
+        return aq.op.slice(list, 1, list.length);
+      }),
     })
     .rename({
       Project_ID: "id",
@@ -86,21 +90,27 @@ const cleanProjects = async ({
 
   const post2019 = aq
     .from(projectsPost2019)
+    .derive({
+      fundingOrganization: aq.escape((d: ProjectPost2019Raw) =>
+        mapToOrganizationGroup(d.Client_FundingAgency)
+      ),
+      leadOrganization: aq.escape((d: ProjectPost2019Raw) =>
+        mapToOrganizationGroup(d.LeadOrganisation)
+      ),
+    })
     .rename({
       projectName: "name",
       projectShortName: "projectShortName",
-      Client_FundingAgency: "fundingOrganization",
       CountriesRegion: "countriesregion",
       descriptionProject: "description",
       LeadDepartment: "leadDepartment",
-      LeadOrganisation: "leadOrganization",
       projectID: "id",
       projecttype: "type",
       Status: "status",
     })
     .derive({
       otherDepartments: (d: ProjectPost2019Raw) =>
-        aq.op.split(d.OtherDepartments, /,\s?/, null),
+        aq.op.split(d.OtherDepartments, /,\s?/, 10),
     });
 
   const merged = pre2019
@@ -120,12 +130,7 @@ const cleanProjects = async ({
         !row.dateEnd || row.dateEnd === "NULL" ? null : row.dateEnd
       ),
       status: aq.escape((row: ProjectMerged) => {
-        if (!row.status) return undefined;
-        if (!!row.status.match(/Finished|Completed|Finalized/g))
-          return "Finished";
-        if (!!row.status.match(/Proposal|Awaiting contract/g))
-          return "Proposed";
-        return "Ongoing";
+        return mapToProjectStatus(row.status);
       }),
       type: aq.escape((row: ProjectMerged) => {
         if (!row.type) return undefined;
@@ -137,18 +142,22 @@ const cleanProjects = async ({
       leadDepartment: aq.escape((row: ProjectMerged) =>
         mapToDepartment(row.leadDepartment)
       ),
-      otherDepartments: aq.escape((row: ProjectMerged) =>
-        Array.isArray(row.otherDepartments)
-          ? row.otherDepartments.map((d) => mapToDepartment(d))
-          : []
-      ),
       countriesRegion: aq.escape((row: ProjectMerged) =>
         mapCountries(row.countriesRegion)
       ),
     })
+    .derive({
+      otherDepartments: aq.escape((row: ProjectMerged) =>
+        Array.isArray(row.otherDepartments) && row.otherDepartments[0]
+          ? row.otherDepartments
+              .map((d) => mapToDepartment(d))
+              .filter((d) => d != row.leadDepartment)
+          : undefined
+      ),
+    })
     .filter(
       aq.escape(
-        (row: any) =>
+        (row: ProjectMerged) =>
           row.dateEnd === null ||
           new Date(row.dateStart) < new Date(row.dateEnd)
       )

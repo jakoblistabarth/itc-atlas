@@ -4,6 +4,7 @@ import { OrbitControls } from "@react-three/drei";
 import Globe from "../components/map-3d/Globe";
 
 import Flow3D from "../components/map-3d/Flow3D";
+import GlobeEnvironment from "../components/map-3d/GlobeEnvironment";
 
 const meta = {
   title: "Map Elements/Symbols/Flow3D",
@@ -29,6 +30,7 @@ const meta = {
             enablePan={false}
             maxPolarAngle={Math.PI / 2}
           />
+          <GlobeEnvironment />
           <Story />
         </Canvas>
       </div>

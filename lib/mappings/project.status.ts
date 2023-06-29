@@ -1,19 +1,18 @@
-import { ProjectStatus } from "../../types/Project";
+import { ProjectStatus } from "@prisma/client";
 
-type StatusMapping = { [key: string]: ProjectStatus };
-
-const type: StatusMapping = {
-  Rejected: ProjectStatus.Undone,
-  Awarded: ProjectStatus.Undone,
-  Finalized: ProjectStatus.Completed,
-  Complete: ProjectStatus.Completed,
-  Ongoing: ProjectStatus.Ongoing,
-  Finished: ProjectStatus.Completed,
-  "Proposal submitted": ProjectStatus.Undone,
-  Proposal: ProjectStatus.Undone,
-  Invitation: ProjectStatus.Undone,
-  "Awaiting contract": ProjectStatus.Undone,
-  "Tender submitted": ProjectStatus.Undone,
-  "LoI submitted": ProjectStatus.Undone,
-  Approved: ProjectStatus.Undone,
+const mapToProjectStatus = (string?: string) => {
+  if (!string) return undefined;
+  if (
+    string.match(
+      /EoI|LoI|MoU|Awarded|Proposal|Invitation|Awaiting|submitted|Call|Offer|attempt/g
+    )
+  )
+    return ProjectStatus.Proposed;
+  if (string.match(/Rejected|Withdrawn/g)) return ProjectStatus.Cancelled;
+  if (string.match(/Finalized|Completed|Finished/))
+    return ProjectStatus.Completed;
+  if (string.match(/Ongoing|Approved/)) return ProjectStatus.Ongoing;
+  return undefined;
 };
+
+export default mapToProjectStatus;

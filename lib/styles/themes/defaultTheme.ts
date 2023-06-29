@@ -2,10 +2,9 @@ import { MapTheme } from "../../../types/MapTheme";
 
 const lightgrey = "#f0f0f0";
 const darkgrey = "#dcdcdc";
-const red = "#f00";
 
 const defaultTheme: MapTheme = {
-  fontFamily: "Inter",
+  fontFamily: "InterVariable",
   hasOutline: true,
   hasShadow: false,
   background: { fill: lightgrey },
@@ -19,11 +18,6 @@ const defaultTheme: MapTheme = {
     strokeWidth: 1,
     fill: "black",
     fillOpacity: 0.1,
-  },
-  scaledPie: {
-    fillOpacity: 1,
-    stroke: lightgrey,
-    strokeWidth: 2,
   },
   flow: {
     stroke: "grey",

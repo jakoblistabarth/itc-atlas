@@ -1,26 +1,17 @@
-import { FC, SVGProps, useState } from "react";
+import { FC, SVGProps } from "react";
 import { Feature } from "geojson";
-import * as d3 from "d3";
-import defaultTheme from "../../lib/styles/themes/defaultTheme";
+import { geoPath, GeoProjection } from "d3";
 
 type Props = {
   feature: Feature;
-  projection: any;
+  projection: GeoProjection;
 } & Omit<SVGProps<SVGPathElement>, "d">;
 
 const PolygonSymbol: FC<Props> = ({ feature, projection, ...rest }) => {
-  const [hover, setHover] = useState(false);
-  const path = d3.geoPath(projection);
+  const path = geoPath(projection);
   const featurePath = path(feature);
   if (!featurePath) return <></>;
-  return (
-    <path
-      d={featurePath}
-      onMouseEnter={() => setHover(true)}
-      onMouseLeave={() => setHover(false)}
-      {...rest}
-    />
-  );
+  return <path d={featurePath} {...rest} />;
 };
 
 export default PolygonSymbol;

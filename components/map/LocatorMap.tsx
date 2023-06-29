@@ -1,7 +1,6 @@
 import * as d3 from "d3";
 import { FeatureCollection } from "geojson";
-import { nanoid } from "nanoid";
-import { FC } from "react";
+import { FC, useId } from "react";
 import { Vector2 } from "three";
 import * as topojson from "topojson-client";
 import getMapHeight from "../../lib/cartographic/getMapHeight";
@@ -11,22 +10,28 @@ import { NeCountriesTopoJson } from "../../types/NeTopoJson";
 import BaseLayer from "./BaseLayer";
 import PolygonSymbol from "./PolygonSymbol";
 import RoundMarker from "./RoundMarker";
+import RectangleMarker from "./RectangleMarker";
 
 type Props = {
   neCountriesTopoJson: NeCountriesTopoJson;
   highlight?: string[];
   theme?: MapTheme;
   width?: number;
-  markers?: (Omit<React.ComponentProps<typeof RoundMarker>, "position"> & {
+  roundMarkers?: (Omit<React.ComponentProps<typeof RoundMarker>, "position"> & {
     lat: number;
     lng: number;
   })[];
+  rectangleMarkers?: Omit<
+    React.ComponentProps<typeof RectangleMarker>,
+    "projection"
+  >[];
 };
 
 const LocatorMap: FC<Props> = ({
   neCountriesTopoJson,
   highlight,
-  markers,
+  roundMarkers,
+  rectangleMarkers,
   width = 300,
   theme = defaultTheme,
 }) => {
@@ -47,10 +52,14 @@ const LocatorMap: FC<Props> = ({
   };
   const centroid = d3.geoCentroid(highlightCountries);
   const rotation: [number, number] = [-centroid[0], -centroid[1]];
-
   const projection = d3.geoOrthographic().rotate(rotation);
   const shadowRadius = dimension.width / 30;
-  dimension.height = getMapHeight(dimension.width, projection, shadowRadius);
+  dimension.height = getMapHeight(dimension.width, projection, {
+    marginBottom: shadowRadius,
+  });
+
+  const outlineId = `outline-${useId()}`;
+  const shadowMaskId = `shadow-mask-${useId()}`;
 
   return (
     <>
@@ -68,29 +77,30 @@ const LocatorMap: FC<Props> = ({
           theme={theme}
         />
         <g>
-          {highlightCountries.features.map((feature) => (
+          {highlightCountries.features.map((feature, idx) => (
             <PolygonSymbol
-              key={nanoid()}
+              key={idx}
               feature={feature}
               projection={projection}
-              style={{ ...defaultTheme.choropleth, stroke: "black" }}
+              style={{ ...defaultTheme.choropleth, fill: "lightgray" }}
             />
           ))}
         </g>
         <defs>
-          <mask id="shadow-mask">
-            <use xlinkHref="#outline" fill="white"></use>
+          <circle id={outlineId} cx={width / 2} cy={width / 2} r={width / 2} />
+          <mask id={shadowMaskId}>
+            <use xlinkHref={`#${outlineId}`} fill="white" />
             <use
               transform={`translate(${dimension.width * -0.35}, ${
                 dimension.height * -0.5
               }) scale(1.4)`}
-              xlinkHref="#outline"
+              xlinkHref={`#${outlineId}`}
               fill="black"
-            ></use>
+            />
           </mask>
         </defs>
-        <g mask="url(#shadow-mask)">
-          <use xlinkHref="#outline" fill={"black"} fillOpacity={0.05} />
+        <g mask={`url(#${shadowMaskId})`}>
+          <use xlinkHref={`#${outlineId}`} fill={"black"} fillOpacity={0.05} />
         </g>
         {!highlight?.length && (
           <g>
@@ -110,8 +120,8 @@ const LocatorMap: FC<Props> = ({
             </text>
           </g>
         )}
-        {markers &&
-          markers?.map((d, idx) => {
+        {roundMarkers &&
+          roundMarkers?.map((d, idx) => {
             const p = projection([d.lng, d.lat]);
             return (
               p && (
@@ -121,6 +131,16 @@ const LocatorMap: FC<Props> = ({
                   {...d}
                 />
               )
+            );
+          })}
+        {rectangleMarkers &&
+          rectangleMarkers?.map((d, idx) => {
+            return (
+              <RectangleMarker
+                key={`marker-${idx}`}
+                projection={projection}
+                {...d}
+              />
             );
           })}
       </svg>

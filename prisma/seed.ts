@@ -17,6 +17,7 @@ import fakeApplications from "../lib/data/fake/fakeApplications";
 import fakePhds from "../lib/data/fake/fakePhds";
 import fakeEmployees from "../lib/data/fake/fakeEmployees";
 import fakeEmployments from "../lib/data/fake/fakeEmployments";
+import { createId } from "@paralleldrive/cuid2";
 
 async function main() {
   await resetDatabase();
@@ -105,8 +106,7 @@ async function main() {
             : undefined,
           departure: d.departure,
           arrival: d.arrival,
-          ref1: d.ref1,
-          ref2: d.ref2,
+          type: d.type,
           department: d.department
             ? {
                 connect: {
@@ -193,7 +193,7 @@ async function main() {
           gender: d.gender,
           itcStudentId: d.itcStudentId,
           countryId: country?.id,
-          dateOfBirth: d.dateOfBirth,
+          yearOfBirth: d.dateOfBirth?.getFullYear(),
         },
       };
       return await prisma.applicant.create(createArgs);
@@ -214,9 +214,9 @@ async function main() {
           level: d.level,
           statusId: d.statusId,
           examYear: d.examYear,
-          enrollmentStart: d.enrollmentStart,
-          enrollmentEnd: d.enrollmentEnd,
-          certificationDate: d.certificationDate,
+          enrollmentStartYear: d.enrollmentStart?.getFullYear(),
+          enrollmentEndYear: d.enrollmentEnd?.getFullYear(),
+          certificationYear: d.certificationDate?.getFullYear(),
           sponsor: d.sponsor,
           certificateType: d.certificateType,
         },
@@ -235,33 +235,33 @@ async function main() {
   const phds = await fakePhds(applicants);
 
   await Promise.all(
-    phds.map(async (d, idx) => {
+    phds.map(async (d) => {
       const itcStudentId = itcIdsInApplicants
         .map((d) => d.itcStudentId)
-        .includes(d.itcStudentId)
+        .includes(d.itcStudentId ?? null)
         ? d.itcStudentId
-        : null;
+        : undefined;
 
       const country = countriesDB.find((c) => c.isoAlpha3 === d.country);
 
-      const createArgs: Prisma.PhdCandidateCreateArgs = {
+      const createArgs: Prisma.PhdCreateArgs = {
         data: {
-          id: idx,
+          id: createId(),
           itcStudentId: itcStudentId,
           departmentMainId: d.department1,
           departmentSecondaryId: d.department2,
           thesisTitle: d.thesisTitle,
           statusId: d.status,
-          start: d.dateStart,
-          graduation: d.dateGraduation,
+          startYear: d.dateStart?.getFullYear(),
+          graduationYear: d.dateGraduation?.getFullYear(),
           promotionYear: d.yearPromotion,
           countryId: country?.id,
         },
       };
-      return await prisma.phdCandidate.create(createArgs);
+      return await prisma.phd.create(createArgs);
     })
   );
-  console.log("Seeded model PhdCandidate. 🌱");
+  console.log("Seeded model Phd. 🌱");
 
   const employees = await fakeEmployees(applicants);
 
@@ -274,7 +274,7 @@ async function main() {
         data: {
           id: d.mId,
           applicantId: d.applicantId,
-          dateOfBirth: d.dateOfBirth,
+          yearOfBirth: d.dateOfBirth?.getFullYear(),
           countryId: country?.id,
         },
       };
@@ -286,7 +286,7 @@ async function main() {
   const employments = await fakeEmployments(employees);
 
   await Promise.all(
-    employments.map(async (d, idx) => {
+    employments.map(async (d) => {
       const department = d.department
         ? await prisma.department.findFirst({
             select: { id: true },
@@ -301,10 +301,11 @@ async function main() {
       // TODO: add unit end?
       const createArgs: Prisma.EmploymentCreateArgs = {
         data: {
-          id: idx,
+          id: createId(),
           employeeId: d.mId,
-          start: d.employmentStart,
-          end: d.employmentEnd,
+          startYear: d.startYear,
+          endYear: d.endYear,
+          employedDays: d.employedDays,
           departmentId: department?.id,
         },
       };

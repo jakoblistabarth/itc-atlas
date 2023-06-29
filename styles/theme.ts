@@ -9,11 +9,11 @@ export const theme: Theme = {
     background: "#fff",
     primary: itc_green,
     secondary: itc_blue,
-    muted: "rgb(240, 255, 255)",
+    muted: "rgb(235, 255, 255)",
   },
   fonts: {
-    body: '"Inter", system-ui, sans-serif',
-    heading: '"Fraunces", serif',
+    body: '"InterVariable", system-ui, sans-serif',
+    heading: '"FrauncesVariable", serif',
     monospace: "Menlo, monospace",
   },
   fontSizes: [10, 14, 16, 20, 24, 32, 48, 64],
@@ -38,15 +38,20 @@ export const theme: Theme = {
   text: {
     heading: {
       mb: 2,
+      "p + &": {
+        mt: 4,
+      },
     },
     teaser: {
-      fontFamily: "Fraunces",
-      fontSize: 3,
+      fontFamily: "heading",
+      fontSize: 4,
       fontStyle: "italic",
+      fontWeight: 1,
     },
     paragraph: {
       mt: 2,
       maxWidth: "40em",
+      textAlign: "justify",
     },
   },
   layout: {
@@ -54,6 +59,9 @@ export const theme: Theme = {
       pt: 5,
     },
     section: {
+      my: 4,
+    },
+    inlineMap: {
       my: 4,
     },
     canvasStage: {
@@ -70,6 +78,22 @@ export const theme: Theme = {
       gridGap: 3,
       mt: 2,
       mb: 4,
+    },
+  },
+  buttons: {
+    primary: {
+      cursor: "pointer",
+      borderRadius: 2,
+    },
+    muted: {
+      cursor: "pointer",
+      borderRadius: 2,
+      p: 2,
+      background: "none",
+      color: "text",
+      "&:hover": {
+        background: "muted",
+      },
     },
   },
   cards: {

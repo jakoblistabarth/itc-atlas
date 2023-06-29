@@ -2,8 +2,7 @@
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
 generator client {
-  provider        = "prisma-client-js"
-  previewFeatures = ["filteredRelationCount"]
+  provider = "prisma-client-js"
 }
 
 datasource db {
@@ -12,36 +11,36 @@ datasource db {
 }
 
 model Department {
-  id                     String         @id
-  name                   String
-  number                 Int?           @unique
-  phdCandidatesMain      PhdCandidate[] @relation("DepartmentPhdMain")
-  phdCandidatesSecondary PhdCandidate[] @relation("DepartmentPhdSecondary")
-  employments            Employment[]   @relation("DepartmentEmployment")
-  projectMain            Project[]      @relation("DepartmentProjectMain")
-  projectsSecondary      Project[]
-  btors                  Btor[]         @relation("BtorsDepartment")
-  flights2019            Flight2019[]   @relation("Flight2019Department")
+  id                String       @id
+  name              String
+  number            Int?         @unique
+  phdsMain          Phd[]        @relation("DepartmentPhdMain")
+  phdsSecondary     Phd[]        @relation("DepartmentPhdSecondary")
+  employments       Employment[] @relation("DepartmentEmployment")
+  projectMain       Project[]    @relation("DepartmentProjectMain")
+  projectsSecondary Project[]
+  btors             Btor[]       @relation("BtorsDepartment")
+  flights2019       Flight2019[] @relation("Flight2019Department")
 }
 
 model Status {
-  id            String         @id
-  label         String
-  applications  Application[]  @relation("StatusApplication")
-  phdCandidates PhdCandidate[] @relation("StatusPhdCandidate")
+  id           String        @id
+  label        String
+  applications Application[] @relation("StatusApplication")
+  phds         Phd[]         @relation("StatusPhd")
 }
 
 //TODO: add city
 model Applicant {
-  id           String         @id
-  itcStudentId String?        @unique
+  id           String        @id
+  itcStudentId String?       @unique
   gender       String?
-  dateOfBirth  DateTime?      @db.Date
+  yearOfBirth  Int?
   countryId    Int?
-  country      Country?       @relation("ApplicantNationality", fields: [countryId], references: [id])
-  phds         PhdCandidate[] @relation("ApplicantPhd")
-  employees    Employee[]     @relation("ApplicantEmployee")
-  applications Application[]  @relation("ApplicantApplication")
+  country      Country?      @relation("ApplicantNationality", fields: [countryId], references: [id])
+  phds         Phd[]         @relation("ApplicantPhd")
+  employees    Employee[]    @relation("ApplicantEmployee")
+  applications Application[] @relation("ApplicantApplication")
 }
 
 // TODO: add model programms
@@ -49,24 +48,25 @@ model Applicant {
 
 // TODO: add programm relation to application
 model Application {
-  id                String    @id
-  applicantId       String
-  applicant         Applicant @relation("ApplicantApplication", fields: [applicantId], references: [id])
-  courseId          String
-  programmId        String?
-  level             String?
-  statusId          String
-  status            Status    @relation("StatusApplication", fields: [statusId], references: [id])
-  examYear          Int?
-  enrollmentStart   DateTime? @db.Date
-  enrollmentEnd     DateTime? @db.Date
-  certificationDate DateTime? @db.Date
-  sponsor           String?
-  certificateType   String?
+  id                  String    @id
+  applicantId         String
+  applicant           Applicant @relation("ApplicantApplication", fields: [applicantId], references: [id])
+  courseId            String
+  programmId          String?
+  level               String?
+  statusId            String
+  status              Status    @relation("StatusApplication", fields: [statusId], references: [id])
+  examYear            Int?
+  enrollmentStartYear Int?
+  enrollmentEndYear   Int?
+  enrolledDays        Int?
+  certificationYear   Int?
+  sponsor             String?
+  certificateType     String?
 }
 
-model PhdCandidate {
-  id                    Int         @id @default(autoincrement())
+model Phd {
+  id                    String      @id
   itcStudentId          String?
   applicant             Applicant?  @relation("ApplicantPhd", fields: [itcStudentId], references: [itcStudentId])
   departmentMainId      String?
@@ -74,54 +74,55 @@ model PhdCandidate {
   departmentSecondaryId String?
   departmentSecondary   Department? @relation("DepartmentPhdSecondary", fields: [departmentSecondaryId], references: [id])
   thesisTitle           String?
-  start                 DateTime?   @db.Date
-  graduation            DateTime?   @db.Date
+  startYear             Int?
+  graduationYear        Int?
   promotionYear         Int?
   statusId              String?
-  status                Status?     @relation("StatusPhdCandidate", fields: [statusId], references: [id])
+  status                Status?     @relation("StatusPhd", fields: [statusId], references: [id])
   countryId             Int?
   country               Country?    @relation("PhdCountry", fields: [countryId], references: [id])
 }
 
 model Employee {
-  id          Int          @id
+  id          String       @id
   applicantId String?
   applicant   Applicant?   @relation("ApplicantEmployee", fields: [applicantId], references: [id])
-  dateOfBirth DateTime?    @db.Date
+  yearOfBirth Int?
   countryId   Int?
   country     Country?     @relation("EmployeeCountry", fields: [countryId], references: [id])
   employment  Employment[]
 }
 
 model Employment {
-  id           Int         @id
-  start        DateTime?   @db.Date
-  end          DateTime?   @db.Date
-  employeeId   Int
+  id           String      @id
+  startYear    Int?
+  endYear      Int?
+  employedDays Int?
+  employeeId   String
   employee     Employee    @relation(fields: [employeeId], references: [id])
   departmentId String?
   department   Department? @relation("DepartmentEmployment", fields: [departmentId], references: [id])
 }
 
 model Country {
-  id                       Int            @id @default(autoincrement())
-  isoAlpha2                String         @db.Char(2)
-  isoAlpha3                String         @db.Char(3)
-  isoNum3                  String?        @db.Char(3)
+  id                       Int          @id @default(autoincrement())
+  isoAlpha2                String       @db.Char(2)
+  isoAlpha3                String       @db.Char(3)
+  isoNum3                  String?      @db.Char(3)
   nameEn                   String?
-  nameLongEn               String         @db.Text
-  unRegionCode             String         @db.Char(3)
-  unSubRegionCode          String         @db.Char(3)
-  unIntermediateRegionCode String?        @db.Char(3)
+  nameLongEn               String       @db.Text
+  unRegionCode             String       @db.Char(3)
+  unSubRegionCode          String       @db.Char(3)
+  unIntermediateRegionCode String?      @db.Char(3)
   ldc                      Boolean
   lldc                     Boolean
   sids                     Boolean
-  phdCandidates            PhdCandidate[] @relation("PhdCountry")
-  applicants               Applicant[]    @relation("ApplicantNationality")
-  employees                Employee[]     @relation("EmployeeCountry")
+  phds                     Phd[]        @relation("PhdCountry")
+  applicants               Applicant[]  @relation("ApplicantNationality")
+  employees                Employee[]   @relation("EmployeeCountry")
   projects                 Project[]
   btors                    Btor[]
-  flights2019              Flight2019[]   @relation("Flight2019Country")
+  flights2019              Flight2019[] @relation("Flight2019Country")
 }
 
 model Project {
@@ -149,10 +150,10 @@ enum ProjectType {
 }
 
 enum ProjectStatus {
-  Finished
+  Completed
   Ongoing
+  Cancelled
   Proposed
-  Rejected
 }
 
 model Btor {
@@ -180,15 +181,20 @@ enum PurposeOfTravel {
 }
 
 model Flight2019 {
-  id           Int         @id @default(autoincrement())
-  departure    DateTime?   @db.Date
-  arrival      DateTime?   @db.Date
-  ref1         String? //TODO: ref1 is the OFI no.? 3rd digit -> external/internal, digit 4-5 -> department
-  ref2         String? //TODO: ref2 courseNo?
+  id           Int             @id @default(autoincrement())
+  departure    DateTime?       @db.Date
+  arrival      DateTime?       @db.Date
+  type         Flight2019Type?
   emissions    Float
   airportCodes String[]
   countryId    Int?
   departmentId String?
-  department   Department? @relation("Flight2019Department", fields: [departmentId], references: [id])
-  country      Country?    @relation("Flight2019Country", fields: [countryId], references: [id])
+  department   Department?     @relation("Flight2019Department", fields: [departmentId], references: [id])
+  country      Country?        @relation("Flight2019Country", fields: [countryId], references: [id])
+}
+
+enum Flight2019Type {
+  ProjectRelated
+  NonProjectRelated
+  StudentPhdRelated
 }

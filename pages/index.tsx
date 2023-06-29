@@ -3,7 +3,6 @@
 import type { NextPage } from "next";
 import Footer from "../components/Footer";
 import { Box, Container, Heading, Paragraph, Text } from "theme-ui";
-import { nanoid } from "nanoid";
 import Building, { ITClocations } from "../components/Building";
 import { Group } from "@visx/group";
 import useMeasure from "react-use-measure";
@@ -14,11 +13,6 @@ import Header from "../components/Header";
 
 const Home: NextPage = () => {
   const links = [
-    {
-      href: "/travels",
-      children: "Travels",
-      description: "Insights into ITC's travels around the globe.",
-    },
     {
       href: "/btors",
       children: "Back to Office Reports",
@@ -42,12 +36,22 @@ const Home: NextPage = () => {
     {
       href: "/employees",
       children: "Employees",
-      description: "Insights into ITC's staff composition.",
+      description: "Insights into ITC's employee composition.",
+    },
+    {
+      href: "/employments",
+      children: "Employments",
+      description: "Insights into ITC's emplpoyments.",
     },
     {
       href: "/applicants",
       children: "Applicants",
       description: "ITC's applicants.",
+    },
+    {
+      href: "/applications",
+      children: "Applications",
+      description: "ITC's applications.",
     },
     {
       href: "/phds",
@@ -142,8 +146,8 @@ const Home: NextPage = () => {
                 gridGap: 2,
               }}
             >
-              {links.map((l) => (
-                <Link key={nanoid()} href={l.href}>
+              {links.map((l, idx) => (
+                <Link key={idx} href={l.href}>
                   {l.children}
                 </Link>
               ))}

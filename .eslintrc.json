@@ -1,3 +1,12 @@
 {
-  "extends": ["next/core-web-vitals", "plugin:storybook/recommended"]
+  "plugins": ["@typescript-eslint"],
+  "extends": [
+    "next/core-web-vitals",
+    "plugin:storybook/recommended",
+    "plugin:@typescript-eslint/recommended",
+    "eslint-config-prettier"
+  ],
+  "rules": {
+    "import/newline-after-import": ["warn", { "count": 1 }]
+  }
 }

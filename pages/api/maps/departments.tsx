@@ -1,6 +1,5 @@
 import * as d3 from "d3";
 import { geoInterruptedMollweide } from "d3-geo-projection";
-import { nanoid } from "nanoid";
 import type { NextApiRequest, NextApiResponse } from "next";
 import ReactDOMServer from "react-dom/server";
 import { Vector2 } from "three";
@@ -13,12 +12,32 @@ import NominalLegend from "../../../components/map/NominalLegend";
 import ScaledPie from "../../../components/map/ScaledPie";
 import { setMapBounds } from "../../../lib/cartographic/getMapHeight";
 import getCountries from "../../../lib/data/getCountries";
-import getPhdCandidatesByCountryByDepartment from "../../../lib/data/queries/phdCandidate/getPhdCandidatesByCountryByDepartment";
+import getPhdsByCountryByDepartment from "../../../lib/data/queries/phd/getPhdsByCountryByDepartment";
 import { departmentColorScale } from "../../../lib/styles/departmentColorScale";
 import themes, { ThemeNames } from "../../../lib/styles/themes";
 import defaultTheme from "../../../lib/styles/themes/defaultTheme";
 import { MapOptions } from "../../../types/MapOptions";
 
+/**
+ * @swagger
+ * /api/maps/departments:
+ *   get:
+ *     summary: 2D map on PhD's country of origin per departments.
+ *     description: Returns a 2D proportional symbol map showing the country of origin for all PhD's grouped by departments.
+ *     tags:
+ *        - SVG
+ *     parameters:
+ *        - in: query
+ *          name: theme
+ *          type: string
+ *          example: ETH
+ *          deprecated: true
+ *     responses:
+ *       200:
+ *         description: response success
+ *       400:
+ *         description: bad request
+ */
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
@@ -29,7 +48,7 @@ export default async function handler(
     res.status(400).json({ error: "invalid theme name" });
   }
   const neCountriesTopoJson = getCountries();
-  const data = await getPhdCandidatesByCountryByDepartment();
+  const data = await getPhdsByCountryByDepartment();
 
   const min = d3.min(data.map((d) => d.totalCount)) ?? 0;
   const max = d3.max(data.map((d) => d.totalCount)) ?? 1;
@@ -65,7 +84,7 @@ export default async function handler(
     >
       <MapLayoutHeader
         bounds={mapOptions.bounds}
-        title={"PhD candidates"}
+        title={"PhDs"}
         subtitle={"by ITC department"}
         theme={theme}
       />
@@ -82,12 +101,12 @@ export default async function handler(
             const position = xy ? new Vector2(xy[0], xy[1]) : new Vector2();
             return (
               <ScaledPie
-                key={nanoid()}
+                key={d.isoAlpha3}
                 position={position}
                 radius={scale(d.totalCount)}
-                color={departmentColorScale}
+                colorScale={departmentColorScale}
                 data={d.departments}
-                style={theme?.scaledPie}
+                stroke="lightgrey"
               />
             );
           })}

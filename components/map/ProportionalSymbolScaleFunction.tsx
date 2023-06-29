@@ -1,6 +1,5 @@
 import { FC } from "react";
 import { line, bin, range, min, max, scaleLinear, ScalePower } from "d3";
-import { nanoid } from "nanoid";
 
 const ProportionalSymbolScaleFunction: FC<{
   data: number[];
@@ -36,7 +35,7 @@ const ProportionalSymbolScaleFunction: FC<{
       <g id="histogram-bins">
         {buckets.map((bucket) => (
           <rect
-            key={nanoid()}
+            key={`${bucket.x0}-${bucket.x1}`}
             fill="lightgrey"
             x={xScale(bucket.x0 || 0) + 1}
             y={yScale(bucket.length)}
@@ -73,7 +72,7 @@ const ProportionalSymbolScaleFunction: FC<{
         />
         {[minData, maxData].map((val, idx) => (
           <text
-            key={nanoid()}
+            key={`${val}-${idx}`}
             x={xScale(val)}
             y={scaleRadius(maxData) + 10}
             textAnchor={idx < 1 ? "start" : "end"}

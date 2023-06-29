@@ -2,6 +2,19 @@ import type { NextApiRequest, NextApiResponse } from "next";
 import getPopulatedPlaces from "../../../../lib/data/getPopulatedPlaces";
 import { NePopulatedPlaces } from "../../../../types/NeTopoJson";
 
+/**
+ * @swagger
+ * /api/data/geo/populatedPlaces:
+ *   get:
+ *     description: Returns geo-populatedPlaces json, "scale" is the query parameter, please specify the scale
+ *     parameters:
+ *        - in: query
+ *          name: scale
+ *          type: string
+ *     responses:
+ *       200:
+ *         description: response success
+ */
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse<NePopulatedPlaces | { error: string }>

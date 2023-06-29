@@ -8,7 +8,7 @@ import type { Topology, Objects } from "topojson-specification";
  * @returns A simplified topojson as {@link Topology}
  */
 const simplifyTopology = (
-  topology: Topology<Objects<{}>>,
+  topology: Topology<Objects>,
   weight: number
 ): Topology => {
   const pre = presimplify(topology);

@@ -1,5 +1,4 @@
 import { Meta, StoryObj } from "@storybook/react";
-
 import Button from "../components/Button";
 
 const meta = {
@@ -11,7 +10,6 @@ type Story = StoryObj<typeof meta>;
 
 export const DefaultButton: Story = {
   args: {
-    outline: false,
     children: "Default Text",
   },
 };

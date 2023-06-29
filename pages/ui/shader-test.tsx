@@ -8,9 +8,8 @@ import BlockDiagramMarker from "../../components/map-3d/BlockDiagramMarker";
 import useSWR from "swr";
 import BasePage from "../../components/BasePage";
 import { Box, Heading, Text } from "theme-ui";
+
 const ShaderTest: NextPage = () => {
-  // TODO: get segements and side with custom hook from fetched data?
-  //const segments = 1000;
   const side = 4;
   const sur = useSWR("/api/data/elevation/Paramaribo");
   const aut = useSWR("/api/data/elevation/Grossglockner");
@@ -21,16 +20,16 @@ const ShaderTest: NextPage = () => {
       <Box variant="layout.canvasStage" sx={{ height: "500px" }}>
         <Canvas orthographic camera={{ zoom: 100 }}>
           {sur.data && (
-          <>
-            <BlockDiagram
-              name="par"
-              side={side}
-              yScale={0.01}
-              zOffset={0.01}
-              segments={Math.sqrt(Float32Array.from(sur.data.elevation).length)-1}
-              data={Float32Array.from(sur.data.elevation)}
-            />
-            <BlockDiagramMarker
+            <>
+              <BlockDiagram
+                name="par"
+                side={side}
+                yScale={0.001}
+                zOffset={0.1}
+                segments={Math.sqrt(sur.data.elevation.length) - 1}
+                data={Float32Array.from(sur.data.elevation)}
+              />
+              <BlockDiagramMarker
                 name="sur"
                 latitude={5.920616894}
                 longitude={-55.2499057923}
@@ -50,7 +49,7 @@ const ShaderTest: NextPage = () => {
                 height={sur.data.elevation}
                 bBox={sur.data.bBox}
               />
-          </>
+            </>
           )}
           <OrbitControls enablePan />
         </Canvas>
@@ -64,15 +63,17 @@ const ShaderTest: NextPage = () => {
         <Canvas orthographic camera={{ zoom: 100 }}>
           {aut.data && (
             <>
-            <BlockDiagram
-              name="blo"
-              side={side}
-              yScale={0.0002}
-              zOffset={0.25}
-              segments={Math.sqrt(Float32Array.from(aut.data.elevation).length)-1}
-              data={Float32Array.from(aut.data.elevation)}
-            />
-            <BlockDiagramMarker
+              <BlockDiagram
+                name="blo"
+                side={side}
+                yScale={0.0002}
+                zOffset={0.25}
+                segments={
+                  Math.sqrt(Float32Array.from(aut.data.elevation).length) - 1
+                }
+                data={Float32Array.from(aut.data.elevation)}
+              />
+              <BlockDiagramMarker
                 name="aus"
                 latitude={47.0725357}
                 longitude={12.7909824}

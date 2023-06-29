@@ -2,15 +2,11 @@ import type { NextPage } from "next";
 import Head from "next/head";
 import Footer from "../../components/Footer";
 import { Container, Heading, Grid, Text } from "theme-ui";
-import SummaryTable from "../../components/SummaryTable";
-import useSWR from "swr";
 import { useRouter } from "next/router";
 import CardLink from "../../components/CardLink";
-import * as aq from "arquero";
 
-const ApplicantsOverview: NextPage = () => {
+const Page: NextPage = () => {
   const { route } = useRouter();
-  const { data, error, isLoading } = useSWR("/api/data/applicant/");
 
   return (
     <>
@@ -22,18 +18,14 @@ const ApplicantsOverview: NextPage = () => {
 
       <Container>
         <main>
-          <Heading as="h1">ITC&apos;s applications</Heading>
+          <Heading as="h1">ITC&apos;s applicants</Heading>
           <Text variant="teaser">Insights into ITC&apos;s applicants.</Text>
 
           <Grid variant="navigation">
             <CardLink href={`${route}/origin-country`}>
-              <Heading as="h2">Origin by Country</Heading>
+              <Heading as="h2">Alumni by country</Heading>
             </CardLink>
           </Grid>
-
-          {error && <div>failed to load</div>}
-          {isLoading && <div>Loading …</div>}
-          {!isLoading && !error && <SummaryTable data={aq.from(data)} />}
         </main>
       </Container>
 
@@ -42,4 +34,4 @@ const ApplicantsOverview: NextPage = () => {
   );
 };
 
-export default ApplicantsOverview;
+export default Page;

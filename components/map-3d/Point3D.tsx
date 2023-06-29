@@ -24,7 +24,7 @@ const Point3D: FC<{
       position={pos}
       castShadow
     >
-      <sphereBufferGeometry args={[radius]} />
+      <sphereGeometry args={[radius]} />
       <meshStandardMaterial color={hover ? "red" : "black"} />
     </animated.mesh>
   );

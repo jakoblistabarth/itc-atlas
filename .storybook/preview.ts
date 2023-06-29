@@ -2,8 +2,8 @@ import { ThemeProvider } from "theme-ui";
 import { withThemeFromJSXProvider } from "@storybook/addon-styling";
 import { theme } from "../styles/theme";
 import ITCAtlasTheme from "./ITCAtlasTheme";
-import "@fontsource/fraunces";
-import "@fontsource/inter";
+import "@fontsource/fraunces/variable.css";
+import "@fontsource/inter/variable.css";
 
 export const decorators = [
   //TODO: add switcher for theme-ui color modes

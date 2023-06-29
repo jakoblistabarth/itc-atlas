@@ -1,5 +1,5 @@
 export type EmployeeClean = {
-  mId: number;
+  mId: string;
   dateOfBirth?: Date;
   gender: string;
   nationality?: string;

@@ -17,7 +17,7 @@ const meta = {
       { value: 10, label: "B" },
       { value: 2, label: "C" },
     ],
-    color: scaleOrdinal<string, string>()
+    colorScale: scaleOrdinal<string, string>()
       .domain(["A", "B", "C"])
       .range(["orange", "red", "skyblue"]),
     position: new Vector2(width / 2, height / 2),
@@ -41,5 +41,5 @@ type Story = StoryObj<typeof meta>;
 export const DefaultScaledPie: Story = {};
 
 export const WithBlackOutline: Story = {
-  args: { style: { stroke: "black", strokeWidth: 2 } },
+  args: { stroke: "black", strokeWidth: 2 },
 };

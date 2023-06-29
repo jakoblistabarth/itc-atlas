@@ -1,5 +1,6 @@
-import xlsx from "xlsx";
 import cleanBTORs from "../clean/cleanBTORs";
+import sheetToJson from "../sheetToJson";
+import workbookFromXlsx from "../workbookFromXlsx";
 
 export type BtorRaw = {
   Year: number;
@@ -16,12 +17,8 @@ export type BtorRaw = {
 
 export default async function loadBtors() {
   const filePath = "./data/itc/BACKTOOFFICEREPORTS.xlsx";
-  const file = xlsx.readFile(filePath, {
-    cellDates: true,
-  });
-  const data = xlsx.utils.sheet_to_json(file.Sheets[file.SheetNames[0]], {
-    defval: null,
-  }) as BtorRaw[];
+  const workbook = await workbookFromXlsx(filePath);
+  const data = sheetToJson<BtorRaw[]>(workbook.worksheets[0]);
 
   return await cleanBTORs(data);
 }

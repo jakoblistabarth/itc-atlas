@@ -6,7 +6,6 @@ import { DefaultEventPeriod } from "./EventPeriod.stories";
 import { DefaultTimelineGrid } from "./TimelineGrid.stories";
 import EventPoint from "../components/charts/timeline/EventPoint";
 import EventPeriod from "../components/charts/timeline/EventPeriod";
-import { nanoid } from "nanoid";
 import { scaleTime } from "d3";
 import { timelineSetup } from "./lib/timelineSetup";
 
@@ -54,9 +53,9 @@ const TimelineTemplate: Story = {
     <Timeline {...args}>
       {args.grid && <TimelineGrid {...args.grid} />}
       {args.points &&
-        args.points.map((args) => <EventPoint key={nanoid()} {...args} />)}
+        args.points.map((args, idx) => <EventPoint key={idx} {...args} />)}
       {args.periods &&
-        args.periods.map((args) => <EventPeriod key={nanoid()} {...args} />)}
+        args.periods.map((args, idx) => <EventPeriod key={idx} {...args} />)}
     </Timeline>
   ),
 };

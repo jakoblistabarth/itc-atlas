@@ -6,7 +6,7 @@ import { Node, extend } from "@react-three/fiber";
 interface CustomLayerProps extends LayerProps {
   sideHalf?: number;
   zOffset?: number;
-  yScale?:number;
+  yScale?: number;
 }
 
 class CustomLayer extends Abstract {
@@ -15,9 +15,9 @@ class CustomLayer extends Abstract {
   // Assign them their default value.
   // Any uniforms here will automatically be set as properties on the class as setters and getters.
   // There are setters and getters will update the underlying uniforms.
-  static u_sideHalf=0.0;
-  static u_zOffset=0.0;
-  static u_yScale=0.0;
+  static u_sideHalf = 0.0;
+  static u_zOffset = 0.0;
+  static u_yScale = 0.0;
 
   // Define your fragment shader just like you already do!
   // Only difference is, you must return the final color of this layer
@@ -111,19 +111,19 @@ class CustomLayer extends Abstract {
   }
 }
 
-declare global {
-  namespace JSX {
-    interface IntrinsicElements {
-      customLayer_: Node<CustomLayer, typeof CustomLayer>;
-    }
+extend({ CustomLayer });
+
+declare module "@react-three/fiber" {
+  interface ThreeElements {
+    customLayer: Node<CustomLayer, typeof CustomLayer>;
   }
 }
 
-extend({ CustomLayer_: CustomLayer });
-
-const CustomLayerComponent = forwardRef<CustomLayer, CustomLayerProps>((props, ref) => {
-  return <customLayer_ ref={ref} {...props} />;
-}) as React.ForwardRefExoticComponent<
+const CustomLayerComponent = forwardRef<CustomLayer, CustomLayerProps>(
+  function CustomLayerComponent(props, ref) {
+    return <customLayer ref={ref} {...props} />;
+  }
+) as React.ForwardRefExoticComponent<
   CustomLayerProps & React.RefAttributes<CustomLayer>
 >;
 

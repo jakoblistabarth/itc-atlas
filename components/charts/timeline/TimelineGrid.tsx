@@ -1,7 +1,6 @@
 import type { FC } from "react";
 import { fDateYear } from "../../../lib/utilities/formaters";
 import type { ScaleTime } from "d3-scale";
-import { nanoid } from "nanoid";
 import PointLabel from "../../map/PointLabel";
 import { Vector2 } from "three";
 import { LabelPlacement } from "../../../types/LabelPlacement";
@@ -16,7 +15,7 @@ const TimelineGrid: FC<Props> = ({ scale, height, margin = 0 }) => {
   return (
     <g>
       {scale.ticks().map((tick) => (
-        <g key={nanoid()}>
+        <g key={tick.getTime()}>
           <line
             x1={scale(tick)}
             x2={scale(tick)}

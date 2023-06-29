@@ -1,13 +1,8 @@
 import { FC, useEffect, useRef } from "react";
-import {
-  BackSide,
-  BufferAttribute,
-  Mesh,
-  PlaneGeometry,
-  TextureLoader 
-} from "three";
+import { BackSide, BufferAttribute, PlaneGeometry, TextureLoader } from "three";
 import CustomLayer from "./CustomLayer";
-import { LayerMaterial,Color,Depth,Texture } from "lamina";
+import { LayerMaterial, Texture } from "lamina";
+
 type Props = {
   name: string;
   side: number;
@@ -29,13 +24,14 @@ const BlockDiagram: FC<Props> = ({
   useEffect(() => {
     geomRef.current?.setAttribute("displacement", new BufferAttribute(data, 1));
   });
-  var texture=new TextureLoader().load("/images/"+name+".png");
+  const texture = new TextureLoader().load("/images/" + name + ".png");
   return (
     <>
       <mesh rotation={[-Math.PI / 2, 0, 0]}>
         <planeGeometry ref={geomRef} args={[side, side, segments, segments]} />
-        <LayerMaterial><CustomLayer sideHalf={sideHalf} zOffset={zOffset} yScale={yScale}/>
-        <Texture map={texture}/>
+        <LayerMaterial>
+          <CustomLayer sideHalf={sideHalf} zOffset={zOffset} yScale={yScale} />
+          <Texture map={texture} />
         </LayerMaterial>
       </mesh>
       <mesh rotation={[-Math.PI / 2, 0, 0]}>
@@ -44,7 +40,5 @@ const BlockDiagram: FC<Props> = ({
       </mesh>
     </>
   );
-
-
 };
 export default BlockDiagram;

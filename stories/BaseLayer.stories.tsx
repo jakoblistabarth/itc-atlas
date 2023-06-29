@@ -1,23 +1,18 @@
 import { Meta, StoryObj } from "@storybook/react";
 import { geoBertin1953 } from "d3-geo-projection";
 import BaseLayer from "../components/map/BaseLayer";
-import MapLayout from "../components/map/layout/MapLayout";
-import MapLayoutBody from "../components/map/layout/MapLayoutBody";
 import getCountries from "../lib/data/getCountries";
 import getLakes from "../lib/data/getLakes";
 import getRivers from "../lib/data/getRivers";
 import themes from "../lib/styles/themes";
 import projections, { getProjectionNames } from "./lib/getProjections";
+import getMapHeight from "../lib/cartographic/getMapHeight";
 
 const countries = getCountries();
+const countriesDetailed = getCountries("10m");
 const lakes = getLakes();
 const rivers = getRivers();
-const defaultArgs = {
-  bounds: {
-    width: 1000,
-  },
-  projection: geoBertin1953(),
-};
+const width = 1000;
 
 const meta = {
   title: "Map Layers/BaseLayer",
@@ -34,6 +29,11 @@ const meta = {
         type: "select",
       },
     },
+    countries: {
+      table: {
+        disable: true,
+      },
+    },
     projection: {
       options: getProjectionNames(),
       mapping: projections,
@@ -42,18 +42,15 @@ const meta = {
       },
     },
   },
-  decorators: [
-    (Story) => (
-      <MapLayout
-        projection={defaultArgs.projection}
-        bounds={defaultArgs.bounds}
-      >
-        <MapLayoutBody bounds={defaultArgs.bounds}>
-          <Story />
-        </MapLayoutBody>
-      </MapLayout>
-    ),
-  ],
+  render: (args) => {
+    const projection = args.projection ?? geoBertin1953();
+    const height = getMapHeight(width, projection);
+    return (
+      <svg width={width} height={height}>
+        <BaseLayer {...{ ...args, projection }} />
+      </svg>
+    );
+  },
 } satisfies Meta<typeof BaseLayer>;
 export default meta;
 type Story = StoryObj<typeof meta>;
@@ -65,6 +62,15 @@ export const Elaborate: Story = {
     lakes: lakes,
     rivers: rivers,
     drawGraticuleLabels: true,
+    drawOutline: true,
+  },
+};
+
+export const Detailed: Story = {
+  args: {
+    countries: countriesDetailed,
+    lakes: lakes,
+    rivers: rivers,
     drawOutline: true,
   },
 };

@@ -1,6 +1,6 @@
 import * as d3 from "d3";
 import { geoPath, GeoSphere, GeoProjection } from "d3-geo";
-import type { FC } from "react";
+import { FC, useId } from "react";
 import * as topojson from "topojson-client";
 import type {
   MultiPolygon as MultiPolygonT,
@@ -11,7 +11,6 @@ import GraticuleLabelLayer from "./GraticuleLabelLayer";
 import geoCirclesLat from "../../lib/cartographic/geoCirclesLat";
 import ShadowLayer from "./ShadowLayer";
 import BendedLabel from "./BendedLabel";
-import { nanoid } from "nanoid";
 import RadialGradient from "../defs/RadialGradient";
 import defaultTheme from "../../lib/styles/themes/defaultTheme";
 import type { FeatureCollection, Polygon, MultiPolygon } from "geojson";
@@ -60,7 +59,7 @@ const BaseLayer: FC<Props> = ({
   const countriesGeoJson = topojson.feature(
     countries,
     countries.objects.ne_admin_0_countries
-  ) as FeatureCollection<MultiPolygon | Polygon>;
+  ) as FeatureCollection<MultiPolygon | Polygon, CountryProperties>;
   const borders = topojson.mesh(
     countries,
     countries.objects.ne_admin_0_countries,
@@ -83,57 +82,69 @@ const BaseLayer: FC<Props> = ({
   const hasOutline = drawOutline ?? theme.hasOutline ?? false;
   const hasShadow = drawShadow ?? theme.hasShadow ?? false;
 
+  const id = useId();
+  const outlinePathId = `outline-${id}`;
+  const clipId = `clip-${id}`;
+  const oceanGradientId = `oceanGradient-${id}`;
+
   return (
     <>
       {hasShadow && pathSphere && (
         <ShadowLayer
+          id={`shadow_${id}`}
           geoPath={pathSphere}
           color={theme.background.fill ?? "black"}
           blur={30}
         />
       )}
-      <g className="base-map" clipPath="url(#clip)">
+      <g
+        className="base-map"
+        id={`base-map-${id}`}
+        clipPath={`url(#${clipId})`}
+      >
         {pathSphere && (
           <defs>
-            <path id="outline" d={pathSphere} />
-            <clipPath id="clip">
-              <use xlinkHref="#outline" />
+            <path id={outlinePathId} d={pathSphere} />
+            <clipPath id={clipId}>
+              <use xlinkHref={`#${outlinePathId}`} />
             </clipPath>
             {theme.background.gradient && (
               <RadialGradient
-                id={"oceanGradient"}
+                id={`#${oceanGradientId}`}
                 colorStops={theme.background.gradient}
               />
             )}
           </defs>
         )}
         {pathSphere && (
-          <path
-            d={pathSphere}
-            fill={
-              theme.background.gradient
-                ? "url(#oceanGradient)"
-                : theme.background.fill
-            }
-          />
+          <g className="sphere" id={`sphere-${id}`}>
+            <path
+              d={pathSphere}
+              fill={
+                theme.background.gradient
+                  ? `url(#${oceanGradientId})`
+                  : theme.background.fill
+              }
+            />
+          </g>
         )}
 
         <Graticules projection={projection} />
 
         {landPath && (
-          <g className="countries">
+          <g className="landmasses" id={`landmasses-${id}`}>
             <path d={landPath} fill={theme.base.fill} />
           </g>
         )}
 
         {lakesPath && (
-          <g className="lakes">
+          <g className="lakes" id={`lakes-${id}`}>
             <path d={lakesPath} fill={theme.background.fill} />
           </g>
         )}
 
         {riversPath && (
-          <g className="rivers">
+          <g className="rivers" id={`rivers-${id}`}>
             <path
               d={riversPath}
               fill={"none"}
@@ -144,7 +155,7 @@ const BaseLayer: FC<Props> = ({
         )}
 
         {bordersPath && (
-          <g className="borders">
+          <g className="borders" id={`borders-${id}`}>
             <path
               d={bordersPath}
               fill="none"
@@ -155,30 +166,35 @@ const BaseLayer: FC<Props> = ({
           </g>
         )}
 
-        {countriesGeoJson &&
-          countriesGeoJson.features.map((country) => {
-            return (
-              <PolygonSymbol
-                key={nanoid()}
-                feature={country}
-                projection={projection}
-                style={{ ...theme.base, fill: "rgba(255,255,255,0)" }}
-              />
-            );
-          })}
+        <g className="countries" id={`countries-${id}`}>
+          {countriesGeoJson &&
+            countriesGeoJson.features.map((country, idx) => {
+              return (
+                <PolygonSymbol
+                  id={`${country.properties.ADM0_A3_NL}-${id}`}
+                  key={`${country.properties.ADM0_A3_NL}-${idx}`}
+                  feature={country}
+                  projection={projection}
+                  fill="none"
+                  stroke="whitesmoke"
+                />
+              );
+            })}
+        </g>
 
         {hasGraticuleLabels && (
-          <>
+          <g className="graticules" id={`graticules-${id}`}>
             <GraticuleLabelLayer
+              id={`graticule-labels-${id}`}
               style={theme.graticuleLabel}
               projection={projection}
               latRange={{ min: -60, max: 60, step: 10 }}
               lonRange={{ min: -180, max: 180, step: 30 }}
             />
-            {geoCirclesLat.features.map((circle) => {
+            {geoCirclesLat.features.map((circle, idx) => {
               return (
                 <BendedLabel
-                  key={nanoid()}
+                  key={idx}
                   graticuleType="lat"
                   textAnchor={"middle"}
                   degree={circle.properties?.lat}
@@ -191,14 +207,14 @@ const BaseLayer: FC<Props> = ({
                 </BendedLabel>
               );
             })}
-          </>
+          </g>
         )}
 
         {labels &&
-          countriesGeoJson.features.map((country) => {
+          countriesGeoJson.features.map((country, idx) => {
             return (
               <BendedLabel
-                key={nanoid()}
+                key={`${(country.properties.ADM0_A3_NL, idx)}`}
                 graticuleType="lat"
                 degree={d3.geoCentroid(country.geometry)[1]}
                 textOriginDegree={d3.geoCentroid(country.geometry)[0]}
@@ -206,7 +222,7 @@ const BaseLayer: FC<Props> = ({
                 style={theme.label}
                 projection={projection}
               >
-                {country.properties?.name}
+                {country.properties?.NAME_EN}
               </BendedLabel>
             );
           })}
@@ -214,7 +230,7 @@ const BaseLayer: FC<Props> = ({
 
       {hasOutline && (
         <use
-          xlinkHref="#outline"
+          xlinkHref={`#${outlinePathId}`}
           stroke={theme.graticule.stroke}
           fill={"none"}
           strokeWidth={theme.graticule.strokeWidth}

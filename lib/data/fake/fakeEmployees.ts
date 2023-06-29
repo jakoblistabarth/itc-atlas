@@ -7,10 +7,7 @@ import { range } from "d3-array";
 
 type EmployeeFake = EmployeeClean & { applicantId?: string };
 
-const fakeEmployees = async (
-  applicants: ApplicantClean[],
-  number: number = 3000
-) => {
+const fakeEmployees = async (applicants: ApplicantClean[], number = 3000) => {
   const countries = await loadUnsdCountries();
 
   const countriesSample = sampleSize(countries, 75);
@@ -24,7 +21,7 @@ const fakeEmployees = async (
     if (Math.random() < 0.1) {
       const applicant = applicantSample.pop();
       const employee: EmployeeFake = {
-        mId: d,
+        mId: d + "",
         applicantId: applicant?.applicantId,
         dateOfBirth: applicant?.dateOfBirth,
         nationality: applicant?.countryIsoAlpha3,
@@ -33,7 +30,7 @@ const fakeEmployees = async (
       return employee;
     }
     const employee: EmployeeFake = {
-      mId: d,
+      mId: d + "",
       dateOfBirth: faker.date.birthdate({ min: 1930, max: 1990 }),
       nationality: country,
       gender: Math.random() < 0.75 ? "m" : "f",

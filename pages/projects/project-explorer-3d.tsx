@@ -15,6 +15,7 @@ import Globe from "../../components/map-3d/Globe";
 import lonLatToXYZ from "../../lib/cartographic/lonLatToXYZ";
 import GlobeTexture from "../../components/map-3d/GlobeTexture";
 import getCountryCodes from "../../lib/data/queries/country/getCountryCodes";
+import GlobeEnvironment from "../../components/map-3d/GlobeEnvironment";
 
 type Props = SharedPageProps;
 
@@ -62,6 +63,7 @@ const ProjectExplorer3D: NextPage<Props> = ({ neCountriesTopoJson }) => {
                   );
                 })}
               </Globe>
+              <GlobeEnvironment />
               <OrbitControls enableZoom={false} enablePan={false} />
             </Canvas>
             <GlobeTexture

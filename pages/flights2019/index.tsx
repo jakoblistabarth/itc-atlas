@@ -1,15 +1,11 @@
 import type { NextPage } from "next";
 import Head from "next/head";
-import SummaryTable from "../../components/SummaryTable";
 import Footer from "../../components/Footer";
 import { Container, Heading, Text, Grid } from "theme-ui";
 import CardLink from "../../components/CardLink";
-import { nanoid } from "nanoid";
-import * as aq from "arquero";
-import useSWR from "swr";
 import { useRouter } from "next/router";
 
-const Travels: NextPage = () => {
+const Page: NextPage = () => {
   const { route } = useRouter();
 
   const links = [
@@ -26,8 +22,6 @@ const Travels: NextPage = () => {
       children: "Flights (globe)",
     },
   ];
-
-  const { data, error, isLoading } = useSWR("/api/data/flight2019/");
 
   return (
     <>
@@ -46,15 +40,12 @@ const Travels: NextPage = () => {
           </Text>
 
           <Grid variant="navigation">
-            {links.map((l) => (
-              <CardLink key={nanoid()} href={l.href}>
+            {links.map((l, idx) => (
+              <CardLink key={idx} href={l.href}>
                 <Heading as="h2">{l.children}</Heading>
               </CardLink>
             ))}
           </Grid>
-          {error && <div>failed to load</div>}
-          {isLoading && <div>Loading …</div>}
-          {!isLoading && !error && <SummaryTable data={aq.from(data)} />}
         </main>
       </Container>
 
@@ -63,4 +54,4 @@ const Travels: NextPage = () => {
   );
 };
 
-export default Travels;
+export default Page;

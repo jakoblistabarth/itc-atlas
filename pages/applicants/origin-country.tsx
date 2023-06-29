@@ -1,113 +1,30 @@
-import { descending, max, range, scaleSqrt } from "d3";
+/** @jsxImportSource theme-ui */
+
 import { geoBertin1953 } from "d3-geo-projection";
-import type { Feature, FeatureCollection, Point } from "geojson";
 import type { GetStaticProps, NextPage } from "next";
 import Head from "next/head";
-import { Vector2 } from "three";
-import { feature } from "topojson-client";
-import Footer from "../../components/Footer";
+import { useState } from "react";
 import { Container, Heading } from "theme-ui";
-import BaseLayer from "../../components/map/BaseLayer";
-import PointLabel from "../../components/map/PointLabel";
-import PointSymbol from "../../components/map/PointSymbol";
-import ProportionalCircleLegend from "../../components/map/ProportionalCircleLegend";
-import getMapHeight from "../../lib/cartographic/getMapHeight";
-import getCentroidByIsoCode from "../../lib/data/getCentroidByIsoCode";
+import Footer from "../../components/Footer";
+import MapLayoutFluid from "../../components/map/layout/MapLayoutFluid";
+import AlumniOrigin from "../../components/visuals/maps/AlumniOrigin";
 import getCountries from "../../lib/data/getCountries";
+import getApplicationLevels, {
+  ApplicationLevels,
+} from "../../lib/data/queries/application/getApplicationLevels";
 import getCountryCodes from "../../lib/data/queries/country/getCountryCodes";
 import getCountryWithApplicantCount, {
   CountryWithApplicantCount,
 } from "../../lib/data/queries/country/getCountryWithApplicantCount";
-import { LabelPlacement } from "../../types/LabelPlacement";
 import { SharedPageProps } from "../../types/Props";
-import useMeasure from "react-use-measure";
-import Tooltip from "../../components/Tooltip/Tooltip";
-import { TooltipTrigger } from "../../components/Tooltip/TooltipTrigger";
-import TooltipContent from "../../components/Tooltip/TooltipContent";
-import { useState } from "react";
-import { CountryProperties } from "../../types/NeTopoJson";
-import useSWR from "swr";
-import LineChart from "../../components/charts/timeline/LineChart";
-import getApplicationsByYear from "../../lib/data/queries/application/getApplicationsByYear";
 
 type Props = {
   applicants: CountryWithApplicantCount;
+  levels: ApplicationLevels;
 } & SharedPageProps;
 
-const AlumniOrigin: NextPage<Props> = ({ applicants, neCountriesTopoJson }) => {
-  const geographies = feature(
-    neCountriesTopoJson,
-    neCountriesTopoJson.objects.ne_admin_0_countries
-  );
-
-  type CountryPropertiesWithAlumniCount = CountryProperties & {
-    alumniCount: number;
-  };
-
-  const points: FeatureCollection<Point, CountryPropertiesWithAlumniCount> = {
-    type: "FeatureCollection",
-    features: geographies.features
-      .map((country) => {
-        const isoCode = country.properties?.ADM0_A3_NL;
-        const pos = getCentroidByIsoCode(isoCode);
-        const feature: Feature<Point, CountryPropertiesWithAlumniCount> = {
-          type: "Feature",
-          geometry: {
-            type: "Point",
-            coordinates: [pos?.x ?? 0, pos?.y ?? 0],
-          },
-          properties: {
-            ...country.properties,
-            alumniCount:
-              applicants.find((d) => d.isoAlpha3 === isoCode)?._count
-                .applicants ?? 0,
-          },
-        };
-        return feature;
-      })
-      .filter(
-        (feature: Feature): feature is Feature =>
-          !!feature.properties?.alumniCount
-      ) //TODO: replace by filter > 0
-      .sort((a: Feature, b: Feature) =>
-        descending(a.properties?.alumniCount, b.properties?.alumniCount)
-      ),
-  };
-
-  const [country, setCountry] = useState<string | null>(null);
-
-  const { data, error, isLoading } = useSWR<
-    Awaited<ReturnType<typeof getApplicationsByYear>>
-  >("/api/data/application/groupByYear?country=" + country);
-
-  const minX = 1950;
-  const maxX = new Date().getFullYear();
-  const dataClean = range(minX, maxX).map((i) => ({
-    x: i,
-    y: data?.find((d) => d.examYear === i)?._count._all ?? 0,
-  }));
-
-  const [mapRef, { width }] = useMeasure();
-  const dimension = {
-    width,
-    height: 0,
-  };
-
-  const projection = geoBertin1953();
-  dimension.height = getMapHeight(dimension.width, projection);
-
-  const isNumber = (item: number | undefined): item is number => {
-    return !!item;
-  };
-
-  const alumniCount = points.features
-    .map((point) => point.properties?.alumniCount)
-    .filter(isNumber);
-  const alumniMax = max<number>(alumniCount);
-
-  const scale = scaleSqrt()
-    .domain([0, alumniMax ?? 1])
-    .range([0, dimension.width / 20]);
+const Page: NextPage<Props> = ({ applicants, neCountriesTopoJson, levels }) => {
+  const [level, setLevel] = useState<string | undefined>(undefined);
 
   return (
     <>
@@ -119,99 +36,35 @@ const AlumniOrigin: NextPage<Props> = ({ applicants, neCountriesTopoJson }) => {
 
       <Container>
         <main>
-          <Heading as="h1">ITC&apos;s MSc alumni country of origin</Heading>
+          <Heading as="h1">Where do ITC&apos;s alumni come from?</Heading>
 
-          <div
-            style={{ padding: "0 1em", width: "100%", height: "100%" }}
-            ref={mapRef}
-          >
-            {dimension.width > 0 && (
-              <svg
-                width={"100%"}
-                height={"100%"}
-                viewBox={`0 0 ${dimension.width} ${dimension.height}`}
+          <div sx={{ mb: 3 }}>
+            <label>
+              Select a level you want to filter for:
+              <select
+                sx={{ ml: 2 }}
+                name="level"
+                onChange={(event) => setLevel(event.target.value)}
+                placeholder={"none selected"}
               >
-                <BaseLayer
-                  countries={neCountriesTopoJson}
-                  projection={projection}
-                />
-                <g id="alumni-countries-symbols">
-                  {points.features.map((point, idx) => (
-                    <Tooltip key={`tooltip-country-${idx}`}>
-                      <TooltipTrigger asChild>
-                        <g>
-                          <PointSymbol
-                            position={
-                              new Vector2(
-                                ...projection(point.geometry.coordinates)
-                              )
-                            }
-                            radius={scale(point.properties?.alumniCount)}
-                            fill={"teal"}
-                            stroke={"teal"}
-                            strokeWidth={0.5}
-                            fillOpacity={0.1}
-                            // TODO: check whether moving state back to point symbol improves behaviour (e.g. css transition)
-                            // seems like the transition is only working once the data is fetched by SWR
-                            onMouseEnter={() => {
-                              setCountry(point.properties?.ADM0_A3_NL);
-                            }}
-                            onMouseLeave={() => setCountry(null)}
-                            isActive={country === point.properties?.ADM0_A3_NL}
-                            interactive
-                          />
-                        </g>
-                      </TooltipTrigger>
-                      {data && (
-                        <TooltipContent>
-                          <div>
-                            <strong>{point.properties?.NAME_EN}</strong>
-                            <br />
-                            {point.properties?.alumniCount} M.Sc. alumni
-                          </div>
-                          <div>
-                            {dataClean && (
-                              <LineChart
-                                data={dataClean}
-                                width={100}
-                                height={30}
-                              />
-                            )}
-                          </div>
-                        </TooltipContent>
-                      )}
-                    </Tooltip>
-                  ))}
-                </g>
-                <g id="alumni-country-labels">
-                  {points.features.slice(0, 10).map((point, idx) => {
-                    const pos = new Vector2(
-                      ...projection(point.geometry.coordinates)
-                    );
-                    return (
-                      <PointLabel
-                        key={`label-${point.properties?.ADM0_A3_NL}-${idx}`}
-                        position={pos}
-                        placement={LabelPlacement.CENTER}
-                        fill={"teal"}
-                        fontSize={10}
-                      >
-                        {point.properties?.NAME_EN}
-                      </PointLabel>
-                    );
-                  })}
-                </g>
-                <ProportionalCircleLegend
-                  data={points.features
-                    .map((feature) => feature.properties?.alumniCount)
-                    .filter(isNumber)}
-                  scaleRadius={scale}
-                  title={"Graduates per country"}
-                  unitLabel={"graduate"}
-                  showFunction={false}
-                />
-              </svg>
-            )}
+                <option value={""}>All levels</option>
+                {levels.map((d) => (
+                  <option value={d.level ?? ""} key={d.level}>
+                    {d.level}
+                  </option>
+                ))}
+              </select>
+            </label>
+          </div>
+
+          <div style={{ padding: "0 1em", width: "100%", height: "100%" }}>
+            <MapLayoutFluid projection={geoBertin1953()}>
+              <AlumniOrigin
+                neCountriesTopoJson={neCountriesTopoJson}
+                level={level}
+                applicants={applicants}
+              />
+            </MapLayoutFluid>
           </div>
         </main>
       </Container>
@@ -221,19 +74,22 @@ const AlumniOrigin: NextPage<Props> = ({ applicants, neCountriesTopoJson }) => {
 };
 
 export const getStaticProps: GetStaticProps<Props> = async () => {
-  const [applicants, neCountriesTopoJson, countries] = await Promise.all([
-    getCountryWithApplicantCount(),
-    getCountries(),
-    getCountryCodes(),
-  ]);
+  const [applicants, neCountriesTopoJson, countries, levels] =
+    await Promise.all([
+      getCountryWithApplicantCount(),
+      getCountries(),
+      getCountryCodes(),
+      getApplicationLevels(),
+    ]);
 
   return {
     props: {
       applicants,
       neCountriesTopoJson,
       countries,
+      levels,
     },
   };
 };
 
-export default AlumniOrigin;
+export default Page;
