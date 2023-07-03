@@ -123,9 +123,9 @@ const BtorsAndCabinets: FC<Props> = ({
               <linearGradient
                 id={"grad" + idx}
                 x1="0%"
-                y1="50%"
+                y1="0%"
                 x2="100%"
-                y2="100%"
+                y2="0%"
               >
                 {("" + d.properties?.category).split(",").map((d, idx, arr) => (
                   <stop
