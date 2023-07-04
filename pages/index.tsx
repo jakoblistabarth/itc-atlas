@@ -63,11 +63,6 @@ const Home: NextPage = () => {
       children: "NFP Countries",
       description: "Policy changes over time.",
     },
-    {
-      href: "/ui",
-      children: "UI Tests",
-      description: "For development only.",
-    },
   ];
 
   const [heroVizRef, { width }] = useMeasure();
@@ -140,7 +135,7 @@ const Home: NextPage = () => {
             <Paragraph variant="teaser">based on data sources</Paragraph>
             <div
               sx={{
-                mt: 3,
+                mt: 2,
                 display: "grid",
                 gridTemplateColumns: "repeat(3, 1fr)",
                 gridGap: 2,
@@ -151,6 +146,12 @@ const Home: NextPage = () => {
                   {l.children}
                 </Link>
               ))}
+            </div>
+            <Paragraph sx={{ mt: 3 }} variant="teaser">
+              others
+            </Paragraph>
+            <div sx={{ mt: 2 }}>
+              <Link href="/ui">UI Tests</Link>
             </div>
           </Box>
         </main>

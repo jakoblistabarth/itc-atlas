@@ -13,7 +13,7 @@ const Home: NextPage = () => {
     <>
       <BasePage title="UI tests">
         <Grid variant="navigation">
-          {["shader-test", "three-test"].map((d) => (
+          {["shader-test", "three-test", "maplayoutfluid-test"].map((d) => (
             <CardLink key={d} href={`${route}/${d}`}>
               {d}
             </CardLink>
