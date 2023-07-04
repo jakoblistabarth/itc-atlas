@@ -4,7 +4,8 @@ import { LayerProps } from "lamina/types";
 import { Node, extend } from "@react-three/fiber";
 
 interface CustomLayerProps extends LayerProps {
-  sideHalf?: number;
+  width?: number;
+  height?: number;
   zOffset?: number;
   yScale?: number;
 }
@@ -15,7 +16,8 @@ class CustomLayer extends Abstract {
   // Assign them their default value.
   // Any uniforms here will automatically be set as properties on the class as setters and getters.
   // There are setters and getters will update the underlying uniforms.
-  static u_sideHalf = 0.0;
+  static u_width = 1.0;
+  static u_height = 1.0;
   static u_zOffset = 0.0;
   static u_yScale = 0.0;
 
@@ -25,7 +27,8 @@ class CustomLayer extends Abstract {
   varying vec3 v_Vertex;
   varying highp float v_height;
   varying vec2 v_XY;
-  uniform highp float u_sideHalf;
+  uniform highp float u_width;
+  uniform highp float u_height;
   void main() {
     //Cold-humid regions
     float gradient[12]=float[12](-400.0,0.0,50.0,200.0,600.0,1000.0,2000.0,3000.0,4000.0,5000.0,6000.0,7000.0);
@@ -67,40 +70,55 @@ class CustomLayer extends Abstract {
       Color=vec3(245.0,245.0,245.0)/256.0;
     }
     //Assign same color to 4 sides
-    if ( v_XY.x == u_sideHalf || v_XY.x == -u_sideHalf || v_XY.y == u_sideHalf || v_XY.y == -u_sideHalf ) {
-       Color=vec3(0.0,0.0,0.0);
+    if (
+      v_XY.x >= u_width / 2.0 || 
+      v_XY.x <= u_width / -2.0 || 
+      v_XY.y >= u_height / 2.0 || 
+      v_XY.y <= u_height / -2.0 
+    ) {
+      Color=vec3(0.0,0.0,0.0);
     }
+
     //normal vector
-     vec3 N = normalize( cross( dFdx( v_Vertex ), dFdy( v_Vertex ) ) );
+    vec3 N = normalize( cross( dFdx( v_Vertex ), dFdy( v_Vertex ) ) );
     // arbitrary direction of the light
-     const vec3 lightDir = vec3( 1., 0., -1. );
-     vec3 L = normalize( lightDir );
-     vec3 diffuse = Color * max( dot( N, -L) , 0.0 );
-     vec4 f_FragColor = vec4(diffuse, 1.0 );
-     return f_FragColor;
+    const vec3 lightDir = vec3( 1., 0., -1. );
+    vec3 L = normalize( lightDir );
+    vec3 diffuse = Color * max( dot( N, -L) , 0.0 );
+    vec4 f_FragColor = vec4(diffuse, 1.0 );
+    return f_FragColor;
   }
   `;
+
   // Optionally Define a vertex shader!
   // Same rules as fragment shaders, except no blend modes.
   // Return a non-transformed vec3 position.
-  static vertexShader = /*glsl*/ `
-  attribute highp float displacement;
-  varying vec3 v_Vertex;
-  varying  float v_height;
-  varying vec2 v_XY;
-  uniform  float u_sideHalf;
-  uniform  float u_zOffset;
-  uniform  float u_yScale;
-  void main() {
-    vec3 p = position;
-    if ( p.x < u_sideHalf && p.x > -u_sideHalf && p.y < u_sideHalf && p.y > -u_sideHalf) {
-      p = p + vec3(0,0,u_zOffset + displacement * u_yScale);
+  static vertexShader = `
+    attribute highp float displacement;
+    varying vec3 v_Vertex;
+    varying float v_height;
+    varying vec2 v_XY;
+    uniform float u_width;
+    uniform float u_height;
+    uniform float u_zOffset;
+    uniform float u_yScale;
+
+    void main() {
+      vec3 p = position;
+      if (
+        p.x < u_width / 2.0 &&
+        p.x > -u_width / 2.0 &&
+        p.y < u_height / 2.0 &&
+        p.y > -u_height / 2.0
+      ) {
+        p = p + vec3(0, 0, u_zOffset + displacement * u_yScale);
+      }
+
+      v_height = displacement;
+      v_Vertex = ( modelViewMatrix * vec4(p, 1. ) ).xyz;
+      v_XY = p.xy;
+      return p;
     }
-    v_height=displacement;
-    v_Vertex = ( modelViewMatrix * vec4(p, 1. ) ).xyz;
-    v_XY=p.xy;
-    return p;
-  }
   `;
 
   constructor(props?: CustomLayerProps) {
