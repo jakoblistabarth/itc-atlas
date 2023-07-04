@@ -133,28 +133,21 @@ const BtorsByYear: FC<Props> = ({
           );
         })}
         <g>
-          {bhosCountries.map((d, idx) => {
-            return (
-              <text
-                key={idx}
-                x={width / 2 - 30}
-                y="150"
-                fontSize="10px"
-                fill="red"
-                opacity={
-                  !btorsByCountry.find(
-                    (country) => country.isoAlpha3 === d?.isoAlpha3
-                  ) &&
-                  activeCountry &&
-                  activeCountry == d?.isoAlpha3
-                    ? 1.0
-                    : 0.0
-                }
-              >
-                No Travel for {d.countryName}
-              </text>
-            );
-          })}
+          <text
+            x={width / 2 - 30}
+            y="150"
+            fontSize="10px"
+            fill="red"
+            opacity={
+              !btorsByCountry.find(
+                (country) => country.isoAlpha3 === activeCountry
+              ) && activeCountry
+                ? 1.0
+                : 0.0
+            }
+          >
+            No Travel for {activeCountry}
+          </text>
         </g>
       </g>
     </svg>
