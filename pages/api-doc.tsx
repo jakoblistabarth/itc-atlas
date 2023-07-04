@@ -12,7 +12,7 @@ const ApiDoc: NextPage<Props> = ({ spec }) => <SwaggerUI spec={spec} />;
 
 export const getStaticProps: GetStaticProps = async () => {
   const spec = createSwaggerSpec({
-    apiFolder: "pages/api/maps",
+    apiFolder: "pages/api",
     definition: {
       openapi: "3.1.0",
       info: {
@@ -31,6 +31,10 @@ export const getStaticProps: GetStaticProps = async () => {
           name: "JPEG",
           description:
             "Endpoints returning canvas-rendered components as `JPEG`-Image.",
+        },
+        {
+          name: "data",
+          description: "Endpoints returning data.",
         },
       ],
     },

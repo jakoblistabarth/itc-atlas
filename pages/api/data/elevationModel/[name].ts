@@ -3,9 +3,11 @@ import getElevationData from "../../../../lib/data/getElevationData";
 
 /**
  * @swagger
- *  /api/data/elevation/{name}:
+ *  /api/data/elevationModel/{name}:
  *   get:
  *     description: Returns elevation json, "name" is the path parameter, please specify the name of area
+ *     tags:
+ *       - data
  *     parameters:
  *       - in: path
  *         name: name
