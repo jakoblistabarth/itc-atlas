@@ -3,6 +3,8 @@ import { Canvas } from "@react-three/fiber";
 
 import Blockdiagram from "../components/map-3d/BlockDiagram";
 import * as grossglockner from "../data/topographic/elevation-Grossglockner.json";
+import * as malta from "../data/topographic/elevation-Malta.json";
+import * as paramaribo from "../data/topographic/elevation-Paramaribo.json";
 import BlockDiagramEnvironment from "../components/map-3d/BlockDiagramEnvironment";
 
 const meta = {
@@ -52,5 +54,24 @@ export const Grossglockner: Story = {
     yScale: 0.00005,
     textureFileName: "grossglockner.png",
     sideColor: "#cab091",
+  },
+};
+
+export const Paramaribo: Story = {
+  args: {
+    data: Float32Array.from(paramaribo.elevation),
+    ratio: paramaribo.dimensions.ratio,
+    yScale: 0.001,
+    textureFileName: "paramaribo.png",
+  },
+};
+
+export const Malta: Story = {
+  args: {
+    data: Float32Array.from(malta.elevation),
+    ratio: malta.dimensions.ratio,
+    yScale: 0.0001,
+    textureFileName: "uv-grid.png",
+    sideColor: "#3689a5",
   },
 };

@@ -16,9 +16,7 @@ type Props = SharedPageProps;
 
 const ShaderTest: NextPage<Props> = () => {
   const side = 1;
-  const sur = useSWR("/api/data/elevationModel/Paramaribo");
   const aut = useSWR("/api/data/elevationModel/Grossglockner");
-  const mal = useSWR("/api/data/elevationModel/Malta");
 
   return (
     <BasePage title="Shader Test">
@@ -60,63 +58,6 @@ const ShaderTest: NextPage<Props> = () => {
           <BlockDiagramEnvironment />
         </Canvas>
       </Box>
-
-      {/* <Heading as="h2">Paramaribo</Heading>
-      <Text>Suriname</Text>
-      <Box variant="layout.canvasStage" sx={{ height: "500px" }}>
-        <Canvas shadows>
-          {sur.data && (
-            <>
-              <BlockDiagram
-                textureFileName="paramaribo.png"
-                side={side}
-                ratio={sur.data.dimensions.ratio}
-                yScale={0.001}
-                zOffset={0.1}
-                data={Float32Array.from(sur.data.elevation)}
-              />
-              {[
-                [5.9060496147290396, -55.15637217935413],
-                [5.81321656500119, -55.158897210508265],
-                [5.868621179099353, -55.09840944390688],
-              ].map(([lat, lng]) => (
-                <BlockDiagramMarker
-                  key={`${lat}-${lng}`}
-                  textureFileName="sur.jpg"
-                  latitude={lat}
-                  longitude={lng}
-                  yScale={0.001}
-                  zOffset={0.1}
-                  side={side}
-                  ratio={sur.data.dimensions.ratio}
-                  bBox={sur.data.bBox}
-                />
-              ))}
-            </>
-          )}
-          <BlockDiagramEnvironment />
-        </Canvas>
-      </Box>
-
-      <Heading as="h2" sx={{ mt: 5 }}>
-        Malta
-      </Heading>
-      <Text>Malta</Text>
-      <Box variant="layout.canvasStage" sx={{ height: "500px" }}>
-        <Canvas shadows>
-          {mal.data && (
-            <BlockDiagram
-              textureFileName="uv-grid.png"
-              side={side}
-              ratio={mal.data.dimensions.ratio}
-              yScale={0.00025}
-              zOffset={0.1}
-              data={Float32Array.from(mal.data.elevation)}
-            />
-          )}
-          <BlockDiagramEnvironment />
-        </Canvas>
-      </Box> */}
     </BasePage>
   );
 };
