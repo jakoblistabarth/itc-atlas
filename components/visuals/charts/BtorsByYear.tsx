@@ -132,23 +132,14 @@ const BtorsByYear: FC<Props> = ({
             </Group>
           );
         })}
-        <g>
-          <text
-            x={width / 2 - 30}
-            y="150"
-            fontSize="10px"
-            fill="red"
-            opacity={
-              !btorsByCountry.find(
-                (country) => country.isoAlpha3 === activeCountry
-              ) && activeCountry
-                ? 1.0
-                : 0.0
-            }
-          >
-            No Travel for {activeCountry}
-          </text>
-        </g>
+        {activeCountry &&
+          !btorsByCountry.map((d) => d.isoAlpha3).includes(activeCountry) && (
+            <g>
+              <text x={width / 2 - 30} y="150" fontSize="10px" fill="red">
+                No Travel for {activeCountry}
+              </text>
+            </g>
+          )}
       </g>
     </svg>
   );
