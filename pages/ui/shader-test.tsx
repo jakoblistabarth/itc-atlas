@@ -1,57 +1,78 @@
 /** @jsxImportSource theme-ui */
 
-import { OrbitControls } from "@react-three/drei";
 import { Canvas } from "@react-three/fiber";
-import type { NextPage } from "next";
-import BlockDiagramm from "../../components/map-3d/BlockDiagram";
+import type { GetStaticProps, NextPage } from "next";
+import BlockDiagram from "../../components/map-3d/BlockDiagram";
+import BlockDiagramMarker from "../../components/map-3d/BlockDiagramMarker";
 import useSWR from "swr";
 import BasePage from "../../components/BasePage";
 import { Box, Heading, Text } from "theme-ui";
+import getCountries from "../../lib/data/getCountries";
+import { SharedPageProps } from "../../types/Props";
+import getCountryCodes from "../../lib/data/queries/country/getCountryCodes";
+import BlockDiagramEnvironment from "../../components/map-3d/BlockDiagramEnvironment";
 
-const ShaderTest: NextPage = () => {
-  // TODO: get segements and side with custom hook from fetched data?
-  const segments = 1000;
-  const side = 4;
-  const sur = useSWR("/api/data/elevation/Paramaribo");
-  const aut = useSWR("/api/data/elevation/Grossglockner");
+type Props = SharedPageProps;
+
+const ShaderTest: NextPage<Props> = () => {
+  const side = 1;
+  const aut = useSWR("/api/data/elevationModel/Grossglockner");
+
   return (
     <BasePage title="Shader Test">
-      <Heading as="h2">Paramaribo</Heading>
-      <Text>Suriname</Text>
-      <Box variant="layout.canvasStage" sx={{ height: "500px" }}>
-        <Canvas orthographic camera={{ zoom: 100 }}>
-          {sur.data && (
-            <BlockDiagramm
-              side={side}
-              yScale={0.001}
-              zOffset={0.1}
-              segments={segments}
-              data={Float32Array.from(sur.data.elevation)}
-            />
-          )}
-          <OrbitControls enablePan />
-        </Canvas>
-      </Box>
-
       <Heading as="h2" sx={{ mt: 5 }}>
         Großglockner
       </Heading>
       <Text>Austria</Text>
       <Box variant="layout.canvasStage" sx={{ height: "500px" }}>
-        <Canvas orthographic camera={{ zoom: 100 }}>
+        <Canvas shadows>
           {aut.data && (
-            <BlockDiagramm
-              side={side}
-              yScale={0.0002}
-              zOffset={0.25}
-              segments={segments}
-              data={Float32Array.from(aut.data.elevation)}
-            />
+            <>
+              <BlockDiagram
+                textureFileName="grossglockner.png"
+                side={side}
+                ratio={aut.data.dimensions.ratio}
+                yScale={0.00005}
+                zOffset={0.1}
+                data={Float32Array.from(aut.data.elevation)}
+              />
+              {[
+                [46.99, 13.01],
+                [47.09, 12.8],
+                [47.0736888633103, 12.6946860503528],
+              ].map(([lat, lng]) => (
+                <BlockDiagramMarker
+                  key={`${lng}-${lat}`}
+                  textureFileName="aus.jpg"
+                  longitude={lng}
+                  latitude={lat}
+                  yScale={0.00005}
+                  zOffset={0.1}
+                  side={side}
+                  ratio={aut.data.dimensions.ratio}
+                  bBox={aut.data.bBox}
+                />
+              ))}
+            </>
           )}
-          <OrbitControls />
+          <BlockDiagramEnvironment />
         </Canvas>
       </Box>
     </BasePage>
   );
 };
 export default ShaderTest;
+
+export const getStaticProps: GetStaticProps<Props> = async () => {
+  const [countries, neCountriesTopoJson] = await Promise.all([
+    getCountryCodes(),
+    getCountries(),
+  ]);
+
+  return {
+    props: {
+      neCountriesTopoJson,
+      countries,
+    },
+  };
+};

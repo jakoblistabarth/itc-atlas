@@ -54,6 +54,7 @@
     "eslint-plugin-import": "^2.27.5",
     "exceljs": "^4.3.0",
     "fuse.js": "^6.6.2",
+    "lamina": "^1.1.23",
     "lodash": "^4.17.21",
     "mapshaper": "^0.6.24",
     "next": "^13.1.6",

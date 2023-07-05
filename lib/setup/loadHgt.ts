@@ -18,16 +18,17 @@ const loadHgt = async (locations: [number, number][], name: string) => {
     maxLng ?? Infinity,
     maxLat ?? Infinity,
   ]);
-  const bBox = [south, west, north, east];
   if (!south || !west || !north || !east) throw new Error("invalid locations");
-  const segments = 1000;
-  const gridSize = segments + 1;
-  const stepY = Math.abs(north - south) / gridSize;
-  const stepX = Math.abs(east - west) / gridSize;
-  const pois = Array.from({ length: gridSize })
+  const width = Math.abs(east - west);
+  const height = Math.abs(north - south);
+  const segments = 250;
+  const vertices = segments + 1;
+  const stepY = height / vertices;
+  const stepX = width / vertices;
+  const pois = Array.from({ length: vertices })
     .map((_, rowIdx) => {
       const y = north - rowIdx * stepY;
-      return Array.from({ length: gridSize }).map((_, colIdx) => {
+      return Array.from({ length: vertices }).map((_, colIdx) => {
         const x = west + colIdx * stepX;
         return [x, y];
       });
@@ -35,7 +36,7 @@ const loadHgt = async (locations: [number, number][], name: string) => {
     .flat()
     .map((d) => d.map((c) => +c.toFixed(6)));
   const tileset = new SyncTileSet(
-    "./data/",
+    "./data/topographic/elevation",
     [minLat, minLng],
     [maxLat, maxLng],
     function (err: string) {
@@ -51,8 +52,13 @@ const loadHgt = async (locations: [number, number][], name: string) => {
 
       const fileContent = {
         elevation,
-        bBox,
+        bBox: [minLat, minLng, maxLat, maxLng],
         name,
+        dimensions: {
+          width,
+          height,
+          ratio: width / height,
+        },
       };
 
       writeFileSync(
