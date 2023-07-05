@@ -1,9 +1,9 @@
 import { Meta, StoryObj } from "@storybook/react";
 import { Canvas } from "@react-three/fiber";
-import { OrbitControls } from "@react-three/drei";
 
 import Blockdiagram from "../components/map-3d/BlockDiagram";
 import * as grossglockner from "../data/topographic/elevation-Grossglockner.json";
+import BlockDiagramEnvironment from "../components/map-3d/BlockDiagramEnvironment";
 
 const meta = {
   title: "Map Elements/Symbols/Blockdiagram",
@@ -24,12 +24,10 @@ const meta = {
   decorators: [
     (Story) => (
       <div style={{ width: "100%", height: "500px" }}>
-        <Canvas camera={{ position: [0, 0, 5], fov: 30 }} shadows>
+        <Canvas shadows>
           <Story />
-          <OrbitControls />
           <axesHelper />
-          <pointLight position={[5, 10, 0]} />
-          <ambientLight intensity={0.25} />
+          <BlockDiagramEnvironment />
         </Canvas>
       </div>
     ),

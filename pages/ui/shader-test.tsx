@@ -1,6 +1,5 @@
 /** @jsxImportSource theme-ui */
 
-import { OrbitControls } from "@react-three/drei";
 import { Canvas } from "@react-three/fiber";
 import type { GetStaticProps, NextPage } from "next";
 import BlockDiagram from "../../components/map-3d/BlockDiagram";
@@ -11,14 +10,14 @@ import { Box, Heading, Text } from "theme-ui";
 import getCountries from "../../lib/data/getCountries";
 import { SharedPageProps } from "../../types/Props";
 import getCountryCodes from "../../lib/data/queries/country/getCountryCodes";
+import BlockDiagramEnvironment from "../../components/map-3d/BlockDiagramEnvironment";
 
 type Props = SharedPageProps;
 
 const ShaderTest: NextPage<Props> = () => {
-  const side = 3;
+  const side = 1;
   const sur = useSWR("/api/data/elevationModel/Paramaribo");
   const aut = useSWR("/api/data/elevationModel/Grossglockner");
-  const swe = useSWR("/api/data/elevationModel/Stockholm");
   const mal = useSWR("/api/data/elevationModel/Malta");
 
   return (
@@ -95,8 +94,7 @@ const ShaderTest: NextPage<Props> = () => {
               ))}
             </>
           )}
-          <pointLight position={[10, 10, 0]} castShadow />
-          <OrbitControls enablePan />
+          <BlockDiagramEnvironment />
         </Canvas>
       </Box>
 
@@ -105,7 +103,7 @@ const ShaderTest: NextPage<Props> = () => {
       </Heading>
       <Text>Malta</Text>
       <Box variant="layout.canvasStage" sx={{ height: "500px" }}>
-        <Canvas orthographic camera={{ zoom: 100 }}>
+        <Canvas shadows>
           {mal.data && (
             <BlockDiagram
               textureFileName="uv-grid.png"
@@ -116,7 +114,7 @@ const ShaderTest: NextPage<Props> = () => {
               data={Float32Array.from(mal.data.elevation)}
             />
           )}
-          <OrbitControls />
+          <BlockDiagramEnvironment />
         </Canvas>
       </Box> */}
     </BasePage>
