@@ -21,7 +21,7 @@ const loadHgt = async (locations: [number, number][], name: string) => {
   if (!south || !west || !north || !east) throw new Error("invalid locations");
   const width = Math.abs(east - west);
   const height = Math.abs(north - south);
-  const segments = 100;
+  const segments = 250;
   const vertices = segments + 1;
   const stepY = height / vertices;
   const stepX = width / vertices;

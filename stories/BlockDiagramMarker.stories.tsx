@@ -1,6 +1,11 @@
 import { Meta, StoryObj } from "@storybook/react";
 import { Canvas } from "@react-three/fiber";
-import { Backdrop, OrbitControls } from "@react-three/drei";
+import {
+  AccumulativeShadows,
+  Backdrop,
+  OrbitControls,
+  RandomizedLight,
+} from "@react-three/drei";
 
 import BlockdiagramMarker from "../components/map-3d/BlockDiagramMarker";
 
@@ -8,7 +13,7 @@ const meta = {
   title: "Map Elements/Symbols/BlockdiagramMarker",
   component: BlockdiagramMarker,
   args: {
-    name: "sur",
+    textureFileName: "sur.jpg",
     latitude: 5,
     longitude: -56,
     yScale: 0.01,
@@ -23,23 +28,16 @@ const meta = {
         <Canvas camera={{ position: [0, 0, 5], fov: 30, zoom: 10 }} shadows>
           <OrbitControls />
           <Story />
-          <ambientLight intensity={0.5} />
-          <pointLight
-            position={[40, 20, 0]}
-            shadow-mapSize={1028 * 8}
-            intensity={2}
-            castShadow
-          />
-          <Backdrop
-            position={[0, 0, -1]}
-            scale={[2, 2, 2]}
-            receiveShadow
-            floor={0.5} // Stretches the floor segment, 0.25 by default
-            segments={20} // Mesh-resolution, 20 by default
-          >
-            <meshStandardMaterial color="white" />
-          </Backdrop>
-          <axesHelper />
+          <hemisphereLight intensity={0.5} />
+          <pointLight position={[1, 0.5, -3]} />
+          <AccumulativeShadows scale={4}>
+            <RandomizedLight
+              amount={10}
+              mapSize={64 * 2 ** 6}
+              position={[1, 2, -3]}
+              radius={1}
+            />
+          </AccumulativeShadows>
         </Canvas>
       </div>
     ),

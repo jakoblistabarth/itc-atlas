@@ -28,18 +28,15 @@ const ShaderTest: NextPage<Props> = () => {
       </Heading>
       <Text>Austria</Text>
       <Box variant="layout.canvasStage" sx={{ height: "500px" }}>
-        <Canvas orthographic camera={{ zoom: 100 }}>
+        <Canvas shadows>
           {aut.data && (
             <>
               <BlockDiagram
-                name="grossglockner"
+                textureFileName="grossglockner.png"
                 side={side}
                 ratio={aut.data.dimensions.ratio}
-                yScale={0.0001}
-                zOffset={0.25}
-                segments={
-                  Math.sqrt(Float32Array.from(aut.data.elevation).length) - 1
-                }
+                yScale={0.00005}
+                zOffset={0.1}
                 data={Float32Array.from(aut.data.elevation)}
               />
               {[
@@ -49,11 +46,11 @@ const ShaderTest: NextPage<Props> = () => {
               ].map(([lat, lng]) => (
                 <BlockDiagramMarker
                   key={`${lng}-${lat}`}
-                  name="aus"
+                  textureFileName="aus.jpg"
                   longitude={lng}
                   latitude={lat}
-                  yScale={0.0001}
-                  zOffset={0.25}
+                  yScale={0.00005}
+                  zOffset={0.1}
                   side={side}
                   ratio={aut.data.dimensions.ratio}
                   bBox={aut.data.bBox}
@@ -61,23 +58,22 @@ const ShaderTest: NextPage<Props> = () => {
               ))}
             </>
           )}
-          <OrbitControls />
+          <BlockDiagramEnvironment />
         </Canvas>
       </Box>
 
-      <Heading as="h2">Paramaribo</Heading>
+      {/* <Heading as="h2">Paramaribo</Heading>
       <Text>Suriname</Text>
       <Box variant="layout.canvasStage" sx={{ height: "500px" }}>
-        <Canvas orthographic camera={{ zoom: 100 }}>
+        <Canvas shadows>
           {sur.data && (
             <>
               <BlockDiagram
-                name="paramaribo"
+                textureFileName="paramaribo.png"
                 side={side}
                 ratio={sur.data.dimensions.ratio}
-                yScale={0.01}
+                yScale={0.001}
                 zOffset={0.1}
-                segments={Math.sqrt(sur.data.elevation.length) - 1}
                 data={Float32Array.from(sur.data.elevation)}
               />
               {[
@@ -87,10 +83,10 @@ const ShaderTest: NextPage<Props> = () => {
               ].map(([lat, lng]) => (
                 <BlockDiagramMarker
                   key={`${lat}-${lng}`}
-                  name="sur"
+                  textureFileName="sur.jpg"
                   latitude={lat}
                   longitude={lng}
-                  yScale={0.01}
+                  yScale={0.001}
                   zOffset={0.1}
                   side={side}
                   ratio={sur.data.dimensions.ratio}
@@ -112,43 +108,17 @@ const ShaderTest: NextPage<Props> = () => {
         <Canvas orthographic camera={{ zoom: 100 }}>
           {mal.data && (
             <BlockDiagram
-              name="malta"
+              textureFileName="uv-grid.png"
               side={side}
               ratio={mal.data.dimensions.ratio}
-              yScale={0.001}
+              yScale={0.00025}
               zOffset={0.1}
-              segments={
-                Math.sqrt(Float32Array.from(mal.data.elevation).length) - 1
-              }
               data={Float32Array.from(mal.data.elevation)}
             />
           )}
           <OrbitControls />
         </Canvas>
-      </Box>
-
-      <Heading as="h2" sx={{ mt: 5 }}>
-        Stockholm
-      </Heading>
-      <Text>Sweden</Text>
-      <Box variant="layout.canvasStage" sx={{ height: "500px" }}>
-        <Canvas orthographic camera={{ zoom: 100 }}>
-          {swe.data && (
-            <BlockDiagram
-              name="stockholm"
-              side={side}
-              ratio={swe.data.dimensions.ratio}
-              yScale={0.0002}
-              zOffset={0.25}
-              segments={
-                Math.sqrt(Float32Array.from(swe.data.elevation).length) - 1
-              }
-              data={Float32Array.from(swe.data.elevation)}
-            />
-          )}
-          <OrbitControls />
-        </Canvas>
-      </Box>
+      </Box> */}
     </BasePage>
   );
 };

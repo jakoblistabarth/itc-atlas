@@ -69,17 +69,8 @@ class CustomLayer extends Abstract {
     if((gradient[10]+gradient[11])/2.0<v_height){
       Color=vec3(245.0,245.0,245.0)/256.0;
     }
-    //Assign same color to 4 sides
-    if (
-      v_XY.x >= u_width / 2.0 || 
-      v_XY.x <= u_width / -2.0 || 
-      v_XY.y >= u_height / 2.0 || 
-      v_XY.y <= u_height / -2.0 
-    ) {
-      Color=vec3(0.0,0.0,0.0);
-    }
 
-    //normal vector
+    // normal vector
     vec3 N = normalize( cross( dFdx( v_Vertex ), dFdy( v_Vertex ) ) );
     // arbitrary direction of the light
     const vec3 lightDir = vec3( 1., 0., -1. );
@@ -105,14 +96,7 @@ class CustomLayer extends Abstract {
 
     void main() {
       vec3 p = position;
-      if (
-        p.x < u_width / 2.0 &&
-        p.x > -u_width / 2.0 &&
-        p.y < u_height / 2.0 &&
-        p.y > -u_height / 2.0
-      ) {
-        p = p + vec3(0, 0, u_zOffset + displacement * u_yScale);
-      }
+      p = p + vec3(0, 0, u_zOffset + displacement * u_yScale);
 
       v_height = displacement;
       v_Vertex = ( modelViewMatrix * vec4(p, 1. ) ).xyz;

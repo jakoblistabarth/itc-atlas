@@ -5,13 +5,13 @@ import useSWR from "swr";
 import getElevation from "../../lib/data/getElevation";
 
 type Props = {
-  name: string;
+  textureFileName: string;
   latitude: number;
   longitude: number;
   yScale: number;
   zOffset: number;
-  side: number;
-  ratio: number;
+  side?: number;
+  ratio?: number;
   /**
    * Bounding Box according to geojson Specification
    * See: {@link https://datatracker.ietf.org/doc/html/rfc7946#section-5}
@@ -23,17 +23,17 @@ type Props = {
   bBox: [number, number, number, number];
 };
 const BlockDiagramMarker: FC<Props> = ({
-  name,
+  textureFileName,
   latitude,
   longitude,
   yScale, // blockDiagram meta
   zOffset, // blockDiagram meta
-  side, // blockDiagram meta
-  ratio, // blockDiagram meta
+  side = 1, // blockDiagram meta
+  ratio = 1, // blockDiagram meta
   bBox, // blockDiagram meta
 }) => {
-  const texture = new TextureLoader().load("/images/" + name + ".jpg");
-  const markerHeight = 0.05;
+  const texture = new TextureLoader().load(`/images/${textureFileName}`);
+  const markerHeight = 0.03;
 
   const widthRange = [-side / 2, side / 2];
   const heightRange = [(-side * (1 / ratio)) / 2, (side * (1 / ratio)) / 2];
@@ -52,9 +52,13 @@ const BlockDiagramMarker: FC<Props> = ({
   return (
     <>
       <mesh position={[scaleLng(longitude), z, scaleLat(latitude)]} castShadow>
-        <cylinderGeometry args={[0.08, 0, markerHeight, 32, 32, false]} />
+        <cylinderGeometry args={[0.03, 0, markerHeight, 32, 32, false]} />
         <meshStandardMaterial attach="material-0" color={"white"} />
-        <meshStandardMaterial attach="material-1" map={texture} />
+        <meshStandardMaterial
+          attach="material-1"
+          map={texture}
+          roughness={0.2}
+        />
       </mesh>
     </>
   );
