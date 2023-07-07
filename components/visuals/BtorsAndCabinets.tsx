@@ -35,6 +35,7 @@ const BtorsAndCabinets: FC<Props> = ({
   const [activeCountry, setActiveCountry] = useState<string | undefined>(
     undefined
   );
+
   for (let i = 0; i < bhosCountries.length; i++) {
     for (let j = i + 1; j < bhosCountries.length; j++) {
       if (
@@ -48,22 +49,28 @@ const BtorsAndCabinets: FC<Props> = ({
       }
     }
   }
+
   const categories = bhosCountries.reduce((acc: string[], d) => {
     if (!acc.includes(d.category) && !d.category.includes(","))
       acc.push(d.category);
     return acc;
   }, []);
+
   const colorScale = scaleOrdinal<string, string>()
     .domain(categories)
     .range(["lightgrey", "gold", "orange", "red", "cornflowerblue"]);
+
   const projection = geoBertin1953();
+
   const countries = feature(
     neCountries,
     neCountries.objects.ne_admin_0_countries
   );
+
   const selectedBhosCountries = bhosCountries.filter(
     (d) => d.cabinet === activeCabinet
   );
+
   const bhosCountryFeatures: Feature[] = selectedBhosCountries.flatMap(
     (d, idx) => {
       const match = countries.features.find(
@@ -83,6 +90,9 @@ const BtorsAndCabinets: FC<Props> = ({
           ];
     }
   );
+
+  const categoryArray = [" "];
+
   return (
     <div>
       <Box sx={{ background: "muted", p: 2, my: 2, borderRadius: 2 }}>
@@ -117,44 +127,63 @@ const BtorsAndCabinets: FC<Props> = ({
         projection={projection}
       >
         <BaseLayer countries={neCountries} projection={projection} />
-        {bhosCountryFeatures.map((d, idx) => (
-          <g key={d.properties?.id}>
-            <defs>
-              <linearGradient
-                id={"grad" + idx}
-                x1="0%"
-                y1="0%"
-                x2="100%"
-                y2="0%"
-              >
-                {("" + d.properties?.category).split(",").map((d, idx, arr) => (
-                  <stop
-                    key={idx}
-                    offset={
-                      arr.length < 3 ? 1 / arr.length : (1 / arr.length) * idx
-                    }
-                    style={{ stopColor: colorScale(d), stopOpacity: "1" }}
-                  />
-                ))}
-              </linearGradient>
-            </defs>
-            <PolygonSymbol
-              feature={d}
-              projection={projection}
-              stroke="white"
-              cursor="pointer"
-              fill={"url(#grad" + idx + ")"}
-              onMouseOver={() => setActiveCountry(d.properties?.isoAlpha3)}
-              onMouseLeave={() => setActiveCountry(undefined)}
-              sx={{ transition: "opacity .5s" }}
-              opacity={
-                activeCountry && activeCountry !== d.properties?.isoAlpha3
-                  ? 0.05
-                  : 1
-              }
-            />
-          </g>
-        ))}
+        {bhosCountryFeatures.map((d) => {
+          const categoryWithoutSpace = d.properties?.category.split(" ").join();
+          return (
+            <g key={d.properties?.id}>
+              {!categoryArray.includes(categoryWithoutSpace) && (
+                <defs>
+                  <linearGradient
+                    id={categoryWithoutSpace}
+                    gradientUnits="userSpaceOnUse"
+                    x2={("" + d.properties?.category).split(",").length * 2}
+                    spreadMethod="repeat"
+                    gradientTransform="rotate(-45)"
+                  >
+                    {("" + d.properties?.category)
+                      .split(",")
+                      .map((d, idx, arr) => (
+                        <>
+                          <stop
+                            key={idx}
+                            offset={(1 / arr.length) * idx}
+                            style={{
+                              stopColor: colorScale(d),
+                              stopOpacity: "1",
+                            }}
+                          />
+                          <stop
+                            key={idx + "1"}
+                            offset={(1 / arr.length) * (idx + 1)}
+                            style={{
+                              stopColor: colorScale(d),
+                              stopOpacity: "1",
+                            }}
+                          />
+                        </>
+                      ))}
+                  </linearGradient>
+                </defs>
+              )}
+              {categoryArray.push(categoryWithoutSpace)}
+              <PolygonSymbol
+                feature={d}
+                projection={projection}
+                stroke="white"
+                cursor="pointer"
+                fill={"url(#" + categoryWithoutSpace + ")"}
+                onMouseOver={() => setActiveCountry(d.properties?.isoAlpha3)}
+                onMouseLeave={() => setActiveCountry(undefined)}
+                sx={{ transition: "opacity .5s" }}
+                opacity={
+                  activeCountry && activeCountry !== d.properties?.isoAlpha3
+                    ? 0.05
+                    : 1
+                }
+              />
+            </g>
+          );
+        })}
         <NominalLegend
           transform="translate(0 10)"
           fontSize={10}
