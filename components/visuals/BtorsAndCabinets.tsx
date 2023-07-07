@@ -119,7 +119,7 @@ const BtorsAndCabinets: FC<Props> = ({
       </Flex>
       <MapLayout
         bounds={{
-          width: 800,
+          width: 700,
           height: 275,
           frame: undefined,
           mapBody: undefined,
