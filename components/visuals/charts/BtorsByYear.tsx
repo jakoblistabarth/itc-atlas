@@ -102,33 +102,61 @@ const BtorsByYear: FC<Props> = ({
       <AxisY left={margin.left} yScale={yScale} />
       <g>
         {btorsByCountry.map((d) => {
-          const bhosCountry = bhosCountries
-            .filter((d) => d.cabinet === activeCabinet?.name)
-            .find((country) => country.isoAlpha3 === d.isoAlpha3);
-          const hasCategory = !!bhosCountry?.category;
+          const bhosCountry = bhosCountries.filter(
+            (country) =>
+              country.cabinet === activeCabinet?.name &&
+              country.isoAlpha3 === d.isoAlpha3
+          );
+          const hasCategory = bhosCountry.length >= 1;
           return (
             <Group key={d.isoAlpha3}>
-              <LinePath
-                data={d.data.sort((a, b) => ascending(a.year, b.year))}
-                x={(d) => xScale(d.year)}
-                y={(d) => yScale(d.count)}
-                strokeLinejoin="round"
-                strokeWidth={hasCategory ? 2 : 0.5}
-                sx={{ transition: "opacity .5s" }}
-                cursor="pointer"
-                stroke={
-                  hasCategory ? colorScale(bhosCountry.category) : "black"
-                }
-                opacity={
-                  activeCountry && d.isoAlpha3 === activeCountry
-                    ? 1
-                    : !activeCountry && hasCategory
-                    ? 1
-                    : 0.05
-                }
-                onMouseEnter={() => mouseEnterLeaveHandler(d.isoAlpha3)}
-                onMouseLeave={() => mouseEnterLeaveHandler(undefined)}
-              />
+              {hasCategory ? (
+                bhosCountry.map((d1, idx, arr) => (
+                  <LinePath
+                    key={idx}
+                    data={d.data.sort((a, b) => ascending(a.year, b.year))}
+                    x={(d) => xScale(d.year)}
+                    y={(d) => yScale(d.count)}
+                    strokeDasharray={
+                      idx != 0 ? (arr.length - idx) * 5 : 0 + "," + idx * 5
+                    }
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    sx={{ transition: "opacity .5s" }}
+                    cursor="pointer"
+                    stroke={colorScale(d1?.category)}
+                    opacity={
+                      activeCountry && d.isoAlpha3 === activeCountry
+                        ? 1
+                        : !activeCountry && hasCategory
+                        ? 1
+                        : 0.05
+                    }
+                    onMouseEnter={() => mouseEnterLeaveHandler(d.isoAlpha3)}
+                    onMouseLeave={() => mouseEnterLeaveHandler(undefined)}
+                  />
+                ))
+              ) : (
+                <LinePath
+                  data={d.data.sort((a, b) => ascending(a.year, b.year))}
+                  x={(d) => xScale(d.year)}
+                  y={(d) => yScale(d.count)}
+                  strokeLinejoin="round"
+                  strokeWidth="0.5"
+                  sx={{ transition: "opacity .5s" }}
+                  cursor="pointer"
+                  stroke={"black"}
+                  opacity={
+                    activeCountry && d.isoAlpha3 === activeCountry
+                      ? 1
+                      : !activeCountry && hasCategory
+                      ? 1
+                      : 0.05
+                  }
+                  onMouseEnter={() => mouseEnterLeaveHandler(d.isoAlpha3)}
+                  onMouseLeave={() => mouseEnterLeaveHandler(undefined)}
+                />
+              )}
             </Group>
           );
         })}
