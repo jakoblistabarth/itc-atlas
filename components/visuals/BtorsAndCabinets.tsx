@@ -1,6 +1,6 @@
 /** @jsxImportSource theme-ui */
 
-import { FC, useState } from "react";
+import { FC, Fragment, useState } from "react";
 import { NeCountriesTopoJson } from "../../types/NeTopoJson";
 import BtorsByYear from "./charts/BtorsByYear";
 import { BtorsGroupedByYear } from "../../lib/data/queries/btors/getBtorsGroupedByYear";
@@ -36,29 +36,80 @@ const BtorsAndCabinets: FC<Props> = ({
     undefined
   );
 
-  for (let i = 0; i < bhosCountries.length; i++) {
-    for (let j = i + 1; j < bhosCountries.length; j++) {
-      if (
-        bhosCountries[i].cabinet == bhosCountries[j].cabinet &&
-        bhosCountries[i].countryName == bhosCountries[j].countryName &&
-        bhosCountries[i].isoAlpha3 == bhosCountries[j].isoAlpha3
-      ) {
-        bhosCountries[i].category =
-          bhosCountries[i].category + "," + bhosCountries[j].category;
-        bhosCountries.splice(j, 1);
+  const bhosCountriesWithCategories = bhosCountries.reduce(
+    (acc: (BhosCountry & { categories: string[] })[], d) => {
+      const match = acc.find(
+        (m) => m.cabinet === d.cabinet && m.isoAlpha3 === d.isoAlpha3
+      );
+      if (!match) {
+        const s = { ...d, categories: [d.category] };
+        return [...acc, s];
       }
-    }
-  }
+      match.categories.push(d.category);
+      return acc;
+    },
+    []
+  );
 
   const categories = bhosCountries.reduce((acc: string[], d) => {
-    if (!acc.includes(d.category) && !d.category.includes(","))
-      acc.push(d.category);
+    if (!acc.includes(d.category)) return [...acc, d.category];
     return acc;
   }, []);
 
   const colorScale = scaleOrdinal<string, string>()
     .domain(categories)
     .range(["lightgrey", "gold", "orange", "red", "cornflowerblue"]);
+
+  const getCategoryKey = (categories: string[]) =>
+    categories.join("-").replaceAll(" ", "");
+
+  const categoryCombinations = bhosCountriesWithCategories.reduce(
+    (acc: string[][], d) => {
+      return !acc
+        .map((e) => getCategoryKey(e))
+        .includes(getCategoryKey(d.categories))
+        ? [...acc, d.categories]
+        : acc;
+    },
+    []
+  );
+
+  const GradientDefs = () => (
+    <defs>
+      {categoryCombinations.map((d) => {
+        const key = getCategoryKey(d);
+        return (
+          <linearGradient
+            id={key}
+            key={key}
+            gradientUnits="userSpaceOnUse"
+            x2={d.length * 2}
+            spreadMethod="repeat"
+            gradientTransform="rotate(-45)"
+          >
+            {d.map((category, i) => (
+              <Fragment key={`${key}-${category}`}>
+                <stop
+                  offset={(1 / d.length) * i}
+                  style={{
+                    stopColor: colorScale(category),
+                    stopOpacity: "1",
+                  }}
+                />
+                <stop
+                  offset={(1 / d.length) * (i + 1)}
+                  style={{
+                    stopColor: colorScale(category),
+                    stopOpacity: "1",
+                  }}
+                />
+              </Fragment>
+            ))}
+          </linearGradient>
+        );
+      })}
+    </defs>
+  );
 
   const projection = geoBertin1953();
 
@@ -67,7 +118,7 @@ const BtorsAndCabinets: FC<Props> = ({
     neCountries.objects.ne_admin_0_countries
   );
 
-  const selectedBhosCountries = bhosCountries.filter(
+  const selectedBhosCountries = bhosCountriesWithCategories.filter(
     (d) => d.cabinet === activeCabinet
   );
 
@@ -90,8 +141,6 @@ const BtorsAndCabinets: FC<Props> = ({
           ];
     }
   );
-
-  const categoryArray = [" "];
 
   return (
     <div>
@@ -126,52 +175,17 @@ const BtorsAndCabinets: FC<Props> = ({
         }}
         projection={projection}
       >
+        <GradientDefs />
         <BaseLayer countries={neCountries} projection={projection} />
         {bhosCountryFeatures.map((d) => {
-          const categoryWithoutSpace = d.properties?.category.split(" ").join();
           return (
             <g key={d.properties?.id}>
-              {!categoryArray.includes(categoryWithoutSpace) && (
-                <defs>
-                  <linearGradient
-                    id={categoryWithoutSpace}
-                    gradientUnits="userSpaceOnUse"
-                    x2={("" + d.properties?.category).split(",").length * 2}
-                    spreadMethod="repeat"
-                    gradientTransform="rotate(-45)"
-                  >
-                    {("" + d.properties?.category)
-                      .split(",")
-                      .map((d, idx, arr) => (
-                        <>
-                          <stop
-                            key={idx}
-                            offset={(1 / arr.length) * idx}
-                            style={{
-                              stopColor: colorScale(d),
-                              stopOpacity: "1",
-                            }}
-                          />
-                          <stop
-                            key={idx + "1"}
-                            offset={(1 / arr.length) * (idx + 1)}
-                            style={{
-                              stopColor: colorScale(d),
-                              stopOpacity: "1",
-                            }}
-                          />
-                        </>
-                      ))}
-                  </linearGradient>
-                </defs>
-              )}
-              {categoryArray.push(categoryWithoutSpace)}
               <PolygonSymbol
                 feature={d}
                 projection={projection}
                 stroke="white"
                 cursor="pointer"
-                fill={"url(#" + categoryWithoutSpace + ")"}
+                fill={`url(#${getCategoryKey(d.properties?.categories)})`}
                 onMouseOver={() => setActiveCountry(d.properties?.isoAlpha3)}
                 onMouseLeave={() => setActiveCountry(undefined)}
                 sx={{ transition: "opacity .5s" }}
