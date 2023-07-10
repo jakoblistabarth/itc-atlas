@@ -179,23 +179,22 @@ const BtorsAndCabinets: FC<Props> = ({
         <BaseLayer countries={neCountries} projection={projection} />
         {bhosCountryFeatures.map((d) => {
           return (
-            <g key={d.properties?.id}>
-              <PolygonSymbol
-                feature={d}
-                projection={projection}
-                stroke="white"
-                cursor="pointer"
-                fill={`url(#${getCategoryKey(d.properties?.categories)})`}
-                onMouseOver={() => setActiveCountry(d.properties?.isoAlpha3)}
-                onMouseLeave={() => setActiveCountry(undefined)}
-                sx={{ transition: "opacity .5s" }}
-                opacity={
-                  activeCountry && activeCountry !== d.properties?.isoAlpha3
-                    ? 0.05
-                    : 1
-                }
-              />
-            </g>
+            <PolygonSymbol
+              key={d.properties?.id}
+              feature={d}
+              projection={projection}
+              stroke="white"
+              cursor="pointer"
+              fill={`url(#${getCategoryKey(d.properties?.categories)})`}
+              onMouseOver={() => setActiveCountry(d.properties?.isoAlpha3)}
+              onMouseLeave={() => setActiveCountry(undefined)}
+              sx={{ transition: "opacity .5s" }}
+              opacity={
+                activeCountry && activeCountry !== d.properties?.isoAlpha3
+                  ? 0.05
+                  : 1
+              }
+            />
           );
         })}
         <NominalLegend
