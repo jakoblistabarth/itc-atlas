@@ -91,17 +91,11 @@ const BtorsAndCabinets: FC<Props> = ({
               <Fragment key={`${key}-${category}`}>
                 <stop
                   offset={(1 / d.length) * i}
-                  style={{
-                    stopColor: colorScale(category),
-                    stopOpacity: "1",
-                  }}
+                  stopColor={colorScale(category)}
                 />
                 <stop
                   offset={(1 / d.length) * (i + 1)}
-                  style={{
-                    stopColor: colorScale(category),
-                    stopOpacity: "1",
-                  }}
+                  stopColor={colorScale(category)}
                 />
               </Fragment>
             ))}
