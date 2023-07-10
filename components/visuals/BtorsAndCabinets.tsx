@@ -52,7 +52,7 @@ const BtorsAndCabinets: FC<Props> = ({
   );
 
   const categories = bhosCountries.reduce((acc: string[], d) => {
-    if (!acc.includes(d.category)) return [...acc, d.category];
+    if (!acc.includes(d.category)) acc.push(d.category);
     return acc;
   }, []);
 
@@ -177,26 +177,24 @@ const BtorsAndCabinets: FC<Props> = ({
       >
         <GradientDefs />
         <BaseLayer countries={neCountries} projection={projection} />
-        {bhosCountryFeatures.map((d) => {
-          return (
-            <PolygonSymbol
-              key={d.properties?.id}
-              feature={d}
-              projection={projection}
-              stroke="white"
-              cursor="pointer"
-              fill={`url(#${getCategoryKey(d.properties?.categories)})`}
-              onMouseOver={() => setActiveCountry(d.properties?.isoAlpha3)}
-              onMouseLeave={() => setActiveCountry(undefined)}
-              sx={{ transition: "opacity .5s" }}
-              opacity={
-                activeCountry && activeCountry !== d.properties?.isoAlpha3
-                  ? 0.05
-                  : 1
-              }
-            />
-          );
-        })}
+        {bhosCountryFeatures.map((d) => (
+          <PolygonSymbol
+            key={d.properties?.id}
+            feature={d}
+            projection={projection}
+            stroke="white"
+            cursor="pointer"
+            fill={`url(#${getCategoryKey(d.properties?.categories)})`}
+            onMouseOver={() => setActiveCountry(d.properties?.isoAlpha3)}
+            onMouseLeave={() => setActiveCountry(undefined)}
+            sx={{ transition: "opacity .5s" }}
+            opacity={
+              activeCountry && activeCountry !== d.properties?.isoAlpha3
+                ? 0.05
+                : 1
+            }
+          />
+        ))}
         <NominalLegend
           transform="translate(0 10)"
           fontSize={10}
