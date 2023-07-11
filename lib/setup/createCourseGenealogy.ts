@@ -5,8 +5,10 @@ import type { Link, Node } from "../../types/CourseGenealogy";
 import { TimelineEvent } from "../../types/TimelineEvent";
 
 const createCourseGenealogy = async () => {
-  const nodesPath = "./data/static/course-genealogy-nodes.csv";
-  const linksPath = "./data/static/course-genealogy-links.csv";
+  console.log("🤖 Compiling course genealogy …");
+  const inputDir = "./data/static";
+  const nodesPath = `${inputDir}/course-genealogy-nodes.csv`;
+  const linksPath = `${inputDir}/course-genealogy-links.csv`;
 
   const csvOpts = {
     delimiter: ";",
@@ -82,12 +84,12 @@ const createCourseGenealogy = async () => {
     nodes,
   };
 
-  const dirPath = "./data/itc";
-  if (!fs.existsSync(dirPath)) {
-    fs.mkdirSync(dirPath);
+  const outputDir = "./data/compiled";
+  if (!fs.existsSync(outputDir)) {
+    fs.mkdirSync(outputDir);
   }
   fs.writeFileSync(
-    dirPath + "/courseGenealogy.json",
+    outputDir + "/courseGenealogy.json",
     JSON.stringify(genealogy)
   );
 };
