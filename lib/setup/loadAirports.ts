@@ -1,4 +1,3 @@
-import axios from "axios";
 import csv from "csvtojson";
 import fs from "fs";
 
@@ -12,15 +11,12 @@ const loadAirports = async () => {
     return;
   }
 
-  const body = await axios.get(url, {
-    responseType: "blob",
-  });
-  const airports = await csv().fromString(body.data);
+  const response = await fetch(url);
+  const string = await response.text();
+  const airports = await csv().fromString(string);
 
   const majorAirports = airports.filter(
-    (airport) =>
-      // ["medium_airport", "large_airport"].includes(airport.type)
-      airport.type === "large_airport"
+    (airport) => airport.type === "large_airport"
   );
 
   majorAirports.forEach((airport) => {

@@ -2,7 +2,6 @@ import os from "os";
 import admZip from "adm-zip";
 // @ts-expect-error mapShaper is not typed
 import mapShaper from "mapshaper";
-import axios from "axios";
 import { NeScales } from "../../types/NeTopoJson";
 
 type fCategory = "physical" | "cultural";
@@ -23,12 +22,11 @@ const loadNaturalEarthData = () => {
   };
 
   const getFile = async (url: string, callback: () => void) => {
+    const response = await fetch(url);
     console.log(`downloading file 🛸 … (${url}) `);
-    const body = await axios.get(url, {
-      responseType: "arraybuffer",
-    });
+    const buffer = Buffer.from(await response.arrayBuffer());
 
-    const zip = new admZip(body.data);
+    const zip = new admZip(buffer);
     const output = tmpDir + getName(url) + "/";
     zip.extractAllToAsync(output, true, false, function (error) {
       if (error) {
