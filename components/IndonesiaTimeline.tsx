@@ -113,7 +113,7 @@ const IndonesiaTimeline: FC<Props> = ({
       if (!project.dateStart || !project.dateEnd) return [];
       return {
         name: project.nameShort ?? "unnamed project",
-        yOffset: project.id ?? "",
+        yOffset: project.nameShort ?? "",
         dateStart: new Date(project.dateStart),
         dateEnd: new Date(project.dateEnd),
         data: project,

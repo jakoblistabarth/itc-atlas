@@ -1,0 +1,309 @@
+[
+  {
+    "nameShort": "BPK-Aceh",
+    "type": "Consulting",
+    "status": "ongoing",
+    "dateStart": "2007-09-14T22:00:00.000Z",
+    "dateEnd": "2008-05-30T22:00:00.000Z",
+    "department": "EOS"
+  },
+  {
+    "nameShort": "Ba",
+    "type": "Contract Research",
+    "status": "Finished",
+    "dateStart": "1997-12-31T23:00:00.000Z",
+    "dateEnd": "2001-12-30T23:00:00.000Z",
+    "projectPartner": "BIG"
+  },
+  {
+    "nameShort": "GEO-INFO - NADIMA",
+    "type": "Contract Education",
+    "status": "ongoing",
+    "dateStart": "2003-05-31T22:00:00.000Z",
+    "dateEnd": "2003-06-14T22:00:00.000Z",
+    "department": "ESA",
+    "projectPartner": "Gadjah Mada Univesity"
+  },
+  {
+    "nameShort": "Indonesia Facility",
+    "type": "Contract Education",
+    "status": "ongoing",
+    "dateStart": "2007-09-30T22:00:00.000Z",
+    "dateEnd": "2010-09-29T22:00:00.000Z",
+    "department": "PGM",
+    "projectPartner": "Gadjah Mada Univesity"
+  },
+  {
+    "nameShort": "RC 02 Geo -info NADIMA",
+    "type": "Contract Education",
+    "status": "ongoing",
+    "dateStart": "2002-09-30T22:00:00.000Z",
+    "dateEnd": "2002-10-10T22:00:00.000Z",
+    "department": "ESA",
+    "projectPartner": "Gadjah Mada Univesity"
+  },
+  {
+    "nameShort": "TMT-Biodiv-Ind",
+    "type": "Contract Education",
+    "status": "ongoing",
+    "dateStart": "2013-08-31T22:00:00.000Z",
+    "dateEnd": "2013-12-30T23:00:00.000Z",
+    "department": "NRS",
+    "projectPartner": "Gadjah Mada Univesity"
+  },
+  {
+    "nameShort": "PUSPICS",
+    "type": "Education collaboration",
+    "status": "finalized",
+    "dateStart": "1985-01-01T00:00:00.000Z",
+    "dateEnd": "1990-01-01T00:00:00.000Z",
+    "projectPartner": "Gadjah Mada Univesity"
+  },
+  {
+    "nameShort": "e-GARUDA",
+    "status": "ongoing",
+    "dateStart": "2016-12-15T23:00:00.000Z",
+    "dateEnd": "2017-09-29T22:00:00.000Z",
+    "department": "WRS"
+  },
+  {
+    "nameShort": "GI",
+    "type": "Contract Education",
+    "status": "Finished",
+    "dateStart": "1995-12-31T23:00:00.000Z",
+    "dateEnd": "1997-06-30T22:00:00.000Z"
+  },
+  {
+    "nameShort": "JCP-III",
+    "type": "Consulting",
+    "status": "Approved",
+    "dateStart": "2018-03-04T23:00:00.000Z",
+    "dateEnd": "2020-09-29T22:00:00.000Z",
+    "department": "ESA",
+    "projectPartner": "BIG"
+  },
+  {
+    "nameShort": "Landslide Early Warning Course",
+    "type": "Contract Education",
+    "status": "ongoing",
+    "dateStart": "2017-06-30T22:00:00.000Z",
+    "dateEnd": "2017-12-30T23:00:00.000Z",
+    "department": "ESA"
+  },
+  {
+    "nameShort": "SEASMAC",
+    "type": "Contract Education",
+    "status": "ongoing",
+    "dateStart": "2013-04-08T22:00:00.000Z",
+    "dateEnd": "2014-04-08T22:00:00.000Z",
+    "department": "NRS"
+  },
+  {
+    "nameShort": "TM ASEA - INDONESIA",
+    "type": "Contract Education",
+    "status": "ongoing",
+    "dateStart": "2010-04-06T22:00:00.000Z",
+    "dateEnd": "2010-05-30T22:00:00.000Z",
+    "department": "NRS"
+  },
+  {
+    "nameShort": "TMT Climage Change (BMKG Indonesia)",
+    "type": "Contract Education",
+    "status": "Proposal",
+    "dateStart": "2012-11-04T23:00:00.000Z",
+    "dateEnd": "2013-03-13T23:00:00.000Z",
+    "department": "ESA"
+  },
+  {
+    "nameShort": "WALHI-EIA",
+    "type": "Contract Education",
+    "status": "ongoing",
+    "dateStart": "2007-04-30T22:00:00.000Z",
+    "dateEnd": "2007-11-29T23:00:00.000Z",
+    "department": "NRS"
+  },
+  {
+    "nameShort": "INECIS",
+    "type": "Contract Research",
+    "status": "Proposal",
+    "dateStart": "2019-02-28T23:00:00.000Z",
+    "dateEnd": "2020-02-29T23:00:00.000Z",
+    "department": "PGM"
+  },
+  {
+    "nameShort": "Technical University Bandung - Geodetic Engineering",
+    "type": "Education collaboration",
+    "status": "finalized",
+    "dateStart": "1984-01-01T00:00:00.000Z",
+    "dateEnd": "1992-01-01T00:00:00.000Z"
+  },
+  {
+    "nameShort": "SEA-SP",
+    "type": "Contract Education",
+    "status": "completed",
+    "dateStart": "2009-02-17T23:00:00.000Z",
+    "dateEnd": "2009-04-29T22:00:00.000Z",
+    "department": "NRS",
+    "projectPartner": "Ministry of environment and Forestry"
+  },
+  {
+    "nameShort": "CZM-Biotrop",
+    "type": "Contract Education",
+    "status": "Finished",
+    "dateStart": "2004-07-11T22:00:00.000Z",
+    "dateEnd": "2004-08-31T22:00:00.000Z",
+    "department": "NRS, ESA"
+  },
+  {
+    "nameShort": "LAPAN ILWIS",
+    "type": "Consulting",
+    "status": "ongoing",
+    "dateStart": "2007-12-09T23:00:00.000Z",
+    "dateEnd": "2007-12-14T23:00:00.000Z",
+    "department": "ESA"
+  },
+  {
+    "nameShort": "TAT",
+    "type": "Consulting",
+    "status": "Finished",
+    "dateStart": "1985-12-31T23:00:00.000Z",
+    "dateEnd": "1993-11-29T23:00:00.000Z",
+    "department": "GIP",
+    "projectPartner": "BIG"
+  },
+  {
+    "nameShort": "N-4 program",
+    "type": "Education collaboration",
+    "status": "finalized",
+    "dateStart": "1984-01-01T00:00:00.000Z",
+    "dateEnd": "1992-01-01T00:00:00.000Z",
+    "projectPartner": "BIG"
+  },
+  {
+    "nameShort": "SMARTseeds Indonesia",
+    "type": "Contract Education",
+    "status": "ongoing",
+    "dateStart": "2016-09-30T22:00:00.000Z",
+    "dateEnd": "2019-09-29T22:00:00.000Z",
+    "department": "EOS"
+  },
+  {
+    "nameShort": "MAHAKAM",
+    "type": "Contract Research",
+    "status": "ongoing",
+    "dateStart": "2007-02-21T23:00:00.000Z",
+    "dateEnd": "2011-02-21T23:00:00.000Z",
+    "department": "WRS",
+    "projectPartner": "BIG"
+  },
+  {
+    "nameShort": "MONCER",
+    "type": "Contract Research",
+    "status": "ongoing",
+    "dateStart": "2003-08-31T22:00:00.000Z",
+    "dateEnd": "2005-12-30T23:00:00.000Z",
+    "department": "PGM",
+    "projectPartner": "Ministry of environment and Forestry"
+  },
+  {
+    "nameShort": "MonFor TMT",
+    "type": "Contract Education",
+    "status": "ongoing",
+    "dateStart": "2018-07-15T22:00:00.000Z",
+    "dateEnd": "2019-04-29T22:00:00.000Z",
+    "department": "NRS",
+    "projectPartner": "Ministry of environment and Forestry"
+  },
+  {
+    "nameShort": "SI",
+    "type": "Consulting",
+    "status": "Finished",
+    "dateStart": "1997-12-31T23:00:00.000Z",
+    "dateEnd": "1999-08-31T22:00:00.000Z"
+  },
+  {
+    "nameShort": "WOTRO/East Kalimantan",
+    "type": "Contract Research",
+    "status": "completed",
+    "dateStart": "2002-12-31T23:00:00.000Z",
+    "dateEnd": "2004-02-29T23:00:00.000Z",
+    "department": "WRS"
+  },
+  {
+    "nameShort": "StuNedIV/TM-127",
+    "type": "Decentralization of Education",
+    "status": "Proposal",
+    "dateStart": "2017-08-31T22:00:00.000Z",
+    "dateEnd": "2017-12-30T23:00:00.000Z",
+    "department": "PGM"
+  },
+  {
+    "nameShort": "LDP",
+    "type": "Consulting",
+    "status": "ongoing",
+    "dateStart": "2003-08-31T22:00:00.000Z",
+    "dateEnd": "2003-10-31T23:00:00.000Z",
+    "department": "BPS"
+  },
+  {
+    "nameShort": "Maluku Province Regional Planning Project (LTA 72)",
+    "type": "Consulting",
+    "status": "finalized",
+    "dateStart": "1982-01-01T00:00:00.000Z",
+    "dateEnd": "1990-01-01T00:00:00.000Z"
+  },
+  {
+    "nameShort": "Pattimura University Land Evaluation Unit",
+    "type": "Education collaboration",
+    "status": "finalized",
+    "dateStart": "1987-01-01T00:00:00.000Z",
+    "dateEnd": "1991-01-01T00:00:00.000Z"
+  },
+  {
+    "nameShort": "EIRA",
+    "type": "Contract Education",
+    "status": "ongoing",
+    "dateStart": "2010-04-27T22:00:00.000Z",
+    "dateEnd": "2010-09-29T22:00:00.000Z",
+    "department": "NRS"
+  },
+  {
+    "nameShort": "LREP II",
+    "type": "Contract Education",
+    "status": "Finished",
+    "dateStart": "1992-05-31T22:00:00.000Z",
+    "dateEnd": "1997-11-30T23:00:00.000Z",
+    "projectPartner": "BIG"
+  },
+  {
+    "nameShort": "BILEWS",
+    "type": "Other",
+    "status": "Proposal",
+    "dateStart": "2019-02-28T23:00:00.000Z",
+    "dateEnd": "2023-05-31T22:00:00.000Z",
+    "department": "ESA"
+  },
+  {
+    "nameShort": "School for Environmental Conservation Management",
+    "type": "Education collaboration",
+    "status": "finalized",
+    "dateStart": "1984-01-01T00:00:00.000Z",
+    "dateEnd": "1992-01-01T00:00:00.000Z",
+    "projectPartner": "Ministry of environment and Forestry"
+  },
+  {
+    "nameShort": "GEOCAP",
+    "type": "Consulting",
+    "status": "ongoing",
+    "dateStart": "2013-12-31T23:00:00.000Z",
+    "dateEnd": "2017-06-29T22:00:00.000Z",
+    "department": "ESA"
+  },
+  {
+    "nameShort": "IN",
+    "type": "Contract Education",
+    "status": "completed",
+    "dateStart": "1997-12-31T23:00:00.000Z",
+    "dateEnd": "1998-02-28T23:00:00.000Z"
+  }
+]

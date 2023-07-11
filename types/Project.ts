@@ -10,15 +10,11 @@ export enum ProjectType {
 }
 
 export type ProjectIndonesia = {
-  id?: null;
   nameShort?: null;
   type?: ProjectType;
   status?: ProjectStatus;
   dateStart?: null;
   dateEnd?: null;
   department?: string;
-  totalBudget?: string;
-  budgetScaled?: string;
-  projectSupervisor?: string;
   projectPartner?: string;
 };
