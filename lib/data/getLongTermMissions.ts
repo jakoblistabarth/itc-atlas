@@ -6,7 +6,7 @@ import {
 import * as aq from "arquero";
 
 export default async function getLongTermMissions() {
-  const csvFilePath = "./data/itc/longTermMissions.csv";
+  const csvFilePath = "./data/static/longTermMissions.csv";
   const data = await csv({ checkType: true }).fromFile(csvFilePath);
 
   const tb = aq.from(data).derive({
