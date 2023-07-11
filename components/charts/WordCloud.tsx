@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Text } from "@visx/text";
-import Wordcloud from "@visx/wordcloud/lib/wordcloud";
+import Wordcloud from "@visx/wordcloud/lib/Wordcloud";
 import { scaleLog } from "d3";
 import { removeStopwords } from "stopword";
 
