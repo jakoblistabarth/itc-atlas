@@ -24,6 +24,8 @@ type Props = {
   dutchCabinets: DutchCabinet[];
 };
 
+export type BhosCountryWithCategories = BhosCountry & { categories: string[] };
+
 const BtorsAndCabinets: FC<Props> = ({
   btorsByYear,
   bhosCountries,
@@ -37,7 +39,7 @@ const BtorsAndCabinets: FC<Props> = ({
   );
 
   const bhosCountriesWithCategories = bhosCountries.reduce(
-    (acc: (BhosCountry & { categories: string[] })[], d) => {
+    (acc: BhosCountryWithCategories[], d) => {
       const match = acc.find(
         (m) => m.cabinet === d.cabinet && m.isoAlpha3 === d.isoAlpha3
       );
@@ -206,7 +208,7 @@ const BtorsAndCabinets: FC<Props> = ({
         activeCountry={activeCountry}
         btors={btorsByYear}
         colorScale={colorScale}
-        bhosCountries={bhosCountries}
+        bhosCountries={bhosCountriesWithCategories}
         mouseEnterLeaveHandler={(isoAlpha3?: string) =>
           setActiveCountry(isoAlpha3)
         }

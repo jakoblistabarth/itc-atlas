@@ -9,6 +9,7 @@ import {
   groups,
   max,
   min,
+  range,
   scaleLinear,
 } from "d3";
 import { BtorsGroupedByYear } from "../../../lib/data/queries/btors/getBtorsGroupedByYear";
@@ -19,14 +20,14 @@ import AxisY from "../../charts/Axis/AxisY";
 import RuleY from "../../charts/RuleY";
 import { MdArrowUpward } from "react-icons/md";
 import { DutchCabinet } from "../../../types/DutchCabinet";
-import { BhosCountry } from "../../../types/BhosCountry";
+import { BhosCountryWithCategories } from "../BtorsAndCabinets";
 
 type Props = {
   btors: BtorsGroupedByYear;
   activeCabinet?: DutchCabinet;
   activeCountry?: string;
   colorScale: ScaleOrdinal<string, string>;
-  bhosCountries: BhosCountry[];
+  bhosCountries: BhosCountryWithCategories[];
   mouseEnterLeaveHandler: (isoAlpha3?: string) => void;
 };
 
@@ -102,50 +103,29 @@ const BtorsByYear: FC<Props> = ({
       <AxisY left={margin.left} yScale={yScale} />
       <g>
         {btorsByCountry.map((d) => {
-          const bhosCountry = bhosCountries.filter(
-            (country) =>
-              country.cabinet === activeCabinet?.name &&
-              country.isoAlpha3 === d.isoAlpha3
+          const bhosCountry = bhosCountries.find(
+            (bhos) =>
+              bhos.cabinet === activeCabinet?.name &&
+              bhos.isoAlpha3 === d.isoAlpha3
           );
-          const hasCategory = bhosCountry.length >= 1;
+          const hasCategory = !!bhosCountry?.categories.length;
+          const categoryCount = hasCategory ? bhosCountry.categories.length : 1;
           return (
             <Group key={d.isoAlpha3}>
-              {hasCategory ? (
-                bhosCountry.map((d1, idx, arr) => (
-                  <LinePath
-                    key={idx}
-                    data={d.data.sort((a, b) => ascending(a.year, b.year))}
-                    x={(d) => xScale(d.year)}
-                    y={(d) => yScale(d.count)}
-                    strokeDasharray={
-                      idx != 0 ? (arr.length - idx) * 5 : 0 + "," + idx * 5
-                    }
-                    strokeLinejoin="round"
-                    strokeWidth="2"
-                    sx={{ transition: "opacity .5s" }}
-                    cursor="pointer"
-                    stroke={colorScale(d1?.category)}
-                    opacity={
-                      activeCountry && d.isoAlpha3 === activeCountry
-                        ? 1
-                        : !activeCountry && hasCategory
-                        ? 1
-                        : 0.05
-                    }
-                    onMouseEnter={() => mouseEnterLeaveHandler(d.isoAlpha3)}
-                    onMouseLeave={() => mouseEnterLeaveHandler(undefined)}
-                  />
-                ))
-              ) : (
+              {range(categoryCount).map((i) => (
                 <LinePath
+                  key={i}
                   data={d.data.sort((a, b) => ascending(a.year, b.year))}
                   x={(d) => xScale(d.year)}
                   y={(d) => yScale(d.count)}
-                  strokeLinejoin="round"
-                  strokeWidth="0.5"
+                  strokeDasharray={`${5} ${5 * (categoryCount - 1)}`}
+                  strokeDashoffset={i * -5}
+                  strokeWidth={hasCategory ? 2 : 0.5}
                   sx={{ transition: "opacity .5s" }}
                   cursor="pointer"
-                  stroke={"black"}
+                  strokeLinejoin="round"
+                  strokeLinecap="butt"
+                  stroke={colorScale(bhosCountry?.categories[i] ?? "")}
                   opacity={
                     activeCountry && d.isoAlpha3 === activeCountry
                       ? 1
@@ -156,7 +136,7 @@ const BtorsByYear: FC<Props> = ({
                   onMouseEnter={() => mouseEnterLeaveHandler(d.isoAlpha3)}
                   onMouseLeave={() => mouseEnterLeaveHandler(undefined)}
                 />
-              )}
+              ))}
             </Group>
           );
         })}
