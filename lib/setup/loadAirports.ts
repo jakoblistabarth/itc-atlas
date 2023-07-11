@@ -4,13 +4,14 @@ import fs from "fs";
 const loadAirports = async () => {
   const url = "https://datahub.io/core/airport-codes/r/airport-codes.csv";
   const output = "data/topographic/airports.json";
+  const fileName = output.slice(output.lastIndexOf("/") + 1);
 
-  console.log(`downloading airports 🛬 … (${url}) `);
   if (fs.existsSync(output)) {
-    console.log("file already exists, download skipped");
+    console.log(`📦 File "${fileName}" already exists, download skipped"`);
     return;
   }
 
+  console.log(`downloading airports 🛬 … (${url}) `);
   const response = await fetch(url);
   const string = await response.text();
   const airports = await csv().fromString(string);
