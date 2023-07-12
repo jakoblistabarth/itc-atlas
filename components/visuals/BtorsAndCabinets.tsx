@@ -138,6 +138,13 @@ const BtorsAndCabinets: FC<Props> = ({
     }
   );
 
+  let IsContainActiveCountry = false;
+  for (let i = 0; i < selectedBhosCountries.length; i++) {
+    if (activeCountry == selectedBhosCountries[i].isoAlpha3) {
+      IsContainActiveCountry = true;
+      break;
+    }
+  }
   return (
     <div>
       <Box sx={{ background: "muted", p: 2, my: 2, borderRadius: 2 }}>
@@ -173,6 +180,36 @@ const BtorsAndCabinets: FC<Props> = ({
       >
         <GradientDefs />
         <BaseLayer countries={neCountries} projection={projection} />
+        <PolygonSymbol
+          key={
+            !IsContainActiveCountry
+              ? countries.features.find(
+                  (country) => country.properties.ADM0_ISO === activeCountry
+                )?.properties.ADM0_ISO + "-active"
+              : "no-key"
+          }
+          feature={
+            !IsContainActiveCountry
+              ? countries.features.find(
+                  (country) => country.properties.ADM0_ISO === activeCountry
+                ) ?? {
+                  type: "Feature",
+                  properties: {},
+                  geometry: { type: "Point", coordinates: [] },
+                }
+              : {
+                  type: "Feature",
+                  properties: {},
+                  geometry: { type: "Point", coordinates: [] },
+                }
+          }
+          projection={projection}
+          stroke="white"
+          cursor="pointer"
+          fill="black"
+          sx={{ transition: "opacity .5s" }}
+          opacity={1}
+        />
         {bhosCountryFeatures.map((d) => (
           <PolygonSymbol
             key={d.properties?.id}
