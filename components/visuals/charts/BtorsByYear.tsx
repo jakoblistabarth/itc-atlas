@@ -57,6 +57,7 @@ const BtorsByYear: FC<Props> = ({
   const maxCount = max(btors, (d) => d.count) ?? 1;
   const minTime = min(btors, (d) => d.year) ?? 2000;
   const maxTime = max(btors, (d) => d.year) ?? new Date().getFullYear();
+
   const xScale = scaleLinear()
     .domain([minTime, maxTime])
     .range([margin.left, width - margin.right]);
@@ -68,6 +69,24 @@ const BtorsByYear: FC<Props> = ({
     isoAlpha3: d[0],
     data: d[1],
   }));
+
+  let flag = false;
+  for (let i = 0; i < btorsByCountry.length; i++) {
+    for (let j = minTime; j < maxTime + 1; j++) {
+      for (let l = 0; l < btorsByCountry[i].data.length; l++) {
+        flag = btorsByCountry[i].data[l].year === j;
+        if (flag) break;
+      }
+
+      if (!flag) {
+        btorsByCountry[i].data.push({
+          year: j,
+          isoAlpha3: btorsByCountry[i].isoAlpha3,
+          count: 0,
+        });
+      }
+    }
+  }
 
   return (
     <svg
