@@ -1,8 +1,9 @@
 /** @jsxImportSource theme-ui */
 
-import { FC } from "react";
+import { FC, useState } from "react";
 import useMeasure from "react-use-measure";
 import {
+  scaleQuantize,
   ScaleOrdinal,
   ascending,
   format,
@@ -21,6 +22,9 @@ import RuleY from "../../charts/RuleY";
 import { MdArrowUpward } from "react-icons/md";
 import { DutchCabinet } from "../../../types/DutchCabinet";
 import { BhosCountryWithCategories } from "../BtorsAndCabinets";
+import Tooltip from "../../Tooltip/Tooltip";
+import TooltipContent from "../../Tooltip/TooltipContent";
+import { TooltipTrigger } from "../../Tooltip/TooltipTrigger";
 
 type Props = {
   btors: BtorsGroupedByYear;
@@ -57,7 +61,7 @@ const BtorsByYear: FC<Props> = ({
   const maxCount = max(btors, (d) => d.count) ?? 1;
   const minTime = min(btors, (d) => d.year) ?? 2000;
   const maxTime = max(btors, (d) => d.year) ?? new Date().getFullYear();
-
+  const [cursorPositionX, setX] = useState<number | undefined>(undefined);
   const xScale = scaleLinear()
     .domain([minTime, maxTime])
     .range([margin.left, width - margin.right]);
@@ -76,6 +80,9 @@ const BtorsByYear: FC<Props> = ({
       return { year, count: match?.count ?? 0 };
     }),
   }));
+  const TooltipScale = scaleQuantize()
+    .domain([197, 753])
+    .range(range(minTime, maxTime + 1));
 
   return (
     <svg
@@ -120,35 +127,63 @@ const BtorsByYear: FC<Props> = ({
           const hasCategory = !!bhosCountry?.categories.length;
           const categoryCount = hasCategory ? bhosCountry.categories.length : 1;
           return (
-            <Group key={d.isoAlpha3}>
-              {range(categoryCount).map((i) => (
-                <LinePath
-                  key={i}
-                  data={d.data.sort((a, b) => ascending(a.year, b.year))}
-                  x={(d) => xScale(d.year)}
-                  y={(d) => yScale(d.count)}
-                  strokeDasharray={`${5} ${5 * (categoryCount - 1)}`}
-                  strokeDashoffset={i * -5}
-                  strokeWidth={hasCategory ? 2 : 0.5}
-                  strokeLinejoin="round"
-                  strokeLinecap="butt"
-                  stroke={
-                    isActiveCountry
-                      ? "black"
-                      : colorScale(bhosCountry?.categories[i] ?? "")
-                  }
-                  sx={{ transition: "opacity .5s" }}
-                  opacity={
-                    isActiveCountry || (!activeCountry && hasCategory)
-                      ? 1
-                      : 0.05
-                  }
-                  cursor="pointer"
-                  onMouseEnter={() => mouseEnterLeaveHandler(d.isoAlpha3)}
-                  onMouseLeave={() => mouseEnterLeaveHandler(undefined)}
-                />
-              ))}
-            </Group>
+            <Tooltip key={d.isoAlpha3}>
+              <TooltipTrigger asChild>
+                <g>
+                  <Group>
+                    {range(categoryCount).map((i) => (
+                      <LinePath
+                        key={i}
+                        data={d.data.sort((a, b) => ascending(a.year, b.year))}
+                        x={(d) => xScale(d.year)}
+                        y={(d) => yScale(d.count)}
+                        strokeDasharray={`${5} ${5 * (categoryCount - 1)}`}
+                        strokeDashoffset={i * -5}
+                        strokeWidth={hasCategory ? 2 : 0.5}
+                        strokeLinejoin="round"
+                        strokeLinecap="butt"
+                        stroke={
+                          isActiveCountry
+                            ? "black"
+                            : colorScale(bhosCountry?.categories[i] ?? "")
+                        }
+                        sx={{ transition: "opacity .5s" }}
+                        opacity={
+                          isActiveCountry || (!activeCountry && hasCategory)
+                            ? 1
+                            : 0.05
+                        }
+                        cursor="pointer"
+                        onMouseMove={(event) => {
+                          setX(event.clientX);
+                          mouseEnterLeaveHandler(d.isoAlpha3);
+                        }}
+                        onMouseLeave={() => mouseEnterLeaveHandler(undefined)}
+                      />
+                    ))}
+                  </Group>
+                </g>
+              </TooltipTrigger>
+              {activeCountry === d.isoAlpha3 && (
+                <TooltipContent>
+                  <div>
+                    <strong>{d.isoAlpha3}</strong>
+                    <br />
+                    year:
+                    {cursorPositionX
+                      ? TooltipScale(cursorPositionX)
+                      : undefined}
+                    <br />
+                    count:
+                    {
+                      d.data.find(
+                        (d) => d.year === TooltipScale(cursorPositionX ?? 0)
+                      )?.count
+                    }
+                  </div>
+                </TooltipContent>
+              )}
+            </Tooltip>
           );
         })}
         {activeCountry && !countriesWithBtors.includes(activeCountry) && (
