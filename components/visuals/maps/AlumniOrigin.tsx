@@ -1,3 +1,5 @@
+/** @jsxImportSource theme-ui */
+
 import { FC, useContext, useState } from "react";
 import BaseLayer from "../../map/BaseLayer";
 import { MapContext } from "../../map/layout/MapContext";
@@ -23,6 +25,7 @@ import getCountryWithApplicantCount, {
 } from "../../../lib/data/queries/country/getCountryWithApplicantCount";
 import getCentroidByIsoCode from "../../../lib/data/getCentroidByIsoCode";
 import { descending, max, range, scaleSqrt } from "d3";
+import { MdArrowForward } from "react-icons/md";
 
 type Props = {
   neCountriesTopoJson: NeCountriesTopoJson;
@@ -145,7 +148,9 @@ const AlumniOrigin: FC<Props> = ({
                     <div>
                       <strong>{point.properties?.NAME_EN}</strong>
                       <br />
-                      {point.properties?.alumniCount} M.Sc. alumni
+                      {point.properties?.alumniCount}{" "}
+                      <span sx={{ textDecoration: "underline" }}>{level}</span>{" "}
+                      alumni
                     </div>
                     <div>
                       {sparklineDataFilled && (
@@ -156,6 +161,9 @@ const AlumniOrigin: FC<Props> = ({
                         />
                       )}
                     </div>
+                    <p sx={{ color: "grey", m: 0 }}>
+                      All alumni over time <MdArrowForward />
+                    </p>
                   </TooltipContent>
                 )}
               </Tooltip>
