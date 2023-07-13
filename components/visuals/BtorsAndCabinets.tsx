@@ -118,33 +118,22 @@ const BtorsAndCabinets: FC<Props> = ({
     (d) => d.cabinet === activeCabinet
   );
 
-  const bhosCountryFeatures: Feature[] = selectedBhosCountries.flatMap(
+  const countriesWithCategories: Feature[] = countries.features.map(
     (d, idx) => {
-      const match = countries.features.find(
-        (country) => d.isoAlpha3 === country.properties.ADM0_A3
+      const match = selectedBhosCountries.find(
+        (country) => d.properties.ADM0_A3_NL === country.isoAlpha3
       );
-      return !match
-        ? []
-        : [
-            {
-              type: "Feature",
-              properties: {
-                id: idx,
-                ...d,
-              },
-              geometry: match.geometry,
-            },
-          ];
+      return {
+        ...d,
+        properties: {
+          id: idx,
+          isoAlpha3: d.properties.ADM0_A3_NL,
+          categories: match?.categories,
+        },
+      };
     }
   );
 
-  let IsContainActiveCountry = false;
-  for (let i = 0; i < selectedBhosCountries.length; i++) {
-    if (activeCountry == selectedBhosCountries[i].isoAlpha3) {
-      IsContainActiveCountry = true;
-      break;
-    }
-  }
   return (
     <div>
       <Box sx={{ background: "muted", p: 2, my: 2, borderRadius: 2 }}>
@@ -180,54 +169,28 @@ const BtorsAndCabinets: FC<Props> = ({
       >
         <GradientDefs />
         <BaseLayer countries={neCountries} projection={projection} />
-        <PolygonSymbol
-          key={
-            !IsContainActiveCountry
-              ? countries.features.find(
-                  (country) => country.properties.ADM0_ISO === activeCountry
-                )?.properties.ADM0_ISO + "-active"
-              : "no-key"
-          }
-          feature={
-            !IsContainActiveCountry
-              ? countries.features.find(
-                  (country) => country.properties.ADM0_ISO === activeCountry
-                ) ?? {
-                  type: "Feature",
-                  properties: {},
-                  geometry: { type: "Point", coordinates: [] },
-                }
-              : {
-                  type: "Feature",
-                  properties: {},
-                  geometry: { type: "Point", coordinates: [] },
-                }
-          }
-          projection={projection}
-          stroke="white"
-          cursor="pointer"
-          fill="black"
-          sx={{ transition: "opacity .5s" }}
-          opacity={1}
-        />
-        {bhosCountryFeatures.map((d) => (
-          <PolygonSymbol
-            key={d.properties?.id}
-            feature={d}
-            projection={projection}
-            stroke="white"
-            cursor="pointer"
-            fill={`url(#${getCategoryKey(d.properties?.categories)})`}
-            onMouseOver={() => setActiveCountry(d.properties?.isoAlpha3)}
-            onMouseLeave={() => setActiveCountry(undefined)}
-            sx={{ transition: "opacity .5s" }}
-            opacity={
-              activeCountry && activeCountry !== d.properties?.isoAlpha3
-                ? 0.05
-                : 1
-            }
-          />
-        ))}
+        {countriesWithCategories.map((d) => {
+          const isActiveCountry = activeCountry === d.properties?.isoAlpha3;
+          return (
+            <PolygonSymbol
+              key={d.properties?.id}
+              feature={d}
+              projection={projection}
+              stroke={isActiveCountry ? "black" : "white"}
+              strokeLinejoin="round"
+              cursor="pointer"
+              fill={
+                d.properties?.categories
+                  ? `url(#${getCategoryKey(d.properties?.categories)})`
+                  : "transparent"
+              }
+              onMouseOver={() => setActiveCountry(d.properties?.isoAlpha3)}
+              onMouseLeave={() => setActiveCountry(undefined)}
+              sx={{ transition: "opacity .5s" }}
+              opacity={!isActiveCountry && !d.properties?.categories ? 0.05 : 1}
+            />
+          );
+        })}
         <NominalLegend
           transform="translate(0 10)"
           fontSize={10}
