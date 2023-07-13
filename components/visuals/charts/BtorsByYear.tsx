@@ -69,7 +69,7 @@ const BtorsByYear: FC<Props> = ({
 
   const btorsByCountryFilled = countriesWithBtors.map((isoAlpha3) => ({
     isoAlpha3,
-    data: range(minTime, maxTime).map((year) => {
+    data: range(minTime, maxTime + 1).map((year) => {
       const match = btors.find(
         (d) => d.isoAlpha3 === isoAlpha3 && d.year === year
       );
