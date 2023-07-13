@@ -6,11 +6,11 @@ import {
   ScaleOrdinal,
   ascending,
   format,
-  groups,
   max,
   min,
   range,
   scaleLinear,
+  union,
 } from "d3";
 import { BtorsGroupedByYear } from "../../../lib/data/queries/btors/getBtorsGroupedByYear";
 import { LinePath } from "@visx/shape";
@@ -65,28 +65,17 @@ const BtorsByYear: FC<Props> = ({
     .domain([0, maxCount])
     .range([chartHeight - margin.bottom, margin.top]);
 
-  const btorsByCountry = groups(btors, (d) => d.isoAlpha3).map((d) => ({
-    isoAlpha3: d[0],
-    data: d[1],
+  const countriesWithBtors = Array.from(union(btors.map((d) => d.isoAlpha3)));
+
+  const btorsByCountryFilled = countriesWithBtors.map((isoAlpha3) => ({
+    isoAlpha3,
+    data: range(minTime, maxTime).map((year) => {
+      const match = btors.find(
+        (d) => d.isoAlpha3 === isoAlpha3 && d.year === year
+      );
+      return { year, count: match?.count ?? 0 };
+    }),
   }));
-
-  let flag = false;
-  for (let i = 0; i < btorsByCountry.length; i++) {
-    for (let j = minTime; j < maxTime + 1; j++) {
-      for (let l = 0; l < btorsByCountry[i].data.length; l++) {
-        flag = btorsByCountry[i].data[l].year === j;
-        if (flag) break;
-      }
-
-      if (!flag) {
-        btorsByCountry[i].data.push({
-          year: j,
-          isoAlpha3: btorsByCountry[i].isoAlpha3,
-          count: 0,
-        });
-      }
-    }
-  }
 
   return (
     <svg
@@ -121,12 +110,13 @@ const BtorsByYear: FC<Props> = ({
       />
       <AxisY left={margin.left} yScale={yScale} />
       <g>
-        {btorsByCountry.map((d) => {
+        {btorsByCountryFilled.map((d) => {
           const bhosCountry = bhosCountries.find(
             (bhos) =>
               bhos.cabinet === activeCabinet?.name &&
               bhos.isoAlpha3 === d.isoAlpha3
           );
+          const isActiveCountry = activeCountry === d.isoAlpha3;
           const hasCategory = !!bhosCountry?.categories.length;
           const categoryCount = hasCategory ? bhosCountry.categories.length : 1;
           return (
@@ -140,18 +130,20 @@ const BtorsByYear: FC<Props> = ({
                   strokeDasharray={`${5} ${5 * (categoryCount - 1)}`}
                   strokeDashoffset={i * -5}
                   strokeWidth={hasCategory ? 2 : 0.5}
-                  sx={{ transition: "opacity .5s" }}
-                  cursor="pointer"
                   strokeLinejoin="round"
                   strokeLinecap="butt"
-                  stroke={colorScale(bhosCountry?.categories[i] ?? "")}
+                  stroke={
+                    isActiveCountry
+                      ? "black"
+                      : colorScale(bhosCountry?.categories[i] ?? "")
+                  }
+                  sx={{ transition: "opacity .5s" }}
                   opacity={
-                    activeCountry && d.isoAlpha3 === activeCountry
-                      ? 1
-                      : !activeCountry && hasCategory
+                    isActiveCountry || (!activeCountry && hasCategory)
                       ? 1
                       : 0.05
                   }
+                  cursor="pointer"
                   onMouseEnter={() => mouseEnterLeaveHandler(d.isoAlpha3)}
                   onMouseLeave={() => mouseEnterLeaveHandler(undefined)}
                 />
@@ -159,14 +151,13 @@ const BtorsByYear: FC<Props> = ({
             </Group>
           );
         })}
-        {activeCountry &&
-          !btorsByCountry.map((d) => d.isoAlpha3).includes(activeCountry) && (
-            <g>
-              <text x={width / 2 - 30} y="150" fontSize="10px" fill="red">
-                No Travel for {activeCountry}
-              </text>
-            </g>
-          )}
+        {activeCountry && !countriesWithBtors.includes(activeCountry) && (
+          <g>
+            <text x={width / 2 - 30} y="150" fontSize="10px" fill="red">
+              No Travel for {activeCountry}
+            </text>
+          </g>
+        )}
       </g>
     </svg>
   );
