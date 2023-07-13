@@ -21,7 +21,6 @@ export default async function handler(
   res: NextApiResponse<CountryWithApplicantCount | { error: string }>
 ) {
   const { level } = req.query;
-  console.log(level);
   if (Array.isArray(level))
     return res.status(400).json({ error: "Please provide exact 1 level" });
   res.status(200).json(await getCountryWithApplicantCount(level));
