@@ -81,7 +81,7 @@ const BtorsByYear: FC<Props> = ({
     }),
   }));
   const TooltipScale = scaleQuantize()
-    .domain([197, 753])
+    .domain([20, width - 20])
     .range(range(minTime, maxTime + 1));
 
   return (
@@ -155,7 +155,7 @@ const BtorsByYear: FC<Props> = ({
                         }
                         cursor="pointer"
                         onMouseMove={(event) => {
-                          setX(event.clientX);
+                          setX(event.nativeEvent.offsetX);
                           mouseEnterLeaveHandler(d.isoAlpha3);
                         }}
                         onMouseLeave={() => mouseEnterLeaveHandler(undefined)}
