@@ -62,6 +62,8 @@ const BtorsByYear: FC<Props> = ({
   const minTime = min(btors, (d) => d.year) ?? 2000;
   const maxTime = max(btors, (d) => d.year) ?? new Date().getFullYear();
   const [cursorPositionX, setX] = useState<number | undefined>(undefined);
+  const [left, setLeft] = useState<number | undefined>(undefined);
+  const [top, setTop] = useState<number | undefined>(undefined);
   const xScale = scaleLinear()
     .domain([minTime, maxTime])
     .range([margin.left, width - margin.right]);
@@ -156,6 +158,8 @@ const BtorsByYear: FC<Props> = ({
                         cursor="pointer"
                         onMouseMove={(event) => {
                           setX(event.nativeEvent.offsetX);
+                          setLeft(event.pageX + 15);
+                          setTop(event.pageY - 15);
                           mouseEnterLeaveHandler(d.isoAlpha3);
                         }}
                         onMouseLeave={() => mouseEnterLeaveHandler(undefined)}
@@ -165,7 +169,7 @@ const BtorsByYear: FC<Props> = ({
                 </g>
               </TooltipTrigger>
               {activeCountry === d.isoAlpha3 && (
-                <TooltipContent>
+                <TooltipContent left={left} top={top}>
                   <div>
                     <strong>{d.isoAlpha3}</strong>
                     <br />
