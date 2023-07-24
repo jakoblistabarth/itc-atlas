@@ -1,6 +1,6 @@
 /** @jsxImportSource theme-ui */
 
-import { FC, Fragment, useState } from "react";
+import { FC, Fragment, useMemo, useState } from "react";
 import { NeCountriesTopoJson } from "../../types/NeTopoJson";
 import BtorsByYear from "./charts/BtorsByYear";
 import { BtorsGroupedByYear } from "../../lib/data/queries/btors/getBtorsGroupedByYear";
@@ -38,43 +38,52 @@ const BtorsAndCabinets: FC<Props> = ({
     undefined
   );
 
-  const bhosCountriesWithCategories = bhosCountries.reduce(
-    (acc: BhosCountryWithCategories[], d) => {
-      const match = acc.find(
-        (m) => m.cabinet === d.cabinet && m.isoAlpha3 === d.isoAlpha3
-      );
-      if (!match) {
-        const s = { ...d, categories: [d.category] };
-        return [...acc, s];
-      }
-      match.categories.push(d.category);
-      return acc;
-    },
-    []
-  );
-
-  const categories = bhosCountries.reduce((acc: string[], d) => {
-    if (!acc.includes(d.category)) acc.push(d.category);
-    return acc;
-  }, []);
-
-  const colorScale = scaleOrdinal<string, string>()
-    .domain(categories)
-    .range(["lightgrey", "gold", "orange", "red", "cornflowerblue"]);
-
   const getCategoryKey = (categories: string[]) =>
     categories.join("-").replaceAll(" ", "");
 
-  const categoryCombinations = bhosCountriesWithCategories.reduce(
-    (acc: string[][], d) => {
-      return !acc
-        .map((e) => getCategoryKey(e))
-        .includes(getCategoryKey(d.categories))
-        ? [...acc, d.categories]
-        : acc;
-    },
-    []
-  );
+  const { bhosCountriesWithCategories, categoryCombinations, colorScale } =
+    useMemo(() => {
+      const bhosCountriesWithCategories = bhosCountries.reduce(
+        (acc: BhosCountryWithCategories[], d) => {
+          const match = acc.find(
+            (m) => m.cabinet === d.cabinet && m.isoAlpha3 === d.isoAlpha3
+          );
+          if (!match) {
+            const s = { ...d, categories: [d.category] };
+            return [...acc, s];
+          }
+          match.categories.push(d.category);
+          return acc;
+        },
+        []
+      );
+
+      const categories = bhosCountries.reduce((acc: string[], d) => {
+        if (!acc.includes(d.category)) acc.push(d.category);
+        return acc;
+      }, []);
+
+      const colorScale = scaleOrdinal<string, string>()
+        .domain(categories)
+        .range(["lightgrey", "gold", "orange", "red", "cornflowerblue"]);
+
+      const categoryCombinations = bhosCountriesWithCategories.reduce(
+        (acc: string[][], d) => {
+          return !acc
+            .map((e) => getCategoryKey(e))
+            .includes(getCategoryKey(d.categories))
+            ? [...acc, d.categories]
+            : acc;
+        },
+        []
+      );
+
+      return {
+        bhosCountriesWithCategories,
+        colorScale,
+        categoryCombinations,
+      };
+    }, [bhosCountries]);
 
   const GradientDefs = () => (
     <defs>
@@ -109,30 +118,33 @@ const BtorsAndCabinets: FC<Props> = ({
 
   const projection = geoBertin1953();
 
-  const countries = feature(
-    neCountries,
-    neCountries.objects.ne_admin_0_countries
+  const countries = useMemo(
+    () => feature(neCountries, neCountries.objects.ne_admin_0_countries),
+    [neCountries]
   );
 
-  const selectedBhosCountries = bhosCountriesWithCategories.filter(
-    (d) => d.cabinet === activeCabinet
-  );
+  const countriesWithCategories = useMemo(() => {
+    const selectedBhosCountries = bhosCountriesWithCategories.filter(
+      (d) => d.cabinet === activeCabinet
+    );
 
-  const countriesWithCategories: Feature[] = countries.features.map(
-    (d, idx) => {
-      const match = selectedBhosCountries.find(
-        (country) => d.properties.ADM0_A3_NL === country.isoAlpha3
-      );
-      return {
-        ...d,
-        properties: {
-          id: idx,
-          isoAlpha3: d.properties.ADM0_A3_NL,
-          categories: match?.categories,
-        },
-      };
-    }
-  );
+    const countriesWithCategories: Feature[] = countries.features.map(
+      (d, idx) => {
+        const match = selectedBhosCountries.find(
+          (country) => d.properties.ADM0_A3_NL === country.isoAlpha3
+        );
+        return {
+          ...d,
+          properties: {
+            id: idx,
+            isoAlpha3: d.properties.ADM0_A3_NL,
+            categories: match?.categories,
+          },
+        };
+      }
+    );
+    return countriesWithCategories;
+  }, [countries, activeCabinet, bhosCountriesWithCategories]);
 
   return (
     <div>
