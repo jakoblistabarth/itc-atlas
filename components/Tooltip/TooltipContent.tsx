@@ -4,15 +4,16 @@ import { useTooltipContext } from "./Tooltip";
 
 type Props = {
   raised?: boolean;
+  left?: number;
+  top?: number;
 };
 
 const TooltipContent = forwardRef<
   HTMLDivElement,
   React.HTMLProps<HTMLDivElement> & Props
->(function TooltipContent({ raised = true, ...props }, propRef) {
+>(function TooltipContent({ raised = true, left, top, ...props }, propRef) {
   const context = useTooltipContext();
   const ref = useMergeRefs([context.refs.setFloating, propRef]);
-
   return (
     <FloatingPortal>
       {context.open && (
@@ -20,8 +21,8 @@ const TooltipContent = forwardRef<
           ref={ref}
           style={{
             position: context.strategy,
-            top: context.y ?? 0,
-            left: context.x ?? 0,
+            top: top ?? context.y ?? 0,
+            left: left ?? context.x ?? 0,
             visibility: context.x == null ? "hidden" : "visible",
             backgroundColor: "white",
             padding: 5,
