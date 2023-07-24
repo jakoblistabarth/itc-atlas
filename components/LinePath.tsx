@@ -6,6 +6,7 @@ import Tooltip from "./Tooltip/Tooltip";
 import { TooltipTrigger } from "./Tooltip/TooltipTrigger";
 import TooltipContent from "./Tooltip/TooltipContent";
 import { ScaleLinear, ascending, range } from "d3";
+import { Text } from "theme-ui";
 
 type Props = {
   mouseEnterLeaveHandler: (identifier?: string) => void;
@@ -25,8 +26,8 @@ const LinePath: FC<Props> = ({
   mouseEnterLeaveHandler,
   xScale,
   yScale,
-  xLabel = "x",
-  yLabel = "y",
+  xLabel,
+  yLabel,
   color = "black",
   identifier,
   isSelected,
@@ -98,17 +99,32 @@ const LinePath: FC<Props> = ({
               onMouseLeave={onMouseLeave}
             />
           )}
+          {isSelected && (
+            <circle
+              cx={xScale(xScaleRevers(cursorPositionX ?? 0))}
+              cy={yScale(
+                data.find((d) => d.x === xScaleRevers(cursorPositionX ?? 0))
+                  ?.y ?? 0
+              )}
+              fill="transparent"
+              strokeWidth={1}
+              stroke={Array.isArray(color) ? color[0] : color}
+              r={4}
+            />
+          )}
         </g>
       </TooltipTrigger>
       <TooltipContent left={left} top={top}>
         <div>
           <strong>{identifier}</strong>
           <br />
-          {xLabel}:{" "}
+          {xLabel && <>{xLabel}: </>}
           {cursorPositionX ? xScaleRevers(cursorPositionX) : undefined}
           <br />
-          {yLabel}:{" "}
-          {data.find((d) => d.x === xScaleRevers(cursorPositionX ?? 0))?.y}
+          <Text variant="kpi">
+            {data.find((d) => d.x === xScaleRevers(cursorPositionX ?? 0))?.y}
+          </Text>
+          {yLabel && <div>{yLabel}</div>}
         </div>
       </TooltipContent>
     </Tooltip>

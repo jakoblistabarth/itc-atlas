@@ -7,10 +7,11 @@ import { BtorsGroupedByYear } from "../../../lib/data/queries/btors/getBtorsGrou
 import AxisX from "../../charts/Axis/AxisX";
 import AxisY from "../../charts/Axis/AxisY";
 import RuleY from "../../charts/RuleY";
-import { MdArrowUpward } from "react-icons/md";
+import { MdArrowUpward, MdInfoOutline } from "react-icons/md";
 import { DutchCabinet } from "../../../types/DutchCabinet";
 import { BhosCountryWithCategories } from "../BtorsAndCabinets";
 import LinePath from "../../LinePath";
+import { Group } from "@visx/group";
 
 type Props = {
   btors: BtorsGroupedByYear;
@@ -31,7 +32,7 @@ const BtorsByYear: FC<Props> = ({
 }) => {
   const [chartRef, { width }] = useMeasure();
 
-  const chartHeight = 300;
+  const height = 300;
   const margin = useMemo(
     () => ({
       top: 30,
@@ -56,7 +57,7 @@ const BtorsByYear: FC<Props> = ({
       .range([margin.left, width - margin.right]);
     const yScale = scaleLinear()
       .domain([0, maxCount])
-      .range([chartHeight - margin.bottom, margin.top]);
+      .range([height - margin.bottom, margin.top]);
     const countriesWithBtors = Array.from(union(btors.map((d) => d.isoAlpha3)));
     const btorsByCountryFilled = countriesWithBtors.map((isoAlpha3) => ({
       isoAlpha3,
@@ -78,38 +79,47 @@ const BtorsByYear: FC<Props> = ({
     };
   }, [btors, margin, width]);
 
+  const hasNoTravelData = useMemo(
+    () =>
+      activeCountry &&
+      !btorsByCountryFilled.map((d) => d.isoAlpha3).includes(activeCountry),
+    [activeCountry, btorsByCountryFilled]
+  );
+
   return (
     <svg
       ref={chartRef}
       width={"100%"}
       height={"100%"}
-      viewBox={`0 0 ${width} ${chartHeight}`}
+      viewBox={`0 0 ${width} ${height}`}
     >
-      <g>
-        <MdArrowUpward size={"10"} />
-        <text x={"1.5em"} fontSize={10} dominantBaseline={"hanging"}>
-          No. of Travels per year
-        </text>
-      </g>
-      {cabinetStart && cabinetEnd && (
-        <rect
-          x={xScale(cabinetStart.getFullYear())}
-          y={yScale(maxCount)}
-          height={yScale(0) - yScale(maxCount)}
-          sx={{ fill: "muted" }}
-          width={
-            xScale(cabinetEnd.getFullYear()) -
-            xScale(cabinetStart.getFullYear())
-          }
+      <g opacity={hasNoTravelData ? 0.5 : 1} sx={{ transition: "opacity .5s" }}>
+        <g>
+          <MdArrowUpward size={"10"} />
+          <text x={"1.5em"} fontSize={10} dominantBaseline={"hanging"}>
+            No. of Travels per year
+          </text>
+        </g>
+        {cabinetStart && cabinetEnd && (
+          <rect
+            x={xScale(cabinetStart.getFullYear())}
+            y={yScale(maxCount)}
+            height={yScale(0) - yScale(maxCount)}
+            sx={{ fill: "muted" }}
+            width={
+              xScale(cabinetEnd.getFullYear()) -
+              xScale(cabinetStart.getFullYear())
+            }
+          />
+        )}
+        <RuleY xScale={xScale} yScale={yScale} />
+        <AxisX
+          top={height - margin.bottom + 5}
+          tickFormat={format("4")}
+          xScale={xScale}
         />
-      )}
-      <RuleY xScale={xScale} yScale={yScale} />
-      <AxisX
-        top={chartHeight - margin.bottom + 5}
-        tickFormat={format("4")}
-        xScale={xScale}
-      />
-      <AxisY left={margin.left} yScale={yScale} />
+        <AxisY left={margin.left} yScale={yScale} />
+      </g>
       <g>
         {btorsByCountryFilled.map((d) => {
           const bhosCountry = bhosCountries.find(
@@ -124,8 +134,7 @@ const BtorsByYear: FC<Props> = ({
               mouseEnterLeaveHandler={mouseEnterLeaveHandler}
               xScale={xScale}
               yScale={yScale}
-              xLabel={"year"}
-              yLabel={"No. of travels"}
+              yLabel={"travels"}
               isSelection={!!activeCountry}
               isSelected={activeCountry === d.isoAlpha3}
               isFocus={hasCategory}
@@ -135,16 +144,12 @@ const BtorsByYear: FC<Props> = ({
             />
           );
         })}
-        {activeCountry &&
-          !btorsByCountryFilled
-            .map((d) => d.isoAlpha3)
-            .includes(activeCountry) && (
-            <g>
-              <text x={width / 2 - 30} y="150" fontSize="10px" fill="red">
-                No Travel for {activeCountry}
-              </text>
-            </g>
-          )}
+        {hasNoTravelData && (
+          <Group top={height / 2} left={width / 2}>
+            <MdInfoOutline y={-40} />
+            <text textAnchor="middle">No Travel for {activeCountry}</text>
+          </Group>
+        )}
       </g>
     </svg>
   );

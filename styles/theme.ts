@@ -53,6 +53,10 @@ export const theme: Theme = {
       maxWidth: "40em",
       textAlign: "justify",
     },
+    kpi: {
+      fontSize: 4,
+      fontWeight: 1,
+    },
   },
   layout: {
     container: {
