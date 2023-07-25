@@ -9,10 +9,10 @@
     "lint": "next lint",
     "setup-data": "tsx lib/setup/index.ts",
     "type-check": "npx tsc --noEmit",
-    "sb": "storybook dev -p 6006",
-    "sb-static": "storybook build",
+    "storybook": "storybook dev -p 6006",
+    "storybook-static": "storybook build",
     "presb-static": "npm run setup-data",
-    "sb-ci": "npm run sb-static --quiet",
+    "storybook-ci": "npm run storybook-static --quiet",
     "prisma-migrate": "dotenv -e .env.local -- npx prisma migrate dev",
     "prisma-studio": "dotenv -e .env.local -- npx prisma studio",
     "test": "dotenv -e .env.local npx jest"
