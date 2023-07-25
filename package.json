@@ -11,7 +11,7 @@
     "type-check": "npx tsc --noEmit",
     "storybook": "storybook dev -p 6006",
     "storybook-static": "storybook build",
-    "presb-static": "npm run setup-data",
+    "prestorybook-static": "npm run setup-data",
     "storybook-ci": "npm run storybook-static --quiet",
     "prisma-migrate": "dotenv -e .env.local -- npx prisma migrate dev",
     "prisma-studio": "dotenv -e .env.local -- npx prisma studio",
