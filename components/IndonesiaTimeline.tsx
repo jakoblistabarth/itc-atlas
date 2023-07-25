@@ -12,6 +12,7 @@ import {
 } from "d3";
 import { FC, PropsWithChildren, useEffect, useState } from "react";
 import useMeasure from "react-use-measure";
+import { Text as TextTui } from "theme-ui";
 import { Text } from "@visx/text";
 import { Group } from "@visx/group";
 import { TimelineEvent } from "../types/TimelineEvent";
@@ -254,6 +255,7 @@ const IndonesiaTimeline: FC<Props> = ({
       fill: "white",
       stroke: itcBlue,
       strokeLinejoin: "round" as const, //QUESTION: good practice?
+      cursor: "pointer",
     };
     switch (party) {
       case parties[0]:
@@ -474,7 +476,7 @@ const IndonesiaTimeline: FC<Props> = ({
                         </g>
                       </TooltipTrigger>
                       <TooltipContent>
-                        <h3>{ce.name}</h3>
+                        <h4>{ce.name}</h4>
                         {ce.data?.party} <br />
                         {ce.dateStart.getFullYear()}–{ce.dateEnd?.getFullYear()}
                       </TooltipContent>
@@ -538,31 +540,41 @@ const IndonesiaTimeline: FC<Props> = ({
             </TimelineHeader>
             <Group top={rowHeaderHeight}>
               {projectEvents.map((e, idx) => (
-                <EventPeriod
-                  key={`${e.name}-${idx}`}
-                  dateStart={e.dateStart}
-                  dateEnd={e.dateEnd ?? new Date()}
-                  xScale={xScale}
-                  yOffset={projectsYScale(e.yOffset) ?? 0}
-                  height={2}
-                  fill={indonesiaColor}
-                >
-                  {e.data?.projectPartner && (
-                    <g transform="translate(-6 0)">
-                      <circle r={4} fill={indonesiaColor} />
-                      <text
-                        textAnchor="middle"
-                        dy={6 / 2.5}
-                        fontWeight={"bold"}
-                        fill={"white"}
+                <Tooltip key={`${e.name}-${idx}`}>
+                  <TooltipTrigger asChild>
+                    <g>
+                      <EventPeriod
+                        dateStart={e.dateStart}
+                        dateEnd={e.dateEnd ?? new Date()}
+                        xScale={xScale}
+                        yOffset={projectsYScale(e.yOffset) ?? 0}
+                        height={2}
+                        fill={indonesiaColor}
+                        cursor="pointer"
                       >
-                        {partnersScale(
-                          (e.data?.projectPartner as string) ?? ""
+                        {e.data?.projectPartner && (
+                          <g transform="translate(-6 0)">
+                            <circle r={4} fill={indonesiaColor} />
+                            <text
+                              textAnchor="middle"
+                              dy={6 / 2.5}
+                              fontWeight={"bold"}
+                              fill={"white"}
+                            >
+                              {partnersScale(
+                                (e.data?.projectPartner as string) ?? ""
+                              )}
+                            </text>
+                          </g>
                         )}
-                      </text>
+                      </EventPeriod>
                     </g>
-                  )}
-                </EventPeriod>
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <h4>{e.name}</h4>
+                    {e.dateStart.toDateString()}–{e.dateEnd?.toDateString()}
+                  </TooltipContent>
+                </Tooltip>
               ))}
             </Group>
           </g>
@@ -618,15 +630,24 @@ const IndonesiaTimeline: FC<Props> = ({
                 const barWidth = width / 100;
                 const height = (e.size ?? 0) / 3;
                 return (
-                  <rect
-                    key={`${e.name}-${idx}`}
-                    width={barWidth}
-                    height={height}
-                    x={xScale(e.dateStart) - barWidth / 2}
-                    y={height / -2}
-                    rx={1}
-                    fill={indonesiaColor}
-                  />
+                  <Tooltip key={`${e.name}-${idx}`}>
+                    <TooltipTrigger asChild>
+                      <rect
+                        width={barWidth}
+                        height={height}
+                        x={xScale(e.dateStart) - barWidth / 2}
+                        y={height / -2}
+                        rx={1}
+                        fill={indonesiaColor}
+                        cursor="pointer"
+                      />
+                    </TooltipTrigger>
+                    <TooltipContent>
+                      <TextTui variant="kpi">{e.size}</TextTui>
+                      <div>alumni in</div>
+                      <strong>{e.dateStart.getFullYear()}</strong>
+                    </TooltipContent>
+                  </Tooltip>
                 );
               })}
               {phdsByYear
