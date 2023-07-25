@@ -18,7 +18,7 @@ type Props = {
 };
 
 const FlightsFlowMap: FC<Props> = ({ neCountriesTopoJson, odMatrix }) => {
-  const { width, height, projection } = useContext(MapContext);
+  const { projection } = useContext(MapContext);
 
   const flightsPerRoute = odMatrix.flows.features.map(
     (flow) => flow.properties?.value
