@@ -43,7 +43,7 @@ const raisz: MapTheme = {
   flow: {
     opacity: 0.4,
     stroke: "rgb(150, 5, 5)",
-    markerEnd: "tip",
+    arrowShape: "tip",
   },
   symbol: {
     fill: "white",

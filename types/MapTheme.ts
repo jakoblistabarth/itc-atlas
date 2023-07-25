@@ -1,3 +1,4 @@
+import { ArrowHeadShape } from "../components/defs/marker/ArrowHead";
 import { Appearance, TextAppearance } from "./Appearance";
 
 export type MapTheme = {
@@ -8,7 +9,7 @@ export type MapTheme = {
   base: Appearance;
   choropleth?: Appearance;
   symbol?: Appearance;
-  flow?: Appearance;
+  flow?: Appearance & { arrowShape: ArrowHeadShape };
   scaledPie?: Appearance;
   label?: TextAppearance;
   hasGraticuleLables?: boolean;

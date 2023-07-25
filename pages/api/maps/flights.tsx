@@ -97,7 +97,7 @@ export default async function handler(
           scaleWidth={scale}
           title="No. of flights in 2019"
           unitLabel="flights"
-          style={mapOptions.theme.flow}
+          flowStyle={mapOptions.theme.flow}
         />
       </MapLayoutAside>
       <MapLayoutBody bounds={mapOptions.bounds}>

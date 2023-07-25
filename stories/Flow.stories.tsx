@@ -14,7 +14,7 @@ const projection = geoRobinson()
     type: "Sphere",
   })
   .translate([width / 2, height / 2]);
-const getLineString = (value: number = 10): Feature<LineString> => ({
+const getLineString = (value = 10): Feature<LineString> => ({
   type: "Feature",
   properties: { name: "Test", value: value },
   geometry: {
@@ -34,15 +34,17 @@ const meta = {
     projection: { table: { disable: true } },
   },
   args: {
-    scale: scaleLinear().domain([0, 100]).range([0, 10]),
+    strokeWidthScale: scaleLinear().domain([0, 100]).range([0, 10]),
     projection: projection,
     datum: getLineString(),
-    style: { fill: "none", stroke: "black" },
+    fill: "none",
+    stroke: "black",
   },
   render: (args) => (
     <>
       <defs>
-        <ArrowHead color={args.style?.stroke} type={args.style?.markerEnd} />
+        <ArrowHead color={args.stroke} shape={"triangle"} />
+        <ArrowHead color={args.stroke} shape={"tip"} />
       </defs>
       <Flow {...args} />
     </>
@@ -70,6 +72,8 @@ export const BigFlowTriangle: Story = {
   args: {
     datum: getLineString(100),
     bend: -0.2,
-    style: { fill: "none", stroke: "red", opacity: 0.5, markerEnd: "triangle" },
+    fill: "none",
+    stroke: "red",
+    opacity: 0.5,
   },
 };

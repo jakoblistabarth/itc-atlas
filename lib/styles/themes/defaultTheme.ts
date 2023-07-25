@@ -22,7 +22,7 @@ const defaultTheme: MapTheme = {
   flow: {
     stroke: "grey",
     opacity: 0.25,
-    markerEnd: "tip",
+    arrowShape: "tip",
   },
   choropleth: {
     fill: "none",

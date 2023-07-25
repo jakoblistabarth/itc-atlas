@@ -1,30 +1,30 @@
 import { GeoProjection, ScaleLinear } from "d3";
-import { FC } from "react";
+import { ComponentProps, FC } from "react";
 import { OdMatrix } from "../../types/OdMatrix";
-import type { Appearance } from "../../types/Appearance";
-import Flow from "./Flow";
+import Flow, { FlowStyleProps } from "./Flow";
 import PointSymbol from "./PointSymbol";
 import ArrowHead from "../defs/marker/ArrowHead";
-import defaultTheme from "../../lib/styles/themes/defaultTheme";
 import { Vector2 } from "three";
+
+export type FlowPointStyleProps = Omit<
+  ComponentProps<typeof PointSymbol>,
+  "position" | "radius"
+>;
 
 const FlowLayer: FC<{
   data: OdMatrix;
   projection: GeoProjection;
   scaleWidth: ScaleLinear<number, number>;
-  flowStyle?: Appearance;
-  pointStyle?: Appearance;
-}> = ({
-  data,
-  projection,
-  scaleWidth,
-  flowStyle = defaultTheme.flow,
-  pointStyle = defaultTheme.symbol,
-}) => {
+  flowStyle?: FlowStyleProps;
+  pointStyle?: FlowPointStyleProps;
+}> = ({ data, projection, scaleWidth, flowStyle, pointStyle }) => {
   return (
     <g id="flow-Layer">
       <defs>
-        <ArrowHead type={flowStyle?.markerEnd} color={flowStyle?.stroke} />
+        <ArrowHead
+          shape={flowStyle?.arrowShape ?? "tip"}
+          color={flowStyle?.stroke}
+        />
       </defs>
       {data.points.features.map((feature) => {
         const position = projection([
@@ -47,8 +47,8 @@ const FlowLayer: FC<{
           key={feature.properties.od}
           projection={projection}
           datum={feature}
-          scale={scaleWidth}
-          style={flowStyle}
+          strokeWidthScale={scaleWidth}
+          {...flowStyle}
         />
       ))}
     </g>

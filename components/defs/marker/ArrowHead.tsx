@@ -1,12 +1,13 @@
 import { FC } from "react";
-import defaultTheme from "../../../lib/styles/themes/defaultTheme";
 
-const ArrowHead: FC<{ color?: string; type?: "tip" | "triangle" }> = ({
-  color = defaultTheme.flow?.stroke,
-  type = defaultTheme.flow?.markerEnd,
+export type ArrowHeadShape = "tip" | "triangle";
+
+const ArrowHead: FC<{ color?: string; shape?: ArrowHeadShape }> = ({
+  color = "black",
+  shape = "tip",
 }) => {
   let path;
-  switch (type) {
+  switch (shape) {
     case "tip":
       path = (
         <path
@@ -30,7 +31,7 @@ const ArrowHead: FC<{ color?: string; type?: "tip" | "triangle" }> = ({
 
   return (
     <marker
-      id={type}
+      id={shape}
       markerWidth="8"
       markerHeight="8"
       refX="5"

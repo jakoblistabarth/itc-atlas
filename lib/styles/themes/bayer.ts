@@ -26,7 +26,7 @@ const bayer: MapTheme = {
   flow: {
     opacity: 0.4,
     stroke: blue,
-    markerEnd: "triangle",
+    arrowShape: "triangle",
   },
   symbol: {
     fill: "white",
