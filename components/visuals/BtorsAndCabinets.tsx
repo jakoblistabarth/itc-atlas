@@ -5,7 +5,7 @@ import { NeCountriesTopoJson } from "../../types/NeTopoJson";
 import BtorsByYear from "./charts/BtorsByYear";
 import { BtorsGroupedByYear } from "../../lib/data/queries/btors/getBtorsGroupedByYear";
 import { BhosCountry } from "../../types/BhosCountry";
-import { Box, Button, Flex, Text } from "theme-ui";
+import { Button, Flex, Text } from "theme-ui";
 import { DutchCabinet } from "../../types/DutchCabinet";
 import MapLayout from "../map/layout/MapLayout";
 import BaseLayer from "../map/BaseLayer";
@@ -16,6 +16,7 @@ import { Feature } from "geojson";
 import { HiCursorClick } from "react-icons/hi";
 import { scaleOrdinal } from "d3";
 import NominalLegend from "../map/NominalLegend";
+import Callout from "../Callout/Callout";
 
 type Props = {
   neCountries: NeCountriesTopoJson;
@@ -148,12 +149,12 @@ const BtorsAndCabinets: FC<Props> = ({
 
   return (
     <div>
-      <Box sx={{ background: "muted", p: 2, my: 2, borderRadius: 2 }}>
+      <Callout Icon={HiCursorClick} title="Tipp">
         <Text as="p">
-          <HiCursorClick sx={{ mr: 1 }} />
-          Select cabinet of interest.
+          Select cabinet of interest and hover over countries (or the lines in
+          the line chart) to get additional information.
         </Text>
-      </Box>
+      </Callout>
       <Flex sx={{ gap: 2, mt: 2, mb: 3 }}>
         {rutteCabinets.map((d) => (
           <Button

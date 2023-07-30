@@ -2,7 +2,10 @@ import type { StorybookConfig } from "@storybook/preset-react-webpack";
 import remarkGfm from "remark-gfm";
 
 const config: StorybookConfig = {
-  stories: ["../stories/**/*.stories.@(ts|tsx|mdx)"],
+  stories: [
+    "../stories/**/*.stories.@(ts|tsx|mdx)",
+    "../components/**/*.stories.tsx",
+  ],
   addons: [
     "@storybook/addon-links",
     "@storybook/addon-essentials",
