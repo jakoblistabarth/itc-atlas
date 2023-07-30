@@ -12,6 +12,8 @@ import { DutchCabinet } from "../../../types/DutchCabinet";
 import { BhosCountryWithCategories } from "../BtorsAndCabinets";
 import LinePath from "../../LinePath";
 import { Group } from "@visx/group";
+import { NeCountriesTopoJson } from "../../../types/NeTopoJson";
+import getCountryName from "../../../lib/getCountryName";
 
 type Props = {
   btors: BtorsGroupedByYear;
@@ -20,6 +22,7 @@ type Props = {
   colorScale: ScaleOrdinal<string, string>;
   bhosCountries: BhosCountryWithCategories[];
   mouseEnterLeaveHandler: (isoAlpha3?: string) => void;
+  neCountries: NeCountriesTopoJson;
 };
 
 const BtorsByYear: FC<Props> = ({
@@ -29,6 +32,7 @@ const BtorsByYear: FC<Props> = ({
   mouseEnterLeaveHandler,
   colorScale,
   bhosCountries,
+  neCountries,
 }) => {
   const [chartRef, { width }] = useMeasure();
 
@@ -78,6 +82,11 @@ const BtorsByYear: FC<Props> = ({
       maxCount,
     };
   }, [btors, margin, width]);
+
+  const activeCountryName = useMemo(
+    () => getCountryName(activeCountry ?? "", neCountries),
+    [activeCountry, neCountries]
+  );
 
   const hasNoTravelData = useMemo(
     () =>
@@ -141,13 +150,17 @@ const BtorsByYear: FC<Props> = ({
               data={d.data}
               color={bhosCountry?.categories.map((d) => colorScale(d))}
               identifier={d.isoAlpha3}
+              label={activeCountryName}
             />
           );
         })}
         {hasNoTravelData && (
           <Group top={height / 2} left={width / 2}>
             <MdInfoOutline y={-40} />
-            <text textAnchor="middle">No Travel for {activeCountry}</text>
+            <text textAnchor="middle">
+              No Travel for{" "}
+              <tspan fontWeight={"bold"}>{activeCountryName}</tspan>
+            </text>
           </Group>
         )}
       </g>

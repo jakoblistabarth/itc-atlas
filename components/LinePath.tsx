@@ -14,6 +14,7 @@ type Props = {
   yScale: ScaleLinear<number | string, number, never>;
   color?: string | string[];
   identifier: string;
+  label?: string;
   xLabel?: string;
   yLabel?: string;
   isSelection: boolean;
@@ -30,6 +31,7 @@ const LinePath: FC<Props> = ({
   yLabel,
   color = "black",
   identifier,
+  label,
   isSelected,
   isSelection,
   isFocus,
@@ -117,7 +119,7 @@ const LinePath: FC<Props> = ({
       </TooltipTrigger>
       <TooltipContent left={left} top={top}>
         <div>
-          <strong>{identifier}</strong>
+          <strong>{label ?? identifier}</strong>
           <br />
           {xLabel && <>{xLabel}: </>}
           {cursorPositionX ? xScaleRevers(cursorPositionX) : undefined}

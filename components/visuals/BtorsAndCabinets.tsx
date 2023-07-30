@@ -20,6 +20,7 @@ import MapLayoutFluid from "../map/layout/MapLayoutFluid";
 import Tooltip from "../Tooltip/Tooltip";
 import { TooltipTrigger } from "../Tooltip/TooltipTrigger";
 import TooltipContent from "../Tooltip/TooltipContent";
+import getCountryName from "../../lib/getCountryName";
 
 type Props = {
   neCountries: NeCountriesTopoJson;
@@ -221,7 +222,9 @@ const BtorsAndCabinets: FC<Props> = ({
                 </g>
               </TooltipTrigger>
               <TooltipContent>
-                <Text as="h4">{d.properties?.isoAlpha3}</Text>
+                <Text as="h4">
+                  {getCountryName(d.properties?.isoAlpha3, neCountries)}
+                </Text>
                 {d.properties?.categories &&
                   d.properties?.categories.map(
                     (category: string, i: number) => (
@@ -248,6 +251,7 @@ const BtorsAndCabinets: FC<Props> = ({
         mouseEnterLeaveHandler={(isoAlpha3?: string) =>
           setActiveCountry(isoAlpha3)
         }
+        neCountries={neCountries}
       />
     </div>
   );
