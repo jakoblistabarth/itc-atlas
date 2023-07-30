@@ -134,7 +134,7 @@ const Page: NextPage<Props> = ({
                   btors={btorsByYear}
                 />
               </MapLayoutFluid>
-              <Caption reference="Fig. 2">
+              <Caption reference="Fig. 3">
                 This map shows travels over time with destinations within
                 Europe, showing a tendency to less travels over time across the
                 contintent.
@@ -154,7 +154,7 @@ const Page: NextPage<Props> = ({
                   btors={btorsByDepartment}
                 />
               </MapLayoutFluid>
-              <Caption reference="Fig. 2">
+              <Caption reference="Fig. 4">
                 This map shows travels per department.
               </Caption>
             </Box>

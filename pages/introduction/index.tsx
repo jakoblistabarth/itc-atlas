@@ -45,7 +45,7 @@ const Home: NextPage = () => {
         <main>
           <section sx={{ my: 4 }}>
             <Heading as="h1">Chapter Introduction</Heading>
-            <Text variant="teaser">Itroducing ITC</Text>
+            <Text variant="teaser">Introducing ITC</Text>
             <Paragraph>
               The last decade the thematic focus was more consistent, but the
               geographic focus continues to shift, reflecting political choices.
