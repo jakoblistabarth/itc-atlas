@@ -7,7 +7,6 @@ import { BtorsGroupedByYear } from "../../lib/data/queries/btors/getBtorsGrouped
 import { BhosCountry } from "../../types/BhosCountry";
 import { Button, Flex, Text } from "theme-ui";
 import { DutchCabinet } from "../../types/DutchCabinet";
-import MapLayout from "../map/layout/MapLayout";
 import BaseLayer from "../map/BaseLayer";
 import { geoBertin1953 } from "d3-geo-projection";
 import { feature } from "topojson-client";
@@ -17,6 +16,10 @@ import { HiCursorClick } from "react-icons/hi";
 import { scaleOrdinal } from "d3";
 import NominalLegend from "../map/NominalLegend";
 import Callout from "../Callout/Callout";
+import MapLayoutFluid from "../map/layout/MapLayoutFluid";
+import Tooltip from "../Tooltip/Tooltip";
+import { TooltipTrigger } from "../Tooltip/TooltipTrigger";
+import TooltipContent from "../Tooltip/TooltipContent";
 
 type Props = {
   neCountries: NeCountriesTopoJson;
@@ -171,42 +174,12 @@ const BtorsAndCabinets: FC<Props> = ({
           </Button>
         ))}
       </Flex>
-      <MapLayout
-        bounds={{
-          width: 700,
-          height: 275,
-          frame: undefined,
-          mapBody: undefined,
-        }}
-        projection={projection}
-      >
-        <GradientDefs />
-        <BaseLayer countries={neCountries} projection={projection} />
-        {countriesWithCategories.map((d) => {
-          const isActiveCountry = activeCountry === d.properties?.isoAlpha3;
-          return (
-            <PolygonSymbol
-              key={d.properties?.id}
-              feature={d}
-              projection={projection}
-              stroke={isActiveCountry ? "black" : "white"}
-              strokeLinejoin="round"
-              cursor="pointer"
-              fill={
-                d.properties?.categories
-                  ? `url(#${getCategoryKey(d.properties?.categories)})`
-                  : "transparent"
-              }
-              onMouseOver={() => setActiveCountry(d.properties?.isoAlpha3)}
-              onMouseLeave={() => setActiveCountry(undefined)}
-              sx={{ transition: "opacity .5s" }}
-              opacity={!isActiveCountry && !d.properties?.categories ? 0.05 : 1}
-            />
-          );
-        })}
+      <svg width={"100%"} height={"50px"}>
         <NominalLegend
           transform="translate(0 10)"
           fontSize={10}
+          columnWidth={200}
+          columns={3}
           entries={colorScale
             .domain()
             .filter((d) => d)
@@ -215,7 +188,57 @@ const BtorsAndCabinets: FC<Props> = ({
               color: colorScale(d),
             }))}
         />
-      </MapLayout>
+      </svg>
+      <MapLayoutFluid projection={projection}>
+        <GradientDefs />
+        <BaseLayer countries={neCountries} projection={projection} />
+        {countriesWithCategories.map((d) => {
+          const isActiveCountry = activeCountry === d.properties?.isoAlpha3;
+          return (
+            <Tooltip key={d.properties?.id}>
+              <TooltipTrigger asChild>
+                <g>
+                  <PolygonSymbol
+                    feature={d}
+                    projection={projection}
+                    stroke={isActiveCountry ? "black" : "white"}
+                    strokeLinejoin="round"
+                    cursor="pointer"
+                    fill={
+                      d.properties?.categories
+                        ? `url(#${getCategoryKey(d.properties?.categories)})`
+                        : "transparent"
+                    }
+                    onMouseOver={() =>
+                      setActiveCountry(d.properties?.isoAlpha3)
+                    }
+                    onMouseLeave={() => setActiveCountry(undefined)}
+                    sx={{ transition: "opacity .5s" }}
+                    opacity={
+                      !isActiveCountry && !d.properties?.categories ? 0.05 : 1
+                    }
+                  />
+                </g>
+              </TooltipTrigger>
+              <TooltipContent>
+                <Text as="h4">{d.properties?.isoAlpha3}</Text>
+                {d.properties?.categories &&
+                  d.properties?.categories.map(
+                    (category: string, i: number) => (
+                      <svg key={i} width={10} height={10}>
+                        <circle
+                          transform="translate(5,5)"
+                          r={5}
+                          fill={colorScale(category)}
+                        />
+                      </svg>
+                    )
+                  )}
+              </TooltipContent>
+            </Tooltip>
+          );
+        })}
+      </MapLayoutFluid>
       <BtorsByYear
         activeCabinet={dutchCabinets.find((d) => d.name === activeCabinet)}
         activeCountry={activeCountry}

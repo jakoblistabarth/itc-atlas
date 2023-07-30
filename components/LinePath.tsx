@@ -108,6 +108,7 @@ const LinePath: FC<Props> = ({
               )}
               fill="transparent"
               strokeWidth={1}
+              pointerEvents={"none"}
               stroke={Array.isArray(color) ? color[0] : color}
               r={4}
             />
