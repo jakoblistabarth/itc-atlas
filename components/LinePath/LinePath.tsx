@@ -1,10 +1,18 @@
 /** @jsxImportSource theme-ui */
 
-import { FC, useCallback, useMemo, useState, MouseEvent } from "react";
-import LinePathBase from "./LinePathBase";
-import Tooltip from "./Tooltip/Tooltip";
-import { TooltipTrigger } from "./Tooltip/TooltipTrigger";
-import TooltipContent from "./Tooltip/TooltipContent";
+import {
+  FC,
+  useCallback,
+  useMemo,
+  useState,
+  MouseEvent,
+  useRef,
+  useEffect,
+} from "react";
+import LinePathBase from "../LinePathBase";
+import Tooltip from "../Tooltip/Tooltip";
+import { TooltipTrigger } from "../Tooltip/TooltipTrigger";
+import TooltipContent from "../Tooltip/TooltipContent";
 import { ScaleLinear, ascending, range } from "d3";
 import { Text } from "theme-ui";
 
@@ -37,22 +45,30 @@ const LinePath: FC<Props> = ({
   isFocus,
   data,
 }) => {
-  const [cursorPositionX, setX] = useState<number | undefined>(undefined);
+  const [cursorX, setCursorX] = useState<number | undefined>(undefined);
+  const [lineX, setLineX] = useState<number | undefined>(undefined);
   const [left, setLeft] = useState<number | undefined>(undefined);
   const [top, setTop] = useState<number | undefined>(undefined);
 
-  const xScaleRevers = useMemo(
+  const pathRef = useRef<SVGPathElement>(null);
+
+  const xScaleReverse = useMemo(
     () => (x: number) => Math.round(xScale.invert(x)),
     [xScale]
   );
 
+  useEffect(() => {
+    const bb = pathRef.current?.getBoundingClientRect();
+    bb && setLineX(bb.x);
+  }, [xScale, pathRef]);
+
   const onMouseMove = useCallback(
     (event: MouseEvent<SVGPathElement>) => {
-      setX(event.nativeEvent.offsetX);
+      setCursorX(event.pageX);
       setLeft(event.pageX + 15);
       setTop(event.pageY - 15);
     },
-    [setLeft, setTop, setX]
+    [setLeft, setTop, setCursorX]
   );
 
   const onMouseLeave = useCallback(
@@ -64,10 +80,12 @@ const LinePath: FC<Props> = ({
     [mouseEnterLeaveHandler, identifier]
   );
 
+  const x = cursorX && lineX && Math.round(cursorX - lineX - 4);
+
   return (
     <Tooltip>
       <TooltipTrigger asChild>
-        <g>
+        <g ref={pathRef}>
           {Array.isArray(color) ? (
             range(color.length).map((i) => (
               <LinePathBase
@@ -102,18 +120,28 @@ const LinePath: FC<Props> = ({
             />
           )}
           {isSelected && (
-            <circle
-              cx={xScale(xScaleRevers(cursorPositionX ?? 0))}
-              cy={yScale(
-                data.find((d) => d.x === xScaleRevers(cursorPositionX ?? 0))
-                  ?.y ?? 0
-              )}
-              fill="transparent"
-              strokeWidth={1}
-              pointerEvents={"none"}
-              stroke={Array.isArray(color) ? color[0] : color}
-              r={4}
-            />
+            <>
+              <line
+                stroke="grey"
+                strokeWidth={0.5}
+                x1={x}
+                x2={x}
+                y1={yScale.range()[0]}
+                y2={yScale.range()[1]}
+                pointerEvents={"none"}
+              />
+              <circle
+                cx={xScale(xScaleReverse(x ?? 0))}
+                cy={yScale(
+                  data.find((d) => d.x === xScaleReverse(x ?? 0))?.y ?? 0
+                )}
+                fill="transparent"
+                strokeWidth={1}
+                pointerEvents={"none"}
+                stroke={Array.isArray(color) ? color[0] : color}
+                r={4}
+              />
+            </>
           )}
         </g>
       </TooltipTrigger>
@@ -122,10 +150,10 @@ const LinePath: FC<Props> = ({
           <strong>{label ?? identifier}</strong>
           <br />
           {xLabel && <>{xLabel}: </>}
-          {cursorPositionX ? xScaleRevers(cursorPositionX) : undefined}
+          {cursorX ? xScaleReverse(x ?? 0) : undefined}
           <br />
           <Text variant="kpi">
-            {data.find((d) => d.x === xScaleRevers(cursorPositionX ?? 0))?.y}
+            {data.find((d) => d.x === xScaleReverse(x ?? 0))?.y}
           </Text>
           {yLabel && <div>{yLabel}</div>}
         </div>

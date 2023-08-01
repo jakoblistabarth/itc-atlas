@@ -129,41 +129,38 @@ const BtorsByYear: FC<Props> = ({
         />
         <AxisY left={margin.left} yScale={yScale} />
       </g>
-      <g>
-        {btorsByCountryFilled.map((d) => {
-          const bhosCountry = bhosCountries.find(
-            (bhos) =>
-              bhos.cabinet === activeCabinet?.name &&
-              bhos.isoAlpha3 === d.isoAlpha3
-          );
-          const hasCategory = !!bhosCountry?.categories.length;
-          return (
-            <LinePath
-              key={d.isoAlpha3}
-              mouseEnterLeaveHandler={mouseEnterLeaveHandler}
-              xScale={xScale}
-              yScale={yScale}
-              yLabel={"travels"}
-              isSelection={!!activeCountry}
-              isSelected={activeCountry === d.isoAlpha3}
-              isFocus={hasCategory}
-              data={d.data}
-              color={bhosCountry?.categories.map((d) => colorScale(d))}
-              identifier={d.isoAlpha3}
-              label={activeCountryName}
-            />
-          );
-        })}
-        {hasNoTravelData && (
-          <Group top={height / 2} left={width / 2}>
-            <MdInfoOutline y={-40} />
-            <text textAnchor="middle">
-              No Travel for{" "}
-              <tspan fontWeight={"bold"}>{activeCountryName}</tspan>
-            </text>
-          </Group>
-        )}
-      </g>
+      {btorsByCountryFilled.map((d) => {
+        const bhosCountry = bhosCountries.find(
+          (bhos) =>
+            bhos.cabinet === activeCabinet?.name &&
+            bhos.isoAlpha3 === d.isoAlpha3
+        );
+        const hasCategory = !!bhosCountry?.categories.length;
+        return (
+          <LinePath
+            key={d.isoAlpha3}
+            mouseEnterLeaveHandler={mouseEnterLeaveHandler}
+            xScale={xScale}
+            yScale={yScale}
+            yLabel={"travels"}
+            isSelection={!!activeCountry}
+            isSelected={activeCountry === d.isoAlpha3}
+            isFocus={hasCategory}
+            data={d.data}
+            color={bhosCountry?.categories.map((d) => colorScale(d))}
+            identifier={d.isoAlpha3}
+            label={activeCountryName}
+          />
+        );
+      })}
+      {hasNoTravelData && (
+        <Group top={height / 2} left={width / 2}>
+          <MdInfoOutline y={-40} />
+          <text textAnchor="middle">
+            No Travel for <tspan fontWeight={"bold"}>{activeCountryName}</tspan>
+          </text>
+        </Group>
+      )}
     </svg>
   );
 };

@@ -1,13 +1,14 @@
-import { FC, useContext } from "react";
+import { FC, useContext, useState } from "react";
 import { NeCountriesTopoJson } from "../../../types/NeTopoJson";
 import BaseLayer from "../../map/BaseLayer";
 import getCentroidByIsoCode from "../../../lib/data/getCentroidByIsoCode";
 import { groups, max, min, range, scaleLinear } from "d3";
 import { Vector2 } from "three";
 import { BtorsGroupedByYear } from "../../../lib/data/queries/btors/getBtorsGroupedByYear";
-import { LinePath } from "@visx/shape";
+import LinePath from "../../LinePath/";
 import { Group } from "@visx/group";
 import { MapContext } from "../../map/layout/MapContext";
+import getCountryName from "../../../lib/getCountryName";
 
 type Props = {
   neCountries: NeCountriesTopoJson;
@@ -15,8 +16,12 @@ type Props = {
 };
 
 const BtorsByYear: FC<Props> = ({ btors, neCountries }) => {
-  const chartWidth = 50;
-  const chartHeight = 50;
+  const [selectedCountry, setSelectedCountry] = useState<string | undefined>(
+    undefined
+  );
+
+  const chartWidth = 40;
+  const chartHeight = 40;
 
   const maxCount = max(btors, (d) => d.count) ?? 1;
   const minTime = min(btors, (d) => d.year) ?? 2000;
@@ -57,10 +62,11 @@ const BtorsByYear: FC<Props> = ({ btors, neCountries }) => {
       {btorsByCountry.map((d) => {
         const centroid = projection([d.centroid.x, d.centroid.y]);
         if (!centroid) return <></>;
+        const isSelectedCountry = selectedCountry == d.isoAlpha3;
         const [x, y] = centroid;
-        const data = range(minTime, maxTime).map((year) => ({
-          year,
-          count: d.data.find((d) => d.year === year)?.count ?? 0,
+        const data = range(minTime, maxTime + 1).map((year) => ({
+          x: year,
+          y: d.data.find((d) => d.year === year)?.count ?? 0,
         }));
         return (
           <g key={d.isoAlpha3} transform={`translate(${x} ${y})`}>
@@ -74,12 +80,17 @@ const BtorsByYear: FC<Props> = ({ btors, neCountries }) => {
                 strokeWidth={0.5}
               />
               <LinePath
+                isSelection={false}
+                isFocus={true}
+                isSelected={isSelectedCountry}
                 data={data}
-                x={(d) => xScale(d.year)}
-                y={(d) => yScale(d.count)}
-                strokeLinejoin="round"
-                strokeWidth="1"
-                stroke="black"
+                xScale={xScale}
+                yScale={yScale}
+                identifier={d.isoAlpha3}
+                label={getCountryName(d.isoAlpha3, neCountries)}
+                mouseEnterLeaveHandler={(isoAlpha3?: string) => {
+                  setSelectedCountry(isoAlpha3);
+                }}
               />
             </Group>
           </g>

@@ -31,7 +31,7 @@ const LinePathBase: FC<Props> = ({
       y={(d) => yScale(d.y)}
       strokeWidth={isSelected || isFocus ? 2 : 0.5}
       strokeLinejoin="round"
-      strokeLinecap="butt"
+      strokeLinecap="round"
       sx={{ transition: "opacity .5s" }}
       opacity={isSelected || (!isSelection && isFocus) ? 1 : 0.05}
       cursor="pointer"
