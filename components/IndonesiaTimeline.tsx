@@ -39,12 +39,16 @@ import { ApplicationByYearWithCount } from "../lib/data/queries/application/getA
 import { LongTermMission } from "../types/LongTermMission";
 import { Minister } from "../types/Minister";
 import { BtorsByCountry } from "../lib/data/queries/btors/getBTORsByCountry";
+import getITCNames from "../lib/data/getITCNames";
+import getPolicyTopics from "../lib/data/getPolicyTopics";
 
 type Props = PropsWithChildren<{
   applications: ApplicationByYearWithCount;
   btors: BtorsByCountry;
   longTermMissions: LongTermMission[];
   ministers: Minister[];
+  itcNames: ReturnType<typeof getITCNames>;
+  policyTopics: ReturnType<typeof getPolicyTopics>;
   phdsByYear: phdsByYearWithCount;
   projects: ProjectIndonesia[];
 }>;
@@ -53,7 +57,9 @@ const IndonesiaTimeline: FC<Props> = ({
   applications,
   btors,
   longTermMissions,
+  itcNames,
   ministers,
+  policyTopics,
   phdsByYear,
   projects,
 }) => {
@@ -126,38 +132,8 @@ const IndonesiaTimeline: FC<Props> = ({
     .domain(projectEvents.map((d) => d.yOffset))
     .range([0, 120]);
 
-  const namesITC = [
-    {
-      year: 1950,
-      name: "Internationaal Opleidingscentrum voor Luchtkartering",
-    },
-    {
-      year: 1958,
-      name: "International Training Centre for Aerial Survey I.T.C",
-    },
-    {
-      year: 1966,
-      name: "International Institute for Aerial Survey and Earth Sciences I.T.C.",
-    },
-    {
-      year: 1972,
-      name: "International Institute for Aerial Survey and Earth Sciences (ITC)",
-    },
-    {
-      year: 1984,
-      name: "International Institute for Aero-space Survey and Earth Sciences (ITC)",
-    },
-    {
-      year: 2001,
-      name: "International Institute for Geoinformation Science and Earth Observation",
-    },
-    {
-      year: 2010,
-      name: "Faculty of Geoinformation Science and Earth Observation",
-    },
-  ];
-  const renamingEvents: TimelineEvent[] = namesITC.map((d, idx) => {
-    const next = namesITC[idx + 1];
+  const renamingEvents: TimelineEvent[] = itcNames.map((d, idx) => {
+    const next = itcNames[idx + 1];
     const dateEnd = next ? new Date(next.year + "") : new Date();
     return {
       name: d.name,
@@ -167,17 +143,7 @@ const IndonesiaTimeline: FC<Props> = ({
     };
   });
 
-  const topicsRaw = [
-    { name: "poverty reduction", dateStart: 1972, dateEnd: 2023 },
-    { name: "water", dateStart: 2002, dateEnd: 2007 },
-    { name: "water", dateStart: 2010, dateEnd: 2023 },
-    { name: "food", dateStart: 2002, dateEnd: 2007 },
-    { name: "food", dateStart: 2010, dateEnd: 2023 },
-    { name: "health", dateStart: 2002, dateEnd: 2023 },
-    { name: "climate", dateStart: 2007, dateEnd: 2010 },
-    { name: "climate", dateStart: 2012, dateEnd: 2023 },
-  ];
-  const topics = topicsRaw
+  const topics = policyTopics
     .map((d) => {
       const start = new Date(d.dateStart + "");
       const end = new Date(d.dateEnd + "");

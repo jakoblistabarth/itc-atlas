@@ -15,7 +15,7 @@ import getBTORsByCountry, {
   BtorsByCountry,
 } from "../../lib/data/queries/btors/getBTORsByCountry";
 import getPhdsByYear, {
-  phdsByYearWithCount,
+  PhdsByYearWithCount,
 } from "../../lib/data/queries/phd/getPhdsByYear";
 import { LongTermMission } from "../../types/LongTermMission";
 import { Minister } from "../../types/Minister";
@@ -23,14 +23,18 @@ import { NeCountriesTopoJson } from "../../types/NeTopoJson";
 import { ProjectIndonesia } from "../../types/Project";
 
 import HeroVisualPage from "../../components/HeroVisualPage";
+import getITCNames from "../../lib/data/getITCNames";
+import getPolicyTopics from "../../lib/data/getPolicyTopics";
 
 type Props = {
   projects: ProjectIndonesia[];
-  phdsByYear: phdsByYearWithCount;
+  phdsByYear: PhdsByYearWithCount;
   applications: ApplicationByYearWithCount;
   btors: BtorsByCountry;
   longTermMissions: LongTermMission[];
   ministers: Minister[];
+  itcNames: ReturnType<typeof getITCNames>;
+  policyTopics: ReturnType<typeof getPolicyTopics>;
   neCountries: NeCountriesTopoJson;
 };
 
@@ -41,6 +45,8 @@ const Page: NextPage<Props> = ({
   btors,
   longTermMissions,
   ministers,
+  itcNames,
+  policyTopics,
   neCountries,
 }) => {
   const heroVisual = (
@@ -49,7 +55,9 @@ const Page: NextPage<Props> = ({
       phdsByYear={phdsByYear}
       applications={applications}
       btors={btors}
+      itcNames={itcNames}
       longTermMissions={longTermMissions}
+      policyTopics={policyTopics}
       ministers={ministers}
     />
   );
@@ -159,6 +167,8 @@ export const getStaticProps: GetStaticProps<Props> = async () => {
     longTermMissions,
     applications,
     ministers,
+    itcNames,
+    policyTopics,
     neCountries,
   ] = await Promise.all([
     getProjectsIndonesia(),
@@ -167,6 +177,8 @@ export const getStaticProps: GetStaticProps<Props> = async () => {
     getLongTermMissions(),
     getApplicationsByYear("IDN"),
     getDutchForeignAffairsMinisters(),
+    getITCNames(),
+    getPolicyTopics(),
     getCountries(),
   ]);
 
@@ -178,6 +190,8 @@ export const getStaticProps: GetStaticProps<Props> = async () => {
       longTermMissions,
       applications,
       ministers,
+      itcNames,
+      policyTopics,
       neCountries,
     },
   };

@@ -23,7 +23,7 @@ const getPhdsByYear = async (isoAlpha3: string) => {
   });
 };
 
-export type phdsByYearWithCount = Prisma.PromiseReturnType<
+export type PhdsByYearWithCount = Prisma.PromiseReturnType<
   typeof getPhdsByYear
 >;
 

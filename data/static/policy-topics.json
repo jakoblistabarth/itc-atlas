@@ -1,0 +1,12 @@
+{
+  "policyTopics": [
+    { "name": "poverty reduction", "dateStart": 1972, "dateEnd": 2023 },
+    { "name": "water", "dateStart": 2002, "dateEnd": 2007 },
+    { "name": "water", "dateStart": 2010, "dateEnd": 2023 },
+    { "name": "food", "dateStart": 2002, "dateEnd": 2007 },
+    { "name": "food", "dateStart": 2010, "dateEnd": 2023 },
+    { "name": "health", "dateStart": 2002, "dateEnd": 2023 },
+    { "name": "climate", "dateStart": 2007, "dateEnd": 2010 },
+    { "name": "climate", "dateStart": 2012, "dateEnd": 2023 }
+  ]
+}
