@@ -112,7 +112,7 @@ const AlumniOrigin: FC<Props> = ({
   const alumniCount = points.features
     .map((point) => point.properties?.alumniCount)
     .filter(isNumber);
-  const alumniMax = max<number>(alumniCount);
+  const alumniMax = max(alumniCount);
 
   const scale = scaleSqrt()
     .domain([0, alumniMax ?? 1])
@@ -176,9 +176,9 @@ const AlumniOrigin: FC<Props> = ({
             );
           })}
       </g>
-      <g id="alumni-country-labels">
+      <g id="alumni-country-labels" pointerEvents={"none"}>
         {!filteredApplicantsIsLoading &&
-          points.features.slice(0, 10).map((point, idx) => {
+          points.features.slice(0, 3).map((point, idx) => {
             const coords = projection(
               point.geometry.coordinates as [number, number]
             );
