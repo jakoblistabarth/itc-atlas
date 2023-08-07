@@ -2,7 +2,7 @@
 
 import { FC, useMemo } from "react";
 import useMeasure from "react-use-measure";
-import { ScaleOrdinal, format, max, min, range, scaleLinear, union } from "d3";
+import { ScaleOrdinal, format, max, min, scaleLinear, union } from "d3";
 import { BtorsGroupedByYear } from "../../../lib/data/queries/btors/getBtorsGroupedByYear";
 import AxisX from "../../charts/Axis/AxisX";
 import AxisY from "../../charts/Axis/AxisY";
@@ -14,6 +14,7 @@ import LinePath from "../../LinePath";
 import { Group } from "@visx/group";
 import { NeCountriesTopoJson } from "../../../types/NeTopoJson";
 import getCountryName from "../../../lib/getCountryName";
+import { getFilledSeries } from "../../LinePath/LinePath.helpers";
 
 type Props = {
   btors: BtorsGroupedByYear;
@@ -65,12 +66,13 @@ const BtorsByYear: FC<Props> = ({
     const countriesWithBtors = Array.from(union(btors.map((d) => d.isoAlpha3)));
     const btorsByCountryFilled = countriesWithBtors.map((isoAlpha3) => ({
       isoAlpha3,
-      data: range(minTime, maxTime + 1).map((x) => {
-        const match = btors.find(
-          (d) => d.isoAlpha3 === isoAlpha3 && d.year === x
-        );
-        return { x, y: match?.count ?? 0 };
-      }),
+      data: getFilledSeries<(typeof btors)[number]>(
+        btors.filter((d) => d.isoAlpha3 === isoAlpha3),
+        (d) => d.year,
+        (d) => d.count,
+        minTime,
+        maxTime
+      ),
     }));
 
     return {

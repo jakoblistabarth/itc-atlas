@@ -24,8 +24,9 @@ import getCountryWithApplicantCount, {
   CountryWithApplicantCount,
 } from "../../../lib/data/queries/country/getCountryWithApplicantCount";
 import getCentroidByIsoCode from "../../../lib/data/getCentroidByIsoCode";
-import { descending, max, range, scaleSqrt } from "d3";
+import { descending, max, scaleSqrt } from "d3";
 import { MdArrowForward } from "react-icons/md";
+import { getFilledSeries } from "../../LinePath/LinePath.helpers";
 
 type Props = {
   neCountriesTopoJson: NeCountriesTopoJson;
@@ -94,10 +95,15 @@ const AlumniOrigin: FC<Props> = ({
 
   const minX = 1950;
   const maxX = new Date().getFullYear();
-  const sparklineDataFilled = range(minX, maxX).map((i) => ({
-    x: i,
-    y: sparklineData?.find((d) => d.examYear === i)?._count._all ?? 0,
-  }));
+  const sparklineDataFilled = sparklineData
+    ? getFilledSeries(
+        sparklineData,
+        (d) => d.examYear,
+        (d) => d._count._all,
+        minX,
+        maxX
+      )
+    : [];
 
   const isNumber = (item: number | undefined): item is number => {
     return !!item;

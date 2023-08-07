@@ -2,13 +2,14 @@ import { FC, useContext, useState } from "react";
 import { NeCountriesTopoJson } from "../../../types/NeTopoJson";
 import BaseLayer from "../../map/BaseLayer";
 import getCentroidByIsoCode from "../../../lib/data/getCentroidByIsoCode";
-import { groups, max, min, range, scaleLinear } from "d3";
+import { groups, max, min, scaleLinear } from "d3";
 import { Vector2 } from "three";
 import { BtorsGroupedByYear } from "../../../lib/data/queries/btors/getBtorsGroupedByYear";
 import LinePath from "../../LinePath/";
 import { Group } from "@visx/group";
 import { MapContext } from "../../map/layout/MapContext";
 import getCountryName from "../../../lib/getCountryName";
+import { getFilledSeries } from "../../LinePath/LinePath.helpers";
 
 type Props = {
   neCountries: NeCountriesTopoJson;
@@ -64,10 +65,13 @@ const BtorsByYear: FC<Props> = ({ btors, neCountries }) => {
         if (!centroid) return <></>;
         const isSelectedCountry = selectedCountry == d.isoAlpha3;
         const [x, y] = centroid;
-        const data = range(minTime, maxTime + 1).map((year) => ({
-          x: year,
-          y: d.data.find((d) => d.year === year)?.count ?? 0,
-        }));
+        const data = getFilledSeries<(typeof d.data)[number]>(
+          d.data,
+          (d) => d.year,
+          (d) => d.count,
+          minTime,
+          maxTime
+        );
         return (
           <g key={d.isoAlpha3} transform={`translate(${x} ${y})`}>
             <Group top={-chartHeight} left={chartWidth / -2}>

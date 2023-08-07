@@ -9,7 +9,7 @@ import {
   useRef,
   useEffect,
 } from "react";
-import LinePathBase from "../LinePathBase";
+import LinePathBase, { LinePathDatum } from "../LinePathBase";
 import Tooltip from "../Tooltip/Tooltip";
 import { TooltipTrigger } from "../Tooltip/TooltipTrigger";
 import TooltipContent from "../Tooltip/TooltipContent";
@@ -28,7 +28,7 @@ type Props = {
   isSelection: boolean;
   isFocus: boolean;
   isSelected: boolean;
-  data: { x: number; y: number }[];
+  data: LinePathDatum[];
 };
 
 const LinePath: FC<Props> = ({

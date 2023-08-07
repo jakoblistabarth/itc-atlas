@@ -4,7 +4,7 @@ import { FC, SVGProps } from "react";
 import { LinePath } from "@visx/shape";
 import { ScaleLinear } from "d3";
 
-type Datum = { x: number; y: number };
+export type LinePathDatum = { x: number; y: number };
 
 type Props = {
   xScale: ScaleLinear<number | string, number, never>;
@@ -12,7 +12,7 @@ type Props = {
   isSelected: boolean;
   isSelection: boolean;
   isFocus: boolean;
-  data: Datum[];
+  data: LinePathDatum[];
 } & Omit<SVGProps<SVGPathElement>, "x" | "y" | "children">;
 
 const LinePathBase: FC<Props> = ({
