@@ -1,8 +1,11 @@
+/** @jsxImportSource theme-ui */
+
 import { geoBertin1953 } from "d3-geo-projection";
 import type { NextPage } from "next";
 import Head from "next/head";
 import { useContext } from "react";
 import { MdTour } from "react-icons/md";
+import { CiPalette } from "react-icons/ci";
 import { Step } from "react-joyride";
 import { Button, Container, Heading } from "theme-ui";
 import { Vector2 } from "three";
@@ -16,12 +19,29 @@ import getCountries from "../../lib/data/getCountries";
 import getOdMatrix from "../../lib/data/getOdMatrix";
 import type { OdMatrix } from "../../types/OdMatrix";
 import { SharedPageProps } from "../../types/Props";
+import { geoPath } from "d3-geo";
+import BaseLayer from "../../components/map/BaseLayer";
+import TissotsIndicatricesLayer from "../../components/map/TissotsIndicatricesLayer";
 
 type Props = {
   odMatrix: OdMatrix;
 } & SharedPageProps;
 
 const Flights: NextPage<Props> = ({ odMatrix, neCountriesTopoJson }) => {
+  const Tissot = () => {
+    const projection = geoBertin1953();
+    return (
+      <MapLayoutFluid projection={projection}>
+        <BaseLayer countries={neCountriesTopoJson} projection={projection} />
+        <TissotsIndicatricesLayer
+          projection={projection}
+          radius={3}
+          step={30}
+        />
+      </MapLayoutFluid>
+    );
+  };
+
   const steps: Step[] = [
     {
       content: (
@@ -36,7 +56,37 @@ const Flights: NextPage<Props> = ({ odMatrix, neCountriesTopoJson }) => {
       target: "#target1",
     },
     {
-      content: <div>Up in the arctic sea there are hardly any travels.</div>,
+      content: (
+        <div sx={{ textAlign: "left" }}>
+          <p sx={{ fontFamily: "heading", mt: 0 }}>
+            <CiPalette sx={{ mb: -1, mr: 2 }} />
+            Design
+          </p>
+          <Tissot />
+          <p>
+            This map uses the <em>Bertin Projection</em>. It is named by its
+            French creator Jacques Bertin. In the center of the equal area
+            projection is Europe (Paris), where Bertin worked and lived.
+          </p>
+          <details>
+            <summary>More</summary>
+            <table sx={{ fontSize: 1, td: { pr: 3 } }}>
+              <tr>
+                <td>Alias</td>
+                <td>Bertin1953</td>
+              </tr>
+              <tr>
+                <td>Domain</td>
+                <td>2D</td>
+              </tr>
+              <tr>
+                <td>formulation</td>
+                <td>Philippe Rivière (2017)</td>
+              </tr>
+            </table>
+          </details>
+        </div>
+      ),
       target: "#target2",
     },
     {
@@ -109,12 +159,10 @@ const Targets = () => {
         fill="transparent"
         opacity={0.25}
       />
-      <circle
+      <path
         id="target2"
-        r={1}
+        d={geoPath(projection)({ type: "Sphere" }) ?? ""}
         fill="transparent"
-        cx={width / 2}
-        cy={height / 4}
       />
       <circle
         id="target3"
