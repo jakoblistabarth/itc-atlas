@@ -8,39 +8,38 @@ import {
   scalePoint,
   scaleTime,
   sum,
-  max,
 } from "d3";
 import { FC, PropsWithChildren, useEffect, useState } from "react";
 import useMeasure from "react-use-measure";
 import { Text as TextTui } from "theme-ui";
 import { Text } from "@visx/text";
 import { Group } from "@visx/group";
-import { TimelineEvent } from "../types/TimelineEvent";
-import Star from "./shapes/Star";
-import NsidedPolygon from "./shapes/NsidedPolygon";
-import TimelineGrid from "./charts/timeline/TimelineGrid";
-import TimelineSeparator from "./charts/timeline/TimelineSeparator";
-import TimelineHeader from "./charts/timeline/TimelineHeader";
-import EventPeriod from "./charts/timeline/EventPeriod";
-import PointSymbol from "./map/PointSymbol";
-import Building, { ITClocations } from "./Building";
-import PointLabel from "./map/PointLabel";
-import NominalLegend from "./map/NominalLegend";
-import Tooltip from "./Tooltip/Tooltip";
-import { TooltipTrigger } from "./Tooltip/TooltipTrigger";
-import TooltipContent from "./Tooltip/TooltipContent";
-import { LabelPlacement } from "../types/LabelPlacement";
-import TopicPatterns from "./TopicPatterns";
+import { TimelineEvent } from "../../types/TimelineEvent";
+import Star from "../shapes/Star";
+import NsidedPolygon from "../shapes/NsidedPolygon";
+import TimelineGrid from "../charts/timeline/TimelineGrid";
+import TimelineSeparator from "../charts/timeline/TimelineSeparator";
+import TimelineHeader from "../charts/timeline/TimelineHeader";
+import EventPeriod from "../charts/timeline/EventPeriod";
+import PointSymbol from "../map/PointSymbol";
+import Building, { ITClocations } from "../Building";
+import PointLabel from "../map/PointLabel";
+import NominalLegend from "../map/NominalLegend";
+import Tooltip from "../Tooltip/Tooltip";
+import { TooltipTrigger } from "../Tooltip/TooltipTrigger";
+import TooltipContent from "../Tooltip/TooltipContent";
+import { LabelPlacement } from "../../types/LabelPlacement";
+import TopicPatterns from "../TopicPatterns";
 import { Vector2 } from "three";
-import LeaderLine from "./LeaderLine";
-import { ProjectIndonesia } from "../types/Project";
-import { phdsByYearWithCount } from "../lib/data/queries/phd/getPhdsByYear";
-import { ApplicationByYearWithCount } from "../lib/data/queries/application/getApplicationsByYear";
-import { LongTermMission } from "../types/LongTermMission";
-import { Minister } from "../types/Minister";
-import { BtorsByCountry } from "../lib/data/queries/btors/getBTORsByCountry";
-import getITCNames from "../lib/data/getITCNames";
-import getPolicyTopics from "../lib/data/getPolicyTopics";
+import { ProjectIndonesia } from "../../types/Project";
+import { PhdsByYearWithCount } from "../../lib/data/queries/phd/getPhdsByYear";
+import { ApplicationByYearWithCount } from "../../lib/data/queries/application/getApplicationsByYear";
+import { LongTermMission } from "../../types/LongTermMission";
+import { Minister } from "../../types/Minister";
+import { BtorsByCountry } from "../../lib/data/queries/btors/getBTORsByCountry";
+import getITCNames from "../../lib/data/getITCNames";
+import getPolicyTopics from "../../lib/data/getPolicyTopics";
+import { TimelineContext } from "../charts/timeline/TimelineContext";
 
 type Props = PropsWithChildren<{
   applications: ApplicationByYearWithCount;
@@ -49,7 +48,7 @@ type Props = PropsWithChildren<{
   ministers: Minister[];
   itcNames: ReturnType<typeof getITCNames>;
   policyTopics: ReturnType<typeof getPolicyTopics>;
-  phdsByYear: phdsByYearWithCount;
+  phdsByYear: PhdsByYearWithCount;
   projects: ProjectIndonesia[];
 }>;
 
@@ -62,6 +61,7 @@ const IndonesiaTimeline: FC<Props> = ({
   policyTopics,
   phdsByYear,
   projects,
+  children,
 }) => {
   const [isSSR, setIsSSR] = useState(true);
   useEffect(() => {
@@ -76,8 +76,8 @@ const IndonesiaTimeline: FC<Props> = ({
   const rowHeaderHeight = 9;
   const separatorHeight = 10;
   const tlHeights = {
-    itcContext: [25, 70],
-    policy: [20, 45],
+    itcContext: [25, 110],
+    policy: [20, 60],
     itc: [130, 20, 30],
   };
   const getSectionHeight = (idx: number) => {
@@ -214,7 +214,7 @@ const IndonesiaTimeline: FC<Props> = ({
   });
   const parties = Array.from(new Set(ministers.map((d) => d.party)));
   const renderPartySymbol = (party: string) => {
-    const size = 6;
+    const size = 7;
     const oR = size / 2;
     const iR = oR / 2;
     const style = {
@@ -291,7 +291,7 @@ const IndonesiaTimeline: FC<Props> = ({
                   >
                     {!isSSR && (
                       <Text
-                        fontSize={6}
+                        fontSize={9}
                         fill={itcGreen}
                         width={200}
                         y={isEven ? 5 : -5}
@@ -331,7 +331,7 @@ const IndonesiaTimeline: FC<Props> = ({
               {Array.from(ITClocations.keys()).map((d, idx) => {
                 const currentLocation = ITClocations.get(d);
                 if (!currentLocation) return <></>;
-                const width = 70;
+                const width = 100;
                 const next = Array.from(ITClocations.entries())[idx + 1];
                 const dateEnd = next
                   ? next[1].moveInDate
@@ -375,12 +375,12 @@ const IndonesiaTimeline: FC<Props> = ({
                         position={new Vector2(0, width / 2)}
                         placement={LabelPlacement.BOTTOM}
                         fill={itcGreen}
-                        fontSize={6}
+                        fontSize={9}
                       >
                         <tspan fontWeight={"bold"} fontFamily={"Fraunces"}>
                           {d}
                         </tspan>
-                        <tspan x="0" dy="7">
+                        <tspan x="0" dy="10">
                           {currentLocation.city}
                         </tspan>
                       </PointLabel>
@@ -417,7 +417,8 @@ const IndonesiaTimeline: FC<Props> = ({
                   symbol: renderPartySymbol(d),
                 }))}
                 columns={4}
-                columnWidth={35}
+                fontSize={9}
+                columnWidth={50}
               />
               {ministerEvents.map((ce, idx) => {
                 return (
@@ -430,7 +431,7 @@ const IndonesiaTimeline: FC<Props> = ({
                     height={1}
                   >
                     <g transform="rotate(-45) translate(2 0)">
-                      <PointLabel placement={LabelPlacement.RIGHT}>
+                      <PointLabel fontSize={7} placement={LabelPlacement.RIGHT}>
                         {ce.name}
                       </PointLabel>
                     </g>
@@ -477,6 +478,7 @@ const IndonesiaTimeline: FC<Props> = ({
                 <PointLabel
                   key={`topic-${idx}`}
                   placement={LabelPlacement.LEFT}
+                  fontSize={9}
                   position={
                     new Vector2(
                       xScale(topic?.dateStart ?? 0),
@@ -642,43 +644,9 @@ const IndonesiaTimeline: FC<Props> = ({
           </g>
         </Group>
       </g>
-      <g id="annotations">
-        {!isSSR && (
-          <g id="annotation-travels">
-            <g
-              textAnchor="center"
-              transform={`translate(${width / 2 + width / 10}, 370)`}
-            >
-              <Text fontFamily="Fraunces" fontWeight={"bold"}>
-                Travels over time
-              </Text>
-              <Text
-                verticalAnchor={"start"}
-                width={max([width / 2, 300])}
-                y={2}
-              >
-                The travels were comparatively long in the beginning and got
-                much shorter in the current century. Darker shades of red
-                indicate overlapping travels.
-              </Text>
-            </g>
-            <LeaderLine
-              sourcePos={new Vector2(xScale(new Date("2002")), 400)}
-              targetPos={new Vector2(xScale(new Date("1990")), 418)}
-              orientation="vertical"
-              stroke="black"
-              strokeWidth={0.5}
-            />
-            <LeaderLine
-              sourcePos={new Vector2(xScale(new Date("2002")), 400)}
-              targetPos={new Vector2(xScale(new Date("2010")), 425)}
-              orientation="vertical"
-              stroke="black"
-              strokeWidth={0.5}
-            />
-          </g>
-        )}
-      </g>
+      <TimelineContext.Provider value={{ xScale }}>
+        {children}
+      </TimelineContext.Provider>
     </svg>
   );
 };

@@ -1,12 +1,18 @@
 /** @jsxImportSource theme-ui */
 
 import type { GetStaticProps, NextPage } from "next";
+import { Step } from "react-joyride";
 import { Box, Heading, Paragraph } from "theme-ui";
-import LocatorMap from "../../components/map/LocatorMap";
+import HeroVisualPage from "../../components/HeroVisualPage";
 import IndonesiaTimeline from "../../components/IndonesiaTimeline";
+import Annotations from "../../components/IndonesiaTimeline/Annotations";
+import Tour from "../../components/Tour";
+import LocatorMap from "../../components/map/LocatorMap";
 import getCountries from "../../lib/data/getCountries";
 import getDutchForeignAffairsMinisters from "../../lib/data/getDutchForeignAffairsMinisters";
+import getITCNames from "../../lib/data/getITCNames";
 import getLongTermMissions from "../../lib/data/getLongTermMissions";
+import getPolicyTopics from "../../lib/data/getPolicyTopics";
 import getProjectsIndonesia from "../../lib/data/getProjectsIndonesia";
 import getApplicationsByYear, {
   ApplicationByYearWithCount,
@@ -21,10 +27,6 @@ import { LongTermMission } from "../../types/LongTermMission";
 import { Minister } from "../../types/Minister";
 import { NeCountriesTopoJson } from "../../types/NeTopoJson";
 import { ProjectIndonesia } from "../../types/Project";
-
-import HeroVisualPage from "../../components/HeroVisualPage";
-import getITCNames from "../../lib/data/getITCNames";
-import getPolicyTopics from "../../lib/data/getPolicyTopics";
 
 type Props = {
   projects: ProjectIndonesia[];
@@ -49,17 +51,52 @@ const Page: NextPage<Props> = ({
   policyTopics,
   neCountries,
 }) => {
+  const steps: Step[] = [
+    {
+      content: (
+        <p>
+          Due to a conflict between both governments the development relations
+          were frozen.
+        </p>
+      ),
+      target: "#target1",
+    },
+    {
+      content: (
+        <p>
+          In the early years the staff were send for <strong>long</strong> stay
+          activities – to set up and run education programs.
+        </p>
+      ),
+      target: "#target2",
+    },
+    {
+      content: (
+        <p>
+          Later rather <strong>short</strong> collaboration missions – to advise
+          and to lecture – took place.
+        </p>
+      ),
+      target: "#target3",
+    },
+  ];
+
   const heroVisual = (
-    <IndonesiaTimeline
-      projects={projects}
-      phdsByYear={phdsByYear}
-      applications={applications}
-      btors={btors}
-      itcNames={itcNames}
-      longTermMissions={longTermMissions}
-      policyTopics={policyTopics}
-      ministers={ministers}
-    />
+    <>
+      <IndonesiaTimeline
+        projects={projects}
+        phdsByYear={phdsByYear}
+        applications={applications}
+        btors={btors}
+        itcNames={itcNames}
+        longTermMissions={longTermMissions}
+        policyTopics={policyTopics}
+        ministers={ministers}
+      >
+        <Annotations />
+      </IndonesiaTimeline>
+      <Tour steps={steps} />
+    </>
   );
 
   return (

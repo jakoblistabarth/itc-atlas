@@ -14,7 +14,7 @@ const TourBeacon = forwardRef<HTMLButtonElement, Props>(function TourBeacon(
       transform: scale(1);
     }
     55% {
-      transform: scale(2);
+      transform: scale(1.2);
     }
   `;
   return (
@@ -22,17 +22,25 @@ const TourBeacon = forwardRef<HTMLButtonElement, Props>(function TourBeacon(
       {...props}
       sx={{
         cursor: "pointer",
-        animation: `${pulse} 1.5s ease-in-out infinite`,
-        width: 7,
-        height: 7,
+        animation: `${pulse} 2s ease-in-out infinite`,
+        width: 20,
+        height: 20,
         background: "secondary",
         aspectRatio: "1",
         borderRadius: "100%",
+        boxShadow: 1,
         border: "none",
+        fontSize: 1,
+        fontWeight: "bold",
+        color: "white",
+        fontFamily: "heading",
+        fontStyle: "italic",
         padding: 0,
       }}
       ref={ref ?? undefined}
-    ></button>
+    >
+      i
+    </button>
   );
 });
 
