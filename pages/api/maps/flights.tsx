@@ -1,16 +1,16 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import ReactDOMServer from "react-dom/server";
 import getCountries from "../../../lib/data/getCountries";
-import BaseLayer from "../../../components/map/BaseLayer";
+import MapLayerBase from "../../../components/MapLayerBase";
 import { geoBertin1953 } from "d3-geo-projection";
 import themes, { ThemeNames } from "../../../lib/styles/themes";
-import FlowLayer from "../../../components/map/FlowLayer";
-import MapLayout from "../../../components/map/layout/MapLayout";
-import MapLayoutBody from "../../../components/map/layout/MapLayoutBody";
-import MapLayoutHeader from "../../../components/map/layout/MapLayoutHeader";
+import MapLayerFlow from "../../../components/MapLayerFlow";
+import MapLayout from "../../../components/MapLayout";
+import MapLayoutBody from "../../../components/MapLayout/MapLayoutBody";
+import MapLayoutHeader from "../../../components/MapLayout/MapLayoutHeader";
 import { MapOptions } from "../../../types/MapOptions";
-import FlowLegend from "../../../components/map/FlowLegend";
-import MapLayoutAside from "../../../components/map/layout/MapLayoutAside";
+import LegendFlow from "../../../components/LegendFlow";
+import MapLayoutAside from "../../../components/MapLayout/MapLayoutAside";
 import * as d3 from "d3";
 import defaultTheme from "../../../lib/styles/themes/defaultTheme";
 import getOdMatrix from "../../../lib/data/getOdMatrix";
@@ -92,7 +92,7 @@ export default async function handler(
         theme={theme}
       />
       <MapLayoutAside xOffset={0} yOffset={mapOptions.bounds?.frame?.top}>
-        <FlowLegend
+        <LegendFlow
           data={odMatrix.flows.features.map((flow) => flow.properties?.value)}
           scaleWidth={scale}
           title="No. of flights in 2019"
@@ -101,12 +101,12 @@ export default async function handler(
         />
       </MapLayoutAside>
       <MapLayoutBody bounds={mapOptions.bounds}>
-        <BaseLayer
+        <MapLayerBase
           countries={neCountriesTopoJson}
           projection={mapOptions.projection}
           theme={mapOptions.theme}
         />
-        <FlowLayer
+        <MapLayerFlow
           projection={mapOptions.projection}
           data={odMatrix}
           scaleWidth={scale}

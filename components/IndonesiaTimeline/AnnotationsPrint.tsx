@@ -3,7 +3,7 @@ import { Group } from "@visx/group";
 import { Text } from "@visx/text";
 import LeaderLine from "../LeaderLine";
 import { Vector2 } from "three";
-import { TimelineContext } from "../charts/timeline/TimelineContext";
+import { TimelineContext } from "../Timeline/TimelineContext";
 
 const IndonesiaAnnotationsPrint: FC = () => {
   const { xScale } = useContext(TimelineContext);

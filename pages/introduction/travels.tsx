@@ -4,7 +4,7 @@ import type { GetStaticProps, NextPage } from "next";
 import { Box, Heading, Paragraph } from "theme-ui";
 import getCountries from "../../lib/data/getCountries";
 import { NeCountriesTopoJson } from "../../types/NeTopoJson";
-import HeroVisualPage from "../../components/HeroVisualPage";
+import PageHeroVisual from "../../components/PageHeroVisual";
 import TravelsByDepartment from "../../components/visuals/maps/MultiStopBtors";
 import getBtorsGroupedByCountry, {
   BtorsGroupedByCountry,
@@ -26,7 +26,7 @@ import getBtorsGroupedByRegionByDepartment, {
 import BtorsByDepartment from "../../components/visuals/maps/BtorsByDepartment";
 import { SharedPageProps } from "../../types/Props";
 import getCountryCodes from "../../lib/data/queries/country/getCountryCodes";
-import MapLayoutFluid from "../../components/map/layout/MapLayoutFluid";
+import MapLayoutFluid from "../../components/MapLayout/MapLayoutFluid";
 import { geoBertin1953 } from "d3-geo-projection";
 
 type Props = SharedPageProps & {
@@ -68,7 +68,7 @@ const Page: NextPage<Props> = ({
   };
 
   return (
-    <HeroVisualPage title="Staff travels over time" heroVisual={heroVisual}>
+    <PageHeroVisual title="Staff travels over time" heroVisual={heroVisual}>
       <Paragraph variant="teaser">
         Where does ITC staff travel and what for? To answer this question we
         need to take a closer look on different travel destination, the
@@ -161,7 +161,7 @@ const Page: NextPage<Props> = ({
           </Box>
         </Box>
       </Box>
-    </HeroVisualPage>
+    </PageHeroVisual>
   );
 };
 

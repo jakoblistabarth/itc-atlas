@@ -2,11 +2,11 @@
 
 import { Meta, StoryObj } from "@storybook/react";
 
-import LinePath from "./";
+import LinePath from ".";
 import { randomInt, range, scaleLinear } from "d3";
-import AxisX from "../charts/Axis/AxisX";
-import AxisY from "../charts/Axis/AxisY";
-import RuleY from "../charts/RuleY";
+import AxisX from "../AxisX";
+import AxisY from "../AxisY";
+import RuleY from "../RuleY";
 
 const width = 486;
 const height = 300;

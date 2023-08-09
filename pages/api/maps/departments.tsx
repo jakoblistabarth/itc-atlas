@@ -3,14 +3,14 @@ import { geoInterruptedMollweide } from "d3-geo-projection";
 import type { NextApiRequest, NextApiResponse } from "next";
 import ReactDOMServer from "react-dom/server";
 import { Vector2 } from "three";
-import BaseLayer from "../../../components/map/BaseLayer";
-import MapLayout from "../../../components/map/layout/MapLayout";
-import MapLayoutAside from "../../../components/map/layout/MapLayoutAside";
-import MapLayoutBody from "../../../components/map/layout/MapLayoutBody";
-import MapLayoutHeader from "../../../components/map/layout/MapLayoutHeader";
-import NominalLegend from "../../../components/map/NominalLegend";
-import ScaledPie from "../../../components/map/ScaledPie";
-import { setMapBounds } from "../../../lib/cartographic/getMapHeight";
+import MapLayerBase from "../../../components/MapLayerBase";
+import MapLayout from "../../../components/MapLayout";
+import MapLayoutAside from "../../../components/MapLayout/MapLayoutAside";
+import MapLayoutBody from "../../../components/MapLayout/MapLayoutBody";
+import MapLayoutHeader from "../../../components/MapLayout/MapLayoutHeader";
+import LegendNominal from "../../../components/LegendNominal";
+import ScaledPie from "../../../components/ScaledPieChart/ScaledPieChart";
+import { setMapBounds } from "../../../lib/helpers/getMapHeight";
 import getCountries from "../../../lib/data/getCountries";
 import getPhdsByCountryByDepartment from "../../../lib/data/queries/phd/getPhdsByCountryByDepartment";
 import { departmentColorScale } from "../../../lib/styles/departmentColorScale";
@@ -89,7 +89,7 @@ export default async function handler(
         theme={theme}
       />
       <MapLayoutBody bounds={mapOptions.bounds}>
-        <BaseLayer
+        <MapLayerBase
           countries={neCountriesTopoJson}
           projection={mapOptions.projection}
           theme={theme}
@@ -113,9 +113,9 @@ export default async function handler(
         </g>
       </MapLayoutBody>
       <MapLayoutAside xOffset={0} yOffset={mapOptions.bounds?.frame?.top}>
-        <NominalLegend title={"Departments"} entries={legendEntries} />
+        <LegendNominal title={"Departments"} entries={legendEntries} />
         <g transform={`translate(0,120)`}>
-          <NominalLegend
+          <LegendNominal
             title={"Top 5 PhD countries"}
             entries={data.slice(0, 5).map((d) => ({
               label: `${d.countryName} (${d.totalCount})`,

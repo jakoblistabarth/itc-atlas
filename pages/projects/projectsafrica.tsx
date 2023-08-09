@@ -7,14 +7,14 @@ import getCountries from "../../lib/data/getCountries";
 import getCountryWithProjectCount, {
   CountryWithProjectCount,
 } from "../../lib/data/queries/country/getCountryWithProjectCount";
-import BaseLayer from "../../components/map/BaseLayer";
+import MapLayerBase from "../../components/MapLayerBase";
 import { Container, Heading } from "theme-ui";
 import { FeatureCollection, Feature, Point } from "geojson";
 import themes, { ThemeNames } from "../../lib/styles/themes";
-import ChoroplethSymbol from "../../components/map/PolygonSymbol";
+import ChoroplethSymbol from "../../components/MarkGeometry/MarkGeometry";
 import { MapOptions } from "../../types/MapOptions";
-import PatternDots from "../../components/defs/patterns/PatternDots";
-import IsoUnit from "../../components/map/IsoUnit";
+import PatternDot from "../../components/PatternDot";
+import MarkIso from "../../components/MarkIso";
 import { SharedPageProps } from "../../types/Props";
 import defaultTheme from "../../lib/styles/themes/defaultTheme";
 import getCountryCodes from "../../lib/data/queries/country/getCountryCodes";
@@ -120,14 +120,14 @@ const ProjectCountries: NextPage<Props> = ({
             height={mapOptions.bounds.height}
           >
             <defs>
-              <PatternDots
+              <PatternDot
                 style={mapOptions.theme.choropleth?.pattern}
                 angle={0}
                 spacing={2}
                 fill={"red"}
-              ></PatternDots>
+              ></PatternDot>
             </defs>
-            <BaseLayer
+            <MapLayerBase
               countries={neCountriesTopoJson}
               projection={mapOptions.projection}
               theme={mapOptions.theme}
@@ -150,7 +150,7 @@ const ProjectCountries: NextPage<Props> = ({
                 );
                 return (
                   xy && (
-                    <IsoUnit
+                    <MarkIso
                       key={idx}
                       xy={xy}
                       scale={scale}

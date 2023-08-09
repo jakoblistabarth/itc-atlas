@@ -2,12 +2,12 @@ import { ascending, max, min, scalePoint, scaleTime } from "d3";
 import type { NextPage } from "next";
 import Head from "next/head";
 import { Vector2 } from "three";
-import EventPeriod from "../../components/charts/timeline/EventPeriod";
-import Timeline from "../../components/charts/timeline/Timeline";
-import TimelineGrid from "../../components/charts/timeline/TimelineGrid";
+import EventPeriod from "../../components/Timeline/EventPeriod";
+import Timeline from "../../components/Timeline";
+import TimelineGrid from "../../components/Timeline/TimelineGrid";
 import Footer from "../../components/Footer";
 import { Container, Heading } from "theme-ui";
-import PointLabel from "../../components/map/PointLabel";
+import LabelPoint from "../../components/LabelPoint";
 import getProjects from "../../lib/data/queries/project/getProjects";
 import { LabelPlacement } from "../../types/LabelPlacement";
 import { Project } from "@prisma/client";
@@ -96,9 +96,9 @@ const projectsTimeline: NextPage<projectsTimelineProps> = ({ projects }) => {
                         height={2}
                         fill={"blue"}
                       >
-                        <PointLabel placement={LabelPlacement.BOTTOMLEFT}>
+                        <LabelPoint placement={LabelPlacement.BOTTOMLEFT}>
                           {labelText}
-                        </PointLabel>
+                        </LabelPoint>
                       </EventPeriod>
                     );
                   })}

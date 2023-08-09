@@ -3,11 +3,11 @@
 import type { GetStaticProps, NextPage } from "next";
 import { Step } from "react-joyride";
 import { Box, Heading, Paragraph } from "theme-ui";
-import HeroVisualPage from "../../components/HeroVisualPage";
+import PageHeroVisual from "../../components/PageHeroVisual";
 import IndonesiaTimeline from "../../components/IndonesiaTimeline";
 import Annotations from "../../components/IndonesiaTimeline/Annotations";
 import Tour from "../../components/Tour";
-import LocatorMap from "../../components/map/LocatorMap";
+import LocatorMap from "../../components/LocatorMap";
 import getCountries from "../../lib/data/getCountries";
 import getDutchForeignAffairsMinisters from "../../lib/data/getDutchForeignAffairsMinisters";
 import getITCNames from "../../lib/data/getITCNames";
@@ -100,7 +100,7 @@ const Page: NextPage<Props> = ({
   );
 
   return (
-    <HeroVisualPage title="ITC's Impact in Indonesia" heroVisual={heroVisual}>
+    <PageHeroVisual title="ITC's Impact in Indonesia" heroVisual={heroVisual}>
       <Paragraph variant="teaser">
         ITC and changing government policies illustrated by its activities in
         Indonesia.
@@ -190,7 +190,7 @@ const Page: NextPage<Props> = ({
           </Box>
         </Box>
       </Box>
-    </HeroVisualPage>
+    </PageHeroVisual>
   );
 };
 

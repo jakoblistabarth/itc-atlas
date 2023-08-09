@@ -1,24 +1,24 @@
 import { geoBertin1953 } from "d3-geo-projection";
 import type { NextApiRequest, NextApiResponse } from "next";
-import PatternLines from "../../../components/defs/patterns/PatternLines";
-import BaseLayer from "../../../components/map/BaseLayer";
-import ChoroplethSymbol from "../../../components/map/PolygonSymbol";
-import PointSymbol from "../../../components/map/PointSymbol";
-import ProportionalCircleLegend from "../../../components/map/ProportionalCircleLegend";
+import PatternLine from "../../../components/PatternLine";
+import MapLayerBase from "../../../components/MapLayerBase";
+import ChoroplethSymbol from "../../../components/MarkGeometry/MarkGeometry";
+import MarkCircle from "../../../components/MarkCircle";
+import LegendProportionalCircle from "../../../components/LegendProportionalCircle";
 import getCountries from "../../../lib/data/getCountries";
 import getProjectsPerCountry from "../../../lib/data/getProjectsPerCountry";
 import themes, { ThemeNames } from "../../../lib/styles/themes";
 import { scaleSqrt } from "d3";
 import getCountriesByGroup from "../../../lib/data/getCountriesByGroup";
 import { UnGrouping } from "../../../types/UnsdCodes";
-import MapLayoutAside from "../../../components/map/layout/MapLayoutAside";
-import MapLayoutBody from "../../../components/map/layout/MapLayoutBody";
-import MapLayoutHeader from "../../../components/map/layout/MapLayoutHeader";
+import MapLayoutAside from "../../../components/MapLayout/MapLayoutAside";
+import MapLayoutBody from "../../../components/MapLayout/MapLayoutBody";
+import MapLayoutHeader from "../../../components/MapLayout/MapLayoutHeader";
 import ReactDOMServer from "react-dom/server";
 import { MapOptions } from "../../../types/MapOptions";
 import defaultTheme from "../../../lib/styles/themes/defaultTheme";
-import MapLayout from "../../../components/map/layout/MapLayout";
-import { setMapBounds } from "../../../lib/cartographic/getMapHeight";
+import MapLayout from "../../../components/MapLayout";
+import { setMapBounds } from "../../../lib/helpers/getMapHeight";
 import { Vector2 } from "three";
 
 /**
@@ -90,7 +90,7 @@ export default async function handler(
         theme={theme}
       />
       <MapLayoutAside xOffset={0} yOffset={mapOptions.bounds?.frame?.top}>
-        <ProportionalCircleLegend
+        <LegendProportionalCircle
           data={data.features.map(
             (feature) => feature.properties?.projectCount ?? 0
           )}
@@ -101,18 +101,18 @@ export default async function handler(
         />
       </MapLayoutAside>
       <MapLayoutBody bounds={mapOptions.bounds}>
-        <BaseLayer
+        <MapLayerBase
           countries={neCountriesTopoJson}
           projection={mapOptions.projection}
           theme={theme}
         />
         <g className="choroplethLayer">
           <defs>
-            <PatternLines
+            <PatternLine
               stroke={theme?.choropleth?.pattern?.color}
               name={theme?.choropleth?.pattern?.id}
               angle={20}
-            ></PatternLines>
+            ></PatternLine>
           </defs>
           {highlightCountries.features.map((feature) => (
             <ChoroplethSymbol
@@ -130,7 +130,7 @@ export default async function handler(
             );
             return (
               xy && (
-                <PointSymbol
+                <MarkCircle
                   key={idx}
                   position={new Vector2(xy[0], xy[1])}
                   radius={scale(feature.properties?.projectCount)}

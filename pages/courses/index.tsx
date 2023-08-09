@@ -19,14 +19,14 @@ import type { GetStaticProps, NextPage } from "next";
 import Head from "next/head";
 import useMeasure from "react-use-measure";
 import { Vector2 } from "three";
-import Timeline from "../../components/charts/timeline/Timeline";
-import TimelineGrid from "../../components/charts/timeline/TimelineGrid";
+import Timeline from "../../components/Timeline";
+import TimelineGrid from "../../components/Timeline/TimelineGrid";
 import Footer from "../../components/Footer";
 import { Container, Heading } from "theme-ui";
-import PointLabel from "../../components/map/PointLabel";
-import ProportionalRectangleLegend from "../../components/map/ProportionalRectangleLegend";
-import Cross from "../../components/shapes/Cross";
-import Tooltip from "../../components/Tooltip/Tooltip";
+import LabelPoint from "../../components/LabelPoint";
+import LegendProportionalRectangle from "../../components/LegendProportionalRectangle";
+import Cross from "../../components/Cross/Cross";
+import Tooltip from "../../components/Tooltip/";
 import TooltipContent from "../../components/Tooltip/TooltipContent";
 import { TooltipTrigger } from "../../components/Tooltip/TooltipTrigger";
 import getCourseGenealogy from "../../lib/data/getCourseGenealogy";
@@ -233,7 +233,7 @@ const CourseGenealogyPage: NextPage<Props> = ({ courseGenealogy }) => {
                           ))}
                         </g>
                         {link.source === link.target && (
-                          <PointLabel
+                          <LabelPoint
                             position={sourcePos}
                             placement={LabelPlacement.LEFT}
                             fontSize={6}
@@ -243,7 +243,7 @@ const CourseGenealogyPage: NextPage<Props> = ({ courseGenealogy }) => {
                             strokeWidth={2}
                           >
                             <tspan fontWeight={"bold"}>{link.source}</tspan>
-                          </PointLabel>
+                          </LabelPoint>
                         )}
                       </g>
                     );
@@ -275,7 +275,7 @@ const CourseGenealogyPage: NextPage<Props> = ({ courseGenealogy }) => {
                         />
                         {tick % 50 === 0 && (
                           <>
-                            <PointLabel
+                            <LabelPoint
                               position={
                                 new Vector2(
                                   width - margin.x + 2,
@@ -285,7 +285,7 @@ const CourseGenealogyPage: NextPage<Props> = ({ courseGenealogy }) => {
                               placement={LabelPlacement.RIGHT}
                             >
                               {tick}
-                            </PointLabel>
+                            </LabelPoint>
                             <line
                               stroke={"lightgrey"}
                               strokeWidth={0.5}
@@ -319,7 +319,7 @@ const CourseGenealogyPage: NextPage<Props> = ({ courseGenealogy }) => {
                   </g>
                 </g>
               </Timeline>
-              <ProportionalRectangleLegend
+              <LegendProportionalRectangle
                 transform={`translate(${margin.x} ${height / 3})`}
                 data={courseGenealogy.nodes.map((n) => n.size ?? 0)}
                 scaleHeight={heightScale}

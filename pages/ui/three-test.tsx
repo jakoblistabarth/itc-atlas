@@ -3,12 +3,12 @@
 import type { NextPage } from "next";
 import { Canvas } from "@react-three/fiber";
 import { OrbitControls } from "@react-three/drei";
-import BasePage from "../../components/BasePage";
+import PageBase from "../../components/PageBase";
 import { Box } from "theme-ui";
 
 const ThreeTest: NextPage = () => {
   return (
-    <BasePage title="Three Line Rendering Test">
+    <PageBase title="Three Line Rendering Test">
       <Box variant="layout.canvasStage" sx={{ height: "500px" }}>
         <Canvas orthographic camera={{ zoom: 100 }}>
           <axesHelper />
@@ -24,7 +24,7 @@ const ThreeTest: NextPage = () => {
           <OrbitControls />
         </Canvas>
       </Box>
-    </BasePage>
+    </PageBase>
   );
 };
 

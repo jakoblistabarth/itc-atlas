@@ -1,16 +1,14 @@
-import Wordcloud from "../../components/charts/WordCloud";
+import Wordcloud from "../../components/WordCloud";
 import type { GetStaticProps, NextPage } from "next";
 import Head from "next/head";
 import Footer from "../../components/Footer";
 import { Container, Heading } from "theme-ui";
-import LocatorMap from "../../components/map/LocatorMap";
+import LocatorMap from "../../components/LocatorMap";
 import getCountries from "../../lib/data/getCountries";
 import getCountryCodes from "../../lib/data/queries/country/getCountryCodes";
 import { SharedPageProps } from "../../types/Props";
 import getTextFromFile from "../../lib/data/getTextFromFile";
-import HierarchyTree, {
-  Hierarchy,
-} from "../../components/charts/HierarchyTree";
+import HierarchyTree, { Hierarchy } from "../../components/HierarchyTree";
 import { readFileSync } from "fs";
 
 type Props = { words: string; hierarchy: Hierarchy } & SharedPageProps;

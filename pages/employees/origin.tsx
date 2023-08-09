@@ -8,10 +8,10 @@ import Head from "next/head";
 import { Vector2 } from "three";
 import Footer from "../../components/Footer";
 import { Container, Heading } from "theme-ui";
-import BaseLayer from "../../components/map/BaseLayer";
-import PointSymbol from "../../components/map/PointSymbol";
-import ProportionalCircleLegend from "../../components/map/ProportionalCircleLegend";
-import getMapHeight from "../../lib/cartographic/getMapHeight";
+import MapLayerBase from "../../components/MapLayerBase";
+import MarkCircle from "../../components/MarkCircle";
+import LegendProportionalCircle from "../../components/LegendProportionalCircle";
+import getMapHeight from "../../lib/helpers/getMapHeight";
 import getCentroidByIsoCode from "../../lib/data/getCentroidByIsoCode";
 import getCountries from "../../lib/data/getCountries";
 import getCountryWithEmployeeCount, {
@@ -85,7 +85,7 @@ const StaffOrigin: NextPage<Props> = ({
         <main>
           <Heading as="h1">ITC&apos;s employee origin</Heading>
           <svg width={dimension.width} height={dimension.height}>
-            <BaseLayer
+            <MapLayerBase
               countries={neCountriesTopoJson}
               projection={projection}
             />
@@ -93,7 +93,7 @@ const StaffOrigin: NextPage<Props> = ({
               {points.features.map((point, idx) => {
                 const pos = projection(point.geometry.coordinates);
                 return (
-                  <PointSymbol
+                  <MarkCircle
                     key={idx}
                     position={new Vector2(pos[0], pos[1])}
                     radius={scale(point.properties?.employeeCount)}
@@ -101,7 +101,7 @@ const StaffOrigin: NextPage<Props> = ({
                 );
               })}
             </g>
-            <ProportionalCircleLegend
+            <LegendProportionalCircle
               data={points.features.map(
                 (feature) => feature.properties?.employeeCount
               )}

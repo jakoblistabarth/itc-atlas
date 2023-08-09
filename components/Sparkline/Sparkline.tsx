@@ -2,7 +2,7 @@ import useMeasure from "react-use-measure";
 import LinePath from "../LinePath";
 import { ScaleLinear } from "d3";
 import { FC, useState } from "react";
-import { LinePathDatum } from "../LinePathBase";
+import { LinePathDatum } from "../LinePath/LinePathBase";
 
 type Props = {
   data: LinePathDatum[];

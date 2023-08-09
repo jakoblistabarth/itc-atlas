@@ -1,4 +1,4 @@
-import { ArrowHeadShape } from "../components/defs/marker/ArrowHead";
+import { ArrowHeadShape } from "../components/MarkerArrowHead";
 import { Appearance, TextAppearance } from "./Appearance";
 
 export type MapTheme = {

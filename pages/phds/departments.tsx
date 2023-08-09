@@ -7,10 +7,10 @@ import { Vector2 } from "three";
 import { departmentColorScale } from "../../lib/styles/departmentColorScale";
 import Footer from "../../components/Footer";
 import { Container, Heading } from "theme-ui";
-import BaseLayer from "../../components/map/BaseLayer";
-import NominalLegend from "../../components/map/NominalLegend";
-import ScaledPie from "../../components/map/ScaledPie";
-import getMapHeight from "../../lib/cartographic/getMapHeight";
+import MapLayerBase from "../../components/MapLayerBase";
+import LegendNominal from "../../components/LegendNominal";
+import ScaledPie from "../../components/ScaledPieChart/ScaledPieChart";
+import getMapHeight from "../../lib/helpers/getMapHeight";
 import getCountries from "../../lib/data/getCountries";
 import getPhdsByCountryByDepartment from "../../lib/data/queries/phd/getPhdsByCountryByDepartment";
 import defaultTheme from "../../lib/styles/themes/defaultTheme";
@@ -87,7 +87,7 @@ const PhdDepartments: NextPage<Props> = ({
             <label htmlFor="filter">Show only graduates</label>
           </div>
           <svg width={dimension.width} height={dimension.height}>
-            <BaseLayer
+            <MapLayerBase
               countries={neCountriesTopoJson}
               projection={projection}
               theme={theme}
@@ -110,12 +110,12 @@ const PhdDepartments: NextPage<Props> = ({
                 })}
               </g>
             )}
-            <NominalLegend
+            <LegendNominal
               title={"ITC's departments"}
               entries={legendEntries}
             />
             <g transform={`translate(${dimension.width - 170},0)`}>
-              <NominalLegend
+              <LegendNominal
                 title={"Top 5 PhD countries"}
                 entries={mapData.slice(0, 5).map((d) => ({
                   label: `${d.countryName} (${d.totalCount})`,

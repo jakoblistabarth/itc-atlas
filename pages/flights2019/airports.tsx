@@ -5,9 +5,9 @@ import Head from "next/head";
 import { FeatureCollection, Point } from "geojson";
 import { Container, Heading } from "theme-ui";
 import getCountries from "../../lib/data/getCountries";
-import BaseLayer from "../../components/map/BaseLayer";
-import PointLabel from "../../components/map/PointLabel";
-import PointSymbol from "../../components/map/PointSymbol";
+import MapLayerBase from "../../components/MapLayerBase";
+import LabelPoint from "../../components/LabelPoint";
+import MarkCircle from "../../components/MarkCircle";
 import defaultTheme from "../../lib/styles/themes/defaultTheme";
 import { SharedPageProps } from "../../types/Props";
 import { Vector2 } from "three";
@@ -15,11 +15,11 @@ import getCountryCodes from "../../lib/data/queries/country/getCountryCodes";
 import getFlightsPerAirport, {
   AirportPropertiesWithCount,
 } from "../../lib/data/getFlightsPerAirport";
-import Tooltip from "../../components/Tooltip/Tooltip";
+import Tooltip from "../../components/Tooltip/";
 import { TooltipTrigger } from "../../components/Tooltip/TooltipTrigger";
 import TooltipContent from "../../components/Tooltip/TooltipContent";
 import { fInt } from "../../lib/utilities/formaters";
-import ProportionalCircleLegend from "../../components/map/ProportionalCircleLegend";
+import LegendProportionalCircle from "../../components/LegendProportionalCircle";
 import Footer from "../../components/Footer";
 
 type Props = {
@@ -58,7 +58,7 @@ const Airports: NextPage<Props> = ({ airports, neCountriesTopoJson }) => {
         <main>
           <Heading as="h1">Airports</Heading>
           <svg width={1020} height={600}>
-            <BaseLayer
+            <MapLayerBase
               countries={neCountriesTopoJson}
               projection={projection}
             />
@@ -75,7 +75,7 @@ const Airports: NextPage<Props> = ({ airports, neCountriesTopoJson }) => {
                   </TooltipContent>
                   <TooltipTrigger asChild>
                     <g>
-                      <PointSymbol
+                      <MarkCircle
                         position={new Vector2(coords[0], coords[1])}
                         radius={scale(airport.properties?.value)}
                         {...defaultTheme.symbol}
@@ -88,7 +88,7 @@ const Airports: NextPage<Props> = ({ airports, neCountriesTopoJson }) => {
             {airportsGeo.features.slice(0, 5).map((airport) => {
               const coords = projection(airport.geometry.coordinates);
               return (
-                <PointLabel
+                <LabelPoint
                   key={airport.properties.iata_code}
                   position={new Vector2(coords[0], coords[1])}
                 >
@@ -96,11 +96,11 @@ const Airports: NextPage<Props> = ({ airports, neCountriesTopoJson }) => {
                     {airport.properties?.["iata_code"]}
                   </tspan>
                   ({airport.properties?.value})
-                </PointLabel>
+                </LabelPoint>
               );
             })}
             <g>
-              <ProportionalCircleLegend
+              <LegendProportionalCircle
                 data={airports.features.map(
                   (feature) => feature.properties?.value
                 )}

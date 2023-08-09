@@ -4,13 +4,13 @@ import * as d3 from "d3";
 import type { NextPage } from "next";
 import Head from "next/head";
 import { Container, Heading } from "theme-ui";
-import Flow3D from "../../components/map-3d/Flow3D";
-import Globe, { FallBackGlobe } from "../../components/map-3d/Globe";
+import Mark3dFlow from "../../components/Mark3dFlow";
+import Globe, { FallBackGlobe } from "../../components/Globe/";
 import getOdMatrix from "../../lib/data/getOdMatrix";
 import type { OdMatrix } from "../../types/OdMatrix";
 import Footer from "../../components/Footer";
 import { Suspense, useState } from "react";
-import GlobeEnvironment from "../../components/map-3d/GlobeEnvironment";
+import GlobeEnvironment from "../../components/Globe/GlobeEnvironment";
 
 type Props = {
   odMatrix: OdMatrix;
@@ -56,7 +56,7 @@ const Flights: NextPage<Props> = ({ odMatrix }) => {
                 const origin = flow.geometry.coordinates[0];
                 const destination = flow.geometry.coordinates[1];
                 return (
-                  <Flow3D
+                  <Mark3dFlow
                     key={flow.properties.od}
                     origin={origin}
                     destination={destination}

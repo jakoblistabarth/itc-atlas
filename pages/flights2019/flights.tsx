@@ -12,16 +12,16 @@ import { Vector2 } from "three";
 import FlightsFlowMap from "../../components/FlightsFlowMap";
 import Footer from "../../components/Footer";
 import Tour from "../../components/Tour";
-import PointSymbol from "../../components/map/PointSymbol";
-import { MapContext } from "../../components/map/layout/MapContext";
-import MapLayoutFluid from "../../components/map/layout/MapLayoutFluid";
+import MarkCircle from "../../components/MarkCircle";
+import { MapLayoutContext } from "../../components/MapLayout/MapLayoutContext";
+import MapLayoutFluid from "../../components/MapLayout/MapLayoutFluid";
 import getCountries from "../../lib/data/getCountries";
 import getOdMatrix from "../../lib/data/getOdMatrix";
 import type { OdMatrix } from "../../types/OdMatrix";
 import { SharedPageProps } from "../../types/Props";
 import { geoPath } from "d3-geo";
-import BaseLayer from "../../components/map/BaseLayer";
-import TissotsIndicatricesLayer from "../../components/map/TissotsIndicatricesLayer";
+import MapLayerBase from "../../components/MapLayerBase";
+import MapLayerTissotsIndicatrices from "../../components/MapLayerTissotsIndicatrices";
 
 type Props = {
   odMatrix: OdMatrix;
@@ -32,8 +32,8 @@ const Flights: NextPage<Props> = ({ odMatrix, neCountriesTopoJson }) => {
     const projection = geoBertin1953();
     return (
       <MapLayoutFluid projection={projection}>
-        <BaseLayer countries={neCountriesTopoJson} projection={projection} />
-        <TissotsIndicatricesLayer
+        <MapLayerBase countries={neCountriesTopoJson} projection={projection} />
+        <MapLayerTissotsIndicatrices
           projection={projection}
           radius={3}
           step={30}
@@ -149,10 +149,10 @@ export async function getStaticProps() {
 export default Flights;
 
 const Targets = () => {
-  const { width, height, projection } = useContext(MapContext);
+  const { width, height, projection } = useContext(MapLayoutContext);
   return (
     <g>
-      <PointSymbol
+      <MarkCircle
         position={new Vector2(...(projection([36.9238, -1.329]) ?? [0, 0]))}
         radius={1}
         id="target1"

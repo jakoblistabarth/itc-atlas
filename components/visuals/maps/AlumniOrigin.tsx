@@ -1,20 +1,20 @@
 /** @jsxImportSource theme-ui */
 
 import { FC, useContext, useState } from "react";
-import BaseLayer from "../../map/BaseLayer";
-import { MapContext } from "../../map/layout/MapContext";
+import MapLayerBase from "../../MapLayerBase";
+import { MapLayoutContext } from "../../MapLayout/MapLayoutContext";
 import {
   CountryProperties,
   NeCountriesTopoJson,
 } from "../../../types/NeTopoJson";
-import Tooltip from "../../Tooltip/Tooltip";
+import Tooltip from "../../Tooltip/";
 import { TooltipTrigger } from "../../Tooltip/TooltipTrigger";
-import PointSymbol from "../../map/PointSymbol";
+import MarkCircle from "../../MarkCircle";
 import { Vector2 } from "three";
 import TooltipContent from "../../Tooltip/TooltipContent";
-import LineChart from "../../charts/timeline/LineChart";
-import ProportionalCircleLegend from "../../map/ProportionalCircleLegend";
-import PointLabel from "../../map/PointLabel";
+import LineChart from "../../Timeline/LineChart";
+import LegendProportionalCircle from "../../LegendProportionalCircle";
+import LabelPoint from "../../LabelPoint";
 import { LabelPlacement } from "../../../types/LabelPlacement";
 import { feature } from "topojson-client";
 import useSWR from "swr";
@@ -39,7 +39,7 @@ const AlumniOrigin: FC<Props> = ({
   level,
   applicants,
 }) => {
-  const { projection, width } = useContext(MapContext);
+  const { projection, width } = useContext(MapLayoutContext);
 
   const [country, setCountry] = useState<string | null>(null);
 
@@ -119,7 +119,7 @@ const AlumniOrigin: FC<Props> = ({
     .range([0, width / 20]);
   return (
     <>
-      <BaseLayer countries={neCountriesTopoJson} projection={projection} />
+      <MapLayerBase countries={neCountriesTopoJson} projection={projection} />
       <g id="alumni-countries-symbols">
         {!filteredApplicantsIsLoading &&
           points.features.map((point, idx) => {
@@ -131,7 +131,7 @@ const AlumniOrigin: FC<Props> = ({
               <Tooltip key={`tooltip-country-${idx}`}>
                 <TooltipTrigger asChild>
                   <g>
-                    <PointSymbol
+                    <MarkCircle
                       position={pos}
                       radius={scale(point.properties?.alumniCount)}
                       fill={"teal"}
@@ -184,7 +184,7 @@ const AlumniOrigin: FC<Props> = ({
             );
             const pos = coords ? new Vector2(...coords) : undefined;
             return (
-              <PointLabel
+              <LabelPoint
                 key={`label-${point.properties?.ADM0_A3_NL}-${idx}`}
                 position={pos}
                 placement={LabelPlacement.CENTER}
@@ -192,11 +192,11 @@ const AlumniOrigin: FC<Props> = ({
                 fontSize={10}
               >
                 {point.properties?.NAME_EN}
-              </PointLabel>
+              </LabelPoint>
             );
           })}
       </g>
-      <ProportionalCircleLegend
+      <LegendProportionalCircle
         data={points.features
           .map((feature) => feature.properties?.alumniCount)
           .filter(isNumber)}

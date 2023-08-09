@@ -1,13 +1,13 @@
 import { FC, useContext, useState } from "react";
 import { NeCountriesTopoJson } from "../../../types/NeTopoJson";
-import BaseLayer from "../../map/BaseLayer";
+import MapLayerBase from "../../MapLayerBase";
 import getCentroidByIsoCode from "../../../lib/data/getCentroidByIsoCode";
 import { groups, max, min, scaleLinear } from "d3";
 import { Vector2 } from "three";
 import { BtorsGroupedByYear } from "../../../lib/data/queries/btors/getBtorsGroupedByYear";
 import LinePath from "../../LinePath/";
 import { Group } from "@visx/group";
-import { MapContext } from "../../map/layout/MapContext";
+import { MapLayoutContext } from "../../MapLayout/MapLayoutContext";
 import getCountryName from "../../../lib/getCountryName";
 import { getFilledSeries } from "../../LinePath/LinePath.helpers";
 
@@ -55,11 +55,11 @@ const BtorsByYear: FC<Props> = ({ btors, neCountries }) => {
     }))
     .filter(hasCentroid);
 
-  const { projection } = useContext(MapContext);
+  const { projection } = useContext(MapLayoutContext);
 
   return (
     <>
-      <BaseLayer countries={neCountries} projection={projection} />
+      <MapLayerBase countries={neCountries} projection={projection} />
       {btorsByCountry.map((d) => {
         const centroid = projection([d.centroid.x, d.centroid.y]);
         if (!centroid) return <></>;

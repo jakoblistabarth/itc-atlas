@@ -6,14 +6,14 @@ import getNfpCountries from "../../lib/data/getNfpCountries";
 import * as d3 from "d3";
 import { geoBertin1953 } from "d3-geo-projection";
 import { NfpCountry } from "../../types/NfpCountry";
-import MapLayout from "../../components/map/layout/MapLayout";
-import MapLayoutBody from "../../components/map/layout/MapLayoutBody";
-import BaseLayer from "../../components/map/BaseLayer";
+import MapLayout from "../../components/MapLayout";
+import MapLayoutBody from "../../components/MapLayout/MapLayoutBody";
+import MapLayerBase from "../../components/MapLayerBase";
 import getCountries from "../../lib/data/getCountries";
 import { SharedPageProps } from "../../types/Props";
 import { feature } from "topojson-client";
-import PolygonSymbol from "../../components/map/PolygonSymbol";
-import MapLayoutHeader from "../../components/map/layout/MapLayoutHeader";
+import MarkGeometry from "../../components/MarkGeometry/MarkGeometry";
+import MapLayoutHeader from "../../components/MapLayout/MapLayoutHeader";
 import getCountryCodes from "../../lib/data/queries/country/getCountryCodes";
 
 type Props = {
@@ -136,13 +136,13 @@ const NfpCountries: NextPage<Props> = ({ nfps, neCountriesTopoJson }) => {
                     }
                   />
                   <MapLayoutBody bounds={bounds}>
-                    <BaseLayer
+                    <MapLayerBase
                       countries={neCountriesTopoJson}
                       projection={projection}
                     />
                     <g>
                       {polygons.map((p, idx) => (
-                        <PolygonSymbol
+                        <MarkGeometry
                           key={`${p.properties.ADM0_A3}-${idx}`}
                           feature={p}
                           projection={projection}

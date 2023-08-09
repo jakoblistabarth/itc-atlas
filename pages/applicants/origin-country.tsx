@@ -4,8 +4,8 @@ import { geoBertin1953 } from "d3-geo-projection";
 import type { GetStaticProps, NextPage } from "next";
 import { useState } from "react";
 import { Box, Paragraph } from "theme-ui";
-import BasePage from "../../components/BasePage";
-import MapLayoutFluid from "../../components/map/layout/MapLayoutFluid";
+import PageBase from "../../components/PageBase";
+import MapLayoutFluid from "../../components/MapLayout/MapLayoutFluid";
 import AlumniOrigin from "../../components/visuals/maps/AlumniOrigin";
 import getCountries from "../../lib/data/getCountries";
 import getApplicationLevels, {
@@ -18,7 +18,7 @@ import getCountryWithApplicantCount, {
 import { SharedPageProps } from "../../types/Props";
 import getApplicationsByYear from "../../lib/data/queries/application/getApplicationsByYear";
 import SmallMultiplesTimeSeries from "../../components/SmallMultiplesTimeseries";
-import { LinePathDatum } from "../../components/LinePathBase";
+import { LinePathDatum } from "../../components/LinePath/LinePathBase";
 import getCountryName from "../../lib/getCountryName";
 import { getFilledSeries } from "../../components/LinePath/LinePath.helpers";
 
@@ -40,7 +40,7 @@ const Page: NextPage<Props> = ({
   const [level, setLevel] = useState<string | undefined>(undefined);
 
   return (
-    <BasePage title="Where do ITC's alumni come from?">
+    <PageBase title="Where do ITC's alumni come from?">
       <Box as="section" variant="layout.section">
         <div sx={{ mb: 3 }}>
           <label>
@@ -109,7 +109,7 @@ const Page: NextPage<Props> = ({
           </Box>
         </Box>
       </Box>
-    </BasePage>
+    </PageBase>
   );
 };
 

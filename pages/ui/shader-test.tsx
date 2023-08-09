@@ -2,15 +2,15 @@
 
 import { Canvas } from "@react-three/fiber";
 import type { GetStaticProps, NextPage } from "next";
-import BlockDiagram from "../../components/map-3d/BlockDiagram";
-import BlockDiagramMarker from "../../components/map-3d/BlockDiagramMarker";
+import BlockDiagram from "../../components/BlockDiagram/";
+import BlockDiagramMarker from "../../components/BlockDiagram/BlockDiagramMarker";
 import useSWR from "swr";
-import BasePage from "../../components/BasePage";
+import PageBase from "../../components/PageBase";
 import { Box, Heading, Text } from "theme-ui";
 import getCountries from "../../lib/data/getCountries";
 import { SharedPageProps } from "../../types/Props";
 import getCountryCodes from "../../lib/data/queries/country/getCountryCodes";
-import BlockDiagramEnvironment from "../../components/map-3d/BlockDiagramEnvironment";
+import BlockDiagramEnvironment from "../../components/BlockDiagram/BlockDiagramEnvironment";
 
 type Props = SharedPageProps;
 
@@ -19,7 +19,7 @@ const ShaderTest: NextPage<Props> = () => {
   const aut = useSWR("/api/data/elevationModel/Grossglockner");
 
   return (
-    <BasePage title="Shader Test">
+    <PageBase title="Shader Test">
       <Heading as="h2" sx={{ mt: 5 }}>
         Großglockner
       </Heading>
@@ -58,7 +58,7 @@ const ShaderTest: NextPage<Props> = () => {
           <BlockDiagramEnvironment />
         </Canvas>
       </Box>
-    </BasePage>
+    </PageBase>
   );
 };
 export default ShaderTest;

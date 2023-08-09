@@ -4,18 +4,18 @@ import type { GetStaticProps, NextPage } from "next";
 import Head from "next/head";
 import Footer from "../../components/Footer";
 import { Container, Heading } from "theme-ui";
-import Point3D from "../../components/map-3d/Point3D";
+import Mark3dSphere from "../../components/Mark3dSphere";
 import getCountries from "../../lib/data/getCountries";
 import { SharedPageProps } from "../../types/Props";
 import * as topojson from "topojson-client";
 import { geoCentroid } from "d3-geo";
 import React, { useRef } from "react";
 import { scaleLinear } from "d3";
-import Globe from "../../components/map-3d/Globe";
-import lonLatToXYZ from "../../lib/cartographic/lonLatToXYZ";
-import GlobeTexture from "../../components/map-3d/GlobeTexture";
+import Globe from "../../components/Globe/";
+import lonLatToXYZ from "../../lib/helpers/lonLatToXYZ";
+import GlobeTexture from "../../components/Globe/GlobeTexture";
 import getCountryCodes from "../../lib/data/queries/country/getCountryCodes";
-import GlobeEnvironment from "../../components/map-3d/GlobeEnvironment";
+import GlobeEnvironment from "../../components/Globe/GlobeEnvironment";
 
 type Props = SharedPageProps;
 
@@ -54,7 +54,7 @@ const ProjectExplorer3D: NextPage<Props> = ({ neCountriesTopoJson }) => {
                     radius
                   );
                   return (
-                    <Point3D
+                    <Mark3dSphere
                       key={i}
                       pos={pos}
                       radius={radius}

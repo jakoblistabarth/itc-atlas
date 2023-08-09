@@ -1,9 +1,9 @@
 import { FC } from "react";
 import { NeCountriesTopoJson } from "../../../types/NeTopoJson";
-import BaseLayer from "../../map/BaseLayer";
+import MapLayerBase from "../../MapLayerBase";
 import { geoBertin1953 } from "d3-geo-projection";
 import useMeasure from "react-use-measure";
-import getMapHeight from "../../../lib/cartographic/getMapHeight";
+import getMapHeight from "../../../lib/helpers/getMapHeight";
 import getCentroidByIsoCode from "../../../lib/data/getCentroidByIsoCode";
 import { max, scaleLinear, scalePow } from "d3";
 import { BtorsGroupedByCountry } from "../../../lib/data/queries/btors/getBtorsGroupedByCountry";
@@ -51,7 +51,7 @@ const MultiStopBtors: FC<Props> = ({ btors, neCountries }) => {
       height={"100%"}
       viewBox={`0 0 ${width} ${height}`}
     >
-      <BaseLayer countries={neCountries} projection={proj} />
+      <MapLayerBase countries={neCountries} projection={proj} />
       {height &&
         multipleStops.map((d) => {
           const centroids = d.centroids;

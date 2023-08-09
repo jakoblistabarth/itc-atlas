@@ -1,6 +1,6 @@
 import { FC, useContext, useEffect, useState } from "react";
 import { Group } from "@visx/group";
-import { TimelineContext } from "../charts/timeline/TimelineContext";
+import { TimelineContext } from "../Timeline/TimelineContext";
 
 const Annotations: FC = () => {
   const { xScale } = useContext(TimelineContext);

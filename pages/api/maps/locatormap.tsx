@@ -1,6 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import ReactDOMServer from "react-dom/server";
-import LocatorMap from "../../../components/map/LocatorMap";
+import LocatorMap from "../../../components/LocatorMap";
 import getCountries from "../../../lib/data/getCountries";
 
 /**

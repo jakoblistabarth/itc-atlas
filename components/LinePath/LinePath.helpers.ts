@@ -1,5 +1,5 @@
 import { range } from "d3";
-import { LinePathDatum } from "../LinePathBase";
+import { LinePathDatum } from "./LinePathBase";
 
 export const getFilledSeries = <
   T extends Record<string, number | string | null | object> = LinePathDatum

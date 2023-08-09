@@ -6,8 +6,8 @@ import {
   geoEquirectangular,
 } from "d3-geo";
 import type { GetStaticProps, NextPage } from "next";
-import BasePage from "../../components/BasePage";
-import MapLayoutFluid from "../../components/map/layout/MapLayoutFluid";
+import PageBase from "../../components/PageBase";
+import MapLayoutFluid from "../../components/MapLayout/MapLayoutFluid";
 import TestMap from "../../components/visuals/maps/TestMap";
 import getCountries from "../../lib/data/getCountries";
 import getCountryCodes from "../../lib/data/queries/country/getCountryCodes";
@@ -48,7 +48,7 @@ const Page: NextPage<Props> = ({ neCountriesTopoJson, btorsByYear }) => {
   };
 
   return (
-    <BasePage title="MapLayoutFluid Test">
+    <PageBase title="MapLayoutFluid Test">
       <Box variant="layout.inlineMap">
         <MapLayoutFluid projection={geoEquirectangular()} extent={extentAut}>
           <TestMap neCountriesTopoJson={neCountriesTopoJson} />
@@ -87,7 +87,7 @@ const Page: NextPage<Props> = ({ neCountriesTopoJson, btorsByYear }) => {
           This map uses an Equirectangular projection.
         </Caption>
       </Box>
-    </BasePage>
+    </PageBase>
   );
 };
 export default Page;

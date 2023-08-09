@@ -1,8 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import ReactDOMServer from "react-dom/server";
-import HierarchyTree, {
-  Hierarchy,
-} from "../../../components/charts/HierarchyTree";
+import HierarchyTree, { Hierarchy } from "../../../components/HierarchyTree";
 import { readFileSync } from "fs";
 
 // this api endpoint is not working!

@@ -2,13 +2,13 @@ import { geoBertin1953 } from "d3-geo-projection";
 import { FeatureCollection, Point } from "geojson";
 import type { GetStaticProps, NextPage } from "next";
 import Head from "next/head";
-import PatternLines from "../../components/defs/patterns/PatternLines";
+import PatternLine from "../../components/PatternLine";
 import { Container, Heading } from "theme-ui";
-import BaseLayer from "../../components/map/BaseLayer";
-import PolygonSymbol from "../../components/map/PolygonSymbol";
-import PointSymbol from "../../components/map/PointSymbol";
-import ProportionalCircleLegend from "../../components/map/ProportionalCircleLegend";
-import getMapHeight from "../../lib/cartographic/getMapHeight";
+import MapLayerBase from "../../components/MapLayerBase";
+import MarkGeometry from "../../components/MarkGeometry/MarkGeometry";
+import MarkCircle from "../../components/MarkCircle";
+import LegendProportionalCircle from "../../components/LegendProportionalCircle";
+import getMapHeight from "../../lib/helpers/getMapHeight";
 import getCountries from "../../lib/data/getCountries";
 import getProjectsPerCountry from "../../lib/data/getProjectsPerCountry";
 import themes, { ThemeNames } from "../../lib/styles/themes";
@@ -56,22 +56,22 @@ const ProjectCountries: NextPage<Props> = ({
           <Heading as="h1">ITC&apos;s global project activity</Heading>
           <svg width={dimension.width} height={dimension.height}>
             <defs>
-              <PatternLines
+              <PatternLine
                 angle={45}
                 spacing={10}
                 strokeWidth={0.5}
                 stroke={theme.choropleth?.pattern?.stroke}
                 name={theme.choropleth?.pattern?.id}
-              ></PatternLines>
+              ></PatternLine>
             </defs>
-            <BaseLayer
+            <MapLayerBase
               countries={neCountriesTopoJson}
               projection={projection}
               theme={theme}
             />
             <g className="choroplethLayer">
               {highlightCountries.features.map((feature) => (
-                <PolygonSymbol
+                <MarkGeometry
                   key={feature.properties.ADM0_A3}
                   projection={projection}
                   feature={feature}
@@ -84,7 +84,7 @@ const ProjectCountries: NextPage<Props> = ({
                 const coordinates = projection(feature.geometry.coordinates);
                 const position = new Vector2(coordinates[0], coordinates[1]);
                 return (
-                  <PointSymbol
+                  <MarkCircle
                     key={idx}
                     position={position}
                     radius={scale(feature.properties?.projectCount)}
@@ -94,7 +94,7 @@ const ProjectCountries: NextPage<Props> = ({
                 );
               })}
             </g>
-            <ProportionalCircleLegend
+            <LegendProportionalCircle
               data={data.features.map(
                 (feature) => feature.properties?.projectCount ?? 0
               )}

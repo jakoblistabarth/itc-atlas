@@ -3,15 +3,15 @@ import { geoBertin1953 } from "d3-geo-projection";
 import type { NextApiRequest, NextApiResponse } from "next";
 import ReactDOMServer from "react-dom/server";
 import { Vector2 } from "three";
-import PatternLines from "../../../components/defs/patterns/PatternLines";
-import BaseLayer from "../../../components/map/BaseLayer";
-import PointSymbol from "../../../components/map/PointSymbol";
-import ProportionalCircleLegend from "../../../components/map/ProportionalCircleLegend";
-import MapLayout from "../../../components/map/layout/MapLayout";
-import MapLayoutAside from "../../../components/map/layout/MapLayoutAside";
-import MapLayoutBody from "../../../components/map/layout/MapLayoutBody";
-import MapLayoutHeader from "../../../components/map/layout/MapLayoutHeader";
-import { setMapBounds } from "../../../lib/cartographic/getMapHeight";
+import PatternLine from "../../../components/PatternLine";
+import MapLayerBase from "../../../components/MapLayerBase";
+import MarkCircle from "../../../components/MarkCircle";
+import LegendProportionalCircle from "../../../components/LegendProportionalCircle";
+import MapLayout from "../../../components/MapLayout";
+import MapLayoutAside from "../../../components/MapLayout/MapLayoutAside";
+import MapLayoutBody from "../../../components/MapLayout/MapLayoutBody";
+import MapLayoutHeader from "../../../components/MapLayout/MapLayoutHeader";
+import { setMapBounds } from "../../../lib/helpers/getMapHeight";
 import getCountries from "../../../lib/data/getCountries";
 import getCountryWithApplicantCount from "../../../lib/data/queries/country/getCountryWithApplicantCount";
 import defaultTheme from "../../../lib/styles/themes/defaultTheme";
@@ -122,7 +122,7 @@ export default async function handler(
         theme={mapOptions.theme}
       />
       <MapLayoutAside xOffset={0} yOffset={mapOptions.bounds?.frame?.top}>
-        <ProportionalCircleLegend
+        <LegendProportionalCircle
           data={data.map((d) => d._count.applicants ?? 0)}
           scaleRadius={scale}
           title={"Alumni per country"}
@@ -132,18 +132,18 @@ export default async function handler(
         />
       </MapLayoutAside>
       <MapLayoutBody bounds={mapOptions.bounds}>
-        <BaseLayer
+        <MapLayerBase
           countries={neCountriesTopoJson}
           projection={mapOptions.projection}
           theme={mapOptions.theme}
         />
         <g className="choroplethLayer">
           <defs>
-            <PatternLines
+            <PatternLine
               stroke={mapOptions.theme?.choropleth?.pattern?.color}
               name={mapOptions.theme?.choropleth?.pattern?.id}
               angle={20}
-            ></PatternLines>
+            ></PatternLine>
           </defs>
         </g>
         <g className="symbolLayer">
@@ -153,7 +153,7 @@ export default async function handler(
             );
             return (
               xy && (
-                <PointSymbol
+                <MarkCircle
                   key={idx}
                   position={new Vector2(xy[0], xy[1])}
                   radius={scale(feature.properties?.alumniCount)}
@@ -170,6 +170,6 @@ export default async function handler(
 
   res
     .status(200)
-    .setHeader("Content-Type", "image/svg+xml; charset=utf-8;")
+    .setHeader("Content-Type", "text/html; charset=utf-8;")
     .send(svg);
 }

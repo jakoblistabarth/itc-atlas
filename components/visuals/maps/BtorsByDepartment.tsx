@@ -12,11 +12,11 @@ import getUnRegions from "../../../lib/data/getUnRegions";
 import { BtorsGroupedByRegionByDepartment } from "../../../lib/data/queries/btors/getBtorsGroupedByRegionByDepartment";
 import { departmentColorScale } from "../../../lib/styles/departmentColorScale";
 import { NeCountriesTopoJson } from "../../../types/NeTopoJson";
-import BaseLayer from "../../map/BaseLayer";
-import NominalLegend from "../../map/NominalLegend";
-import PolygonSymbol from "../../map/PolygonSymbol";
-import ScaledPie from "../../map/ScaledPie";
-import { MapContext } from "../../map/layout/MapContext";
+import MapLayerBase from "../../MapLayerBase";
+import LegendNominal from "../../LegendNominal";
+import MarkGeometry from "../../MarkGeometry/MarkGeometry";
+import ScaledPie from "../../ScaledPieChart/ScaledPieChart";
+import { MapLayoutContext } from "../../MapLayout/MapLayoutContext";
 
 type Props = {
   neCountries: NeCountriesTopoJson;
@@ -53,14 +53,14 @@ const BtorsByDepartment: FC<Props> = ({ btors, countryCodes, neCountries }) => {
     };
   });
 
-  const { projection } = useContext(MapContext);
+  const { projection } = useContext(MapLayoutContext);
 
   return (
     <>
-      <BaseLayer countries={neCountries} projection={projection} />
+      <MapLayerBase countries={neCountries} projection={projection} />
       <g>
         {regions.map((d) => (
-          <PolygonSymbol
+          <MarkGeometry
             key={d.properties?.region}
             feature={d}
             projection={projection}
@@ -87,7 +87,7 @@ const BtorsByDepartment: FC<Props> = ({ btors, countryCodes, neCountries }) => {
           );
         })}
       </g>
-      <NominalLegend
+      <LegendNominal
         title="Departments"
         transform="translate(0 0)"
         fontSize={10}

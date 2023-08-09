@@ -15,21 +15,22 @@ import { Text as TextTui } from "theme-ui";
 import { Text } from "@visx/text";
 import { Group } from "@visx/group";
 import { TimelineEvent } from "../../types/TimelineEvent";
-import Star from "../shapes/Star";
-import NsidedPolygon from "../shapes/NsidedPolygon";
-import TimelineGrid from "../charts/timeline/TimelineGrid";
-import TimelineSeparator from "../charts/timeline/TimelineSeparator";
-import TimelineHeader from "../charts/timeline/TimelineHeader";
-import EventPeriod from "../charts/timeline/EventPeriod";
-import PointSymbol from "../map/PointSymbol";
+import Star from "../Star/Star";
+import NsidedPolygon from "../NsidedPolygon";
+import TimelineGrid from "../Timeline/TimelineGrid";
+import TimelineSeparator from "../Timeline/TimelineSeparator";
+import TimelineHeader from "../Timeline/TimelineHeader";
+import { TimelineContext } from "../Timeline/TimelineContext";
+import EventPeriod from "../Timeline/EventPeriod";
+import MarkCircle from "../MarkCircle";
 import Building, { ITClocations } from "../Building";
-import PointLabel from "../map/PointLabel";
-import NominalLegend from "../map/NominalLegend";
-import Tooltip from "../Tooltip/Tooltip";
+import LabelPoint from "../LabelPoint";
+import LegendNominal from "../LegendNominal";
+import Tooltip from "../Tooltip/";
 import { TooltipTrigger } from "../Tooltip/TooltipTrigger";
 import TooltipContent from "../Tooltip/TooltipContent";
 import { LabelPlacement } from "../../types/LabelPlacement";
-import TopicPatterns from "../TopicPatterns";
+import TopicPatterns from "./TopicPatterns";
 import { Vector2 } from "three";
 import { ProjectIndonesia } from "../../types/Project";
 import { PhdsByYearWithCount } from "../../lib/data/queries/phd/getPhdsByYear";
@@ -39,7 +40,6 @@ import { Minister } from "../../types/Minister";
 import { BtorsByCountry } from "../../lib/data/queries/btors/getBTORsByCountry";
 import getITCNames from "../../lib/data/getITCNames";
 import getPolicyTopics from "../../lib/data/getPolicyTopics";
-import { TimelineContext } from "../charts/timeline/TimelineContext";
 
 type Props = PropsWithChildren<{
   applications: ApplicationByYearWithCount;
@@ -306,7 +306,7 @@ const IndonesiaTimeline: FC<Props> = ({
                       stroke={itcGreen}
                       strokeWidth={0.5}
                     />
-                    <PointSymbol
+                    <MarkCircle
                       position={new Vector2()}
                       radius={2}
                       stroke={itcGreen}
@@ -364,14 +364,14 @@ const IndonesiaTimeline: FC<Props> = ({
                         width={width}
                         location={d}
                       />
-                      <PointSymbol
+                      <MarkCircle
                         position={new Vector2(0, width / 2)}
                         fillOpacity={1}
                         fill={"white"}
                         stroke={itcGreen}
                         interactive={false}
                       />
-                      <PointLabel
+                      <LabelPoint
                         position={new Vector2(0, width / 2)}
                         placement={LabelPlacement.BOTTOM}
                         fill={itcGreen}
@@ -383,7 +383,7 @@ const IndonesiaTimeline: FC<Props> = ({
                         <tspan x="0" dy="10">
                           {currentLocation.city}
                         </tspan>
-                      </PointLabel>
+                      </LabelPoint>
                     </g>
                   </g>
                 );
@@ -410,7 +410,7 @@ const IndonesiaTimeline: FC<Props> = ({
               Ministers in charge
             </TimelineHeader>
             <Group top={rowHeaderHeight}>
-              <NominalLegend
+              <LegendNominal
                 entries={parties.map((d) => ({
                   label: d,
                   color: itcBlue,
@@ -431,9 +431,9 @@ const IndonesiaTimeline: FC<Props> = ({
                     height={1}
                   >
                     <g transform="rotate(-45) translate(2 0)">
-                      <PointLabel fontSize={7} placement={LabelPlacement.RIGHT}>
+                      <LabelPoint fontSize={7} placement={LabelPlacement.RIGHT}>
                         {ce.name}
-                      </PointLabel>
+                      </LabelPoint>
                     </g>
                     <Tooltip>
                       <TooltipTrigger asChild>
@@ -475,7 +475,7 @@ const IndonesiaTimeline: FC<Props> = ({
                 />
               ))}
               {firstTopicOccurences.map((topic, idx) => (
-                <PointLabel
+                <LabelPoint
                   key={`topic-${idx}`}
                   placement={LabelPlacement.LEFT}
                   fontSize={9}
@@ -487,7 +487,7 @@ const IndonesiaTimeline: FC<Props> = ({
                   }
                 >
                   {topic?.name}
-                </PointLabel>
+                </LabelPoint>
               ))}
             </Group>
           </g>

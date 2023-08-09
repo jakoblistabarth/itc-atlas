@@ -7,17 +7,17 @@ import { BtorsGroupedByYear } from "../../lib/data/queries/btors/getBtorsGrouped
 import { BhosCountry } from "../../types/BhosCountry";
 import { Button, Flex, Text } from "theme-ui";
 import { DutchCabinet } from "../../types/DutchCabinet";
-import BaseLayer from "../map/BaseLayer";
+import MapLayerBase from "../MapLayerBase";
 import { geoBertin1953 } from "d3-geo-projection";
 import { feature } from "topojson-client";
-import PolygonSymbol from "../map/PolygonSymbol";
+import MarkGeometry from "../MarkGeometry/MarkGeometry";
 import { Feature } from "geojson";
 import { HiCursorClick } from "react-icons/hi";
 import { scaleOrdinal } from "d3";
-import NominalLegend from "../map/NominalLegend";
+import LegendNominal from "../LegendNominal";
 import Callout from "../Callout/Callout";
-import MapLayoutFluid from "../map/layout/MapLayoutFluid";
-import Tooltip from "../Tooltip/Tooltip";
+import MapLayoutFluid from "../MapLayout/MapLayoutFluid";
+import Tooltip from "../Tooltip/";
 import { TooltipTrigger } from "../Tooltip/TooltipTrigger";
 import TooltipContent from "../Tooltip/TooltipContent";
 import getCountryName from "../../lib/getCountryName";
@@ -176,7 +176,7 @@ const BtorsAndCabinets: FC<Props> = ({
         ))}
       </Flex>
       <svg width={"100%"} height={"50px"}>
-        <NominalLegend
+        <LegendNominal
           transform="translate(0 10)"
           fontSize={10}
           columnWidth={200}
@@ -192,14 +192,14 @@ const BtorsAndCabinets: FC<Props> = ({
       </svg>
       <MapLayoutFluid projection={projection}>
         <GradientDefs />
-        <BaseLayer countries={neCountries} projection={projection} />
+        <MapLayerBase countries={neCountries} projection={projection} />
         {countriesWithCategories.map((d) => {
           const isActiveCountry = activeCountry === d.properties?.isoAlpha3;
           return (
             <Tooltip key={d.properties?.id}>
               <TooltipTrigger asChild>
                 <g>
-                  <PolygonSymbol
+                  <MarkGeometry
                     feature={d}
                     projection={projection}
                     stroke={isActiveCountry ? "black" : "white"}

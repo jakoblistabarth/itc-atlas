@@ -8,7 +8,7 @@ import getCountries from "../../lib/data/getCountries";
 import { SharedPageProps } from "../../types/Props";
 import React from "react";
 import { group, rollup } from "d3";
-import SpaceTimeCube from "../../components/map-3d/SpaceTimeCube";
+import SpaceTimeCube from "../../components/SpaceTimeCube/SpaceTimeCube";
 import { SpaceTimeCubeEvent } from "../../types/SpaceTimeCubeEvent";
 import getCentroidByIsoCode from "../../lib/data/getCentroidByIsoCode";
 import getCountryCodes from "../../lib/data/queries/country/getCountryCodes";

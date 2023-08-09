@@ -1,7 +1,7 @@
 import { Meta, StoryObj } from "@storybook/react";
 import { Text } from "theme-ui";
 
-import Callout from "./";
+import Callout from ".";
 import { HiCursorClick } from "react-icons/hi";
 
 const meta = {

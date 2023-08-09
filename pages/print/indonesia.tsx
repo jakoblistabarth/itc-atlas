@@ -2,7 +2,7 @@
 
 import type { NextPage } from "next";
 import IndonesiaTimeline from "../../components/IndonesiaTimeline";
-import PaperCanvasPage from "../../components/PaperCanvasPage";
+import PagePaperCanvas from "../../components/PagePaperCanvas";
 import getCountries from "../../lib/data/getCountries";
 import getDutchForeignAffairsMinisters from "../../lib/data/getDutchForeignAffairsMinisters";
 import getITCNames from "../../lib/data/getITCNames";
@@ -44,7 +44,7 @@ const Page: NextPage<Props> = ({
   phdsByYear,
   projects,
 }) => (
-  <PaperCanvasPage title="Indonesia Timeline">
+  <PagePaperCanvas title="Indonesia Timeline">
     <div sx={{ width: 1280 }}>
       <IndonesiaTimeline
         applications={applications}
@@ -59,7 +59,7 @@ const Page: NextPage<Props> = ({
         <AnnotationsPrint />
       </IndonesiaTimeline>
     </div>
-  </PaperCanvasPage>
+  </PagePaperCanvas>
 );
 
 export async function getStaticProps() {

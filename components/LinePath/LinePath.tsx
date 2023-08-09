@@ -9,8 +9,8 @@ import {
   useRef,
   useEffect,
 } from "react";
-import LinePathBase, { LinePathDatum } from "../LinePathBase";
-import Tooltip from "../Tooltip/Tooltip";
+import LinePathBase, { LinePathDatum } from "./LinePathBase";
+import Tooltip from "../Tooltip/";
 import { TooltipTrigger } from "../Tooltip/TooltipTrigger";
 import TooltipContent from "../Tooltip/TooltipContent";
 import { ScaleLinear, ascending, range } from "d3";
