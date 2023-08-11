@@ -28,7 +28,7 @@ const config: StorybookConfig = {
       },
     },
   ],
-  staticDirs: ["../public", "../stories/assets", "../data/topographic"],
+  staticDirs: ["../public", "../data/topographic"],
   framework: {
     name: "@storybook/nextjs",
     options: {},
