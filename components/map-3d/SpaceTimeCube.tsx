@@ -6,7 +6,19 @@ import lonLatTimeToXYZ from "../../lib/cartographic/lonLatTimeToXYZ";
 import { fDateYear } from "../../lib/utilities/formaters";
 import { SpaceTimeCubeEvent } from "../../types/SpaceTimeCubeEvent";
 import type { Topology } from "topojson-specification";
-import PolygonMap3D from "./PolygonMap3D";
+import { useMemo } from "react";
+import { SVGLoader } from "three-stdlib";
+import { feature } from "topojson-client";
+import {
+  FeatureCollection,
+  Polygon,
+  MultiPolygon,
+  GeoJsonProperties,
+} from "geojson";
+import featureCollectionToSVG from "../../lib/cartographic/featureCollectionToSVG";
+import { geoPath } from "d3-geo";
+import { useEffect, useState } from "react";
+import { Color, DoubleSide } from "three";
 
 type PropTypes = React.PropsWithChildren<{
   events: SpaceTimeCubeEvent[];
@@ -41,22 +53,46 @@ const SpaceTimeCube: FC<PropTypes> = ({
       type: "Sphere",
     }
   );
+  const fc = feature(
+    topology,
+    topology.objects[topologyObject]
+  ) as FeatureCollection<MultiPolygon | Polygon, GeoJsonProperties>;
+  const svg = featureCollectionToSVG(fc, geoPath(projection));
+
+  const loader = new SVGLoader();
+  const svgData = loader.parse(svg);
+  const { paths } = svgData;
+  const extrudeGeometryOptions = {
+    depth: 0.05,
+    bevelSize: 0.005,
+    bevelThickness: 0.005,
+    bevelSegments: 12,
+  };
+
+  const shapes = useMemo(
+    () =>
+      paths.flatMap((p, idx) =>
+        p.toShapes(true).map((shape) => ({
+          shape,
+          fillOpacity: p.userData?.style.fillOpacity,
+          name: fc.features[idx].properties?.ADM0_A3,
+        }))
+      ),
+    [paths, fc.features]
+  );
+
+  const [hoverCountry, setHover] = useState<string | undefined>(undefined);
+
+  useEffect(
+    () => void (document.body.style.cursor = hoverCountry ? `pointer` : `auto`),
+    [hoverCountry]
+  );
 
   return (
     <>
       {timeScale.ticks().map((t, idx) => {
         return (
           <group key={`${t.getDate()}-${idx}`}>
-            {/* <mesh
-              receiveShadow
-              castShadow
-              position={[0, timeScale(t), 0]}
-              rotation={[-Math.PI / 2, 0, 0]}
-            >
-              <planeGeometry args={[side, side]} />
-              <meshStandardMaterial transparent opacity={0} />
-              <Edges color={"white"} />
-            </mesh> */}
             <mesh receiveShadow castShadow position={[side + 0.1, 0, 0]}>
               <Text3D
                 receiveShadow
@@ -77,37 +113,73 @@ const SpaceTimeCube: FC<PropTypes> = ({
           </group>
         );
       })}
-      {events.map((e, idx) => {
-        const pos = lonLatTimeToXYZ(
-          e.coordinates,
-          e.dateStart,
-          timeScale,
-          projection
-        );
-        return (
-          <mesh key={`${e.name}-${idx}`} position={pos}>
-            <boxGeometry
-              args={[(e.size ?? 1) / 200, eventSide / 5, (e.size ?? 1) / 200]}
+      {hoverCountry
+        ? events
+            .filter((event) => event.name == hoverCountry)
+            .map((e, idx) => {
+              const pos = lonLatTimeToXYZ(
+                e.coordinates,
+                e.dateStart,
+                timeScale,
+                projection
+              );
+              return (
+                <mesh key={`${e.name}-${idx}`} position={pos}>
+                  <boxGeometry
+                    args={[
+                      (e.size ?? 1) / 200,
+                      eventSide / 5,
+                      (e.size ?? 1) / 200,
+                    ]}
+                  />
+                  <meshPhongMaterial color={"teal"} />
+                </mesh>
+              );
+            })
+        : events.map((e, idx) => {
+            const pos = lonLatTimeToXYZ(
+              e.coordinates,
+              e.dateStart,
+              timeScale,
+              projection
+            );
+            return (
+              <mesh key={`${e.name}-${idx}`} position={pos}>
+                <boxGeometry
+                  args={[
+                    (e.size ?? 1) / 200,
+                    eventSide / 5,
+                    (e.size ?? 1) / 200,
+                  ]}
+                />
+                <meshPhongMaterial color={"teal"} />
+              </mesh>
+            );
+          })}
+      <group position-y={height / -2} rotation={[Math.PI / -2, 0, 0]}>
+        {shapes.map((props) => (
+          <mesh
+            key={props.shape.uuid}
+            onPointerDown={() => setHover(props.name)}
+            onPointerOut={() => setHover(undefined)}
+            rotation={[Math.PI, 0, 0]} // taking into account the origin of svg coordinates in the top left rather than in the center
+          >
+            <extrudeGeometry
+              args={[props.shape, { ...extrudeGeometryOptions }]}
             />
-            <meshPhongMaterial color={"teal"} />
+            <meshStandardMaterial
+              color={
+                hoverCountry == props.name
+                  ? new Color("grey")
+                  : new Color("white")
+              }
+              opacity={props.fillOpacity}
+              depthWrite={true}
+              side={DoubleSide}
+              transparent
+            />
           </mesh>
-        );
-      })}
-      <group position-y={height / -2}>
-        <PolygonMap3D
-          topology={topology}
-          topologyObject={topologyObject}
-          width={side}
-          height={side}
-          projection={projection}
-          color={"white"}
-          extrudeGeometryOptions={{
-            depth: 0.05,
-            bevelSize: 0.005,
-            bevelThickness: 0.005,
-            bevelSegments: 12,
-          }}
-        />
+        ))}
       </group>
     </>
   );
