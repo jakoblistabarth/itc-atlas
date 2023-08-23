@@ -82,19 +82,24 @@ const SpaceTimeCube: FC<PropTypes> = ({
   );
 
   const [hoverCountry, setHover] = useState<string | undefined>(undefined);
-
+  const [hoverYear, setYear] = useState<string | undefined>(undefined);
   useEffect(
     () => void (document.body.style.cursor = hoverCountry ? `pointer` : `auto`),
     [hoverCountry]
   );
-
+  useEffect(
+    () => void (document.body.style.cursor = hoverYear ? `pointer` : `auto`),
+    [hoverYear]
+  );
   return (
     <>
-      {timeScale.ticks().map((t, idx) => {
+      {timeScale.ticks(25).map((t, idx) => {
         return (
           <group key={`${t.getDate()}-${idx}`}>
             <mesh receiveShadow castShadow position={[side + 0.1, 0, 0]}>
               <Text3D
+                onPointerEnter={() => setYear(t.toDateString())}
+                onPointerLeave={() => setYear(undefined)}
                 receiveShadow
                 castShadow
                 font={"/fonts/Inter_Regular.json"}
@@ -107,15 +112,21 @@ const SpaceTimeCube: FC<PropTypes> = ({
                 curveSegments={2}
               >
                 {fDateYear(t)}
-                <meshStandardMaterial color={"white"} />
+                <meshStandardMaterial
+                  color={hoverYear == t.toDateString() ? "blue" : "white"}
+                />
               </Text3D>
             </mesh>
           </group>
         );
       })}
-      {hoverCountry
+      {hoverCountry || hoverYear
         ? events
-            .filter((event) => event.name == hoverCountry)
+            .filter(
+              (event) =>
+                event.name == hoverCountry ||
+                event.dateStart.toDateString() == hoverYear
+            )
             .map((e, idx) => {
               const pos = lonLatTimeToXYZ(
                 e.coordinates,
