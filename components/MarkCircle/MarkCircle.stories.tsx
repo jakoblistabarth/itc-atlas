@@ -2,17 +2,10 @@ import { Meta, StoryObj } from "@storybook/react";
 
 import MarkCircle from ".";
 import { Vector2 } from "three";
-import themes from "../../lib/styles/themes";
 import PatternLine from "../PatternLine";
 
 const width = 600;
 const height = 300;
-
-const stylesArr = Array.from(themes.entries()).map(([key, value]) => [
-  key,
-  value.symbol,
-]);
-const styles = Object.fromEntries(stylesArr);
 
 const meta = {
   title: "Map Elements/Marks/MarkCircle",
