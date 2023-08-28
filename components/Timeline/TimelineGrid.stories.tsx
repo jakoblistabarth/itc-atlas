@@ -1,6 +1,7 @@
 import { StoryObj, Meta } from "@storybook/react";
 import TimelineGrid from "./TimelineGrid";
 import { timelineSetup } from "./Timeline.stories.helpers";
+import Timeline from "./Timeline";
 
 const meta = {
   title: "Charts/Timeline/TimelineGrid",
@@ -8,7 +9,9 @@ const meta = {
   decorators: [
     (Story) => (
       <svg width={timelineSetup.width} height={timelineSetup.height}>
-        <Story />
+        <Timeline xScale={timelineSetup.scale}>
+          <Story />
+        </Timeline>
       </svg>
     ),
   ],
@@ -18,7 +21,6 @@ type Story = StoryObj<typeof meta>;
 
 export const DefaultTimelineGrid: Story = {
   args: {
-    scale: timelineSetup.scale,
     height: timelineSetup.height,
     margin: timelineSetup.margin,
   },

@@ -1,10 +1,9 @@
-import { ScaleTime } from "d3";
 import type { FC, SVGProps } from "react";
+import { useTimelineContext } from "./TimelineContext";
 
 type Props = React.PropsWithChildren<
   {
     date: Date;
-    xScale: ScaleTime<number, number>;
     y?: number;
     radius: number;
     drawCenter: boolean;
@@ -13,13 +12,13 @@ type Props = React.PropsWithChildren<
 
 const EventPoint: FC<Props> = ({
   date,
-  xScale,
   y = 0,
   radius = 2.5,
   children,
   drawCenter = false,
   ...rest
 }) => {
+  const { xScale } = useTimelineContext();
   return (
     <g transform={`translate(${xScale(date)}, ${y})`}>
       <circle r={radius} {...rest} />

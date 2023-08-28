@@ -4,6 +4,7 @@ import { LabelPlacement } from "../../types/LabelPlacement";
 import EventPoint from "./EventPoint";
 import { TimelineEvent } from "../../types/TimelineEvent";
 import { timelineSetup } from "./Timeline.stories.helpers";
+import Timeline from "./Timeline";
 
 const event: TimelineEvent = {
   name: "Event Point",
@@ -18,7 +19,9 @@ const meta = {
   decorators: [
     (Story) => (
       <svg width={timelineSetup.width} height={timelineSetup.height}>
-        <Story />
+        <Timeline xScale={timelineSetup.scale}>
+          <Story />
+        </Timeline>
       </svg>
     ),
   ],
@@ -37,7 +40,6 @@ export const DefaultEventPoint: Story = {
   args: {
     y: timelineSetup.height / 2 - 20,
     date: event.dateStart,
-    xScale: timelineSetup.scale,
     radius: 5,
     drawCenter: false,
   },

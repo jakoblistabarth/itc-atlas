@@ -1,9 +1,9 @@
-import { FC, useContext, useEffect, useState } from "react";
 import { Group } from "@visx/group";
-import { TimelineContext } from "../Timeline/TimelineContext";
+import { FC, useEffect, useState } from "react";
+import { useTimelineContext } from "../Timeline/TimelineContext";
 
 const Annotations: FC = () => {
-  const { xScale } = useContext(TimelineContext);
+  const { xScale } = useTimelineContext();
 
   const [isSSR, setIsSSR] = useState(true);
   useEffect(() => setIsSSR(false), []);

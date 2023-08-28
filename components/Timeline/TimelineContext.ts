@@ -1,12 +1,20 @@
-import { ScaleTime, scaleTime } from "d3";
-import { createContext } from "react";
+import { ScaleTime } from "d3";
+import { createContext, useContext } from "react";
 
 type Context = {
+  left?: number;
+  top?: number;
   xScale: ScaleTime<number, number>;
 };
 
-export const TimelineContext = createContext<Context>({
-  xScale: scaleTime()
-    .domain([new Date("1950"), new Date()])
-    .range([0, 100]),
-});
+export const TimelineContext = createContext<Context | null>(null);
+
+export const useTimelineContext = () => {
+  const context = useContext(TimelineContext);
+
+  if (context == null) {
+    throw new Error("Timeline components must be wrapped in <Timeline />");
+  }
+
+  return context;
+};

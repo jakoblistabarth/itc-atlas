@@ -151,12 +151,8 @@ const CourseGenealogyPage: NextPage<Props> = ({ courseGenealogy }) => {
               height={"100%"}
               viewBox={`0 0 ${width} ${height}`}
             >
-              <Timeline>
-                <TimelineGrid
-                  scale={xScale}
-                  height={height}
-                  margin={margin.t}
-                />
+              <Timeline xScale={xScale}>
+                <TimelineGrid height={height} margin={margin.t} />
                 <g id={"nodes"} opacity={0.8}>
                   {courseGenealogy.nodes.map((node, idx) => {
                     const year = node.dateStart.getFullYear();

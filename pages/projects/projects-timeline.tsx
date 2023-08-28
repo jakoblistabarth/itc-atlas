@@ -75,12 +75,8 @@ const projectsTimeline: NextPage<projectsTimelineProps> = ({ projects }) => {
           <p>{projectsSelection.length} projects</p>
           <div style={{ overflowX: "scroll", maxHeight: "500px" }}>
             <svg width={wrapper.width} height={wrapper.height}>
-              <Timeline position={new Vector2(margin.left, 0)}>
-                <TimelineGrid
-                  scale={xScale}
-                  height={bounds.height}
-                  margin={margin.top}
-                />
+              <Timeline position={new Vector2(margin.left, 0)} xScale={xScale}>
+                <TimelineGrid height={bounds.height} margin={margin.top} />
                 <g id="project-events">
                   {events.map((e, idx) => {
                     const labelText =
@@ -91,7 +87,6 @@ const projectsTimeline: NextPage<projectsTimelineProps> = ({ projects }) => {
                         key={`${labelText}-${e.dateStart.getMilliseconds()}-${e.dateEnd?.getMilliseconds()}-${idx}`}
                         dateStart={e.dateStart}
                         dateEnd={e.dateEnd ?? new Date()}
-                        xScale={xScale}
                         yOffset={yScale(e.yOffset) ?? 0}
                         height={2}
                         fill={"blue"}

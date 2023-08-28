@@ -5,6 +5,7 @@ import EventPeriod from "./EventPeriod";
 import { TimelineEvent } from "../../types/TimelineEvent";
 import { timelineSetup } from "./Timeline.stories.helpers";
 import { Text } from "@visx/text";
+import Timeline from "./Timeline";
 
 const event: TimelineEvent = {
   name: "Event Period",
@@ -19,13 +20,16 @@ const meta = {
   decorators: [
     (Story) => (
       <svg width={timelineSetup.width} height={timelineSetup.height}>
-        <Story />
+        <Timeline xScale={timelineSetup.scale}>
+          <Story />
+        </Timeline>
       </svg>
     ),
   ],
   render: (args) => (
     <EventPeriod {...args}>
       <LabelPoint placement={LabelPlacement.LEFT}>{event.name}</LabelPoint>
+      {args.children}
     </EventPeriod>
   ),
 } satisfies Meta<typeof EventPeriod>;
@@ -39,7 +43,6 @@ export const DefaultEventPeriod: Story = {
     yOffset: timelineSetup.height / 2,
     dateStart: event.dateStart,
     dateEnd: event.dateEnd ?? new Date(),
-    xScale: timelineSetup.scale,
     height: 10,
   },
 };
@@ -62,8 +65,5 @@ export const EventWithText: Story = {
         This is a label with a rather long text, in multiple lines
       </Text>
     ),
-  },
-  render: (args) => {
-    return <EventPeriod {...args}>{args.children}</EventPeriod>;
   },
 };

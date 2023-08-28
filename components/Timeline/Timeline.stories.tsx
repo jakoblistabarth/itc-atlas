@@ -18,6 +18,11 @@ type TimelineElements = {
 const meta = {
   component: Timeline,
   title: "Charts/Timeline/Timeline",
+  args: {
+    xScale: scaleTime()
+      .domain([new Date("2010"), new Date()])
+      .range([0, 500]),
+  },
   argTypes: {
     points: {
       table: {
@@ -76,18 +81,12 @@ export const WithScaledItem: Story = {
       {
         date: new Date("2015"),
         y: timelineSetup.height / 2,
-        xScale: scaleTime()
-          .domain([new Date("2010"), new Date()])
-          .range([0, 500]),
         radius: 5,
         drawCenter: true,
       },
       { ...ScaledEventPoint.args },
     ],
     grid: {
-      scale: scaleTime()
-        .domain([new Date("2010"), new Date()])
-        .range([0, 500]),
       height: 100,
     },
   },

@@ -1,12 +1,12 @@
-import { FC, useContext, useEffect, useState } from "react";
+import { FC, useEffect, useState } from "react";
 import { Group } from "@visx/group";
 import { Text } from "@visx/text";
 import LeaderLine from "../LeaderLine";
 import { Vector2 } from "three";
-import { TimelineContext } from "../Timeline/TimelineContext";
+import { useTimelineContext } from "../Timeline/TimelineContext";
 
 const IndonesiaAnnotationsPrint: FC = () => {
-  const { xScale } = useContext(TimelineContext);
+  const { xScale } = useTimelineContext();
 
   const [isSSR, setIsSSR] = useState(true);
   useEffect(() => setIsSSR(false), []);

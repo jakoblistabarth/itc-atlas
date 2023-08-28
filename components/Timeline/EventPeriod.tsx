@@ -1,10 +1,9 @@
 import type { FC, SVGProps } from "react";
-import type { ScaleTime } from "d3";
+import { useTimelineContext } from "./TimelineContext";
 
 type Props = React.PropsWithChildren<{
   dateStart: Date;
   dateEnd: Date;
-  xScale: ScaleTime<number, number>;
   height: number;
   yOffset: number;
 }> &
@@ -13,12 +12,12 @@ type Props = React.PropsWithChildren<{
 const Event: FC<Props> = ({
   dateStart,
   dateEnd,
-  xScale,
   yOffset,
   children,
   height = 1,
   ...rest
 }) => {
+  const { xScale } = useTimelineContext();
   const width = dateEnd ? xScale(dateEnd) - xScale(dateStart) : 3;
   return (
     <g transform={`translate(${xScale(dateStart)}, ${yOffset})`}>
