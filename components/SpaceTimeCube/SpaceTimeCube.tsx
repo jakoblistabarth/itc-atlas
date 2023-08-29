@@ -73,6 +73,10 @@ const SpaceTimeCube: FC<PropTypes> = ({
     bevelSegments: 12,
   };
 
+  const [hoverCountry, setHover] = useState<string | undefined>(undefined);
+  const [hoverYear, setYear] = useState<string | undefined>(undefined);
+  const [selectedCountry, setSelect] = useState<string | undefined>(undefined);
+
   const shapes = useMemo(
     () =>
       paths.flatMap((p, idx) =>
@@ -85,16 +89,29 @@ const SpaceTimeCube: FC<PropTypes> = ({
     [paths, fc.features]
   );
 
-  const [hoverCountry, setHover] = useState<string | undefined>(undefined);
-  const [hoverYear, setYear] = useState<string | undefined>(undefined);
+  const selectedEvents =
+    selectedCountry || hoverYear
+      ? events.filter(
+          (event) =>
+            event.name == selectedCountry ||
+            event.dateStart.toDateString() == hoverYear
+        )
+      : events;
+
   useEffect(
     () => void (document.body.style.cursor = hoverCountry ? `pointer` : `auto`),
     [hoverCountry]
   );
   useEffect(
+    () =>
+      void (document.body.style.cursor = selectedCountry ? `pointer` : `auto`),
+    [selectedCountry]
+  );
+  useEffect(
     () => void (document.body.style.cursor = hoverYear ? `pointer` : `auto`),
     [hoverYear]
   );
+
   return (
     <>
       {timeScale.ticks(25).map((t, idx) => {
@@ -124,59 +141,35 @@ const SpaceTimeCube: FC<PropTypes> = ({
           </group>
         );
       })}
-      {hoverCountry || hoverYear
-        ? events
-            .filter(
-              (event) =>
-                event.name == hoverCountry ||
-                event.dateStart.toDateString() == hoverYear
-            )
-            .map((e, idx) => {
-              const pos = lonLatTimeToXYZ(
-                e.coordinates,
-                e.dateStart,
-                timeScale,
-                projection
-              );
-              return (
-                <mesh key={`${e.name}-${idx}`} position={pos}>
-                  <boxGeometry
-                    args={[
-                      (e.size ?? 1) / 200,
-                      eventSide / 5,
-                      (e.size ?? 1) / 200,
-                    ]}
-                  />
-                  <meshPhongMaterial color={"teal"} />
-                </mesh>
-              );
-            })
-        : events.map((e, idx) => {
-            const pos = lonLatTimeToXYZ(
-              e.coordinates,
-              e.dateStart,
-              timeScale,
-              projection
-            );
-            return (
-              <mesh key={`${e.name}-${idx}`} position={pos}>
-                <boxGeometry
-                  args={[
-                    (e.size ?? 1) / 200,
-                    eventSide / 5,
-                    (e.size ?? 1) / 200,
-                  ]}
-                />
-                <meshPhongMaterial color={"teal"} />
-              </mesh>
-            );
-          })}
+
+      {selectedEvents.map((e, idx) => {
+        const pos = lonLatTimeToXYZ(
+          e.coordinates,
+          e.dateStart,
+          timeScale,
+          projection
+        );
+        return (
+          <mesh key={`${e.name}-${idx}`} position={pos}>
+            <boxGeometry
+              args={[(e.size ?? 1) / 200, eventSide / 5, (e.size ?? 1) / 200]}
+            />
+            <meshPhongMaterial color={"teal"} />
+          </mesh>
+        );
+      })}
+
       <group position-y={height / -2} rotation={[Math.PI / -2, 0, 0]}>
         {shapes.map((props) => (
           <mesh
             key={props.shape.uuid}
-            onPointerDown={() => setHover(props.name)}
-            onPointerOut={() => setHover(undefined)}
+            onPointerDown={() => setSelect(props.name)}
+            onPointerEnter={() => setHover(props.name)}
+            onPointerUp={() => {
+              setSelect(undefined);
+              setHover(undefined);
+            }}
+            onPointerLeave={() => setHover(undefined)}
             rotation={[Math.PI, 0, 0]} // taking into account the origin of svg coordinates in the top left rather than in the center
           >
             <extrudeGeometry
@@ -184,7 +177,7 @@ const SpaceTimeCube: FC<PropTypes> = ({
             />
             <meshStandardMaterial
               color={
-                hoverCountry == props.name
+                selectedCountry == props.name
                   ? new Color("grey")
                   : new Color("white")
               }
@@ -196,6 +189,22 @@ const SpaceTimeCube: FC<PropTypes> = ({
           </mesh>
         ))}
       </group>
+
+      {hoverCountry && (
+        <group>
+          <mesh>
+            <Text3D
+              font={"/fonts/Inter_Regular.json"}
+              size={fontSize}
+              height={fontSize / 20}
+              position={[-side / 2, -height / 2, -side / 2]}
+            >
+              {hoverCountry}
+              <meshStandardMaterial color="red" />
+            </Text3D>
+          </mesh>
+        </group>
+      )}
     </>
   );
 };
