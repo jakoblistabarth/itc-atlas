@@ -8,7 +8,7 @@
     "start": "next start",
     "lint": "next lint",
     "setup-data": "tsx lib/setup/index.ts",
-    "type-check": "npx tsc --noEmit",
+    "type-check": "npx tsc",
     "storybook": "storybook dev -p 6006",
     "storybook-static": "storybook build",
     "prestorybook-static": "npm run setup-data",
