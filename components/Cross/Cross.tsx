@@ -1,20 +1,20 @@
-import { FC } from "react";
+import { FC, SVGProps } from "react";
 import { Appearance } from "../../types/Appearance";
 import defaultTheme from "../../lib/styles/themes/defaultTheme";
-import { Vector2 } from "three";
 
-const Cross: FC<{
-  position: Vector2;
+type Props = {
   style?: Appearance;
   length?: number;
   halos?: { size: number; color: string }[];
-}> = ({ position, style, length = 5, halos = [] }) => {
+} & SVGProps<SVGGElement>;
+
+const Cross: FC<Props> = ({ style, length = 5, halos = [], ...rest }) => {
   return (
     <g
-      transform={`translate(${position.x}, ${position.y})`}
       strokeOpacity={style?.strokeOpacity ?? defaultTheme.symbol?.strokeOpacity}
       strokeLinejoin={style?.strokeLineJoin ?? "round"}
       strokeLinecap={"square"}
+      {...rest}
     >
       {[
         { size: 1, color: style?.stroke ?? defaultTheme.symbol?.stroke },

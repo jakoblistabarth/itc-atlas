@@ -6,10 +6,12 @@ import { Bounds } from "../../types/MapOptions";
 import { MapTheme } from "../../types/MapTheme";
 import LayoutDebug from "./DebugLayout";
 import { MapLayoutContext } from "./MapLayoutContext";
+import { MapExtent } from "../../types/MapExtent";
 
 type Props = React.PropsWithChildren<{
   bounds: Bounds;
   projection: GeoProjection;
+  extent?: MapExtent;
   theme?: MapTheme;
   debug?: boolean;
 }>;
@@ -17,14 +19,20 @@ type Props = React.PropsWithChildren<{
 const MapLayout: FC<Props> = ({
   bounds,
   projection,
+  extent,
   theme = defaultTheme,
   debug = false,
   children,
 }) => {
-  setMapBounds(bounds, projection);
+  const options = extent ? { extent } : undefined;
+  setMapBounds(bounds, projection, options);
   return (
     <MapLayoutContext.Provider
-      value={{ projection, width: bounds.width, height: bounds.height ?? 300 }}
+      value={{
+        projection,
+        width: bounds.width,
+        height: bounds.height ?? 300,
+      }}
     >
       <svg
         xmlns="http://www.w3.org/2000/svg"

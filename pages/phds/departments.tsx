@@ -1,22 +1,21 @@
-import prisma from "../../prisma/client";
 import { max, min, scaleSqrt } from "d3";
 import { geoInterruptedMollweide } from "d3-geo-projection";
 import type { GetStaticProps, NextPage } from "next";
 import Head from "next/head";
-import { Vector2 } from "three";
-import { departmentColorScale } from "../../lib/styles/departmentColorScale";
-import Footer from "../../components/Footer";
+import { useState } from "react";
+import useSWR from "swr";
 import { Container, Heading } from "theme-ui";
-import MapLayerBase from "../../components/MapLayerBase";
+import Footer from "../../components/Footer";
 import LegendNominal from "../../components/LegendNominal";
-import ScaledPie from "../../components/ScaledPieChart/ScaledPieChart";
-import getMapHeight from "../../lib/helpers/getMapHeight";
+import MapLayerBase from "../../components/MapLayerBase";
+import MapLayoutFluid from "../../components/MapLayout/MapLayoutFluid";
+import MarkScaledPieChart from "../../components/MarkScaledPieChart";
 import getCountries from "../../lib/data/getCountries";
 import getPhdsByCountryByDepartment from "../../lib/data/queries/phd/getPhdsByCountryByDepartment";
+import { departmentColorScale } from "../../lib/styles/departmentColorScale";
 import defaultTheme from "../../lib/styles/themes/defaultTheme";
+import prisma from "../../prisma/client";
 import { SharedPageProps } from "../../types/Props";
-import useSWR from "swr";
-import { useState } from "react";
 
 type Props = {
   phdsByCountryByDepartment: Awaited<
@@ -50,7 +49,6 @@ const PhdDepartments: NextPage<Props> = ({
 
   const theme = defaultTheme;
   const projection = geoInterruptedMollweide();
-  dimension.height = getMapHeight(dimension.width, projection);
 
   const phdCount = mapData.map((d) => d.totalCount, 0);
   const minCount = min(phdCount) ?? 0;
@@ -86,21 +84,17 @@ const PhdDepartments: NextPage<Props> = ({
             />
             <label htmlFor="filter">Show only graduates</label>
           </div>
-          <svg width={dimension.width} height={dimension.height}>
-            <MapLayerBase
-              countries={neCountriesTopoJson}
-              projection={projection}
-              theme={theme}
-            />
+          <MapLayoutFluid projection={projection}>
+            <MapLayerBase countries={neCountriesTopoJson} theme={theme} />
             {!isLoading && (
               <g id="symbols">
                 {mapData.map((country) => {
                   if (!country.departments) return;
-                  const pos = projection(country.coordinates);
                   return (
-                    <ScaledPie
+                    <MarkScaledPieChart
                       key={country.isoAlpha3}
-                      position={new Vector2(pos[0], pos[1])}
+                      lng={country.coordinates[0]}
+                      lat={country.coordinates[1]}
                       radius={scale(country.totalCount)}
                       colorScale={departmentColorScale}
                       data={country.departments}
@@ -124,7 +118,7 @@ const PhdDepartments: NextPage<Props> = ({
                 }))}
               />
             </g>
-          </svg>
+          </MapLayoutFluid>
         </main>
       </Container>
       <Footer />

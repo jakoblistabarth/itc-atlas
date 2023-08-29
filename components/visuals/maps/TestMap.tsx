@@ -1,16 +1,16 @@
 import { GeoGeometryObjects, geoPath } from "d3-geo";
-import { FC, useContext } from "react";
+import { FC } from "react";
 import useSWR from "swr";
 import MapLayerBase from "../../MapLayerBase";
 import { NeCountriesTopoJson } from "../../../types/NeTopoJson";
-import { MapLayoutContext } from "../../MapLayout/MapLayoutContext";
+import { useMapLayoutContext } from "../../MapLayout/MapLayoutContext";
 
 type Props = {
   neCountriesTopoJson: NeCountriesTopoJson;
 };
 
 const TestMap: FC<Props> = ({ neCountriesTopoJson }) => {
-  const { projection, width, height } = useContext(MapLayoutContext);
+  const { projection, width, height } = useMapLayoutContext();
 
   const { data: aut } = useSWR("/api/data/elevationModel/Grossglockner");
   const [w, s, e, n] = aut ? aut?.bBox : [0, 0, 0, 0];
@@ -30,7 +30,7 @@ const TestMap: FC<Props> = ({ neCountriesTopoJson }) => {
 
   return aut ? (
     <>
-      <MapLayerBase countries={neCountriesTopoJson} projection={projection} />
+      <MapLayerBase countries={neCountriesTopoJson} />
       <path d={path(feature) ?? ""} fill="red" fillOpacity={0.2} stroke="red" />
     </>
   ) : (

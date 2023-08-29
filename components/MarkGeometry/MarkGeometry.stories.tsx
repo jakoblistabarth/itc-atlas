@@ -5,6 +5,8 @@ import { geoRobinson } from "d3-geo-projection";
 import MarkGeometry from ".";
 import getCountries from "../../lib/data/getCountries";
 import PatternLine from "../PatternLine";
+import MapLayout from "../MapLayout/MapLayout";
+import MapLayerBase from "../MapLayerBase/MapLayerBase";
 
 const width = 600;
 const height = 300;
@@ -17,23 +19,27 @@ const featureCollection = topojson.feature(
 const feature = featureCollection.features.find(
   (d) => d.properties.ADM0_A3 === "GRC"
 );
-const projection = geoRobinson().fitSize([width, height], feature);
+const projection = geoRobinson();
 
 const meta = {
   title: "Map Elements/Marks/MarkGeometry",
   component: MarkGeometry,
   args: {
     feature,
-    projection,
   },
   decorators: [
     (Story) => (
-      <svg width={width} height={height}>
+      <MapLayout
+        projection={projection}
+        bounds={{ width, height }}
+        extent={feature}
+      >
         <defs>
           <PatternLine stroke="blue" spacing={5} angle={45} />
         </defs>
+        <MapLayerBase countries={countries} />
         <Story />
-      </svg>
+      </MapLayout>
     ),
   ],
 } satisfies Meta<typeof MarkGeometry>;

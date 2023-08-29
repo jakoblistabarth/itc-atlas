@@ -1,7 +1,6 @@
 import { Meta, StoryObj } from "@storybook/react";
 
 import Cross from "./";
-import { Vector2 } from "three";
 import themes from "../../lib/styles/themes";
 
 const width = 600;
@@ -18,7 +17,7 @@ const meta = {
   component: Cross,
   args: {
     style: { fill: "none", stroke: "black" },
-    position: new Vector2(width / 2, height / 2),
+    transform: `translate(${width / 2} ${height / 2})`,
   },
   argTypes: {
     length: { control: { type: "range", min: 1, max: 50, step: 1 } },

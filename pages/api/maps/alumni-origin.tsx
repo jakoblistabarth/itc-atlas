@@ -1,24 +1,23 @@
 import { descending, max, scaleSqrt } from "d3";
 import { geoBertin1953 } from "d3-geo-projection";
+import { Feature, FeatureCollection, Point } from "geojson";
 import type { NextApiRequest, NextApiResponse } from "next";
 import ReactDOMServer from "react-dom/server";
-import { Vector2 } from "three";
-import PatternLine from "../../../components/PatternLine";
-import MapLayerBase from "../../../components/MapLayerBase";
-import MarkCircle from "../../../components/MarkCircle";
+import { feature } from "topojson-client";
 import LegendProportionalCircle from "../../../components/LegendProportionalCircle";
+import MapLayerBase from "../../../components/MapLayerBase";
 import MapLayout from "../../../components/MapLayout";
 import MapLayoutAside from "../../../components/MapLayout/MapLayoutAside";
 import MapLayoutBody from "../../../components/MapLayout/MapLayoutBody";
 import MapLayoutHeader from "../../../components/MapLayout/MapLayoutHeader";
-import { setMapBounds } from "../../../lib/helpers/getMapHeight";
+import MarkCircle from "../../../components/MarkCircle";
+import PatternLine from "../../../components/PatternLine";
+import getCentroidByIsoCode from "../../../lib/data/getCentroidByIsoCode";
 import getCountries from "../../../lib/data/getCountries";
 import getCountryWithApplicantCount from "../../../lib/data/queries/country/getCountryWithApplicantCount";
+import { setMapBounds } from "../../../lib/helpers/getMapHeight";
 import defaultTheme from "../../../lib/styles/themes/defaultTheme";
 import { MapOptions } from "../../../types/MapOptions";
-import { feature } from "topojson-client";
-import getCentroidByIsoCode from "../../../lib/data/getCentroidByIsoCode";
-import { Feature, Point, FeatureCollection } from "geojson";
 import { CountryProperties } from "../../../types/NeTopoJson";
 
 /**
@@ -134,7 +133,6 @@ export default async function handler(
       <MapLayoutBody bounds={mapOptions.bounds}>
         <MapLayerBase
           countries={neCountriesTopoJson}
-          projection={mapOptions.projection}
           theme={mapOptions.theme}
         />
         <g className="choroplethLayer">
@@ -147,22 +145,16 @@ export default async function handler(
           </defs>
         </g>
         <g className="symbolLayer">
-          {featureCollection.features.map((feature, idx) => {
-            const xy = mapOptions.projection(
-              feature.geometry.coordinates as [number, number]
-            );
-            return (
-              xy && (
-                <MarkCircle
-                  key={idx}
-                  position={new Vector2(xy[0], xy[1])}
-                  radius={scale(feature.properties?.alumniCount)}
-                  {...mapOptions.theme?.symbol}
-                  interactive={false}
-                />
-              )
-            );
-          })}
+          {featureCollection.features.map(({ properties, geometry }, idx) => (
+            <MarkCircle
+              key={idx}
+              lng={geometry.coordinates[0]}
+              lat={geometry.coordinates[1]}
+              radius={scale(properties?.alumniCount)}
+              {...mapOptions.theme?.symbol}
+              interactive={false}
+            />
+          ))}
         </g>
       </MapLayoutBody>
     </MapLayout>

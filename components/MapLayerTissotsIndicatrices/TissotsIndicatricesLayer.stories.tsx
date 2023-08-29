@@ -5,7 +5,7 @@ import {
   geoInterruptedMollweide,
   geoBaker,
 } from "d3-geo-projection";
-import { geoMercator } from "d3-geo";
+import { GeoProjection, geoMercator } from "d3-geo";
 import MapLayout from "../MapLayout";
 import MapLayoutBody from "../MapLayout/MapLayoutBody";
 import MapLayerTissotsIndicatrices from ".";
@@ -71,11 +71,7 @@ const meta = {
   render: (args) => (
     <MapLayout projection={args.projection} bounds={bounds}>
       <MapLayoutBody bounds={bounds}>
-        <MapLayerBase
-          projection={args.projection}
-          theme={args.theme}
-          countries={countries}
-        />
+        <MapLayerBase theme={args.theme} countries={countries} />
         <MapLayerTissotsIndicatrices {...args} />
       </MapLayoutBody>
     </MapLayout>
@@ -83,6 +79,7 @@ const meta = {
 } satisfies Meta<
   React.ComponentProps<typeof MapLayerTissotsIndicatrices> & {
     theme?: MapTheme;
+    projection: GeoProjection;
   }
 >;
 export default meta;

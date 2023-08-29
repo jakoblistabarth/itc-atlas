@@ -9,7 +9,7 @@ export type pieDatum = {
 };
 
 type Props = {
-  position: Vector2;
+  position?: Vector2;
   radius: number;
   innerRadius?: number;
   data: pieDatum[];
@@ -17,10 +17,10 @@ type Props = {
 } & SVGProps<SVGPathElement>;
 
 const ScaledPieChart: FC<Props> = ({
-  position,
   radius,
   innerRadius = radius / 2,
   data,
+  position = new Vector2(0, 0),
   colorScale = d3
     .scaleOrdinal()
     .domain(data.map((d) => d.label))

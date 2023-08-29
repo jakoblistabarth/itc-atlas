@@ -1,5 +1,5 @@
 import * as d3 from "d3";
-import { geoPath, GeoSphere, GeoProjection } from "d3-geo";
+import { geoPath, GeoSphere } from "d3-geo";
 import { FC, useId } from "react";
 import * as topojson from "topojson-client";
 import type {
@@ -22,12 +22,12 @@ import {
 } from "../../types/NeTopoJson";
 import MarkGeometry from "../MarkGeometry/MarkGeometry";
 import MapLayerGraticule from "../MapLayerGraticule";
+import { useMapLayoutContext } from "../MapLayout/MapLayoutContext";
 
 type Props = {
   countries: NeCountriesTopoJson;
   lakes?: NeLakes;
   rivers?: NeRivers;
-  projection: GeoProjection;
   theme?: MapTheme;
   labels?: boolean;
   drawOutline?: boolean;
@@ -39,13 +39,13 @@ const MapLayerBase: FC<Props> = ({
   countries,
   lakes,
   rivers,
-  projection,
   theme = defaultTheme,
   labels = false,
   drawOutline,
   drawGraticuleLabels,
   drawShadow,
 }) => {
+  const { projection } = useMapLayoutContext();
   const path = geoPath(projection);
   const sphere: GeoSphere = { type: "Sphere" };
   const pathSphere = path(sphere);
@@ -129,7 +129,7 @@ const MapLayerBase: FC<Props> = ({
           </g>
         )}
 
-        <MapLayerGraticule projection={projection} />
+        <MapLayerGraticule />
 
         {landPath && (
           <g className="landmasses" id={`landmasses-${id}`}>
@@ -174,7 +174,6 @@ const MapLayerBase: FC<Props> = ({
                   id={`${country.properties.ADM0_A3_NL}-${id}`}
                   key={`${country.properties.ADM0_A3_NL}-${idx}`}
                   feature={country}
-                  projection={projection}
                   fill="none"
                   stroke="whitesmoke"
                 />

@@ -1,15 +1,15 @@
-import { FC, useContext, useState } from "react";
-import { NeCountriesTopoJson } from "../../../types/NeTopoJson";
-import MapLayerBase from "../../MapLayerBase";
-import getCentroidByIsoCode from "../../../lib/data/getCentroidByIsoCode";
-import { groups, max, min, scaleLinear } from "d3";
-import { Vector2 } from "three";
-import { BtorsGroupedByYear } from "../../../lib/data/queries/btors/getBtorsGroupedByYear";
-import LinePath from "../../LinePath/";
 import { Group } from "@visx/group";
-import { MapLayoutContext } from "../../MapLayout/MapLayoutContext";
+import { groups, max, min, scaleLinear } from "d3";
+import { FC, useState } from "react";
+import { Vector2 } from "three";
+import getCentroidByIsoCode from "../../../lib/data/getCentroidByIsoCode";
+import { BtorsGroupedByYear } from "../../../lib/data/queries/btors/getBtorsGroupedByYear";
 import getCountryName from "../../../lib/getCountryName";
+import { NeCountriesTopoJson } from "../../../types/NeTopoJson";
+import LinePath from "../../LinePath/";
 import { getFilledSeries } from "../../LinePath/LinePath.helpers";
+import MapLayerBase from "../../MapLayerBase";
+import { useMapLayoutContext } from "../../MapLayout/MapLayoutContext";
 
 type Props = {
   neCountries: NeCountriesTopoJson;
@@ -55,11 +55,11 @@ const BtorsByYear: FC<Props> = ({ btors, neCountries }) => {
     }))
     .filter(hasCentroid);
 
-  const { projection } = useContext(MapLayoutContext);
+  const { projection } = useMapLayoutContext();
 
   return (
     <>
-      <MapLayerBase countries={neCountries} projection={projection} />
+      <MapLayerBase countries={neCountries} />
       {btorsByCountry.map((d) => {
         const centroid = projection([d.centroid.x, d.centroid.y]);
         if (!centroid) return <></>;

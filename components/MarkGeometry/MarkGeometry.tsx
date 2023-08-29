@@ -1,13 +1,14 @@
-import { FC, SVGProps } from "react";
+import { geoPath } from "d3";
 import { Feature } from "geojson";
-import { geoPath, GeoProjection } from "d3";
+import { FC, SVGProps } from "react";
+import { useMapLayoutContext } from "../MapLayout/MapLayoutContext";
 
 type Props = {
   feature: Feature;
-  projection: GeoProjection;
 } & Omit<SVGProps<SVGPathElement>, "d">;
 
-const MarkGeometry: FC<Props> = ({ feature, projection, ...rest }) => {
+const MarkGeometry: FC<Props> = ({ feature, ...rest }) => {
+  const { projection } = useMapLayoutContext();
   const path = geoPath(projection);
   const featurePath = path(feature);
   if (!featurePath) return <></>;

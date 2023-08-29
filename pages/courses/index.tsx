@@ -164,7 +164,7 @@ const CourseGenealogyPage: NextPage<Props> = ({ courseGenealogy }) => {
                     return node.data?.value === "-" ? (
                       <Cross
                         key={idx}
-                        position={pos}
+                        transform={`translate(${pos.x} ${pos.y})`}
                         length={2}
                         halos={[{ size: 4, color: "white" }]}
                       />

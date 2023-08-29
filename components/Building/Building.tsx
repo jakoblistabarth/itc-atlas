@@ -1,7 +1,6 @@
 /** @jsxImportSource theme-ui */
 
 import type { FC, SVGProps } from "react";
-import { Vector2 } from "three";
 import Delft1 from "/public/images/building-kanaalweg.svg";
 import Delft2 from "/public/images/building-kanaalweg4.svg";
 import Enschede1 from "/public/images/building-boulevard1945.svg";
@@ -54,13 +53,11 @@ export const ITClocations = new Map([
 type Props = {
   location: ITCLocationName;
   width: number;
-  position?: Vector2;
   color?: string;
   shadow?: boolean;
 } & Omit<SVGProps<SVGGElement>, "fill" | "stroke">;
 
 const Building: FC<Props> = ({
-  position = new Vector2(0, 0),
   location,
   width,
   color = "black",
@@ -69,15 +66,11 @@ const Building: FC<Props> = ({
 }) => {
   const height = width / 2;
   return (
-    <g
-      transform={`translate(${position.x - width / 2} ${
-        position.y - height / 2
-      })`}
-      {...rest}
-    >
-      <svg className="building" width={width} height={height}>
-        <style>
-          {`
+    <g {...rest}>
+      <g transform={`translate(${-width / 2} ${-height / 2})`}>
+        <svg className="building" width={width} height={height}>
+          <style>
+            {`
           svg.building g,
           svg.building *[stroke="#000"]  {
                 stroke: ${color};
@@ -88,13 +81,14 @@ const Building: FC<Props> = ({
                 display: ${shadow ? "block" : "none"}
             }
             `}
-        </style>
-        {location == ITCLocationName.DELFT1 && <Delft1 />}
-        {location == ITCLocationName.DELFT2 && <Delft2 />}
-        {location == ITCLocationName.ENSCHEDE1 && <Enschede1 />}
-        {location == ITCLocationName.ENSCHEDE2 && <Enschede2 />}
-        {location == ITCLocationName.ENSCHEDE3 && <Enschede3 />}
-      </svg>
+          </style>
+          {location == ITCLocationName.DELFT1 && <Delft1 />}
+          {location == ITCLocationName.DELFT2 && <Delft2 />}
+          {location == ITCLocationName.ENSCHEDE1 && <Enschede1 />}
+          {location == ITCLocationName.ENSCHEDE2 && <Enschede2 />}
+          {location == ITCLocationName.ENSCHEDE3 && <Enschede3 />}
+        </svg>
+      </g>
     </g>
   );
 };

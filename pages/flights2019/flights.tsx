@@ -1,27 +1,25 @@
 /** @jsxImportSource theme-ui */
 
+import { geoPath } from "d3-geo";
 import { geoBertin1953 } from "d3-geo-projection";
 import type { NextPage } from "next";
 import Head from "next/head";
-import { useContext } from "react";
-import { MdTour } from "react-icons/md";
 import { CiPalette } from "react-icons/ci";
+import { MdTour } from "react-icons/md";
 import { Step } from "react-joyride";
 import { Button, Container, Heading } from "theme-ui";
-import { Vector2 } from "three";
 import FlightsFlowMap from "../../components/FlightsFlowMap";
 import Footer from "../../components/Footer";
-import Tour from "../../components/Tour";
-import MarkCircle from "../../components/MarkCircle";
-import { MapLayoutContext } from "../../components/MapLayout/MapLayoutContext";
+import MapLayerBase from "../../components/MapLayerBase";
+import MapLayerTissotsIndicatrices from "../../components/MapLayerTissotsIndicatrices";
+import { useMapLayoutContext } from "../../components/MapLayout/MapLayoutContext";
 import MapLayoutFluid from "../../components/MapLayout/MapLayoutFluid";
+import MarkCircle from "../../components/MarkCircle";
+import Tour from "../../components/Tour";
 import getCountries from "../../lib/data/getCountries";
 import getOdMatrix from "../../lib/data/getOdMatrix";
 import type { OdMatrix } from "../../types/OdMatrix";
 import { SharedPageProps } from "../../types/Props";
-import { geoPath } from "d3-geo";
-import MapLayerBase from "../../components/MapLayerBase";
-import MapLayerTissotsIndicatrices from "../../components/MapLayerTissotsIndicatrices";
 
 type Props = {
   odMatrix: OdMatrix;
@@ -32,12 +30,8 @@ const Flights: NextPage<Props> = ({ odMatrix, neCountriesTopoJson }) => {
     const projection = geoBertin1953();
     return (
       <MapLayoutFluid projection={projection}>
-        <MapLayerBase countries={neCountriesTopoJson} projection={projection} />
-        <MapLayerTissotsIndicatrices
-          projection={projection}
-          radius={3}
-          step={30}
-        />
+        <MapLayerBase countries={neCountriesTopoJson} />
+        <MapLayerTissotsIndicatrices radius={3} step={30} />
       </MapLayoutFluid>
     );
   };
@@ -149,11 +143,12 @@ export async function getStaticProps() {
 export default Flights;
 
 const Targets = () => {
-  const { width, height, projection } = useContext(MapLayoutContext);
+  const { width, height, projection } = useMapLayoutContext();
   return (
     <g>
       <MarkCircle
-        position={new Vector2(...(projection([36.9238, -1.329]) ?? [0, 0]))}
+        lat={-1.329}
+        lng={36.9238}
         radius={1}
         id="target1"
         fill="transparent"

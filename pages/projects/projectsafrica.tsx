@@ -11,13 +11,14 @@ import MapLayerBase from "../../components/MapLayerBase";
 import { Container, Heading } from "theme-ui";
 import { FeatureCollection, Feature, Point } from "geojson";
 import themes, { ThemeNames } from "../../lib/styles/themes";
-import ChoroplethSymbol from "../../components/MarkGeometry/MarkGeometry";
+import MarkGeometry from "../../components/MarkGeometry/MarkGeometry";
 import { MapOptions } from "../../types/MapOptions";
 import PatternDot from "../../components/PatternDot";
 import MarkIso from "../../components/MarkIso";
 import { SharedPageProps } from "../../types/Props";
 import defaultTheme from "../../lib/styles/themes/defaultTheme";
 import getCountryCodes from "../../lib/data/queries/country/getCountryCodes";
+import MapLayoutFluid from "../../components/MapLayout/MapLayoutFluid";
 
 type Props = {
   countriesWithProjectCount: CountryWithProjectCount;
@@ -115,10 +116,8 @@ const ProjectCountries: NextPage<Props> = ({
       <Container>
         <main>
           <Heading as="h1">ITC&apos;s projects in Sub-Saharan Africa</Heading>
-          <svg
-            width={mapOptions.bounds.width}
-            height={mapOptions.bounds.height}
-          >
+          {/* TODO: implement projection transform (not only defining the extent with MapLayout) */}
+          <MapLayoutFluid projection={mapOptions.projection}>
             <defs>
               <PatternDot
                 style={mapOptions.theme.choropleth?.pattern}
@@ -129,15 +128,13 @@ const ProjectCountries: NextPage<Props> = ({
             </defs>
             <MapLayerBase
               countries={neCountriesTopoJson}
-              projection={mapOptions.projection}
               theme={mapOptions.theme}
               labels
             />
             <g className="choroplethLayer">
               {polygons.features.map((feature, idx) => (
-                <ChoroplethSymbol
+                <MarkGeometry
                   key={`${feature.properties.ADM0_A3_NL}-${idx}`}
-                  projection={mapOptions.projection}
                   feature={feature}
                   fill={"url(#Dots)"}
                 />
@@ -163,7 +160,7 @@ const ProjectCountries: NextPage<Props> = ({
                 );
               })}
             </g>
-          </svg>
+          </MapLayoutFluid>
         </main>
       </Container>
     </>

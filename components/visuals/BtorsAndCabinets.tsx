@@ -192,7 +192,7 @@ const BtorsAndCabinets: FC<Props> = ({
       </svg>
       <MapLayoutFluid projection={projection}>
         <GradientDefs />
-        <MapLayerBase countries={neCountries} projection={projection} />
+        <MapLayerBase countries={neCountries} />
         {countriesWithCategories.map((d) => {
           const isActiveCountry = activeCountry === d.properties?.isoAlpha3;
           return (
@@ -201,7 +201,6 @@ const BtorsAndCabinets: FC<Props> = ({
                 <g>
                   <MarkGeometry
                     feature={d}
-                    projection={projection}
                     stroke={isActiveCountry ? "black" : "white"}
                     strokeLinejoin="round"
                     cursor="pointer"

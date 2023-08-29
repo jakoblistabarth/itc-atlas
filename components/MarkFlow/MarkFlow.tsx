@@ -1,9 +1,10 @@
-import type { GeoProjection, ScaleLinear } from "d3";
+import type { ScaleLinear } from "d3";
 import * as d3 from "d3";
 import { Feature, LineString } from "geojson";
 import { FC, SVGProps } from "react";
 import { getFlowPoints } from "./MarkFlow.helpers";
 import { ArrowHeadShape } from "../MarkerArrowHead";
+import { useMapLayoutContext } from "../MapLayout/MapLayoutContext";
 
 export type FlowStyleProps = Omit<
   SVGProps<SVGPathElement>,
@@ -13,19 +14,12 @@ export type FlowStyleProps = Omit<
 const MarkFlow: FC<
   {
     datum: Feature<LineString>;
-    projection: GeoProjection;
     bend?: number;
     arrowShape?: ArrowHeadShape;
     strokeWidthScale: ScaleLinear<number, number>;
   } & FlowStyleProps
-> = ({
-  datum,
-  strokeWidthScale,
-  bend,
-  projection,
-  arrowShape = "tip",
-  ...rest
-}) => {
+> = ({ datum, strokeWidthScale, bend, arrowShape = "tip", ...rest }) => {
+  const { projection } = useMapLayoutContext();
   const line = d3
     .line()
     .x((d) => d[0])

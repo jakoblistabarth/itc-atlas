@@ -1,26 +1,25 @@
+import { scaleSqrt } from "d3";
 import { geoBertin1953 } from "d3-geo-projection";
 import { FeatureCollection, Point } from "geojson";
 import type { GetStaticProps, NextPage } from "next";
 import Head from "next/head";
-import PatternLine from "../../components/PatternLine";
 import { Container, Heading } from "theme-ui";
-import MapLayerBase from "../../components/MapLayerBase";
-import MarkGeometry from "../../components/MarkGeometry/MarkGeometry";
-import MarkCircle from "../../components/MarkCircle";
+import Footer from "../../components/Footer";
 import LegendProportionalCircle from "../../components/LegendProportionalCircle";
-import getMapHeight from "../../lib/helpers/getMapHeight";
+import MapLayerBase from "../../components/MapLayerBase";
+import MapLayoutFluid from "../../components/MapLayout/MapLayoutFluid";
+import MarkCircle from "../../components/MarkCircle";
+import MarkGeometry from "../../components/MarkGeometry/MarkGeometry";
+import PatternLine from "../../components/PatternLine";
 import getCountries from "../../lib/data/getCountries";
-import getProjectsPerCountry from "../../lib/data/getProjectsPerCountry";
-import themes, { ThemeNames } from "../../lib/styles/themes";
-import { scaleSqrt } from "d3";
 import getCountriesByGroup from "../../lib/data/getCountriesByGroup";
-import { UnGrouping } from "../../types/UnsdCodes";
+import getProjectsPerCountry from "../../lib/data/getProjectsPerCountry";
+import getCountryCodes from "../../lib/data/queries/country/getCountryCodes";
+import themes, { ThemeNames } from "../../lib/styles/themes";
+import defaultTheme from "../../lib/styles/themes/defaultTheme";
 import { NeCountriesGeoJson } from "../../types/NeCountriesGeoJson";
 import { SharedPageProps } from "../../types/Props";
-import defaultTheme from "../../lib/styles/themes/defaultTheme";
-import Footer from "../../components/Footer";
-import { Vector2 } from "three";
-import getCountryCodes from "../../lib/data/queries/country/getCountryCodes";
+import { UnGrouping } from "../../types/UnsdCodes";
 
 type Props = {
   data: FeatureCollection<Point>;
@@ -34,13 +33,8 @@ const ProjectCountries: NextPage<Props> = ({
   highlightCountries,
   neCountriesTopoJson,
 }) => {
-  const dimension = {
-    width: 1280,
-    height: 0,
-  };
   const theme = themes.get(ThemeNames.BAYER) ?? defaultTheme; // Question: this seems strange, I know that such theme exists, that's the point of the enum
   const projection = geoBertin1953();
-  dimension.height = getMapHeight(dimension.width, projection);
   const scale = scaleSqrt().domain(domain).range([0.5, 40]);
 
   return (
@@ -54,7 +48,7 @@ const ProjectCountries: NextPage<Props> = ({
       <Container>
         <main>
           <Heading as="h1">ITC&apos;s global project activity</Heading>
-          <svg width={dimension.width} height={dimension.height}>
+          <MapLayoutFluid projection={projection}>
             <defs>
               <PatternLine
                 angle={45}
@@ -64,16 +58,11 @@ const ProjectCountries: NextPage<Props> = ({
                 name={theme.choropleth?.pattern?.id}
               ></PatternLine>
             </defs>
-            <MapLayerBase
-              countries={neCountriesTopoJson}
-              projection={projection}
-              theme={theme}
-            />
+            <MapLayerBase countries={neCountriesTopoJson} theme={theme} />
             <g className="choroplethLayer">
               {highlightCountries.features.map((feature) => (
                 <MarkGeometry
                   key={feature.properties.ADM0_A3}
-                  projection={projection}
                   feature={feature}
                   fill={`url(#${theme.choropleth?.pattern?.id})`}
                 />
@@ -81,12 +70,11 @@ const ProjectCountries: NextPage<Props> = ({
             </g>
             <g className="symbolLayer">
               {data.features.map((feature, idx) => {
-                const coordinates = projection(feature.geometry.coordinates);
-                const position = new Vector2(coordinates[0], coordinates[1]);
                 return (
                   <MarkCircle
                     key={idx}
-                    position={position}
+                    lng={feature.geometry.coordinates[0]}
+                    lat={feature.geometry.coordinates[1]}
                     radius={scale(feature.properties?.projectCount)}
                     {...theme.symbol}
                     interactive
@@ -103,7 +91,7 @@ const ProjectCountries: NextPage<Props> = ({
               unitLabel={"project"}
               style={theme.symbol}
             />
-          </svg>
+          </MapLayoutFluid>
         </main>
       </Container>
       <Footer />

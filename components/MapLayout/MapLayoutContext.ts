@@ -1,6 +1,5 @@
 import { GeoProjection } from "d3-geo";
-import { geoBertin1953 } from "d3-geo-projection";
-import { createContext } from "react";
+import { createContext, useContext } from "react";
 
 type Context = {
   projection: GeoProjection;
@@ -8,8 +7,14 @@ type Context = {
   height: number;
 };
 
-export const MapLayoutContext = createContext<Context>({
-  projection: geoBertin1953(),
-  width: 600,
-  height: 300,
-});
+export const MapLayoutContext = createContext<Context | null>(null);
+
+export const useMapLayoutContext = () => {
+  const context = useContext(MapLayoutContext);
+
+  if (context == null) {
+    throw new Error("Map components must be wrapped in <MapLayout />");
+  }
+
+  return context;
+};

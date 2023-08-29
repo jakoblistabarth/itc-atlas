@@ -2,12 +2,12 @@ import { FC } from "react";
 import { NeCountriesTopoJson } from "../../../types/NeTopoJson";
 import MapLayerBase from "../../MapLayerBase";
 import { geoBertin1953 } from "d3-geo-projection";
-import useMeasure from "react-use-measure";
-import getMapHeight from "../../../lib/helpers/getMapHeight";
 import getCentroidByIsoCode from "../../../lib/data/getCentroidByIsoCode";
 import { max, scaleLinear, scalePow } from "d3";
 import { BtorsGroupedByCountry } from "../../../lib/data/queries/btors/getBtorsGroupedByCountry";
 import { Vector2 } from "three";
+import MapLayoutFluid from "../../MapLayout/MapLayoutFluid";
+import MarkCircle from "../../MarkCircle/MarkCircle";
 
 type Props = {
   neCountries: NeCountriesTopoJson;
@@ -16,8 +16,6 @@ type Props = {
 
 const MultiStopBtors: FC<Props> = ({ btors, neCountries }) => {
   const proj = geoBertin1953();
-  const [mapRef, { width }] = useMeasure();
-  const height = getMapHeight(width, proj);
 
   type BtorWithCentroids = (typeof btors)[number] & {
     centroids: (Vector2 | undefined)[];
@@ -45,48 +43,40 @@ const MultiStopBtors: FC<Props> = ({ btors, neCountries }) => {
   const scaleWidth = scaleLinear().domain([1, maxCount]).range([1, 20]);
 
   return (
-    <svg
-      ref={mapRef}
-      width={"100%"}
-      height={"100%"}
-      viewBox={`0 0 ${width} ${height}`}
-    >
-      <MapLayerBase countries={neCountries} projection={proj} />
-      {height &&
-        multipleStops.map((d) => {
-          const centroids = d.centroids;
-          return (
-            <g key={d.id} opacity={0.5}>
-              {d.centroids.map((c, i) => {
-                const coord = proj([c.x, c.y]);
-                return (
-                  <circle
-                    key={i}
-                    cx={coord[0]}
-                    cy={coord[1]}
-                    r={scaleArea(d.count)}
-                  />
-                );
-              })}
-              {d.centroids.slice(0, -1).map((c, i) => {
-                const start = proj([c.x, c.y]);
-                const end = proj([centroids[i + 1].x, centroids[i + 1].y]);
-                return (
-                  <line
-                    key={i}
-                    x1={start[0]}
-                    y1={start[1]}
-                    x2={end[0]}
-                    y2={end[1]}
-                    strokeWidth={scaleWidth(d.count)}
-                    stroke="black"
-                  />
-                );
-              })}
-            </g>
-          );
-        })}
-    </svg>
+    <MapLayoutFluid projection={proj}>
+      <MapLayerBase countries={neCountries} />
+      {multipleStops.map((d) => {
+        const centroids = d.centroids;
+        return (
+          <g key={d.id} opacity={0.5}>
+            {d.centroids.map((c, i) => (
+              <MarkCircle
+                key={i}
+                lat={c.y}
+                lng={c.x}
+                radius={scaleArea(d.count)}
+              />
+            ))}
+            {d.centroids.slice(0, -1).map((c, i) => {
+              const start = proj([c.x, c.y]);
+              const end = proj([centroids[i + 1].x, centroids[i + 1].y]);
+              // TODO: create MarkLine component or add noTip to MarkFlow
+              return (
+                <line
+                  key={i}
+                  x1={start[0]}
+                  y1={start[1]}
+                  x2={end[0]}
+                  y2={end[1]}
+                  strokeWidth={scaleWidth(d.count)}
+                  stroke="black"
+                />
+              );
+            })}
+          </g>
+        );
+      })}
+    </MapLayoutFluid>
   );
 };
 

@@ -1,25 +1,24 @@
+import { scaleSqrt } from "d3";
 import { geoBertin1953 } from "d3-geo-projection";
 import type { NextApiRequest, NextApiResponse } from "next";
-import PatternLine from "../../../components/PatternLine";
-import MapLayerBase from "../../../components/MapLayerBase";
-import ChoroplethSymbol from "../../../components/MarkGeometry/MarkGeometry";
-import MarkCircle from "../../../components/MarkCircle";
+import ReactDOMServer from "react-dom/server";
 import LegendProportionalCircle from "../../../components/LegendProportionalCircle";
-import getCountries from "../../../lib/data/getCountries";
-import getProjectsPerCountry from "../../../lib/data/getProjectsPerCountry";
-import themes, { ThemeNames } from "../../../lib/styles/themes";
-import { scaleSqrt } from "d3";
-import getCountriesByGroup from "../../../lib/data/getCountriesByGroup";
-import { UnGrouping } from "../../../types/UnsdCodes";
+import MapLayerBase from "../../../components/MapLayerBase";
+import MapLayout from "../../../components/MapLayout";
 import MapLayoutAside from "../../../components/MapLayout/MapLayoutAside";
 import MapLayoutBody from "../../../components/MapLayout/MapLayoutBody";
 import MapLayoutHeader from "../../../components/MapLayout/MapLayoutHeader";
-import ReactDOMServer from "react-dom/server";
-import { MapOptions } from "../../../types/MapOptions";
-import defaultTheme from "../../../lib/styles/themes/defaultTheme";
-import MapLayout from "../../../components/MapLayout";
+import MarkCircle from "../../../components/MarkCircle";
+import ChoroplethSymbol from "../../../components/MarkGeometry";
+import PatternLine from "../../../components/PatternLine";
+import getCountries from "../../../lib/data/getCountries";
+import getCountriesByGroup from "../../../lib/data/getCountriesByGroup";
+import getProjectsPerCountry from "../../../lib/data/getProjectsPerCountry";
 import { setMapBounds } from "../../../lib/helpers/getMapHeight";
-import { Vector2 } from "three";
+import themes, { ThemeNames } from "../../../lib/styles/themes";
+import defaultTheme from "../../../lib/styles/themes/defaultTheme";
+import { MapOptions } from "../../../types/MapOptions";
+import { UnGrouping } from "../../../types/UnsdCodes";
 
 /**
  * @swagger
@@ -101,11 +100,7 @@ export default async function handler(
         />
       </MapLayoutAside>
       <MapLayoutBody bounds={mapOptions.bounds}>
-        <MapLayerBase
-          countries={neCountriesTopoJson}
-          projection={mapOptions.projection}
-          theme={theme}
-        />
+        <MapLayerBase countries={neCountriesTopoJson} theme={theme} />
         <g className="choroplethLayer">
           <defs>
             <PatternLine
@@ -117,27 +112,22 @@ export default async function handler(
           {highlightCountries.features.map((feature) => (
             <ChoroplethSymbol
               key={feature.properties.ADM0_ISO}
-              projection={mapOptions.projection}
               feature={feature}
               fill={"url(#Lines)"}
             />
           ))}
         </g>
         <g className="symbolLayer">
-          {data.features.map((feature, idx) => {
-            const xy = mapOptions.projection(
-              feature.geometry.coordinates as [number, number]
-            );
+          {data.features.map(({ properties, geometry }, idx) => {
             return (
-              xy && (
-                <MarkCircle
-                  key={idx}
-                  position={new Vector2(xy[0], xy[1])}
-                  radius={scale(feature.properties?.projectCount)}
-                  {...theme?.symbol}
-                  interactive={false}
-                />
-              )
+              <MarkCircle
+                key={idx}
+                lng={geometry.coordinates[0]}
+                lat={geometry.coordinates[1]}
+                radius={scale(properties?.projectCount)}
+                {...theme?.symbol}
+                interactive={false}
+              />
             );
           })}
         </g>

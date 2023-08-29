@@ -1,7 +1,6 @@
 import { Meta, StoryObj } from "@storybook/react";
 
 import Building, { ITCLocationName } from ".";
-import { Vector2 } from "three";
 
 const width = 300;
 const height = width / 2;
@@ -29,6 +28,6 @@ export const DefaultBuilding: Story = {
   args: {
     width: width,
     location: ITCLocationName.DELFT1,
-    position: new Vector2(width / 2, height / 2),
+    transform: `translate(${width / 2} ${height / 2})`,
   },
 };

@@ -136,16 +136,12 @@ const NfpCountries: NextPage<Props> = ({ nfps, neCountriesTopoJson }) => {
                     }
                   />
                   <MapLayoutBody bounds={bounds}>
-                    <MapLayerBase
-                      countries={neCountriesTopoJson}
-                      projection={projection}
-                    />
+                    <MapLayerBase countries={neCountriesTopoJson} />
                     <g>
                       {polygons.map((p, idx) => (
                         <MarkGeometry
                           key={`${p.properties.ADM0_A3}-${idx}`}
                           feature={p}
-                          projection={projection}
                           style={{ fill: "black" }}
                         />
                       ))}

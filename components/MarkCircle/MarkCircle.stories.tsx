@@ -1,7 +1,8 @@
 import { Meta, StoryObj } from "@storybook/react";
 
+import { geoRobinson } from "d3-geo-projection";
 import MarkCircle from ".";
-import { Vector2 } from "three";
+import MapLayout from "../MapLayout/MapLayout";
 import PatternLine from "../PatternLine";
 
 const width = 600;
@@ -13,7 +14,8 @@ const meta = {
   args: {
     fill: "transparent",
     stroke: "black",
-    position: new Vector2(width / 2, height / 2),
+    lat: 0,
+    lng: 0,
     radius: 5,
   },
   argTypes: {
@@ -21,12 +23,12 @@ const meta = {
   },
   decorators: [
     (Story) => (
-      <svg width={width} height={height}>
+      <MapLayout bounds={{ width, height }} projection={geoRobinson()}>
         <defs>
           <PatternLine stroke={"red"} />
         </defs>
         <Story />
-      </svg>
+      </MapLayout>
     ),
   ],
 } satisfies Meta<typeof MarkCircle>;
