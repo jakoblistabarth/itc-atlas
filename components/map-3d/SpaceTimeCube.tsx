@@ -1,4 +1,4 @@
-import { Text3D } from "@react-three/drei";
+import { Text3D, Html } from "@react-three/drei";
 import { max, min, scaleTime } from "d3";
 import { geoBertin1953 } from "d3-geo-projection";
 import React, { FC } from "react";
@@ -159,12 +159,12 @@ const SpaceTimeCube: FC<PropTypes> = ({
         {shapes.map((props) => (
           <mesh
             key={props.shape.uuid}
-            onPointerDown={() => setSelect(props.name)}
-            onPointerEnter={() => setHover(props.name)}
-            onPointerUp={() => {
-              setSelect(undefined);
-              setHover(undefined);
+            onPointerDown={() => {
+              selectedCountry === props.name
+                ? setSelect(undefined)
+                : setSelect(props.name);
             }}
+            onPointerEnter={() => setHover(props.name)}
             onPointerLeave={() => setHover(undefined)}
             rotation={[Math.PI, 0, 0]} // taking into account the origin of svg coordinates in the top left rather than in the center
           >
@@ -174,6 +174,8 @@ const SpaceTimeCube: FC<PropTypes> = ({
             <meshStandardMaterial
               color={
                 selectedCountry == props.name
+                  ? new Color("black")
+                  : hoverCountry == props.name
                   ? new Color("grey")
                   : new Color("white")
               }
@@ -182,25 +184,25 @@ const SpaceTimeCube: FC<PropTypes> = ({
               side={DoubleSide}
               transparent
             />
+            {hoverCountry == props.name && (
+              <Html
+                style={{
+                  paddingTop: "5px",
+                  color: "white",
+                  transform: "translate3d(calc(50% + 40px), 0, 0)",
+                  textAlign: "left",
+                  background: "#fcaf17",
+                  padding: "5px 10px",
+                  borderRadius: "5px",
+                }}
+                position={(props.shape.currentPoint, -1.0)}
+              >
+                <div>{hoverCountry}</div>
+              </Html>
+            )}
           </mesh>
         ))}
       </group>
-
-      {hoverCountry && (
-        <group>
-          <mesh>
-            <Text3D
-              font={"/fonts/Inter_Regular.json"}
-              size={fontSize}
-              height={fontSize / 20}
-              position={[-side / 2, -height / 2, -side / 2]}
-            >
-              {hoverCountry}
-              <meshStandardMaterial color="red" />
-            </Text3D>
-          </mesh>
-        </group>
-      )}
     </>
   );
 };
