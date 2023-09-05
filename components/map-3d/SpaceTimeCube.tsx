@@ -2,7 +2,7 @@ import { Text3D, Html } from "@react-three/drei";
 import { max, min, scaleTime } from "d3";
 import { geoBertin1953 } from "d3-geo-projection";
 import React, { FC } from "react";
-import lonLatTimeToXYZ from "../../lib/helpers/lonLatTimeToXYZ";
+import lonLatTimeToXYZ from "../../lib/cartographic/lonLatTimeToXYZ";
 import { fDateYear } from "../../lib/utilities/formaters";
 import { SpaceTimeCubeEvent } from "../../types/SpaceTimeCubeEvent";
 import type { Topology } from "topojson-specification";
@@ -15,7 +15,7 @@ import {
   MultiPolygon,
   GeoJsonProperties,
 } from "geojson";
-import { featureCollectionToSVG } from "../ExtrudedGeometries/ExtrudedGeometries.helpers";
+import featureCollectionToSVG from "../../lib/cartographic/featureCollectionToSVG";
 import { geoPath } from "d3-geo";
 import { useEffect, useState } from "react";
 import { Color, DoubleSide } from "three";
@@ -187,13 +187,15 @@ const SpaceTimeCube: FC<PropTypes> = ({
             {hoverCountry == props.name && (
               <Html
                 style={{
+                  paddingTop: "5px",
                   color: "white",
+                  transform: "translate3d(calc(50% + 40px), 0, 0)",
                   textAlign: "left",
                   background: "#fcaf17",
                   padding: "5px 10px",
                   borderRadius: "5px",
                 }}
-                position={[0.0, 0.0, -1.0]}
+                position={(props.shape.currentPoint, -1.0)}
               >
                 <div>{hoverCountry}</div>
               </Html>
