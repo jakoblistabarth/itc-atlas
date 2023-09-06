@@ -10,7 +10,16 @@ type Props = PropsWithChildren<{
 }>;
 
 const Callout: FC<Props> = ({ Icon = MdOutlineLightbulb, title, children }) => (
-  <Box sx={{ background: "muted", p: 3, my: 2, borderRadius: 2, fontSize: 1 }}>
+  <Box
+    sx={{
+      background: "muted",
+      p: 3,
+      my: 2,
+      borderRadius: 2,
+      fontSize: 1,
+      maxWidth: "600px",
+    }}
+  >
     <Grid gap={3} columns={"min-content auto"}>
       <Icon />
       <Box>

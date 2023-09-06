@@ -116,6 +116,7 @@ export const theme: Theme = {
       color: "text",
       boxShadow: 0,
       borderRadius: 1,
+      background: "white",
     },
   },
   styles: {

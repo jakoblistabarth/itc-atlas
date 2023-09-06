@@ -26,12 +26,16 @@ type PropTypes = React.PropsWithChildren<{
   topologyObject: string;
   side?: number;
   height?: number;
+  onClickHandler: (featureId?: string) => void;
+  activeFeature?: string;
 }>;
 
 const SpaceTimeCube: FC<PropTypes> = ({
   events,
   topology,
   topologyObject,
+  activeFeature,
+  onClickHandler,
   side = 10,
   height = 10,
 }) => {
@@ -71,7 +75,6 @@ const SpaceTimeCube: FC<PropTypes> = ({
 
   const [hoverCountry, setHover] = useState<string | undefined>(undefined);
   const [hoverYear, setYear] = useState<string | undefined>(undefined);
-  const [selectedCountry, setSelect] = useState<string | undefined>(undefined);
 
   const shapes = useMemo(
     () =>
@@ -86,10 +89,10 @@ const SpaceTimeCube: FC<PropTypes> = ({
   );
 
   const selectedEvents =
-    selectedCountry || hoverYear
+    activeFeature || hoverYear
       ? events.filter(
           (event) =>
-            event.name == selectedCountry ||
+            event.name == activeFeature ||
             event.dateStart.toDateString() == hoverYear
         )
       : events;
@@ -100,8 +103,8 @@ const SpaceTimeCube: FC<PropTypes> = ({
   );
   useEffect(
     () =>
-      void (document.body.style.cursor = selectedCountry ? `pointer` : `auto`),
-    [selectedCountry]
+      void (document.body.style.cursor = activeFeature ? `pointer` : `auto`),
+    [activeFeature]
   );
   useEffect(
     () => void (document.body.style.cursor = hoverYear ? `pointer` : `auto`),
@@ -160,9 +163,9 @@ const SpaceTimeCube: FC<PropTypes> = ({
           <mesh
             key={props.shape.uuid}
             onPointerDown={() => {
-              selectedCountry === props.name
-                ? setSelect(undefined)
-                : setSelect(props.name);
+              activeFeature === props.name
+                ? onClickHandler(undefined)
+                : onClickHandler(props.name);
             }}
             onPointerEnter={() => setHover(props.name)}
             onPointerLeave={() => setHover(undefined)}
@@ -173,7 +176,7 @@ const SpaceTimeCube: FC<PropTypes> = ({
             />
             <meshStandardMaterial
               color={
-                selectedCountry == props.name
+                activeFeature == props.name
                   ? new Color("black")
                   : hoverCountry == props.name
                   ? new Color("grey")
