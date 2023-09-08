@@ -81,7 +81,7 @@ const ProjectExplorer3D: NextPage<Props> = ({
           Select individual country to only see projects for this country. Hover
           over the time labels to see all projects for this year.
         </Callout>
-        <Box sx={{ width: "100%", height: "500px", position: "relative" }}>
+        <Box sx={{ width: "100%", height: "600px", position: "relative" }}>
           <Canvas
             style={{ background: "white" }}
             orthographic

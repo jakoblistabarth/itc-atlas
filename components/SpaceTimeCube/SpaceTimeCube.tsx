@@ -5,6 +5,7 @@ import React, { FC } from "react";
 import lonLatTimeToXYZ from "../../lib/helpers/lonLatTimeToXYZ";
 import { fDateYear } from "../../lib/utilities/formaters";
 import { SpaceTimeCubeEvent } from "../../types/SpaceTimeCubeEvent";
+import getCentroidByIsoCode from "../../lib/data/getCentroidByIsoCode";
 import type { Topology } from "topojson-specification";
 import { useMemo } from "react";
 import { SVGLoader } from "three-stdlib";
@@ -16,9 +17,9 @@ import {
   GeoJsonProperties,
 } from "geojson";
 import { featureCollectionToSVG } from "../ExtrudedGeometries/ExtrudedGeometries.helpers";
-import { geoPath } from "d3-geo";
+import { geoPath, GeoProjection } from "d3-geo";
 import { useEffect, useState } from "react";
-import { Color, DoubleSide } from "three";
+import { Color, DoubleSide, Vector3 } from "three";
 
 type PropTypes = React.PropsWithChildren<{
   events: SpaceTimeCubeEvent[];
@@ -56,7 +57,7 @@ const SpaceTimeCube: FC<PropTypes> = ({
     {
       type: "Sphere",
     }
-  );
+  ) as GeoProjection;
   const fc = feature(
     topology,
     topology.objects[topologyObject]
@@ -159,50 +160,58 @@ const SpaceTimeCube: FC<PropTypes> = ({
       })}
 
       <group position-y={height / -2} rotation={[Math.PI / -2, 0, 0]}>
-        {shapes.map((props) => (
-          <mesh
-            key={props.shape.uuid}
-            onPointerDown={() => {
-              activeFeature === props.name
-                ? onClickHandler(undefined)
-                : onClickHandler(props.name);
-            }}
-            onPointerEnter={() => setHover(props.name)}
-            onPointerLeave={() => setHover(undefined)}
-            rotation={[Math.PI, 0, 0]} // taking into account the origin of svg coordinates in the top left rather than in the center
-          >
-            <extrudeGeometry
-              args={[props.shape, { ...extrudeGeometryOptions }]}
-            />
-            <meshStandardMaterial
-              color={
-                activeFeature == props.name
-                  ? new Color("black")
-                  : hoverCountry == props.name
-                  ? new Color("grey")
-                  : new Color("white")
-              }
-              opacity={props.fillOpacity}
-              depthWrite={true}
-              side={DoubleSide}
-              transparent
-            />
-            {hoverCountry == props.name && (
-              <Html
-                style={{
-                  color: "white",
-                  textAlign: "left",
-                  background: "#fcaf17",
-                  padding: "5px 10px",
-                  borderRadius: "5px",
-                }}
-                position={[0.0, 0.0, -1.0]}
-              >
-                <div>{hoverCountry}</div>
-              </Html>
-            )}
-          </mesh>
-        ))}
+        {shapes.map((props) => {
+          const centroidLatLong = getCentroidByIsoCode(props.name);
+          const centroid = projection([
+            centroidLatLong?.x ?? 0,
+            centroidLatLong?.y ?? 0,
+          ]);
+          const position = centroid ? new Vector3(...centroid, -1) : undefined;
+          return (
+            <mesh
+              key={props.shape.uuid}
+              onPointerDown={() => {
+                activeFeature === props.name
+                  ? onClickHandler(undefined)
+                  : onClickHandler(props.name);
+              }}
+              onPointerEnter={() => setHover(props.name)}
+              onPointerLeave={() => setHover(undefined)}
+              rotation={[Math.PI, 0, 0]} // taking into account the origin of svg coordinates in the top left rather than in the center
+            >
+              <extrudeGeometry
+                args={[props.shape, { ...extrudeGeometryOptions }]}
+              />
+              <meshStandardMaterial
+                color={
+                  activeFeature == props.name
+                    ? new Color("black")
+                    : hoverCountry == props.name
+                    ? new Color("grey")
+                    : new Color("white")
+                }
+                opacity={props.fillOpacity}
+                depthWrite={true}
+                side={DoubleSide}
+                transparent
+              />
+              {hoverCountry == props.name && position && (
+                <Html
+                  style={{
+                    color: "white",
+                    textAlign: "left",
+                    background: "#fcaf17",
+                    padding: "5px 10px",
+                    borderRadius: "5px",
+                  }}
+                  position={position}
+                >
+                  <div>{hoverCountry}</div>
+                </Html>
+              )}
+            </mesh>
+          );
+        })}
       </group>
     </>
   );
