@@ -73,8 +73,8 @@ const ProjectCountries: NextPage<Props> = ({
                 return (
                   <MarkCircle
                     key={idx}
-                    lng={feature.geometry.coordinates[0]}
-                    lat={feature.geometry.coordinates[1]}
+                    longitude={feature.geometry.coordinates[0]}
+                    latitude={feature.geometry.coordinates[1]}
                     radius={scale(feature.properties?.projectCount)}
                     {...theme.symbol}
                     interactive

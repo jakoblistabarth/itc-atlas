@@ -127,8 +127,8 @@ const AlumniOrigin: FC<Props> = ({
               <TooltipTrigger asChild>
                 <g>
                   <MarkCircle
-                    lng={geometry.coordinates[0]}
-                    lat={geometry.coordinates[1]}
+                    longitude={geometry.coordinates[0]}
+                    latitude={geometry.coordinates[1]}
                     radius={scale(properties?.alumniCount)}
                     fill={"teal"}
                     stroke={"teal"}

@@ -3,23 +3,23 @@ import { Text } from "@visx/text";
 import { useMapLayoutContext } from "../MapLayout/MapLayoutContext";
 
 type Props = {
-  lng: number;
-  lat: number;
+  longitude: number;
+  latitude: number;
   label: string;
   labelColor?: string;
   fontSize?: number;
 } & SVGProps<SVGCircleElement>;
 
 const MarkGlyph: FC<Props> = ({
-  lng,
-  lat,
+  longitude,
+  latitude,
   label,
   labelColor = "black",
   fontSize = 10,
   ...rest
 }) => {
   const { projection } = useMapLayoutContext();
-  const [x, y] = projection([lng, lat]) ?? [undefined];
+  const [x, y] = projection([longitude, latitude]) ?? [undefined];
   return (
     <g transform={`translate(${x} ${y})`}>
       <circle {...rest} r={fontSize} />;

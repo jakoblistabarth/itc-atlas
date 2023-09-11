@@ -148,8 +148,8 @@ export default async function handler(
           {featureCollection.features.map(({ properties, geometry }, idx) => (
             <MarkCircle
               key={idx}
-              lng={geometry.coordinates[0]}
-              lat={geometry.coordinates[1]}
+              longitude={geometry.coordinates[0]}
+              latitude={geometry.coordinates[1]}
               radius={scale(properties?.alumniCount)}
               {...mapOptions.theme?.symbol}
               interactive={false}

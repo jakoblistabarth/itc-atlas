@@ -94,8 +94,8 @@ export default async function handler(
             return (
               <MarkScaledPie
                 key={d.isoAlpha3}
-                lng={d.coordinates[0]}
-                lat={d.coordinates[1]}
+                longitude={d.coordinates[0]}
+                latitude={d.coordinates[1]}
                 radius={scale(d.totalCount)}
                 colorScale={departmentColorScale}
                 data={d.departments}

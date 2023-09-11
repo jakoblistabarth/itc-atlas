@@ -7,7 +7,7 @@ import ArrowHead from "../MarkerArrowHead";
 
 export type FlowPointStyleProps = Omit<
   ComponentProps<typeof MarkCircle>,
-  "lat" | "lng" | "radius"
+  "latitude" | "longitude" | "radius"
 >;
 
 type Props = {
@@ -34,8 +34,8 @@ const MapLayerFlow: FC<Props> = ({
       {data.points.features.map((feature) => (
         <MarkCircle
           key={feature.properties.name}
-          lng={feature.geometry.coordinates[0]}
-          lat={feature.geometry.coordinates[1]}
+          longitude={feature.geometry.coordinates[0]}
+          latitude={feature.geometry.coordinates[1]}
           radius={1}
           {...pointStyle}
         />

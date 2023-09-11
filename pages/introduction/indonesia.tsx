@@ -162,24 +162,24 @@ const Page: NextPage<Props> = ({
               width={250}
               roundMarkers={[
                 {
-                  lng: 106.5,
-                  lat: -6,
+                  longitude: 106.5,
+                  latitude: -6,
                   fill: "red",
                   labelColor: "white",
                   label: "A",
                   fontSize: 10,
                 },
                 {
-                  lng: 106.8,
-                  lat: -6.5,
+                  longitude: 106.8,
+                  latitude: -6.5,
                   fill: "darkred",
                   labelColor: "white",
                   fontSize: 10,
                   label: "B",
                 },
                 {
-                  lng: 110,
-                  lat: -7.5,
+                  longitude: 110,
+                  latitude: -7.5,
                   fill: "red",
                   labelColor: "white",
                   label: "C",

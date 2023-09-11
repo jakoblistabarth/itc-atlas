@@ -2,7 +2,7 @@ import { Text3D } from "@react-three/drei";
 import { max, min, scaleTime } from "d3";
 import { geoBertin1953 } from "d3-geo-projection";
 import React, { FC } from "react";
-import lonLatTimeToXYZ from "../../lib/helpers/lonLatTimeToXYZ";
+import longitudeLatitudeTimeToXYZ from "../../lib/helpers/longitudeLatitudeTimeToXYZ";
 import { fDateYear } from "../../lib/utilities/formaters";
 import { SpaceTimeCubeEvent } from "../../types/SpaceTimeCubeEvent";
 import type { Topology } from "topojson-specification";
@@ -78,7 +78,7 @@ const SpaceTimeCube: FC<PropTypes> = ({
         );
       })}
       {events.map((e, idx) => {
-        const pos = lonLatTimeToXYZ(
+        const pos = longitudeLatitudeTimeToXYZ(
           e.coordinates,
           e.dateStart,
           timeScale,

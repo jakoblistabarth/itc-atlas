@@ -36,7 +36,7 @@ const meta = {
   ],
   render: ({ children, ...args }) => (
     <>
-      <MarkCircle lat={0} lng={0} />
+      <MarkCircle latitude={0} longitude={0} />
       <LabelPoint {...args}>{children}</LabelPoint>
     </>
   ),

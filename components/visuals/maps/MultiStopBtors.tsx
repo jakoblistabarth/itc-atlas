@@ -52,8 +52,8 @@ const MultiStopBtors: FC<Props> = ({ btors, neCountries }) => {
             {d.centroids.map((c, i) => (
               <MarkCircle
                 key={i}
-                lat={c.y}
-                lng={c.x}
+                latitude={c.y}
+                longitude={c.x}
                 radius={scaleArea(d.count)}
               />
             ))}

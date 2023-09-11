@@ -4,16 +4,16 @@ import toInt from "../../lib/utilities/toInt";
 import { useMapLayoutContext } from "../MapLayout/MapLayoutContext";
 
 type Props = {
-  lat: number;
-  lng: number;
+  latitude: number;
+  longitude: number;
   radius?: number;
   isActive?: boolean;
   interactive?: boolean;
 } & Omit<SVGProps<SVGCircleElement>, "cx" | "cy" | "r">;
 
 const MarkCircle: FC<Props> = ({
-  lat,
-  lng,
+  latitude,
+  longitude,
   radius = 2,
   isActive = false,
   interactive = true,
@@ -22,7 +22,7 @@ const MarkCircle: FC<Props> = ({
   const { projection } = useMapLayoutContext();
   // TODO: create custom projection function which throws an error if coordinates have no projected position?
   // to avoid ?? [undefined]
-  const [x, y] = projection([lng, lat]) ?? [undefined];
+  const [x, y] = projection([longitude, latitude]) ?? [undefined];
   const strokeWidth =
     toInt(props.strokeWidth) ?? defaultTheme.symbol?.strokeWidth ?? 1;
   return (

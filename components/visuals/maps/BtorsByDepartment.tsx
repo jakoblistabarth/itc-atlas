@@ -67,8 +67,8 @@ const BtorsByDepartment: FC<Props> = ({ btors, countryCodes, neCountries }) => {
         {regionsWithData.map((d) => (
           <MarkScaledPieChart
             key={d.properties.region}
-            lng={d.properties.centroid[0]}
-            lat={d.properties.centroid[1]}
+            longitude={d.properties.centroid[0]}
+            latitude={d.properties.centroid[1]}
             radius={radiusScale(d.properties.sum)}
             innerRadius={radiusScale(d.properties.sum) / 4}
             data={d.properties.data ?? []}

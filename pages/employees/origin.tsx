@@ -84,8 +84,8 @@ const StaffOrigin: NextPage<Props> = ({
                 return (
                   <MarkCircle
                     key={idx}
-                    lng={geometry.coordinates[0]}
-                    lat={geometry.coordinates[1]}
+                    longitude={geometry.coordinates[0]}
+                    latitude={geometry.coordinates[1]}
                     radius={scale(properties?.employeeCount)}
                   />
                 );

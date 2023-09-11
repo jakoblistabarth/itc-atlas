@@ -8,13 +8,13 @@ export type pieDatum = {
 };
 
 type Props = Omit<ComponentProps<typeof ScaledPieChart>, "position"> & {
-  lng: number;
-  lat: number;
+  longitude: number;
+  latitude: number;
 };
 
-const MarkScaledPieChart: FC<Props> = ({ lat, lng, ...rest }) => {
+const MarkScaledPieChart: FC<Props> = ({ latitude, longitude, ...rest }) => {
   const { projection } = useMapLayoutContext();
-  const [x, y] = projection([lng, lat]) ?? [undefined];
+  const [x, y] = projection([longitude, latitude]) ?? [undefined];
   return (
     <g transform={`translate(${x} ${y})`}>
       <ScaledPieChart {...rest} />

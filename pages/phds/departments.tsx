@@ -93,8 +93,8 @@ const PhdDepartments: NextPage<Props> = ({
                   return (
                     <MarkScaledPieChart
                       key={country.isoAlpha3}
-                      lng={country.coordinates[0]}
-                      lat={country.coordinates[1]}
+                      longitude={country.coordinates[0]}
+                      latitude={country.coordinates[1]}
                       radius={scale(country.totalCount)}
                       colorScale={departmentColorScale}
                       data={country.departments}

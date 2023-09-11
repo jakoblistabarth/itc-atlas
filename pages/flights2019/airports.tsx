@@ -72,8 +72,8 @@ const Airports: NextPage<Props> = ({ airports, neCountriesTopoJson }) => {
                   <TooltipTrigger asChild>
                     <g>
                       <MarkCircle
-                        lng={geometry.coordinates[0]}
-                        lat={geometry.coordinates[1]}
+                        longitude={geometry.coordinates[0]}
+                        latitude={geometry.coordinates[1]}
                         radius={scale(properties?.value)}
                         {...defaultTheme.symbol}
                       />

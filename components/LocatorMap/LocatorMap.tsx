@@ -18,8 +18,8 @@ type Props = {
   theme?: MapTheme;
   width?: number;
   roundMarkers?: (Omit<React.ComponentProps<typeof MarkGlyph>, "position"> & {
-    lat: number;
-    lng: number;
+    latitude: number;
+    longitude: number;
   })[];
   rectangleMarkers?: Omit<
     React.ComponentProps<typeof MarkBbox>,
@@ -119,7 +119,7 @@ const LocatorMap: FC<Props> = ({
       )}
       {roundMarkers &&
         roundMarkers?.map((d, idx) => {
-          const p = projection([d.lng, d.lat]);
+          const p = projection([d.longitude, d.latitude]);
           return p && <MarkGlyph key={`marker-${idx}`} {...d} />;
         })}
       {rectangleMarkers &&

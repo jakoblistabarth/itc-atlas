@@ -14,8 +14,8 @@ const meta = {
   args: {
     fill: "transparent",
     stroke: "black",
-    lat: 0,
-    lng: 0,
+    latitude: 0,
+    longitude: 0,
     radius: 5,
   },
   argTypes: {

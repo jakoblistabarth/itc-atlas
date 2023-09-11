@@ -10,8 +10,8 @@ const meta = {
   title: "Map Elements/Marks/MarkGlyph",
   component: MarkGlyph,
   args: {
-    lng: 0,
-    lat: 0,
+    longitude: 0,
+    latitude: 0,
     label: "A",
     fill: "lightgrey",
   },

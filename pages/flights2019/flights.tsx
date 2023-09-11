@@ -147,8 +147,8 @@ const Targets = () => {
   return (
     <g>
       <MarkCircle
-        lat={-1.329}
-        lng={36.9238}
+        latitude={-1.329}
+        longitude={36.9238}
         radius={1}
         id="target1"
         fill="transparent"

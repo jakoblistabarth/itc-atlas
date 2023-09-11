@@ -9,9 +9,14 @@ import { Vector3 } from "three";
  * @param offset An offset (from the surface of this sphere).
  * @returns A {@link Vector3} holding the Cartesian coordinates of the point.
  */
-const lonLatToXYZ = (lon: number, lat: number, radius: number, offset = 0) => {
-  const phi = (lat * Math.PI) / 180;
-  const theta = ((lon - 180) * Math.PI) / 180;
+const longitudeLatitudeToXYZ = (
+  longitude: number,
+  latitude: number,
+  radius: number,
+  offset = 0
+) => {
+  const phi = (latitude * Math.PI) / 180;
+  const theta = ((longitude - 180) * Math.PI) / 180;
 
   const x = -(radius + offset) * Math.cos(phi) * Math.cos(theta);
   const y = (radius + offset) * Math.sin(phi);
@@ -19,4 +24,4 @@ const lonLatToXYZ = (lon: number, lat: number, radius: number, offset = 0) => {
   return new Vector3(x, y, z);
 };
 
-export default lonLatToXYZ;
+export default longitudeLatitudeToXYZ;

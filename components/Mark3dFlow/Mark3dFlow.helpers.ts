@@ -1,6 +1,6 @@
 import type { Position } from "geojson";
 import { CurvePath, CubicBezierCurve3, Vector3 } from "three";
-import lonLatToXYZ from "../../lib/helpers/lonLatToXYZ";
+import longitudeLatitudeToXYZ from "../../lib/helpers/longitudeLatitudeToXYZ";
 
 export const getFlowCurve3D = (
   origin: Position,
@@ -8,8 +8,8 @@ export const getFlowCurve3D = (
   radius: number,
   arcHeight: number
 ) => {
-  const start = lonLatToXYZ(origin[0], origin[1], radius);
-  const end = lonLatToXYZ(destination[0], destination[1], radius);
+  const start = longitudeLatitudeToXYZ(origin[0], origin[1], radius);
+  const end = longitudeLatitudeToXYZ(destination[0], destination[1], radius);
 
   // @credits: https://github.com/bwlewis/rthreejs/blob/master/inst/htmlwidgets/globe.js
 
