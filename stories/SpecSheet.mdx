@@ -1,0 +1,73 @@
+import {
+  Meta,
+  ColorPalette,
+  ColorItem,
+  Typeset,
+  IconGallery,
+  IconItem,
+} from "@storybook/addon-docs";
+import { theme } from "../styles/theme";
+import IconResearch from "../public/images/icon_research.svg";
+import IconEducation from "../public/images/icon_education.svg";
+import IconProjects from "../public/images/icon_projects.svg";
+import IconIntroduction from "../public/images/icon_introduction.svg";
+import IconAppendix from "../public/images/icon_appendix.svg";
+import { HiCursorClick } from "react-icons/hi";
+
+# ITC Atlas Spec Sheet
+
+test {theme.colors.primary}
+
+## Colors
+
+<ColorPalette>
+  <ColorItem
+    title="Primary"
+    subtitle="Primary brand color"
+    colors={{ "ITC green": theme.colors.primary }}
+  />
+  <ColorItem
+    title="Secondary"
+    subtitle="Secondary brand color"
+    colors={{ "ITC blue": theme.colors.secondary }}
+  />
+  <ColorItem
+    title="Muted brand colors"
+    subtitle=""
+    colors={{
+      "ITC green muted": theme.colors.muted,
+      "ITC blue muted": "rgb(185, 195, 255)",
+    }}
+  />
+  <ColorItem title="Accent color" colors={{ accent: "rgb(255,230,0)" }} />
+</ColorPalette>
+
+## Typography
+
+### Headlines
+
+<Typeset
+  fontSizes={theme.fontSizes.slice(-6).reverse()}
+  fontFamily={theme.fonts.heading}
+  sampleText={"ITC Atlas"}
+/>
+
+### Teaser
+
+<Typeset
+  fontSizes={[theme.fontSizes[theme.text.teaser.fontSize]]}
+  fontWeights={[theme.fontWeights[theme.text.teaser.fontWeight]]}
+  fontFamily="Fraunces"
+  sampleText={"ITC Atlas"}
+/>
+
+## Iconography
+
+<IconGallery>
+  <IconItem name="chapter Introduction">
+    <IconIntroduction width="100px" height="100px" />
+  </IconItem>
+  <IconItem name="chapter xy">
+    <HiCursorClick />
+  </IconItem>
+</IconGallery>

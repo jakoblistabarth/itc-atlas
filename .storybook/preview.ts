@@ -35,6 +35,7 @@ export const parameters = {
       order: [
         "Intro",
         "Map Elements",
+        ["Marks", "Marks3D", "Labels", "Layouts", "Legends"],
         "Map Layers",
         "Map Types",
         "Annotations",

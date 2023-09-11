@@ -1,7 +1,7 @@
 import type { Theme } from "theme-ui";
 
-export const itc_green = "#00877C";
-export const itc_blue = "#002395";
+export const itc_green = "rgb(0, 135, 125)";
+export const itc_blue = "rgb(0,35,150)";
 
 export const theme: Theme = {
   colors: {
