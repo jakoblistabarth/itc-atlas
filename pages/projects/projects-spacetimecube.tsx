@@ -27,7 +27,9 @@ const ProjectExplorer3D: NextPage<Props> = ({
   neCountriesTopoJson,
   projects,
 }) => {
-  const [selectedCountry, setSelect] = useState<string | undefined>(undefined);
+  const [selectedCountries, setSelect] = useState<string[] | undefined>(
+    undefined
+  );
 
   const projectsSplit = projects
     .map((p) => {
@@ -92,8 +94,20 @@ const ProjectExplorer3D: NextPage<Props> = ({
               topology={neCountriesTopoJson}
               topologyObject="ne_admin_0_countries"
               events={events}
-              activeFeature={selectedCountry}
-              onClickHandler={(featureId?: string) => setSelect(featureId)}
+              activeFeature={selectedCountries}
+              onClickHandler={(featureId?: string) => {
+                selectedCountries
+                  ? selectedCountries.push(featureId ?? "")
+                  : setSelect([featureId ?? ""]);
+              }}
+              onClickCancel={(featureId?: string) => {
+                selectedCountries
+                  ? selectedCountries.splice(
+                      selectedCountries.indexOf(featureId ?? ""),
+                      1
+                    )
+                  : setSelect(undefined);
+              }}
             />
             <ambientLight args={[undefined, 0.1]} />
             <hemisphereLight
@@ -113,22 +127,22 @@ const ProjectExplorer3D: NextPage<Props> = ({
             <Text as="p" sx={{ fontStyle: "italic", fontSize: 0 }}>
               Details
             </Text>
-            {selectedCountry ? (
-              <>
-                <Heading as="h2">
-                  {getCountryName(selectedCountry, neCountriesTopoJson)}
-                </Heading>
-                <Text>
-                  {
-                    projects.filter((d) =>
-                      d.countries
-                        .map((d) => d.isoAlpha3)
-                        .includes(selectedCountry)
-                    ).length
-                  }{" "}
-                  Projects
-                </Text>
-              </>
+            {selectedCountries ? (
+              selectedCountries.map((d) => (
+                <>
+                  <Heading as="h2">
+                    {getCountryName(d, neCountriesTopoJson)}
+                  </Heading>
+                  <Text>
+                    {
+                      projects.filter((d1) =>
+                        d1.countries.map((d1) => d1.isoAlpha3).includes(d)
+                      ).length
+                    }{" "}
+                    Projects
+                  </Text>
+                </>
+              ))
             ) : (
               <Text as="p" sx={{ mt: 2 }}>
                 Click on a country to see details

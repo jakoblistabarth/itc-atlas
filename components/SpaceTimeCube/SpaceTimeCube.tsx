@@ -28,7 +28,8 @@ type PropTypes = React.PropsWithChildren<{
   side?: number;
   height?: number;
   onClickHandler: (featureId?: string) => void;
-  activeFeature?: string;
+  onClickCancel: (featureId?: string) => void;
+  activeFeature?: string[];
 }>;
 
 const SpaceTimeCube: FC<PropTypes> = ({
@@ -37,6 +38,7 @@ const SpaceTimeCube: FC<PropTypes> = ({
   topologyObject,
   activeFeature,
   onClickHandler,
+  onClickCancel,
   side = 10,
   height = 10,
 }) => {
@@ -93,7 +95,7 @@ const SpaceTimeCube: FC<PropTypes> = ({
     activeFeature || hoverYear
       ? events.filter(
           (event) =>
-            event.name == activeFeature ||
+            activeFeature?.includes(event.name) ||
             event.dateStart.toDateString() == hoverYear
         )
       : events;
@@ -167,12 +169,13 @@ const SpaceTimeCube: FC<PropTypes> = ({
             centroidLatLong?.y ?? 0,
           ]);
           const position = centroid ? new Vector3(...centroid, -1) : undefined;
+
           return (
             <mesh
               key={props.shape.uuid}
               onPointerDown={() => {
-                activeFeature === props.name
-                  ? onClickHandler(undefined)
+                activeFeature?.includes(props.name)
+                  ? onClickCancel(props.name)
                   : onClickHandler(props.name);
               }}
               onPointerEnter={() => setHover(props.name)}
@@ -184,7 +187,7 @@ const SpaceTimeCube: FC<PropTypes> = ({
               />
               <meshStandardMaterial
                 color={
-                  activeFeature == props.name
+                  activeFeature?.includes(props.name)
                     ? new Color("black")
                     : hoverCountry == props.name
                     ? new Color("grey")
