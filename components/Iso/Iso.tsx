@@ -1,4 +1,4 @@
-import { FC } from "react";
+import { FC, SVGProps } from "react";
 import { Appearance } from "../../types/Appearance";
 import LabelPoint from "../LabelPoint";
 import { ScaleLinear } from "d3";
@@ -6,16 +6,25 @@ import defaultTheme from "../../lib/styles/themes/defaultTheme";
 import { Vector2 } from "three";
 import { LabelPlacement } from "../../types/LabelPlacement";
 
-const MarkIso: FC<{
-  xy: [number, number];
+type Props = {
   side: number;
   value: number;
-  scale: ScaleLinear<number, number>;
+  scaleHeight: ScaleLinear<number, number>;
   style?: Appearance;
   label?: boolean;
   shadow?: boolean;
-}> = ({ xy, side, value, scale, style, label = false, shadow = true }) => {
-  const height = scale(value);
+} & SVGProps<SVGSVGElement>;
+
+const MarkIso: FC<Props> = ({
+  side,
+  value,
+  scaleHeight,
+  style,
+  label = false,
+  shadow = true,
+  ...rest
+}) => {
+  const height = scaleHeight(value);
   const halfWidth = (side * Math.sqrt(3)) / 2;
   const rightFacePath = `
     M 0 0 
@@ -47,9 +56,8 @@ const MarkIso: FC<{
   `;
 
   const faces = [topFace, rightFacePath, leftFacePath];
-  // const faces = [rightFacePath, leftFacePath, topFace];
   return (
-    <g transform={`translate(${xy[0]} ${xy[1]} )`}>
+    <g {...rest}>
       {shadow && (
         <path
           d={shade}

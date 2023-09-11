@@ -1,17 +1,17 @@
 import { Meta, StoryObj } from "@storybook/react";
 import { scaleLinear } from "d3-scale";
 
-import MarkIso from ".";
+import Iso from ".";
 
 const width = 300;
 const height = 300;
 
 const meta = {
-  title: "Map Elements/Marks/MarkIso",
-  component: MarkIso,
+  title: "Shapes/Iso",
+  component: Iso,
   args: {
-    scale: scaleLinear().domain([0, 100]).range([0, 100]),
-    xy: [width / 2, height / 2] as [number, number], //Question: proper ts solution?
+    scaleHeight: scaleLinear().domain([0, 100]).range([0, 100]),
+    transform: `translate(${width / 2} ${height / 2})`, //Question: proper ts solution?
     style: { fill: "white", stroke: "black" },
   },
   argTypes: {
@@ -25,7 +25,7 @@ const meta = {
       </svg>
     ),
   ],
-} satisfies Meta<typeof MarkIso>;
+} satisfies Meta<typeof Iso>;
 export default meta;
 type Story = StoryObj<typeof meta>;
 
