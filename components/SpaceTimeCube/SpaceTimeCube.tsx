@@ -29,14 +29,14 @@ type PropTypes = React.PropsWithChildren<{
   height?: number;
   onClickHandler: (featureId?: string) => void;
   onClickCancel: (featureId?: string) => void;
-  activeFeature?: string[];
+  activeFeatureIds?: string[];
 }>;
 
 const SpaceTimeCube: FC<PropTypes> = ({
   events,
   topology,
   topologyObject,
-  activeFeature,
+  activeFeatureIds,
   onClickHandler,
   onClickCancel,
   side = 10,
@@ -92,10 +92,10 @@ const SpaceTimeCube: FC<PropTypes> = ({
   );
 
   const selectedEvents =
-    activeFeature || hoverYear
+    activeFeatureIds || hoverYear
       ? events.filter(
           (event) =>
-            activeFeature?.includes(event.name) ||
+            activeFeatureIds?.includes(event.name) ||
             event.dateStart.toDateString() == hoverYear
         )
       : events;
@@ -106,8 +106,8 @@ const SpaceTimeCube: FC<PropTypes> = ({
   );
   useEffect(
     () =>
-      void (document.body.style.cursor = activeFeature ? `pointer` : `auto`),
-    [activeFeature]
+      void (document.body.style.cursor = activeFeatureIds ? `pointer` : `auto`),
+    [activeFeatureIds]
   );
   useEffect(
     () => void (document.body.style.cursor = hoverYear ? `pointer` : `auto`),
@@ -174,7 +174,7 @@ const SpaceTimeCube: FC<PropTypes> = ({
             <mesh
               key={props.shape.uuid}
               onPointerDown={() => {
-                activeFeature?.includes(props.name)
+                activeFeatureIds?.includes(props.name)
                   ? onClickCancel(props.name)
                   : onClickHandler(props.name);
               }}
@@ -187,7 +187,7 @@ const SpaceTimeCube: FC<PropTypes> = ({
               />
               <meshStandardMaterial
                 color={
-                  activeFeature?.includes(props.name)
+                  activeFeatureIds?.includes(props.name)
                     ? new Color("black")
                     : hoverCountry == props.name
                     ? new Color("grey")

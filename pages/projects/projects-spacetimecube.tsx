@@ -6,7 +6,7 @@ import type { GetStaticProps, NextPage } from "next";
 import { Box, Card, Heading, Text } from "theme-ui";
 import getCountries from "../../lib/data/getCountries";
 import { SharedPageProps } from "../../types/Props";
-import React, { useState } from "react";
+import { useState } from "react";
 import { group, rollup } from "d3";
 import SpaceTimeCube from "../../components/SpaceTimeCube/SpaceTimeCube";
 import { SpaceTimeCubeEvent } from "../../types/SpaceTimeCubeEvent";
@@ -18,6 +18,7 @@ import getProjectsWithCountries, {
 import getCountryName from "../../lib/getCountryName";
 import Callout from "../../components/Callout/Callout";
 import PageBase from "../../components/PageBase";
+import { HiCursorClick } from "react-icons/hi";
 
 type Props = SharedPageProps & {
   projects: ProjectsWithCountries;
@@ -79,8 +80,8 @@ const ProjectExplorer3D: NextPage<Props> = ({
   return (
     <PageBase title="Projects Space Time Cube">
       <Box as="section" variant="layout.section">
-        <Callout>
-          Select individual country to only see projects for this country. Hover
+        <Callout Icon={HiCursorClick}>
+          Select individual countries to only see projects related to them. Hover
           over the time labels to see all projects for this year.
         </Callout>
         <Box sx={{ width: "100%", height: "600px", position: "relative" }}>
@@ -94,7 +95,7 @@ const ProjectExplorer3D: NextPage<Props> = ({
               topology={neCountriesTopoJson}
               topologyObject="ne_admin_0_countries"
               events={events}
-              activeFeature={selectedCountries}
+              activeFeatureIds={selectedCountries}
               onClickHandler={(featureId?: string) => {
                 selectedCountries
                   ? selectedCountries.push(featureId ?? "")
@@ -145,7 +146,7 @@ const ProjectExplorer3D: NextPage<Props> = ({
               ))
             ) : (
               <Text as="p" sx={{ mt: 2 }}>
-                Click on a country to see details
+                Select a country to see details.
               </Text>
             )}
           </Card>
