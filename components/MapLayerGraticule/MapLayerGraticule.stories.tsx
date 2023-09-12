@@ -8,6 +8,7 @@ import { Bounds } from "../../types/MapOptions";
 import projections, {
   getProjectionNames,
 } from "../../stories/lib/getProjections";
+import { GeoProjection } from "d3-geo";
 
 const meta = {
   title: "Map Layers/MapLayerGraticule",
@@ -42,7 +43,10 @@ const meta = {
     </MapLayout>
   ),
 } satisfies Meta<
-  React.ComponentProps<typeof MapLayerGraticule> & { bounds: Bounds }
+  React.ComponentProps<typeof MapLayerGraticule> & {
+    bounds: Bounds;
+    projection: GeoProjection;
+  }
 >;
 export default meta;
 type Story = StoryObj<typeof meta>;

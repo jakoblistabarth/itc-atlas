@@ -1,16 +1,16 @@
 import { max, min, scaleLinear } from "d3";
-import { FC, useContext } from "react";
+import { FC } from "react";
 import { Vector2 } from "three";
-import { getFlowPoints } from "../MarkFlow/MarkFlow.helpers";
 import { itc_blue, itc_green } from "../../styles/theme";
 import { NeCountriesTopoJson } from "../../types/NeTopoJson";
 import { OdMatrix } from "../../types/OdMatrix";
-import MapLayerBase from "../MapLayerBase";
-import { FlowStyleProps } from "../MarkFlow/";
-import MapLayerFlow, { FlowPointStyleProps } from "../MapLayerFlow";
-import LegendFlow from "../LegendFlow";
 import LabelPoint from "../LabelPoint";
-import { MapLayoutContext } from "../MapLayout/MapLayoutContext";
+import LegendFlow from "../LegendFlow";
+import MapLayerBase from "../MapLayerBase";
+import MapLayerFlow, { FlowPointStyleProps } from "../MapLayerFlow";
+import { useMapLayoutContext } from "../MapLayout/MapLayoutContext";
+import { FlowStyleProps } from "../MarkFlow/";
+import { getFlowPoints } from "../MarkFlow/MarkFlow.helpers";
 
 type Props = {
   neCountriesTopoJson: NeCountriesTopoJson;
@@ -18,7 +18,7 @@ type Props = {
 };
 
 const FlightsFlowMap: FC<Props> = ({ neCountriesTopoJson, odMatrix }) => {
-  const { projection } = useContext(MapLayoutContext);
+  const { projection } = useMapLayoutContext();
 
   const flightsPerRoute = odMatrix.flows.features.map(
     (flow) => flow.properties?.value
@@ -42,9 +42,8 @@ const FlightsFlowMap: FC<Props> = ({ neCountriesTopoJson, odMatrix }) => {
 
   return (
     <>
-      <MapLayerBase countries={neCountriesTopoJson} projection={projection} />
+      <MapLayerBase countries={neCountriesTopoJson} />
       <MapLayerFlow
-        projection={projection}
         data={odMatrix}
         scaleWidth={scaleWidth}
         flowStyle={flowStyle}

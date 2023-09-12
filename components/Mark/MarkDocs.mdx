@@ -1,0 +1,36 @@
+import {
+  ArgTypes,
+  Canvas,
+  Description,
+  Meta,
+  Title,
+  Subtitle,
+} from "@storybook/addon-docs";
+import * as MarkStories from "./Mark.stories";
+import LocationPin from "./LocationPin";
+
+<Meta of={MarkStories} name="Docs" />
+
+<Title />
+<Subtitle />
+<Description />
+
+<ArgTypes />
+
+This component is a generic Mark.
+The component itself does not render anything visible.
+It is useful to position an arbitrary child component based on geographich coordinates.
+Like all `MapElements` it can only be used as a child of `MapLayout`.
+That is why its children need to be `svg` nodes as well.
+
+The indicated coordinates (longitude and latitude) presents the origin (top left) of its child node.
+The origin is indicated by the <svg width="10" height="10" viewBox="-5 -5 10 10"><LocationPin /></svg> in the stories.
+The Mark's child node needs to take care of eventual repositioning (usually centering).
+
+## Non-centered Mark
+
+<Canvas of={MarkStories.DefaultMark} />
+
+## Centered Mark
+
+<Canvas of={MarkStories.RotatedMark} />

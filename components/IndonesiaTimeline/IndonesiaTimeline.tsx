@@ -1,5 +1,7 @@
 /** @jsxImportSource theme-ui */
 
+import { Group } from "@visx/group";
+import { Text } from "@visx/text";
 import {
   ascending,
   range,
@@ -12,34 +14,31 @@ import {
 import { FC, PropsWithChildren, useEffect, useState } from "react";
 import useMeasure from "react-use-measure";
 import { Text as TextTui } from "theme-ui";
-import { Text } from "@visx/text";
-import { Group } from "@visx/group";
+import { Vector2 } from "three";
+import getITCNames from "../../lib/data/getITCNames";
+import getPolicyTopics from "../../lib/data/getPolicyTopics";
+import { ApplicationByYearWithCount } from "../../lib/data/queries/application/getApplicationsByYear";
+import { BtorsByCountry } from "../../lib/data/queries/btors/getBTORsByCountry";
+import { PhdsByYearWithCount } from "../../lib/data/queries/phd/getPhdsByYear";
+import { LabelPlacement } from "../../types/LabelPlacement";
+import { LongTermMission } from "../../types/LongTermMission";
+import { Minister } from "../../types/Minister";
+import { ProjectIndonesia } from "../../types/Project";
 import { TimelineEvent } from "../../types/TimelineEvent";
-import Star from "../Star/Star";
-import NsidedPolygon from "../NsidedPolygon";
-import TimelineGrid from "../Timeline/TimelineGrid";
-import TimelineSeparator from "../Timeline/TimelineSeparator";
-import TimelineHeader from "../Timeline/TimelineHeader";
-import EventPeriod from "../Timeline/EventPeriod";
-import MarkCircle from "../MarkCircle";
 import Building, { ITClocations } from "../Building";
 import LabelPoint from "../LabelPoint";
 import LegendNominal from "../LegendNominal";
-import Tooltip from "../Tooltip/";
-import { TooltipTrigger } from "../Tooltip/TooltipTrigger";
-import TooltipContent from "../Tooltip/TooltipContent";
-import { LabelPlacement } from "../../types/LabelPlacement";
-import TopicPatterns from "./TopicPatterns";
-import { Vector2 } from "three";
-import { ProjectIndonesia } from "../../types/Project";
-import { PhdsByYearWithCount } from "../../lib/data/queries/phd/getPhdsByYear";
-import { ApplicationByYearWithCount } from "../../lib/data/queries/application/getApplicationsByYear";
-import { LongTermMission } from "../../types/LongTermMission";
-import { Minister } from "../../types/Minister";
-import { BtorsByCountry } from "../../lib/data/queries/btors/getBTORsByCountry";
-import getITCNames from "../../lib/data/getITCNames";
-import getPolicyTopics from "../../lib/data/getPolicyTopics";
+import NsidedPolygon from "../NsidedPolygon";
+import Star from "../Star/Star";
 import Timeline from "../Timeline/";
+import EventPeriod from "../Timeline/EventPeriod";
+import TimelineGrid from "../Timeline/TimelineGrid";
+import TimelineHeader from "../Timeline/TimelineHeader";
+import TimelineSeparator from "../Timeline/TimelineSeparator";
+import Tooltip from "../Tooltip/";
+import TooltipContent from "../Tooltip/TooltipContent";
+import { TooltipTrigger } from "../Tooltip/TooltipTrigger";
+import TopicPatterns from "./TopicPatterns";
 
 type Props = PropsWithChildren<{
   applications: ApplicationByYearWithCount;
@@ -306,13 +305,11 @@ const IndonesiaTimeline: FC<Props> = ({
                         stroke={itcGreen}
                         strokeWidth={0.5}
                       />
-                      <MarkCircle
-                        position={new Vector2()}
-                        radius={2}
+                      <circle
+                        r={2}
                         stroke={itcGreen}
                         fill={"white"}
                         fillOpacity={1}
-                        interactive={false}
                       />
                     </EventPeriod>
                   );
@@ -359,17 +356,17 @@ const IndonesiaTimeline: FC<Props> = ({
                           stroke={itcGreen}
                         />
                         <Building
-                          position={new Vector2(0, width / 2 / 2)}
+                          transform={`translate(${0} ${width / 2 / 2})`}
                           color={itcGreen}
                           width={width}
                           location={d}
                         />
-                        <MarkCircle
-                          position={new Vector2(0, width / 2)}
+                        <circle
+                          cy={width / 2 - 0.5}
                           fillOpacity={1}
                           fill={"white"}
                           stroke={itcGreen}
-                          interactive={false}
+                          r={1}
                         />
                         <LabelPoint
                           position={new Vector2(0, width / 2)}

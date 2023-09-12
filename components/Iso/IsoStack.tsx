@@ -1,7 +1,7 @@
 import { FC } from "react";
 import { Appearance } from "../../types/Appearance";
 import type { Position } from "geojson";
-import MarkIso from "./MarkIso";
+import Iso from "./Iso";
 import { range, scaleLinear } from "d3";
 
 type Props = {
@@ -12,26 +12,25 @@ type Props = {
   style?: Appearance;
 };
 
-const MarkIsoStack: FC<Props> = ({ xy, value, side, maxUnits, style }) => {
+const IsoStack: FC<Props> = ({ xy, value, side, maxUnits, style }) => {
   const unitNoScale = scaleLinear().domain([0, 100]).range([0, maxUnits]);
   const unitNo = Math.ceil(unitNoScale(value));
   const unitScale = scaleLinear().domain([0, 10]).range([0, 10]);
   return (
     <g transform={`translate(${xy[0]}, ${xy[1]})`}>
-      <MarkIso
-        scale={unitScale}
+      <Iso
+        scaleHeight={unitScale}
         value={side * unitNo}
-        xy={[0, 0]}
         side={side}
         style={{ strokeWidth: 2 }}
       />
       {range(0, -unitNo, -1).map((no) => {
         return (
-          <MarkIso
+          <Iso
             key={no}
-            scale={unitScale}
+            scaleHeight={unitScale}
             value={side}
-            xy={[0, side * no]}
+            transform={`translate(0 ${side * no})`}
             side={side}
             style={style}
             shadow={false}
@@ -42,4 +41,4 @@ const MarkIsoStack: FC<Props> = ({ xy, value, side, maxUnits, style }) => {
   );
 };
 
-export default MarkIsoStack;
+export default IsoStack;

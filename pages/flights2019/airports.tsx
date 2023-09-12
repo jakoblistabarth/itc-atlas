@@ -21,6 +21,7 @@ import TooltipContent from "../../components/Tooltip/TooltipContent";
 import { fInt } from "../../lib/utilities/formaters";
 import LegendProportionalCircle from "../../components/LegendProportionalCircle";
 import Footer from "../../components/Footer";
+import MapLayoutFluid from "../../components/MapLayout/MapLayoutFluid";
 
 type Props = {
   airports: FeatureCollection<Point, AirportPropertiesWithCount>;
@@ -57,27 +58,23 @@ const Airports: NextPage<Props> = ({ airports, neCountriesTopoJson }) => {
       <Container>
         <main>
           <Heading as="h1">Airports</Heading>
-          <svg width={1020} height={600}>
-            <MapLayerBase
-              countries={neCountriesTopoJson}
-              projection={projection}
-            />
-            {airportsGeo.features.map((airport) => {
-              const coords = projection(airport.geometry.coordinates);
+          <MapLayoutFluid projection={projection}>
+            <MapLayerBase countries={neCountriesTopoJson} />
+            {airportsGeo.features.map(({ geometry, properties }) => {
               return (
-                <Tooltip key={airport.properties.iata_code}>
+                <Tooltip key={properties.iata_code}>
                   <TooltipContent>
-                    <strong>{airport.properties?.["iata_code"]}</strong>
-                    &nbsp;{airport.properties?.name}
+                    <strong>{properties?.["iata_code"]}</strong>
+                    &nbsp;{properties?.name}
                     <br />
-                    {fInt(airport.properties?.value)} flights
-                    (incoming/outgoing)
+                    {fInt(properties?.value)} flights (incoming/outgoing)
                   </TooltipContent>
                   <TooltipTrigger asChild>
                     <g>
                       <MarkCircle
-                        position={new Vector2(coords[0], coords[1])}
-                        radius={scale(airport.properties?.value)}
+                        longitude={geometry.coordinates[0]}
+                        latitude={geometry.coordinates[1]}
+                        radius={scale(properties?.value)}
                         {...defaultTheme.symbol}
                       />
                     </g>
@@ -110,7 +107,7 @@ const Airports: NextPage<Props> = ({ airports, neCountriesTopoJson }) => {
                 showFunction={false}
               />
             </g>
-          </svg>
+          </MapLayoutFluid>
         </main>
       </Container>
 

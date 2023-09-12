@@ -3,7 +3,7 @@ import { Abstract } from "lamina/vanilla";
 import { LayerProps } from "lamina/types";
 import { Node, extend } from "@react-three/fiber";
 
-interface ShaderLayerProps extends LayerProps {
+interface Props extends LayerProps {
   width?: number;
   height?: number;
   zOffset?: number;
@@ -105,7 +105,7 @@ class ShaderLayer extends Abstract {
     }
   `;
 
-  constructor(props?: ShaderLayerProps) {
+  constructor(props?: Props) {
     super(ShaderLayer, {
       name: "ShaderLayer",
       ...props,
@@ -117,16 +117,14 @@ extend({ ShaderLayer });
 
 declare module "@react-three/fiber" {
   interface ThreeElements {
-    customLayer: Node<ShaderLayer, typeof ShaderLayer>;
+    shaderLayer: Node<ShaderLayer, typeof ShaderLayer>;
   }
 }
 
-const ShaderLayerComponent = forwardRef<ShaderLayer, ShaderLayerProps>(
+const ShaderLayerComponent = forwardRef<ShaderLayer, Props>(
   function ShaderLayerComponent(props, ref) {
-    return <customLayer ref={ref} {...props} />;
+    return <shaderLayer ref={ref} {...props} />;
   }
-) as React.ForwardRefExoticComponent<
-  ShaderLayerProps & React.RefAttributes<ShaderLayer>
->;
+);
 
 export default ShaderLayerComponent;

@@ -10,9 +10,9 @@ import { scaleTime } from "d3";
 import { timelineSetup } from "./Timeline.stories.helpers";
 
 type TimelineElements = {
-  points?: React.ComponentProps<typeof EventPoint>[];
-  periods?: React.ComponentProps<typeof EventPeriod>[];
-  grid?: React.ComponentProps<typeof TimelineGrid>;
+  tlPoints?: React.ComponentProps<typeof EventPoint>[];
+  tlPeriods?: React.ComponentProps<typeof EventPeriod>[];
+  tlGrid?: React.ComponentProps<typeof TimelineGrid>;
 };
 
 const meta = {
@@ -24,23 +24,22 @@ const meta = {
       .range([0, 500]),
   },
   argTypes: {
-    points: {
+    tlPoints: {
       table: {
         disable: true,
       },
     },
-    periods: {
+    tlPeriods: {
       table: {
         disable: true,
       },
     },
-    grid: {
+    tlGrid: {
       table: {
         disable: true,
       },
     },
   },
-  tags: ["autodocs"],
   decorators: [
     (Story) => (
       <svg width={timelineSetup.width} height={timelineSetup.height}>
@@ -56,11 +55,11 @@ type Story = StoryObj<typeof meta>;
 const TimelineTemplate: Story = {
   render: (args) => (
     <Timeline {...args}>
-      {args.grid && <TimelineGrid {...args.grid} />}
-      {args.points &&
-        args.points.map((args, idx) => <EventPoint key={idx} {...args} />)}
-      {args.periods &&
-        args.periods.map((args, idx) => <EventPeriod key={idx} {...args} />)}
+      {args.tlGrid && <TimelineGrid {...args.tlGrid} />}
+      {args.tlPoints &&
+        args.tlPoints.map((args, idx) => <EventPoint key={idx} {...args} />)}
+      {args.tlPeriods &&
+        args.tlPeriods.map((args, idx) => <EventPeriod key={idx} {...args} />)}
     </Timeline>
   ),
 };
@@ -68,16 +67,16 @@ const TimelineTemplate: Story = {
 export const Default: Story = {
   ...TimelineTemplate,
   args: {
-    points: [{ ...DefaultEventPoint.args }],
-    periods: [{ ...DefaultEventPeriod.args }],
-    grid: { ...DefaultTimelineGrid.args },
+    tlPoints: [{ ...DefaultEventPoint.args }],
+    tlPeriods: [{ ...DefaultEventPeriod.args }],
+    tlGrid: { ...DefaultTimelineGrid.args },
   },
 };
 
 export const WithScaledItem: Story = {
   ...TimelineTemplate,
   args: {
-    points: [
+    tlPoints: [
       {
         date: new Date("2015"),
         y: timelineSetup.height / 2,
@@ -86,7 +85,7 @@ export const WithScaledItem: Story = {
       },
       { ...ScaledEventPoint.args },
     ],
-    grid: {
+    tlGrid: {
       height: 100,
     },
   },

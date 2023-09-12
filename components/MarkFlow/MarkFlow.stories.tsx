@@ -6,6 +6,7 @@ import type { Feature, LineString } from "geojson";
 
 import MarkFlow from ".";
 import ArrowHead from "../MarkerArrowHead";
+import MapLayout from "../MapLayout";
 
 const width = 600;
 const height = 300;
@@ -31,11 +32,9 @@ const meta = {
   component: MarkFlow,
   argTypes: {
     bend: { control: { type: "range", min: -0.4, max: 0.4, step: 0.01 } },
-    projection: { table: { disable: true } },
   },
   args: {
     strokeWidthScale: scaleLinear().domain([0, 100]).range([0, 10]),
-    projection: projection,
     datum: getLineString(),
     fill: "none",
     stroke: "black",
@@ -51,7 +50,7 @@ const meta = {
   ),
   decorators: [
     (Story) => (
-      <svg width={width} height={height}>
+      <MapLayout bounds={{ width, height }} projection={projection}>
         <path
           d={geoPath(projection)({ type: "Sphere" }) ?? ""}
           stroke={"grey"}
@@ -59,7 +58,7 @@ const meta = {
           fill={"none"}
         />
         <Story />
-      </svg>
+      </MapLayout>
     ),
   ],
 } satisfies Meta<typeof MarkFlow>;

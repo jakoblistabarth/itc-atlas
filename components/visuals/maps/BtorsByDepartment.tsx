@@ -6,17 +6,15 @@ import {
   GeoGeometryObjects,
   geoCentroid,
 } from "d3-geo";
-import { FC, useContext } from "react";
-import { Vector2 } from "three";
+import { FC } from "react";
 import getUnRegions from "../../../lib/data/getUnRegions";
 import { BtorsGroupedByRegionByDepartment } from "../../../lib/data/queries/btors/getBtorsGroupedByRegionByDepartment";
 import { departmentColorScale } from "../../../lib/styles/departmentColorScale";
 import { NeCountriesTopoJson } from "../../../types/NeTopoJson";
-import MapLayerBase from "../../MapLayerBase";
 import LegendNominal from "../../LegendNominal";
-import MarkGeometry from "../../MarkGeometry/MarkGeometry";
-import ScaledPie from "../../ScaledPieChart/ScaledPieChart";
-import { MapLayoutContext } from "../../MapLayout/MapLayoutContext";
+import MapLayerBase from "../../MapLayerBase";
+import MarkGeometry from "../../MarkGeometry";
+import MarkScaledPieChart from "../../MarkScaledPieChart/";
 
 type Props = {
   neCountries: NeCountriesTopoJson;
@@ -53,39 +51,31 @@ const BtorsByDepartment: FC<Props> = ({ btors, countryCodes, neCountries }) => {
     };
   });
 
-  const { projection } = useContext(MapLayoutContext);
-
   return (
     <>
-      <MapLayerBase countries={neCountries} projection={projection} />
+      <MapLayerBase countries={neCountries} />
       <g>
         {regions.map((d) => (
           <MarkGeometry
             key={d.properties?.region}
             feature={d}
-            projection={projection}
             stroke={"black"}
             strokeWidth={0.5}
             fill="transparent"
           />
         ))}
-        {regionsWithData.map((d) => {
-          const coords = projection(d.properties.centroid);
-          const position = coords ? new Vector2(...coords) : undefined;
-          if (!position?.x || !position.y)
-            return <g key={d.properties.region}></g>;
-          return (
-            <ScaledPie
-              key={d.properties.region}
-              position={position}
-              radius={radiusScale(d.properties.sum)}
-              innerRadius={radiusScale(d.properties.sum) / 4}
-              data={d.properties.data ?? []}
-              stroke={"white"}
-              colorScale={departmentColorScale}
-            />
-          );
-        })}
+        {regionsWithData.map((d) => (
+          <MarkScaledPieChart
+            key={d.properties.region}
+            longitude={d.properties.centroid[0]}
+            latitude={d.properties.centroid[1]}
+            radius={radiusScale(d.properties.sum)}
+            innerRadius={radiusScale(d.properties.sum) / 4}
+            data={d.properties.data ?? []}
+            stroke={"white"}
+            colorScale={departmentColorScale}
+          />
+        ))}
       </g>
       <LegendNominal
         title="Departments"

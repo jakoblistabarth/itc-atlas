@@ -69,9 +69,9 @@ export const WithMarkers: Story = {
     roundMarkers: [
       [106.5, -6],
       [110, -7.5],
-    ].map(([lng, lat], i) => ({
-      lng,
-      lat,
+    ].map(([longitude, latitude], i) => ({
+      longitude,
+      latitude,
       label: i.toFixed(),
       fill: "red",
       labelColor: "white",

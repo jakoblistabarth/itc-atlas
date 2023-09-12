@@ -17,7 +17,6 @@ export const departmentColors = {
   [Department.PGM]: "#ffc61e",
   [Department.WRS]: "#f28522",
   [Department.VAR]: "#000000",
-  [Department.VAR]: "#aaaaaa",
   NA: "#ffffff",
 };
 

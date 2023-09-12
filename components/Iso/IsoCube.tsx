@@ -3,7 +3,7 @@ import type { Position } from "geojson";
 import { FC } from "react";
 import { Vector2 } from "three";
 import { Appearance } from "../../types/Appearance";
-import MarkIso from "./MarkIso";
+import Iso from "./Iso";
 
 type Props = {
   xy: Position;
@@ -14,7 +14,7 @@ type Props = {
   silhouette?: boolean;
 };
 
-const MarkIsoCube: FC<Props> = ({
+const IsoCube: FC<Props> = ({
   xy,
   value,
   side,
@@ -33,10 +33,9 @@ const MarkIsoCube: FC<Props> = ({
   let count = 0;
   return (
     <g transform={`translate(${xy[0]}, ${xy[1]})`}>
-      <MarkIso
-        scale={unitScale}
+      <Iso
+        scaleHeight={unitScale}
         value={side * base}
-        xy={[0, 0]}
         side={side * base}
         style={
           silhouette
@@ -57,11 +56,11 @@ const MarkIsoCube: FC<Props> = ({
                 .addScaledVector(c, column);
               return (
                 count++ < unitNo && (
-                  <MarkIso
+                  <Iso
                     key={`${level}-${row}-${column}`}
-                    scale={unitScale}
+                    scaleHeight={unitScale}
                     value={side}
-                    xy={pos.toArray()}
+                    transform={`translate(${pos.toArray().join(" ")})`}
                     side={side}
                     style={style}
                     shadow={false}
@@ -76,4 +75,4 @@ const MarkIsoCube: FC<Props> = ({
   );
 };
 
-export default MarkIsoCube;
+export default IsoCube;

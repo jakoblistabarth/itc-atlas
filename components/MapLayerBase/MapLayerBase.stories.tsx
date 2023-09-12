@@ -5,10 +5,7 @@ import getCountries from "../../lib/data/getCountries";
 import getLakes from "../../lib/data/getLakes";
 import getRivers from "../../lib/data/getRivers";
 import themes from "../../lib/styles/themes";
-import projections, {
-  getProjectionNames,
-} from "../../stories/lib/getProjections";
-import getMapHeight from "../../lib/helpers/getMapHeight";
+import MapLayout from "../MapLayout/MapLayout";
 
 const countries = getCountries();
 const countriesDetailed = getCountries("10m");
@@ -20,7 +17,6 @@ const meta = {
   title: "Map Layers/MapLayerBase",
   component: MapLayerBase,
   args: {
-    projection: geoBertin1953(),
     countries: countries,
   },
   argTypes: {
@@ -36,23 +32,16 @@ const meta = {
         disable: true,
       },
     },
-    projection: {
-      options: getProjectionNames(),
-      mapping: projections,
-      control: {
-        type: "select",
-      },
+  },
+  decorators: [
+    (Story) => {
+      return (
+        <MapLayout bounds={{ width }} projection={geoBertin1953()}>
+          <Story />
+        </MapLayout>
+      );
     },
-  },
-  render: (args) => {
-    const projection = args.projection ?? geoBertin1953();
-    const height = getMapHeight(width, projection);
-    return (
-      <svg width={width} height={height}>
-        <MapLayerBase {...{ ...args, projection }} />
-      </svg>
-    );
-  },
+  ],
 } satisfies Meta<typeof MapLayerBase>;
 export default meta;
 type Story = StoryObj<typeof meta>;

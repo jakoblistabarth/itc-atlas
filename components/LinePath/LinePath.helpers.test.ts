@@ -27,6 +27,6 @@ describe("getFilledSeries", () => {
       2000,
       2006
     );
-    expect(filled.length).toBe(6);
+    expect(filled.length).toBe(7);
   });
 });

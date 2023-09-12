@@ -1,22 +1,21 @@
 import { Country } from "@prisma/client";
-import prisma from "../../prisma/client";
 import * as d3 from "d3";
 import { geoBertin1953 } from "d3-geo-projection";
 import type { Feature, FeatureCollection, Point } from "geojson";
 import type { GetStaticProps, NextPage } from "next";
 import Head from "next/head";
-import { Vector2 } from "three";
-import Footer from "../../components/Footer";
 import { Container, Heading } from "theme-ui";
-import MapLayerBase from "../../components/MapLayerBase";
-import MarkCircle from "../../components/MarkCircle";
+import Footer from "../../components/Footer";
 import LegendProportionalCircle from "../../components/LegendProportionalCircle";
-import getMapHeight from "../../lib/helpers/getMapHeight";
+import MapLayerBase from "../../components/MapLayerBase";
+import MapLayoutFluid from "../../components/MapLayout/MapLayoutFluid";
+import MarkCircle from "../../components/MarkCircle";
 import getCentroidByIsoCode from "../../lib/data/getCentroidByIsoCode";
 import getCountries from "../../lib/data/getCountries";
 import getCountryWithEmployeeCount, {
   CountryWithEmployeeCount,
 } from "../../lib/data/queries/country/getCountryWithEmployeeCount";
+import prisma from "../../prisma/client";
 import { NeCountriesTopoJson } from "../../types/NeTopoJson";
 import { SharedPageProps } from "../../types/Props";
 
@@ -30,13 +29,7 @@ const StaffOrigin: NextPage<Props> = ({
   countryWithEmployeeCount,
   neCountriesTopoJson,
 }) => {
-  const dimension = {
-    width: 1280,
-    height: 0,
-  };
-
-  const projection = geoBertin1953();
-  dimension.height = getMapHeight(dimension.width, projection);
+  const projection: d3.GeoProjection = geoBertin1953();
 
   const points: FeatureCollection<Point> = {
     type: "FeatureCollection",
@@ -71,7 +64,7 @@ const StaffOrigin: NextPage<Props> = ({
   const scale = d3
     .scaleSqrt()
     .domain([min ?? 0, max ?? 100])
-    .range([1, dimension.width / 30]);
+    .range([1, 30]);
 
   return (
     <>
@@ -84,19 +77,16 @@ const StaffOrigin: NextPage<Props> = ({
       <Container>
         <main>
           <Heading as="h1">ITC&apos;s employee origin</Heading>
-          <svg width={dimension.width} height={dimension.height}>
-            <MapLayerBase
-              countries={neCountriesTopoJson}
-              projection={projection}
-            />
+          <MapLayoutFluid projection={projection}>
+            <MapLayerBase countries={neCountriesTopoJson} />
             <g id="symbols">
-              {points.features.map((point, idx) => {
-                const pos = projection(point.geometry.coordinates);
+              {points.features.map(({ properties, geometry }, idx) => {
                 return (
                   <MarkCircle
                     key={idx}
-                    position={new Vector2(pos[0], pos[1])}
-                    radius={scale(point.properties?.employeeCount)}
+                    longitude={geometry.coordinates[0]}
+                    latitude={geometry.coordinates[1]}
+                    radius={scale(properties?.employeeCount)}
                   />
                 );
               })}
@@ -109,7 +99,7 @@ const StaffOrigin: NextPage<Props> = ({
               title={"Staff members per Country"}
               unitLabel={"Staff member"}
             />
-          </svg>
+          </MapLayoutFluid>
         </main>
       </Container>
 

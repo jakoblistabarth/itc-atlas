@@ -147,11 +147,23 @@ const Home: NextPage = () => {
                 </Link>
               ))}
             </div>
+            <Heading as="h2">Playground</Heading>
             <Paragraph sx={{ mt: 3 }} variant="teaser">
-              others
+              for devleopment purposes only
             </Paragraph>
-            <div sx={{ mt: 2 }}>
-              <Link href="/ui">UI Tests</Link>
+            <div
+              sx={{
+                mt: 2,
+                display: "grid",
+                gridTemplateColumns: "repeat(3, 1fr)",
+                gridGap: 2,
+              }}
+            >
+              {["shader-test", "three-test", "maplayoutfluid-test"].map((d) => (
+                <Link key={d} href={`ui/${d}`}>
+                  {d}
+                </Link>
+              ))}
             </div>
           </Box>
         </main>

@@ -1,7 +1,7 @@
 import type { Theme } from "theme-ui";
 
-export const itc_green = "#00877C";
-export const itc_blue = "#002395";
+export const itc_green = "rgb(0, 135, 125)";
+export const itc_blue = "rgb(0,35,150)";
 
 export const theme: Theme = {
   colors: {
@@ -12,8 +12,8 @@ export const theme: Theme = {
     muted: "rgb(235, 255, 255)",
   },
   fonts: {
-    body: '"InterVariable", system-ui, sans-serif',
-    heading: '"FrauncesVariable", serif',
+    body: '"Inter Variable", system-ui, sans-serif',
+    heading: '"Fraunces Variable", serif',
     monospace: "Menlo, monospace",
   },
   fontSizes: [10, 14, 16, 20, 24, 32, 48, 64],

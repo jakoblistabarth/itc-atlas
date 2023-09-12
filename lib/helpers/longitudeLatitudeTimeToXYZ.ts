@@ -10,7 +10,7 @@ import { Vector2, Vector3 } from "three";
  * @param projection A projection
  * @returns A {@link Vector3} holding the Cartesian coordinates of the point.
  */
-const lonLatToXYZ = (
+const longitudeLatitudeTimeToXYZ = (
   coordinates: Vector2,
   dateTime: Date,
   tScale: ScaleTime<number, number>,
@@ -21,4 +21,4 @@ const lonLatToXYZ = (
   return new Vector3(x, y, z);
 };
 
-export default lonLatToXYZ;
+export default longitudeLatitudeTimeToXYZ;

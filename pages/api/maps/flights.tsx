@@ -103,11 +103,9 @@ export default async function handler(
       <MapLayoutBody bounds={mapOptions.bounds}>
         <MapLayerBase
           countries={neCountriesTopoJson}
-          projection={mapOptions.projection}
           theme={mapOptions.theme}
         />
         <MapLayerFlow
-          projection={mapOptions.projection}
           data={odMatrix}
           scaleWidth={scale}
           flowStyle={mapOptions.theme.flow}

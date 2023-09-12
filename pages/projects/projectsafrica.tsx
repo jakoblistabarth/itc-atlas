@@ -1,23 +1,25 @@
+import * as d3 from "d3";
+import { geoSatellite } from "d3-geo-projection";
+import { Feature, FeatureCollection, Point } from "geojson";
 import type { GetStaticProps, NextPage } from "next";
 import Head from "next/head";
-import { geoSatellite } from "d3-geo-projection";
-import * as d3 from "d3";
+import { Container, Heading } from "theme-ui";
 import * as topojson from "topojson-client";
+import Iso from "../../components/Iso";
+import MapLayerBase from "../../components/MapLayerBase";
+import MapLayoutFluid from "../../components/MapLayout/MapLayoutFluid";
+import Mark from "../../components/Mark";
+import MarkGeometry from "../../components/MarkGeometry/MarkGeometry";
+import PatternDot from "../../components/PatternDot";
 import getCountries from "../../lib/data/getCountries";
+import getCountryCodes from "../../lib/data/queries/country/getCountryCodes";
 import getCountryWithProjectCount, {
   CountryWithProjectCount,
 } from "../../lib/data/queries/country/getCountryWithProjectCount";
-import MapLayerBase from "../../components/MapLayerBase";
-import { Container, Heading } from "theme-ui";
-import { FeatureCollection, Feature, Point } from "geojson";
 import themes, { ThemeNames } from "../../lib/styles/themes";
-import ChoroplethSymbol from "../../components/MarkGeometry/MarkGeometry";
-import { MapOptions } from "../../types/MapOptions";
-import PatternDot from "../../components/PatternDot";
-import MarkIso from "../../components/MarkIso";
-import { SharedPageProps } from "../../types/Props";
 import defaultTheme from "../../lib/styles/themes/defaultTheme";
-import getCountryCodes from "../../lib/data/queries/country/getCountryCodes";
+import { MapOptions } from "../../types/MapOptions";
+import { SharedPageProps } from "../../types/Props";
 
 type Props = {
   countriesWithProjectCount: CountryWithProjectCount;
@@ -115,10 +117,8 @@ const ProjectCountries: NextPage<Props> = ({
       <Container>
         <main>
           <Heading as="h1">ITC&apos;s projects in Sub-Saharan Africa</Heading>
-          <svg
-            width={mapOptions.bounds.width}
-            height={mapOptions.bounds.height}
-          >
+          {/* TODO: implement projection transform (not only defining the extent with MapLayout) */}
+          <MapLayoutFluid projection={mapOptions.projection}>
             <defs>
               <PatternDot
                 style={mapOptions.theme.choropleth?.pattern}
@@ -129,41 +129,40 @@ const ProjectCountries: NextPage<Props> = ({
             </defs>
             <MapLayerBase
               countries={neCountriesTopoJson}
-              projection={mapOptions.projection}
               theme={mapOptions.theme}
               labels
             />
             <g className="choroplethLayer">
               {polygons.features.map((feature, idx) => (
-                <ChoroplethSymbol
+                <MarkGeometry
                   key={`${feature.properties.ADM0_A3_NL}-${idx}`}
-                  projection={mapOptions.projection}
                   feature={feature}
                   fill={"url(#Dots)"}
                 />
               ))}
             </g>
             <g className="symbolLayer">
-              {points.features.map((feature, idx) => {
-                const xy = mapOptions.projection(
-                  feature.geometry.coordinates as [number, number]
-                );
-                return (
-                  xy && (
-                    <MarkIso
-                      key={idx}
-                      xy={xy}
-                      scale={scale}
-                      value={feature.properties?.projectCount}
-                      side={5}
-                      style={{ ...mapOptions.theme.symbol, fillOpacity: 1 }}
-                      label={true}
-                    />
-                  )
-                );
-              })}
+              {points.features.map(({ properties, geometry }, idx) => (
+                <Mark
+                  longitude={geometry.coordinates[0]}
+                  latitude={geometry.coordinates[1]}
+                  key={idx}
+                >
+                  <Iso
+                    scaleHeight={scale}
+                    value={properties?.projectCount}
+                    side={5}
+                    style={{
+                      ...mapOptions.theme.symbol,
+                      stroke: "blue",
+                      fillOpacity: 1,
+                    }}
+                    label={true}
+                  />
+                </Mark>
+              ))}
             </g>
-          </svg>
+          </MapLayoutFluid>
         </main>
       </Container>
     </>

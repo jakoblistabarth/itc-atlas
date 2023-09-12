@@ -1,23 +1,27 @@
 import { FC, SVGProps } from "react";
-import { Vector2 } from "three";
 import { Text } from "@visx/text";
+import { useMapLayoutContext } from "../MapLayout/MapLayoutContext";
 
 type Props = {
-  position: Vector2;
+  longitude: number;
+  latitude: number;
   label: string;
   labelColor?: string;
   fontSize?: number;
 } & SVGProps<SVGCircleElement>;
 
 const MarkGlyph: FC<Props> = ({
-  position,
+  longitude,
+  latitude,
   label,
   labelColor = "black",
   fontSize = 10,
   ...rest
 }) => {
+  const { projection } = useMapLayoutContext();
+  const [x, y] = projection([longitude, latitude]) ?? [undefined];
   return (
-    <g transform={`translate(${position.x} ${position.y})`}>
+    <g transform={`translate(${x} ${y})`}>
       <circle {...rest} r={fontSize} />;
       <Text
         fill={labelColor}

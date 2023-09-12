@@ -12,7 +12,7 @@ import { geoCentroid } from "d3-geo";
 import React, { useRef } from "react";
 import { scaleLinear } from "d3";
 import Globe from "../../components/Globe/";
-import lonLatToXYZ from "../../lib/helpers/lonLatToXYZ";
+import longitudeLatitudeToXYZ from "../../lib/helpers/longitudeLatitudeToXYZ";
 import GlobeTexture from "../../components/Globe/GlobeTexture";
 import getCountryCodes from "../../lib/data/queries/country/getCountryCodes";
 import GlobeEnvironment from "../../components/Globe/GlobeEnvironment";
@@ -47,7 +47,7 @@ const ProjectExplorer3D: NextPage<Props> = ({ neCountriesTopoJson }) => {
                   const radius = scaleLinear()
                     .domain([0, 1])
                     .range([0.005, 0.03])(Math.random());
-                  const pos = lonLatToXYZ(
+                  const pos = longitudeLatitudeToXYZ(
                     centroid[0],
                     centroid[1],
                     earthRadius,

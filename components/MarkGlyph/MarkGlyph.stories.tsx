@@ -1,7 +1,8 @@
 import { Meta, StoryObj } from "@storybook/react";
-import { Vector2 } from "three";
 
 import MarkGlyph from ".";
+import MapLayout from "../MapLayout";
+import { geoMercator } from "d3-geo";
 
 const side = 300;
 
@@ -9,16 +10,17 @@ const meta = {
   title: "Map Elements/Marks/MarkGlyph",
   component: MarkGlyph,
   args: {
-    position: new Vector2(side / 2, side / 2),
+    longitude: 0,
+    latitude: 0,
     label: "A",
     fill: "lightgrey",
   },
   argTypes: {},
   decorators: [
     (Story) => (
-      <svg width={side} height={side}>
+      <MapLayout bounds={{ width: side }} projection={geoMercator()}>
         <Story />
-      </svg>
+      </MapLayout>
     ),
   ],
 } satisfies Meta<typeof MarkGlyph>;

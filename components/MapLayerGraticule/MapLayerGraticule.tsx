@@ -1,17 +1,18 @@
-import { geoPath, GeoProjection } from "d3-geo";
-import { FC, useId } from "react";
 import { geoGraticule10 } from "d3";
-import { geoEquator } from "./MapLayerGraticule.helpers";
+import { geoPath } from "d3-geo";
+import { FC, useId } from "react";
 import geoCirclesLat from "../../lib/helpers/geoCirclesLat";
-import { MapTheme } from "../../types/MapTheme";
 import defaultTheme from "../../lib/styles/themes/defaultTheme";
+import { MapTheme } from "../../types/MapTheme";
+import { useMapLayoutContext } from "../MapLayout/MapLayoutContext";
+import { geoEquator } from "./MapLayerGraticule.helpers";
 
 type Props = {
-  projection: GeoProjection;
   theme?: MapTheme;
 };
 
-const MapLayerGraticule: FC<Props> = ({ projection, theme = defaultTheme }) => {
+const MapLayerGraticule: FC<Props> = ({ theme = defaultTheme }) => {
+  const { projection } = useMapLayoutContext();
   const path = geoPath(projection);
   const graticule = geoGraticule10();
   const graticulePath = path(graticule);

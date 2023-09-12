@@ -1,13 +1,13 @@
 import { Meta, StoryObj } from "@storybook/react";
 
-import MarkIsoStack from "./MarkIsoStack";
+import IsoStack from "./IsoStack";
 
 const width = 300;
 const height = 300;
 
 const meta = {
-  title: "Map Elements/Marks/MarkIsoStack",
-  component: MarkIsoStack,
+  title: "Shapes/IsoStack",
+  component: IsoStack,
   args: {
     maxUnits: 10,
     xy: [width / 2, height / 2],
@@ -24,7 +24,7 @@ const meta = {
       </svg>
     ),
   ],
-} satisfies Meta<typeof MarkIsoStack>;
+} satisfies Meta<typeof IsoStack>;
 export default meta;
 type Story = StoryObj<typeof meta>;
 

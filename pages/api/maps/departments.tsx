@@ -2,14 +2,13 @@ import * as d3 from "d3";
 import { geoInterruptedMollweide } from "d3-geo-projection";
 import type { NextApiRequest, NextApiResponse } from "next";
 import ReactDOMServer from "react-dom/server";
-import { Vector2 } from "three";
 import MapLayerBase from "../../../components/MapLayerBase";
 import MapLayout from "../../../components/MapLayout";
 import MapLayoutAside from "../../../components/MapLayout/MapLayoutAside";
 import MapLayoutBody from "../../../components/MapLayout/MapLayoutBody";
 import MapLayoutHeader from "../../../components/MapLayout/MapLayoutHeader";
 import LegendNominal from "../../../components/LegendNominal";
-import ScaledPie from "../../../components/ScaledPieChart/ScaledPieChart";
+import MarkScaledPie from "../../../components/MarkScaledPieChart";
 import { setMapBounds } from "../../../lib/helpers/getMapHeight";
 import getCountries from "../../../lib/data/getCountries";
 import getPhdsByCountryByDepartment from "../../../lib/data/queries/phd/getPhdsByCountryByDepartment";
@@ -89,20 +88,14 @@ export default async function handler(
         theme={theme}
       />
       <MapLayoutBody bounds={mapOptions.bounds}>
-        <MapLayerBase
-          countries={neCountriesTopoJson}
-          projection={mapOptions.projection}
-          theme={theme}
-        />
+        <MapLayerBase countries={neCountriesTopoJson} theme={theme} />
         <g id="symbols">
           {data.map((d) => {
-            const projection = mapOptions.projection;
-            const xy = projection(d.coordinates as [number, number]);
-            const position = xy ? new Vector2(xy[0], xy[1]) : new Vector2();
             return (
-              <ScaledPie
+              <MarkScaledPie
                 key={d.isoAlpha3}
-                position={position}
+                longitude={d.coordinates[0]}
+                latitude={d.coordinates[1]}
                 radius={scale(d.totalCount)}
                 colorScale={departmentColorScale}
                 data={d.departments}

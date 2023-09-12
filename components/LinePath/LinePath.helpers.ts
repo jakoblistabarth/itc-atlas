@@ -1,6 +1,15 @@
 import { range } from "d3";
 import { LinePathDatum } from "./LinePathBase";
 
+/**
+ * Fills all missing values (gaps) in a time series with 0s.
+ * @param data The incomplete series.
+ * @param x Accessor function for the x coordinate.
+ * @param y Accessor function for the y coordinate.
+ * @param minX The (new) beginn date for the filled series.
+ * @param maxX The (new) end date for the filled series (inclusive).
+ * @returns A series without gaps in time.
+ */
 export const getFilledSeries = <
   T extends Record<string, number | string | null | object> = LinePathDatum
 >(

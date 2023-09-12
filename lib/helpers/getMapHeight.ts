@@ -68,9 +68,12 @@ export function setMapBounds(
     const height =
       bounds.height - ((bounds.frame?.top ?? 0) + (bounds.frame?.bottom ?? 0));
     bounds.mapBody = { width, height };
-    projection.fitSize([bounds.mapBody.width, bounds.mapBody.height], {
-      type: "Sphere",
-    });
+    projection.fitSize(
+      [bounds.mapBody.width, bounds.mapBody.height],
+      options?.extent ?? {
+        type: "Sphere",
+      }
+    );
   }
   return projection;
 }

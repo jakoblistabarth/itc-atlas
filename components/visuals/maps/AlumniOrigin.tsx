@@ -1,32 +1,32 @@
 /** @jsxImportSource theme-ui */
 
-import { FC, useContext, useState } from "react";
-import MapLayerBase from "../../MapLayerBase";
-import { MapLayoutContext } from "../../MapLayout/MapLayoutContext";
-import {
-  CountryProperties,
-  NeCountriesTopoJson,
-} from "../../../types/NeTopoJson";
-import Tooltip from "../../Tooltip/";
-import { TooltipTrigger } from "../../Tooltip/TooltipTrigger";
-import MarkCircle from "../../MarkCircle";
-import { Vector2 } from "three";
-import TooltipContent from "../../Tooltip/TooltipContent";
-import LineChart from "../../Timeline/LineChart";
-import LegendProportionalCircle from "../../LegendProportionalCircle";
-import LabelPoint from "../../LabelPoint";
-import { LabelPlacement } from "../../../types/LabelPlacement";
-import { feature } from "topojson-client";
-import useSWR from "swr";
+import { descending, max, scaleSqrt } from "d3";
 import type { Feature, FeatureCollection, Point } from "geojson";
+import { FC, useState } from "react";
+import { MdArrowForward } from "react-icons/md";
+import useSWR from "swr";
+import { Vector2 } from "three";
+import { feature } from "topojson-client";
+import getCentroidByIsoCode from "../../../lib/data/getCentroidByIsoCode";
 import getApplicationsByYear from "../../../lib/data/queries/application/getApplicationsByYear";
 import getCountryWithApplicantCount, {
   CountryWithApplicantCount,
 } from "../../../lib/data/queries/country/getCountryWithApplicantCount";
-import getCentroidByIsoCode from "../../../lib/data/getCentroidByIsoCode";
-import { descending, max, scaleSqrt } from "d3";
-import { MdArrowForward } from "react-icons/md";
+import { LabelPlacement } from "../../../types/LabelPlacement";
+import {
+  CountryProperties,
+  NeCountriesTopoJson,
+} from "../../../types/NeTopoJson";
+import LabelPoint from "../../LabelPoint";
+import LegendProportionalCircle from "../../LegendProportionalCircle";
 import { getFilledSeries } from "../../LinePath/LinePath.helpers";
+import MapLayerBase from "../../MapLayerBase";
+import { useMapLayoutContext } from "../../MapLayout/MapLayoutContext";
+import MarkCircle from "../../MarkCircle";
+import LineChart from "../../Timeline/LineChart";
+import Tooltip from "../../Tooltip/";
+import TooltipContent from "../../Tooltip/TooltipContent";
+import { TooltipTrigger } from "../../Tooltip/TooltipTrigger";
 
 type Props = {
   neCountriesTopoJson: NeCountriesTopoJson;
@@ -39,7 +39,7 @@ const AlumniOrigin: FC<Props> = ({
   level,
   applicants,
 }) => {
-  const { projection, width } = useContext(MapLayoutContext);
+  const { projection, width } = useMapLayoutContext();
 
   const [country, setCountry] = useState<string | null>(null);
 
@@ -119,62 +119,57 @@ const AlumniOrigin: FC<Props> = ({
     .range([0, width / 20]);
   return (
     <>
-      <MapLayerBase countries={neCountriesTopoJson} projection={projection} />
+      <MapLayerBase countries={neCountriesTopoJson} />
       <g id="alumni-countries-symbols">
         {!filteredApplicantsIsLoading &&
-          points.features.map((point, idx) => {
-            const coords = projection(
-              point.geometry.coordinates as [number, number]
-            );
-            const pos = coords ? new Vector2(...coords) : new Vector2();
-            return (
-              <Tooltip key={`tooltip-country-${idx}`}>
-                <TooltipTrigger asChild>
-                  <g>
-                    <MarkCircle
-                      position={pos}
-                      radius={scale(point.properties?.alumniCount)}
-                      fill={"teal"}
-                      stroke={"teal"}
-                      strokeWidth={0.5}
-                      fillOpacity={0.1}
-                      // TODO: check whether moving state back to point symbol improves behaviour (e.g. css transition)
-                      // seems like the transition is only working once the data is fetched by SWR
-                      onMouseEnter={() => {
-                        setCountry(point.properties?.ADM0_A3_NL);
-                      }}
-                      onMouseLeave={() => setCountry(null)}
-                      isActive={country === point.properties?.ADM0_A3_NL}
-                      interactive
-                    />
-                  </g>
-                </TooltipTrigger>
-                {sparklineData && (
-                  <TooltipContent>
-                    <div>
-                      <strong>{point.properties?.NAME_EN}</strong>
-                      <br />
-                      {point.properties?.alumniCount}{" "}
-                      <span sx={{ textDecoration: "underline" }}>{level}</span>{" "}
-                      alumni
-                    </div>
-                    <div>
-                      {sparklineDataFilled && (
-                        <LineChart
-                          data={sparklineDataFilled}
-                          width={100}
-                          height={30}
-                        />
-                      )}
-                    </div>
-                    <p sx={{ color: "grey", m: 0 }}>
-                      All alumni over time <MdArrowForward />
-                    </p>
-                  </TooltipContent>
-                )}
-              </Tooltip>
-            );
-          })}
+          points.features.map(({ properties, geometry }, idx) => (
+            <Tooltip key={`tooltip-country-${idx}`}>
+              <TooltipTrigger asChild>
+                <g>
+                  <MarkCircle
+                    longitude={geometry.coordinates[0]}
+                    latitude={geometry.coordinates[1]}
+                    radius={scale(properties?.alumniCount)}
+                    fill={"teal"}
+                    stroke={"teal"}
+                    strokeWidth={0.5}
+                    fillOpacity={0.1}
+                    // TODO: check whether moving state back to point symbol improves behaviour (e.g. css transition)
+                    // seems like the transition is only working once the data is fetched by SWR
+                    onMouseEnter={() => {
+                      setCountry(properties?.ADM0_A3_NL);
+                    }}
+                    onMouseLeave={() => setCountry(null)}
+                    isActive={country === properties?.ADM0_A3_NL}
+                    interactive
+                  />
+                </g>
+              </TooltipTrigger>
+              {sparklineData && (
+                <TooltipContent>
+                  <div>
+                    <strong>{properties?.NAME_EN}</strong>
+                    <br />
+                    {properties?.alumniCount}{" "}
+                    <span sx={{ textDecoration: "underline" }}>{level}</span>{" "}
+                    alumni
+                  </div>
+                  <div>
+                    {sparklineDataFilled && (
+                      <LineChart
+                        data={sparklineDataFilled}
+                        width={100}
+                        height={30}
+                      />
+                    )}
+                  </div>
+                  <p sx={{ color: "grey", m: 0 }}>
+                    All alumni over time <MdArrowForward />
+                  </p>
+                </TooltipContent>
+              )}
+            </Tooltip>
+          ))}
       </g>
       <g id="alumni-country-labels" pointerEvents={"none"}>
         {!filteredApplicantsIsLoading &&

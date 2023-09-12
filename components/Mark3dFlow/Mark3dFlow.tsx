@@ -1,6 +1,6 @@
 import { FC, useState } from "react";
 import type { Position } from "geojson";
-import lonLatToXYZ from "../../lib/helpers/lonLatToXYZ";
+import longitudeLatitudeToXYZ from "../../lib/helpers/longitudeLatitudeToXYZ";
 import Mark3dSphere from "../Mark3dSphere";
 import { getFlowCurve3D } from "./Mark3dFlow.helpers";
 import { scaleLinear } from "d3";
@@ -15,7 +15,9 @@ const Mark3dFlow: FC<{
 }> = ({ origin, destination, data, value, arcHeight = 0.4 }) => {
   const [hover, setHover] = useState(false);
 
-  const od = [origin, destination].map((pos) => lonLatToXYZ(pos[0], pos[1], 1));
+  const od = [origin, destination].map((pos) =>
+    longitudeLatitudeToXYZ(pos[0], pos[1], 1)
+  );
   const curve = getFlowCurve3D(origin, destination, 1, arcHeight);
   const flowScale = scaleLinear().domain([0, 100]).range([0.001, 0.03]);
   const radius = flowScale(value);

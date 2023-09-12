@@ -1,15 +1,16 @@
-import { FC, SVGProps } from "react";
-import { GeoProjection, geoPath } from "d3-geo";
 import { range } from "d3";
-import { Feature, Polygon, BBox } from "geojson";
+import { geoPath } from "d3-geo";
+import { BBox, Feature, Polygon } from "geojson";
+import { FC, SVGProps } from "react";
+import { useMapLayoutContext } from "../MapLayout/MapLayoutContext";
 
 type Props = {
   bounds: BBox;
-  projection: GeoProjection;
 } & SVGProps<SVGPathElement>;
 
-const MarkBbox: FC<Props> = ({ bounds, projection, ...rest }) => {
+const MarkBbox: FC<Props> = ({ bounds, ...rest }) => {
   const [minLng, maxLat, maxLng, minLat] = bounds;
+  const { projection } = useMapLayoutContext();
 
   const top = [
     [minLng, maxLat],

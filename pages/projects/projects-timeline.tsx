@@ -1,16 +1,15 @@
+import { Project } from "@prisma/client";
 import { ascending, max, min, scalePoint, scaleTime } from "d3";
 import type { NextPage } from "next";
 import Head from "next/head";
-import { Vector2 } from "three";
-import EventPeriod from "../../components/Timeline/EventPeriod";
-import Timeline from "../../components/Timeline";
-import TimelineGrid from "../../components/Timeline/TimelineGrid";
-import Footer from "../../components/Footer";
 import { Container, Heading } from "theme-ui";
+import Footer from "../../components/Footer";
 import LabelPoint from "../../components/LabelPoint";
+import Timeline from "../../components/Timeline";
+import EventPeriod from "../../components/Timeline/EventPeriod";
+import TimelineGrid from "../../components/Timeline/TimelineGrid";
 import getProjects from "../../lib/data/queries/project/getProjects";
 import { LabelPlacement } from "../../types/LabelPlacement";
-import { Project } from "@prisma/client";
 import { TimelineEvent } from "../../types/TimelineEvent";
 
 type projectsTimelineProps = {
@@ -75,7 +74,7 @@ const projectsTimeline: NextPage<projectsTimelineProps> = ({ projects }) => {
           <p>{projectsSelection.length} projects</p>
           <div style={{ overflowX: "scroll", maxHeight: "500px" }}>
             <svg width={wrapper.width} height={wrapper.height}>
-              <Timeline position={new Vector2(margin.left, 0)} xScale={xScale}>
+              <Timeline left={margin.left} xScale={xScale}>
                 <TimelineGrid height={bounds.height} margin={margin.top} />
                 <g id="project-events">
                   {events.map((e, idx) => {

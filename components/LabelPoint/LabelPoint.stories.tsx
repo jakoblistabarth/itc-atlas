@@ -6,6 +6,8 @@ import { LabelPlacement } from "../../types/LabelPlacement";
 
 import MarkCircle from "../MarkCircle";
 import { Vector2 } from "three";
+import MapLayout from "../MapLayout";
+import { geoMercator } from "d3-geo";
 
 const width = 600;
 const height = 300;
@@ -27,14 +29,14 @@ const meta = {
   },
   decorators: [
     (Story) => (
-      <svg width={width} height={height}>
+      <MapLayout bounds={{ width, height }} projection={geoMercator()}>
         <Story />
-      </svg>
+      </MapLayout>
     ),
   ],
   render: ({ children, ...args }) => (
     <>
-      <MarkCircle position={args.position ?? new Vector2(0, 0)} />
+      <MarkCircle latitude={0} longitude={0} />
       <LabelPoint {...args}>{children}</LabelPoint>
     </>
   ),

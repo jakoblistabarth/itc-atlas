@@ -21,7 +21,7 @@ import { SVGLoader } from "three-stdlib";
 import { feature } from "topojson-client";
 import type { Topology } from "topojson-specification";
 import getCentroidByIsoCode from "../../lib/data/getCentroidByIsoCode";
-import lonLatTimeToXYZ from "../../lib/helpers/lonLatTimeToXYZ";
+import longitudeLatitudeTimeToXYZ from "../../lib/helpers/longitudeLatitudeTimeToXYZ";
 import { fDateYear } from "../../lib/utilities/formaters";
 import { SpaceTimeCubeEvent } from "../../types/SpaceTimeCubeEvent";
 import { featureCollectionToSVG } from "../ExtrudedGeometries/ExtrudedGeometries.helpers";
@@ -139,7 +139,12 @@ const SpaceTimeCube: FC<PropTypes> = ({
     () =>
       events.map((e) => ({
         ...e,
-        pos: lonLatTimeToXYZ(e.coordinates, e.dateStart, timeScale, projection),
+        pos: longitudeLatitudeTimeToXYZ(
+          e.coordinates,
+          e.dateStart,
+          timeScale,
+          projection
+        ),
       })),
     [events, projection, timeScale]
   );

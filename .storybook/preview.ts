@@ -2,8 +2,8 @@ import { ThemeProvider } from "theme-ui";
 import { withThemeFromJSXProvider } from "@storybook/addon-styling";
 import { theme } from "../styles/theme";
 import ITCAtlasTheme from "./ITCAtlasTheme";
-import "@fontsource/fraunces/variable.css";
-import "@fontsource/inter/variable.css";
+import "@fontsource-variable/fraunces/full.css";
+import "@fontsource-variable/inter/slnt.css";
 
 export const decorators = [
   //TODO: add switcher for theme-ui color modes
@@ -35,6 +35,7 @@ export const parameters = {
       order: [
         "Intro",
         "Map Elements",
+        ["Marks", "Marks3D", "Labels", "Layouts", "Legends"],
         "Map Layers",
         "Map Types",
         "Annotations",
