@@ -1,25 +1,30 @@
-import { Text3D, Html } from "@react-three/drei";
-import { max, min, scaleTime } from "d3";
+/** @jsxImportSource theme-ui */
+
+import { Html, Text3D } from "@react-three/drei";
+import { group, max, min, scaleTime, union } from "d3";
+import { geoPath } from "d3-geo";
 import { geoBertin1953 } from "d3-geo-projection";
-import React, { FC } from "react";
+import {
+  FeatureCollection,
+  GeoJsonProperties,
+  MultiPolygon,
+  Polygon,
+} from "geojson";
+import React, { FC, useMemo, useState } from "react";
+import {
+  DoubleSide,
+  MeshPhongMaterial,
+  MeshStandardMaterial,
+  Vector3,
+} from "three";
+import { SVGLoader } from "three-stdlib";
+import { feature } from "topojson-client";
+import type { Topology } from "topojson-specification";
+import getCentroidByIsoCode from "../../lib/data/getCentroidByIsoCode";
 import lonLatTimeToXYZ from "../../lib/helpers/lonLatTimeToXYZ";
 import { fDateYear } from "../../lib/utilities/formaters";
 import { SpaceTimeCubeEvent } from "../../types/SpaceTimeCubeEvent";
-import getCentroidByIsoCode from "../../lib/data/getCentroidByIsoCode";
-import type { Topology } from "topojson-specification";
-import { useMemo } from "react";
-import { SVGLoader } from "three-stdlib";
-import { feature } from "topojson-client";
-import {
-  FeatureCollection,
-  Polygon,
-  MultiPolygon,
-  GeoJsonProperties,
-} from "geojson";
 import { featureCollectionToSVG } from "../ExtrudedGeometries/ExtrudedGeometries.helpers";
-import { geoPath, GeoProjection } from "d3-geo";
-import { useEffect, useState } from "react";
-import { Color, DoubleSide, Vector3 } from "three";
 
 type PropTypes = React.PropsWithChildren<{
   events: SpaceTimeCubeEvent[];
@@ -32,6 +37,15 @@ type PropTypes = React.PropsWithChildren<{
   activeFeatureIds?: string[];
 }>;
 
+const teal = new MeshPhongMaterial({ color: "teal" });
+
+const materials = Object.fromEntries(
+  ["teal", "white", "grey", "blue"].map((d) => [
+    d,
+    new MeshStandardMaterial({ color: d, depthWrite: true, side: DoubleSide }),
+  ])
+);
+
 const SpaceTimeCube: FC<PropTypes> = ({
   events,
   topology,
@@ -42,33 +56,94 @@ const SpaceTimeCube: FC<PropTypes> = ({
   side = 10,
   height = 10,
 }) => {
-  const minDate = min(events.map((d) => d.dateStart));
-  const maxDate = max(events.map((d) => d.dateEnd ?? new Date()));
-  const timeScale = scaleTime<number, number>()
-    .domain([minDate ?? new Date("1952"), maxDate ?? new Date()])
-    .range([height / -2, height / 2])
-    .nice();
+  const [hoverCountry, setHover] = useState<string | undefined>(undefined);
+  const [hoverYear, setYear] = useState<string | undefined>(undefined);
 
-  const eventSide = height / timeScale.ticks().length;
-  const fontSize = eventSide / 5;
-  const projection = geoBertin1953().fitExtent(
-    [
-      [-side / 2, -side / 2],
-      [side / 2, side / 2],
-    ],
-    {
-      type: "Sphere",
-    }
-  ) as GeoProjection;
-  const fc = feature(
-    topology,
-    topology.objects[topologyObject]
-  ) as FeatureCollection<MultiPolygon | Polygon, GeoJsonProperties>;
-  const svg = featureCollectionToSVG(fc, geoPath(projection));
+  const timeScale = useMemo(() => {
+    const minDate = min(events.map((d) => d.dateStart));
+    const maxDate = max(events.map((d) => d.dateEnd ?? new Date()));
+    return scaleTime<number, number>()
+      .domain([minDate ?? new Date("1952"), maxDate ?? new Date()])
+      .range([height / -2, height / 2])
+      .nice();
+  }, [events, height]);
 
-  const loader = new SVGLoader();
-  const svgData = loader.parse(svg);
-  const { paths } = svgData;
+  const { eventSide, fontSize, projection } = useMemo(() => {
+    const eventSide = height / timeScale.ticks().length;
+    const fontSize = eventSide / 5;
+    const projection = geoBertin1953().fitExtent(
+      [
+        [-side / 2, -side / 2],
+        [side / 2, side / 2],
+      ],
+      {
+        type: "Sphere",
+      }
+    );
+    return { eventSide, fontSize, projection };
+  }, [height, side, timeScale]);
+
+  const fc = useMemo(
+    () =>
+      feature(topology, topology.objects[topologyObject]) as FeatureCollection<
+        MultiPolygon | Polygon,
+        GeoJsonProperties
+      >,
+    [topology, topologyObject]
+  );
+
+  const paths = useMemo(() => {
+    const svg = featureCollectionToSVG(fc, geoPath(projection));
+    const loader = new SVGLoader();
+    const svgData = loader.parse(svg);
+    const { paths } = svgData;
+    return paths;
+  }, [fc, projection]);
+
+  const countriesWithShapes = useMemo(
+    () =>
+      group(
+        paths.flatMap((p, idx) =>
+          p.toShapes(true).map((shape) => ({
+            shape,
+            fillOpacity: p.userData?.style.fillOpacity,
+            name: fc.features[idx].properties?.ADM0_A3 as string,
+          }))
+        ),
+        (d) => d.name
+      ),
+    [paths, fc.features]
+  );
+
+  const centroids = useMemo(
+    () =>
+      new Map(
+        Array.from(union(fc.features.map((d) => d.properties?.ADM0_A3))).map(
+          (isoCode) => {
+            const centroidLatLon = getCentroidByIsoCode(isoCode);
+            const centroid = projection([
+              centroidLatLon?.x ?? 0,
+              centroidLatLon?.y ?? 0,
+            ]);
+            const position = centroid
+              ? new Vector3(...centroid, -1)
+              : undefined;
+            return [isoCode, position];
+          }
+        )
+      ),
+    [fc, projection]
+  );
+
+  const eventsWithPosition = useMemo(
+    () =>
+      events.map((e) => ({
+        ...e,
+        pos: lonLatTimeToXYZ(e.coordinates, e.dateStart, timeScale, projection),
+      })),
+    [events, projection, timeScale]
+  );
+
   const extrudeGeometryOptions = {
     depth: 0.05,
     bevelSize: 0.005,
@@ -76,50 +151,24 @@ const SpaceTimeCube: FC<PropTypes> = ({
     bevelSegments: 12,
   };
 
-  const [hoverCountry, setHover] = useState<string | undefined>(undefined);
-  const [hoverYear, setYear] = useState<string | undefined>(undefined);
-
-  const shapes = useMemo(
-    () =>
-      paths.flatMap((p, idx) =>
-        p.toShapes(true).map((shape) => ({
-          shape,
-          fillOpacity: p.userData?.style.fillOpacity,
-          name: fc.features[idx].properties?.ADM0_A3,
-        }))
-      ),
-    [paths, fc.features]
-  );
-
   const selectedEvents =
     activeFeatureIds || hoverYear
-      ? events.filter(
+      ? eventsWithPosition.filter(
           (event) =>
             activeFeatureIds?.includes(event.name) ||
             event.dateStart.toDateString() == hoverYear
         )
-      : events;
-
-  useEffect(
-    () => void (document.body.style.cursor = hoverCountry ? `pointer` : `auto`),
-    [hoverCountry]
-  );
-  useEffect(
-    () =>
-      void (document.body.style.cursor = activeFeatureIds ? `pointer` : `auto`),
-    [activeFeatureIds]
-  );
-  useEffect(
-    () => void (document.body.style.cursor = hoverYear ? `pointer` : `auto`),
-    [hoverYear]
-  );
+      : eventsWithPosition;
 
   return (
     <>
-      {timeScale.ticks(25).map((t, idx) => {
-        return (
-          <group key={`${t.getDate()}-${idx}`}>
-            <mesh receiveShadow castShadow position={[side + 0.1, 0, 0]}>
+      <group
+        onPointerEnter={() => (document.body.style.cursor = "pointer")}
+        onPointerLeave={() => (document.body.style.cursor = "auto")}
+      >
+        {timeScale.ticks(25).map((t, idx) => {
+          return (
+            <mesh position={[side + 0.1, 0, 0]} key={`${t.getDate()}-${idx}`}>
               <Text3D
                 onPointerEnter={() => setYear(t.toDateString())}
                 onPointerLeave={() => setYear(undefined)}
@@ -133,86 +182,84 @@ const SpaceTimeCube: FC<PropTypes> = ({
                 bevelThickness={0.005}
                 bevelSize={0.0001}
                 curveSegments={2}
+                material={
+                  hoverYear == t.toDateString()
+                    ? materials.teal
+                    : materials.white
+                }
               >
                 {fDateYear(t)}
-                <meshStandardMaterial
-                  color={hoverYear == t.toDateString() ? "blue" : "white"}
-                />
               </Text3D>
             </mesh>
-          </group>
-        );
-      })}
+          );
+        })}
+      </group>
 
-      {selectedEvents.map((e, idx) => {
-        const pos = lonLatTimeToXYZ(
-          e.coordinates,
-          e.dateStart,
-          timeScale,
-          projection
-        );
-        return (
-          <mesh key={`${e.name}-${idx}`} position={pos}>
-            <boxGeometry
-              args={[(e.size ?? 1) / 200, eventSide / 5, (e.size ?? 1) / 200]}
-            />
-            <meshPhongMaterial color={"teal"} />
-          </mesh>
-        );
-      })}
+      {selectedEvents.map((e, idx) => (
+        <mesh key={`${e.name}-${idx}`} position={e.pos} material={teal}>
+          <boxGeometry
+            args={[(e.size ?? 1) / 200, eventSide / 5, (e.size ?? 1) / 200]}
+          />
+        </mesh>
+      ))}
 
-      <group position-y={height / -2} rotation={[Math.PI / -2, 0, 0]}>
-        {shapes.map((props) => {
-          const centroidLatLong = getCentroidByIsoCode(props.name);
-          const centroid = projection([
-            centroidLatLong?.x ?? 0,
-            centroidLatLong?.y ?? 0,
-          ]);
-          const position = centroid ? new Vector3(...centroid, -1) : undefined;
-
+      <group
+        position-y={height / -2}
+        rotation={[Math.PI / -2, 0, 0]}
+        onPointerEnter={() => (document.body.style.cursor = "pointer")}
+        onPointerLeave={() => (document.body.style.cursor = "auto")}
+      >
+        {Array.from(countriesWithShapes).map(([country, shapes]) => {
+          const position = centroids.get(country);
           return (
-            <mesh
-              key={props.shape.uuid}
+            <group
+              key={country}
               onPointerDown={() => {
-                activeFeatureIds?.includes(props.name)
-                  ? onClickCancel(props.name)
-                  : onClickHandler(props.name);
+                activeFeatureIds?.includes(country)
+                  ? onClickCancel(country)
+                  : onClickHandler(country);
               }}
-              onPointerEnter={() => setHover(props.name)}
+              onPointerEnter={() => setHover(country)}
               onPointerLeave={() => setHover(undefined)}
               rotation={[Math.PI, 0, 0]} // taking into account the origin of svg coordinates in the top left rather than in the center
             >
-              <extrudeGeometry
-                args={[props.shape, { ...extrudeGeometryOptions }]}
-              />
-              <meshStandardMaterial
-                color={
-                  activeFeatureIds?.includes(props.name)
-                    ? new Color("black")
-                    : hoverCountry == props.name
-                    ? new Color("grey")
-                    : new Color("white")
-                }
-                opacity={props.fillOpacity}
-                depthWrite={true}
-                side={DoubleSide}
-                transparent
-              />
-              {hoverCountry == props.name && position && (
+              {shapes.map((shape) => (
+                <mesh
+                  key={shape.shape.uuid}
+                  material={
+                    activeFeatureIds?.includes(country)
+                      ? materials.blue
+                      : hoverCountry == country
+                      ? materials.grey
+                      : materials.white
+                  }
+                >
+                  <extrudeGeometry
+                    args={[shape.shape, { ...extrudeGeometryOptions }]}
+                  />
+                </mesh>
+              ))}
+
+              {hoverCountry == country && position && (
                 <Html
-                  style={{
-                    color: "white",
+                  sx={{
+                    color: "primary",
                     textAlign: "left",
-                    background: "#fcaf17",
+                    background: "background",
+                    boxShadow: 1,
                     padding: "5px 10px",
-                    borderRadius: "5px",
+                    borderRadius: 1,
+                    pointerEvents: "none",
+                    fontWeight: activeFeatureIds?.includes(country)
+                      ? "bold"
+                      : "regular",
                   }}
                   position={position}
                 >
-                  <div>{hoverCountry}</div>
+                  <div>{country}</div>
                 </Html>
               )}
-            </mesh>
+            </group>
           );
         })}
       </group>
