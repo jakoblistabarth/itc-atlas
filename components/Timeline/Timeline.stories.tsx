@@ -40,7 +40,6 @@ const meta = {
       },
     },
   },
-  tags: ["autodocs"],
   decorators: [
     (Story) => (
       <svg width={timelineSetup.width} height={timelineSetup.height}>
