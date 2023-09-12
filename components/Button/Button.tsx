@@ -1,12 +1,17 @@
-import React, { forwardRef } from "react";
+import React, { ComponentPropsWithoutRef, forwardRef } from "react";
+import { Button as ButtonTUI } from "theme-ui";
 
-type Props = React.PropsWithChildren;
+type Props = React.PropsWithChildren & ComponentPropsWithoutRef<"button">;
 
 const Button = forwardRef<HTMLButtonElement, Props>(function Button(
-  { children },
+  { children, ...rest },
   ref
 ) {
-  return <button ref={ref ?? undefined}>{children}</button>;
+  return (
+    <ButtonTUI ref={ref ?? undefined} {...rest}>
+      {children}
+    </ButtonTUI>
+  );
 });
 
 export default Button;

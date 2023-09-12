@@ -19,6 +19,8 @@ import getCountryName from "../../lib/getCountryName";
 import Callout from "../../components/Callout/Callout";
 import PageBase from "../../components/PageBase";
 import { HiCursorClick } from "react-icons/hi";
+import Button from "../../components/Button";
+import { HiXMark } from "react-icons/hi2";
 
 type Props = SharedPageProps & {
   projects: ProjectsWithCountries;
@@ -28,9 +30,9 @@ const ProjectExplorer3D: NextPage<Props> = ({
   neCountriesTopoJson,
   projects,
 }) => {
-  const [selectedCountries, setSelect] = useState<string[] | undefined>(
-    undefined
-  );
+  const [selectedCountries, setSelectedCountries] = useState<
+    string[] | undefined
+  >(undefined);
 
   const projectsSplit = projects
     .map((p) => {
@@ -81,9 +83,15 @@ const ProjectExplorer3D: NextPage<Props> = ({
     <PageBase title="Projects Space Time Cube">
       <Box as="section" variant="layout.section">
         <Callout Icon={HiCursorClick}>
-          Select individual countries to only see projects related to them. Hover
-          over the time labels to see all projects for this year.
+          Select individual countries to only see projects related to them.
+          Hover over the time labels to see all projects for this year.
         </Callout>
+        {selectedCountries && selectedCountries.length > 0 && (
+          <Button onClick={() => setSelectedCountries(undefined)}>
+            <HiXMark />
+            Clear country selection
+          </Button>
+        )}
         <Box sx={{ width: "100%", height: "600px", position: "relative" }}>
           <Canvas
             style={{ background: "white" }}
@@ -99,7 +107,7 @@ const ProjectExplorer3D: NextPage<Props> = ({
               onClickHandler={(featureId?: string) => {
                 selectedCountries
                   ? selectedCountries.push(featureId ?? "")
-                  : setSelect([featureId ?? ""]);
+                  : setSelectedCountries([featureId ?? ""]);
               }}
               onClickCancel={(featureId?: string) => {
                 selectedCountries
@@ -107,7 +115,7 @@ const ProjectExplorer3D: NextPage<Props> = ({
                       selectedCountries.indexOf(featureId ?? ""),
                       1
                     )
-                  : setSelect(undefined);
+                  : setSelectedCountries(undefined);
               }}
             />
             <ambientLight args={[undefined, 0.1]} />
