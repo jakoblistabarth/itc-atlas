@@ -3,11 +3,11 @@
 import { OrbitControls } from "@react-three/drei";
 import { Canvas } from "@react-three/fiber";
 import type { GetStaticProps, NextPage } from "next";
-import { Box, Card, Heading, Text } from "theme-ui";
+import { Box, Card, Heading, Select, Text } from "theme-ui";
 import getCountries from "../../lib/data/getCountries";
 import { SharedPageProps } from "../../types/Props";
-import { useState } from "react";
-import { group, rollup } from "d3";
+import { useMemo, useState } from "react";
+import { group, rollup, max, min, scaleTime } from "d3";
 import SpaceTimeCube from "../../components/SpaceTimeCube/SpaceTimeCube";
 import { SpaceTimeCubeEvent } from "../../types/SpaceTimeCubeEvent";
 import getCentroidByIsoCode from "../../lib/data/getCentroidByIsoCode";
@@ -26,13 +26,14 @@ type Props = SharedPageProps & {
   projects: ProjectsWithCountries;
 };
 
-const ProjectExplorer3D: NextPage<Props> = ({
+const ProjectSpaceTimeCube: NextPage<Props> = ({
   neCountriesTopoJson,
   projects,
 }) => {
-  const [selectedCountries, setSelectedCountries] = useState<
-    string[] | undefined
-  >(undefined);
+  const [selectedCountries, setSelectedCountries] = useState<string[]>([]);
+  const [selectedYear, setSelectedYear] = useState<string | undefined>(
+    undefined
+  );
 
   const projectsSplit = projects
     .map((p) => {
@@ -79,6 +80,16 @@ const ProjectExplorer3D: NextPage<Props> = ({
     }
   );
 
+  const height = 10;
+  const timeScale = useMemo(() => {
+    const minDate = min(events.map((d) => d.dateStart));
+    const maxDate = max(events.map((d) => d.dateEnd ?? new Date()));
+    return scaleTime<number, number>()
+      .domain([minDate ?? new Date("1952"), maxDate ?? new Date()])
+      .range([height / -2, height / 2])
+      .nice();
+  }, [events, height]);
+
   return (
     <PageBase title="Projects Space Time Cube">
       <Box as="section" variant="layout.section">
@@ -86,8 +97,23 @@ const ProjectExplorer3D: NextPage<Props> = ({
           Select individual countries to only see projects related to them.
           Hover over the time labels to see all projects for this year.
         </Callout>
-        {selectedCountries && selectedCountries.length > 0 && (
-          <Button onClick={() => setSelectedCountries(undefined)}>
+        <Box sx={{ display: "flex", gap: "3" }}>
+          <Select
+            onChange={(event) => {
+              setSelectedYear(event.target.value);
+            }}
+          >
+            {timeScale.ticks(30).map((d) => (
+              <option key={d.getTime()}>{d.getFullYear()}</option>
+            ))}
+          </Select>
+          <Button onClick={() => setSelectedYear(undefined)}>
+            <HiXMark />
+          </Button>
+        </Box>
+
+        {selectedCountries.length > 0 && (
+          <Button sx={{ mt: 2 }} onClick={() => setSelectedCountries([])}>
             <HiXMark />
             Clear country selection
           </Button>
@@ -102,27 +128,26 @@ const ProjectExplorer3D: NextPage<Props> = ({
             <SpaceTimeCube
               topology={neCountriesTopoJson}
               topologyObject="ne_admin_0_countries"
+              timeScale={timeScale}
+              height={height}
               events={events}
-              activeFeatureIds={selectedCountries}
-              onClickHandler={(featureId?: string) => {
-                selectedCountries
-                  ? selectedCountries.push(featureId ?? "")
-                  : setSelectedCountries([featureId ?? ""]);
-              }}
-              onClickCancel={(featureId?: string) => {
-                selectedCountries
-                  ? selectedCountries.splice(
-                      selectedCountries.indexOf(featureId ?? ""),
-                      1
-                    )
-                  : setSelectedCountries(undefined);
-              }}
+              selectedFeatureIds={selectedCountries}
+              selectedYear={selectedYear}
+              onPointerDownHandler={(featureId: string) =>
+                setSelectedCountries((previousState) => {
+                  if (previousState.includes(featureId)) {
+                    return [...previousState.filter((d) => d !== featureId)];
+                  } else {
+                    return [...previousState, featureId];
+                  }
+                })
+              }
             />
-            <ambientLight args={[undefined, 0.1]} />
-            <hemisphereLight
-              color="#ffffff"
-              groundColor="#080820"
-              intensity={1.0}
+            <ambientLight args={["white", 1]} />
+            <directionalLight
+              position={[10, 12, 0]}
+              color="white"
+              intensity={2}
             />
             <OrbitControls enableZoom={false} enablePan={false} />
           </Canvas>
@@ -136,21 +161,21 @@ const ProjectExplorer3D: NextPage<Props> = ({
             <Text as="p" sx={{ fontStyle: "italic", fontSize: 0 }}>
               Details
             </Text>
-            {selectedCountries ? (
-              selectedCountries.map((d) => (
-                <>
+            {selectedCountries.length > 0 ? (
+              selectedCountries.map((isoCode) => (
+                <div key={isoCode}>
                   <Heading as="h2">
-                    {getCountryName(d, neCountriesTopoJson)}
+                    {getCountryName(isoCode, neCountriesTopoJson)}
                   </Heading>
                   <Text>
                     {
-                      projects.filter((d1) =>
-                        d1.countries.map((d1) => d1.isoAlpha3).includes(d)
+                      projects.filter((d) =>
+                        d.countries.map((d) => d.isoAlpha3).includes(isoCode)
                       ).length
                     }{" "}
                     Projects
                   </Text>
-                </>
+                </div>
               ))
             ) : (
               <Text as="p" sx={{ mt: 2 }}>
@@ -180,4 +205,4 @@ export const getStaticProps: GetStaticProps<Props> = async () => {
   };
 };
 
-export default ProjectExplorer3D;
+export default ProjectSpaceTimeCube;

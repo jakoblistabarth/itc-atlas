@@ -1,7 +1,7 @@
 /** @jsxImportSource theme-ui */
 
 import { Html, Text3D } from "@react-three/drei";
-import { group, max, min, scaleTime, union } from "d3";
+import { ScaleTime, group, union } from "d3";
 import { geoPath } from "d3-geo";
 import { geoBertin1953 } from "d3-geo-projection";
 import {
@@ -25,6 +25,7 @@ import longitudeLatitudeTimeToXYZ from "../../lib/helpers/longitudeLatitudeTimeT
 import { fDateYear } from "../../lib/utilities/formaters";
 import { SpaceTimeCubeEvent } from "../../types/SpaceTimeCubeEvent";
 import { featureCollectionToSVG } from "../ExtrudedGeometries/ExtrudedGeometries.helpers";
+import PlaneOutline from "../PlaneOutline";
 
 type PropTypes = React.PropsWithChildren<{
   events: SpaceTimeCubeEvent[];
@@ -32,9 +33,10 @@ type PropTypes = React.PropsWithChildren<{
   topologyObject: string;
   side?: number;
   height?: number;
-  onClickHandler: (featureId?: string) => void;
-  onClickCancel: (featureId?: string) => void;
-  activeFeatureIds?: string[];
+  timeScale: ScaleTime<number, number>;
+  onPointerDownHandler: (featureId: string) => void;
+  selectedFeatureIds: string[];
+  selectedYear?: string;
 }>;
 
 const teal = new MeshPhongMaterial({ color: "teal" });
@@ -50,23 +52,16 @@ const SpaceTimeCube: FC<PropTypes> = ({
   events,
   topology,
   topologyObject,
-  activeFeatureIds,
-  onClickHandler,
-  onClickCancel,
+  timeScale,
+  selectedYear,
+  selectedFeatureIds,
+  onPointerDownHandler,
   side = 10,
   height = 10,
 }) => {
-  const [hoverCountry, setHover] = useState<string | undefined>(undefined);
-  const [hoverYear, setYear] = useState<string | undefined>(undefined);
-
-  const timeScale = useMemo(() => {
-    const minDate = min(events.map((d) => d.dateStart));
-    const maxDate = max(events.map((d) => d.dateEnd ?? new Date()));
-    return scaleTime<number, number>()
-      .domain([minDate ?? new Date("1952"), maxDate ?? new Date()])
-      .range([height / -2, height / 2])
-      .nice();
-  }, [events, height]);
+  const [hoveredCountry, setHoveredCountry] = useState<string | undefined>(
+    undefined
+  );
 
   const { eventSide, fontSize, projection } = useMemo(() => {
     const eventSide = height / timeScale.ticks().length;
@@ -157,11 +152,13 @@ const SpaceTimeCube: FC<PropTypes> = ({
   };
 
   const selectedEvents =
-    activeFeatureIds || hoverYear
+    selectedFeatureIds || selectedYear
       ? eventsWithPosition.filter(
           (event) =>
-            activeFeatureIds?.includes(event.name) ||
-            event.dateStart.toDateString() == hoverYear
+            selectedFeatureIds.length === 0 ||
+            selectedFeatureIds.includes(event.name) ||
+            (selectedYear &&
+              event.dateStart.getFullYear().toString() === selectedYear)
         )
       : eventsWithPosition;
 
@@ -171,31 +168,41 @@ const SpaceTimeCube: FC<PropTypes> = ({
         onPointerEnter={() => (document.body.style.cursor = "pointer")}
         onPointerLeave={() => (document.body.style.cursor = "auto")}
       >
-        {timeScale.ticks(25).map((t, idx) => {
+        {timeScale.ticks(10).map((t, idx) => {
+          const isActiveYear =
+            selectedYear && t.getFullYear().toString() === selectedYear;
           return (
-            <mesh position={[side + 0.1, 0, 0]} key={`${t.getDate()}-${idx}`}>
-              <Text3D
-                onPointerEnter={() => setYear(t.toDateString())}
-                onPointerLeave={() => setYear(undefined)}
-                receiveShadow
-                castShadow
-                font={"/fonts/Inter_Regular.json"}
-                position={[-side / 2, timeScale(t) - fontSize / 2, side * 0.52]}
-                size={fontSize}
-                height={fontSize / 50}
-                bevelEnabled
-                bevelThickness={0.005}
-                bevelSize={0.0001}
-                curveSegments={2}
-                material={
-                  hoverYear == t.toDateString()
-                    ? materials.teal
-                    : materials.white
-                }
-              >
-                {fDateYear(t)}
-              </Text3D>
-            </mesh>
+            <group
+              key={`${t.getDate()}-${idx}`}
+              position={[0, timeScale(t), 0]}
+            >
+              <PlaneOutline
+                side={side}
+                color="teal"
+                lineWidth={isActiveYear ? 2 : 0.5}
+              />
+              <mesh>
+                <Text3D
+                  receiveShadow
+                  castShadow
+                  font={"/fonts/Inter_Regular.json"}
+                  position={[side / 2 + 0.5, 0, side * 0.5]}
+                  size={fontSize}
+                  height={fontSize / 50}
+                  bevelEnabled
+                  bevelThickness={0.005}
+                  bevelSize={0.0001}
+                  curveSegments={2}
+                  material={
+                    selectedYear == t.getFullYear.toString()
+                      ? materials.teal
+                      : materials.white
+                  }
+                >
+                  {fDateYear(t)}
+                </Text3D>
+              </mesh>
+            </group>
           );
         })}
       </group>
@@ -208,6 +215,15 @@ const SpaceTimeCube: FC<PropTypes> = ({
         </mesh>
       ))}
 
+      {selectedYear && (
+        <PlaneOutline
+          position-y={timeScale(new Date(selectedYear))}
+          side={side}
+          color="teal"
+          lineWidth={5}
+        />
+      )}
+
       <group
         position-y={height / -2}
         rotation={[Math.PI / -2, 0, 0]}
@@ -219,22 +235,18 @@ const SpaceTimeCube: FC<PropTypes> = ({
           return (
             <group
               key={country}
-              onPointerDown={() => {
-                activeFeatureIds?.includes(country)
-                  ? onClickCancel(country)
-                  : onClickHandler(country);
-              }}
-              onPointerEnter={() => setHover(country)}
-              onPointerLeave={() => setHover(undefined)}
+              onPointerDown={() => onPointerDownHandler(country)}
+              onPointerEnter={() => setHoveredCountry(country)}
+              onPointerLeave={() => setHoveredCountry(undefined)}
               rotation={[Math.PI, 0, 0]} // taking into account the origin of svg coordinates in the top left rather than in the center
             >
               {shapes.map((shape) => (
                 <mesh
                   key={shape.shape.uuid}
                   material={
-                    activeFeatureIds?.includes(country)
+                    selectedFeatureIds?.includes(country)
                       ? materials.blue
-                      : hoverCountry == country
+                      : hoveredCountry == country
                       ? materials.grey
                       : materials.white
                   }
@@ -245,7 +257,7 @@ const SpaceTimeCube: FC<PropTypes> = ({
                 </mesh>
               ))}
 
-              {hoverCountry == country && position && (
+              {hoveredCountry == country && position && (
                 <Html
                   sx={{
                     color: "primary",
@@ -255,7 +267,7 @@ const SpaceTimeCube: FC<PropTypes> = ({
                     padding: "5px 10px",
                     borderRadius: 1,
                     pointerEvents: "none",
-                    fontWeight: activeFeatureIds?.includes(country)
+                    fontWeight: selectedFeatureIds?.includes(country)
                       ? "bold"
                       : "regular",
                   }}

@@ -5,6 +5,7 @@ import getCountries from "../../lib/data/getCountries";
 import SpaceTimeCube from ".";
 import { SpaceTimeCubeEvent } from "../../types/SpaceTimeCubeEvent";
 import { Vector2 } from "three";
+import { scaleTime } from "d3";
 
 const events: SpaceTimeCubeEvent[] = [
   {
@@ -55,6 +56,13 @@ const countries = getCountries();
 const meta = {
   title: "Map types/SpaceTimeCube",
   component: SpaceTimeCube,
+  args: {
+    events,
+    topology: countries,
+    topologyObject: "ne_admin_0_countries",
+    timeScale: scaleTime([new Date("1950"), new Date()], [-5, 5]),
+    selectedFeatureIds: [],
+  },
   argTypes: {
     side: {
       control: { type: "range", min: 0.1, max: 10, step: 0.1 },
@@ -90,10 +98,4 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const DefaultSpaceTimeCube: Story = {
-  args: {
-    events,
-    topology: countries,
-    topologyObject: "ne_admin_0_countries",
-  },
-};
+export const DefaultSpaceTimeCube: Story = {};
