@@ -152,10 +152,9 @@ const SpaceTimeCube: FC<PropTypes> = ({
   };
 
   const selectedEvents =
-    selectedFeatureIds || selectedYear
+    selectedFeatureIds.length != 0 || selectedYear
       ? eventsWithPosition.filter(
           (event) =>
-            selectedFeatureIds.length === 0 ||
             selectedFeatureIds.includes(event.name) ||
             (selectedYear &&
               event.dateStart.getFullYear().toString() === selectedYear)
@@ -168,7 +167,7 @@ const SpaceTimeCube: FC<PropTypes> = ({
         onPointerEnter={() => (document.body.style.cursor = "pointer")}
         onPointerLeave={() => (document.body.style.cursor = "auto")}
       >
-        {timeScale.ticks(10).map((t, idx) => {
+        {timeScale.ticks(30).map((t, idx) => {
           const isActiveYear =
             selectedYear && t.getFullYear().toString() === selectedYear;
           return (
@@ -193,11 +192,7 @@ const SpaceTimeCube: FC<PropTypes> = ({
                   bevelThickness={0.005}
                   bevelSize={0.0001}
                   curveSegments={2}
-                  material={
-                    selectedYear == t.getFullYear.toString()
-                      ? materials.teal
-                      : materials.white
-                  }
+                  material={isActiveYear ? materials.teal : materials.white}
                 >
                   {fDateYear(t)}
                 </Text3D>

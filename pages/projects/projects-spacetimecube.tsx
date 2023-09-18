@@ -95,7 +95,7 @@ const ProjectSpaceTimeCube: NextPage<Props> = ({
       <Box as="section" variant="layout.section">
         <Callout Icon={HiCursorClick}>
           Select individual countries to only see projects related to them.
-          Hover over the time labels to see all projects for this year.
+          Select certain year in the box to see all projects for this year.
         </Callout>
         <Box sx={{ display: "flex", gap: "3" }}>
           <Select
