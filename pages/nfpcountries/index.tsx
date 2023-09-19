@@ -174,7 +174,7 @@ const NfpCountries: NextPage<Props> = ({
             })}
           </Grid>
           <Heading>Development Countries</Heading>
-          <Grid columns={"1fr 1fr 1fr"} gap={"1em 1em"}>
+          <Grid columns={"1fr 1fr 1fr 1fr"} gap={"1em 1em"}>
             {dutchCabinets
               .filter((d) => cabinetsWithBhosData.includes(d.name))
               .map(({ name, dateStart, dateEnd }, idx) => {
@@ -187,8 +187,8 @@ const NfpCountries: NextPage<Props> = ({
 
                 const projection = geoBertin1953();
                 const bounds = {
-                  width: 300,
-                  height: 275,
+                  width: 250,
+                  height: 200,
                 };
                 return (
                   <MapLayout key={idx} bounds={bounds} projection={projection}>
