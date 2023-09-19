@@ -28,7 +28,7 @@ const useBhosCategories = (countries: BhosCountry[]) => {
 
   const colorScale = scaleOrdinal<string, string>()
     .domain(categories)
-    .range(["lightgrey", "gold", "orange", "red", "cornflowerblue"]);
+    .range(["teal", "gold", "orange", "red", "cornflowerblue"]);
 
   const categoryCombinations = bhosCountriesWithCategories.reduce(
     (acc: string[][], d) => {
