@@ -1,6 +1,6 @@
 /** @jsxImportSource theme-ui */
 
-import { FC, Fragment, useMemo, useState } from "react";
+import { FC, useMemo, useState } from "react";
 import { NeCountriesTopoJson } from "../../types/NeTopoJson";
 import BtorsByYear from "./charts/BtorsByYear";
 import { BtorsGroupedByYear } from "../../lib/data/queries/btors/getBtorsGroupedByYear";
@@ -13,7 +13,6 @@ import { feature } from "topojson-client";
 import MarkGeometry from "../MarkGeometry/MarkGeometry";
 import { Feature } from "geojson";
 import { HiCursorClick } from "react-icons/hi";
-import { scaleOrdinal } from "d3";
 import LegendNominal from "../LegendNominal";
 import Callout from "../Callout/Callout";
 import MapLayoutFluid from "../MapLayout/MapLayoutFluid";
@@ -21,6 +20,9 @@ import Tooltip from "../Tooltip/";
 import { TooltipTrigger } from "../Tooltip/TooltipTrigger";
 import TooltipContent from "../Tooltip/TooltipContent";
 import getCountryName from "../../lib/getCountryName";
+import BhosGradientDefs from "./BhosGradientsDefs";
+import useBhosCategories from "./useBhosCategories";
+import { union } from "d3";
 
 type Props = {
   neCountries: NeCountriesTopoJson;
@@ -37,90 +39,26 @@ const BtorsAndCabinets: FC<Props> = ({
   dutchCabinets,
   neCountries,
 }) => {
-  const rutteCabinets = dutchCabinets.filter((d) => /^Rutte/.test(d.name));
-  const [activeCabinet, setActiveCabinet] = useState(rutteCabinets[0].name);
+  const [activeCabinet, setActiveCabinet] = useState(
+    dutchCabinets[dutchCabinets.length - 1].name
+  );
   const [activeCountry, setActiveCountry] = useState<string | undefined>(
     undefined
   );
 
-  const getCategoryKey = (categories: string[]) =>
-    categories.join("-").replaceAll(" ", "");
-
-  const { bhosCountriesWithCategories, categoryCombinations, colorScale } =
-    useMemo(() => {
-      const bhosCountriesWithCategories = bhosCountries.reduce(
-        (acc: BhosCountryWithCategories[], d) => {
-          const match = acc.find(
-            (m) => m.cabinet === d.cabinet && m.isoAlpha3 === d.isoAlpha3
-          );
-          if (!match) {
-            const s = { ...d, categories: [d.category] };
-            return [...acc, s];
-          }
-          match.categories.push(d.category);
-          return acc;
-        },
-        []
-      );
-
-      const categories = bhosCountries.reduce((acc: string[], d) => {
-        if (!acc.includes(d.category)) acc.push(d.category);
-        return acc;
-      }, []);
-
-      const colorScale = scaleOrdinal<string, string>()
-        .domain(categories)
-        .range(["lightgrey", "gold", "orange", "red", "cornflowerblue"]);
-
-      const categoryCombinations = bhosCountriesWithCategories.reduce(
-        (acc: string[][], d) => {
-          return !acc
-            .map((e) => getCategoryKey(e))
-            .includes(getCategoryKey(d.categories))
-            ? [...acc, d.categories]
-            : acc;
-        },
-        []
-      );
-
-      return {
-        bhosCountriesWithCategories,
-        colorScale,
-        categoryCombinations,
-      };
-    }, [bhosCountries]);
-
-  const GradientDefs = () => (
-    <defs>
-      {categoryCombinations.map((d) => {
-        const key = getCategoryKey(d);
-        return (
-          <linearGradient
-            id={key}
-            key={key}
-            gradientUnits="userSpaceOnUse"
-            x2={d.length * 2}
-            spreadMethod="repeat"
-            gradientTransform="rotate(-45)"
-          >
-            {d.map((category, i) => (
-              <Fragment key={`${key}-${category}`}>
-                <stop
-                  offset={(1 / d.length) * i}
-                  stopColor={colorScale(category)}
-                />
-                <stop
-                  offset={(1 / d.length) * (i + 1)}
-                  stopColor={colorScale(category)}
-                />
-              </Fragment>
-            ))}
-          </linearGradient>
-        );
-      })}
-    </defs>
+  const cabinetsWithBhosData = Array.from(
+    union(bhosCountries.map((d) => d.cabinet))
+  );
+  const filteredCabinets = dutchCabinets.filter((d) =>
+    cabinetsWithBhosData.includes(d.name)
   );
 
+  const {
+    bhosCountriesWithCategories,
+    categoryCombinations,
+    colorScale,
+    getCategoryKey,
+  } = useBhosCategories(bhosCountries);
   const projection = geoBertin1953();
 
   const countries = useMemo(
@@ -159,12 +97,26 @@ const BtorsAndCabinets: FC<Props> = ({
           the line chart) to get additional information.
         </Text>
       </Callout>
-      <Flex sx={{ gap: 2, mt: 2, mb: 3 }}>
-        {rutteCabinets.map((d) => (
+      <Flex
+        sx={{
+          flexWrap: "nowrap",
+          whiteSpace: "nowrap",
+          overflowX: "auto",
+          gap: 2,
+          mt: 2,
+          mb: 3,
+          pb: 2,
+          scrollbarWidth: "thin",
+        }}
+      >
+        {filteredCabinets.map((d) => (
           <Button
             variant="muted"
             key={d.name}
             sx={{
+              "&:firstChild": { marginLeft: "auto" },
+              "&:lastChild": { marginRight: "auto" },
+              minWidth: 100,
               borderWidth: 1,
               borderColor: activeCabinet === d.name ? "primary" : "transparent",
               borderStyle: "solid",
@@ -191,7 +143,11 @@ const BtorsAndCabinets: FC<Props> = ({
         />
       </svg>
       <MapLayoutFluid projection={projection}>
-        <GradientDefs />
+        <BhosGradientDefs
+          categoryCombinations={categoryCombinations}
+          getCategoryKey={getCategoryKey}
+          colorScale={colorScale}
+        />
         <MapLayerBase countries={neCountries} />
         {countriesWithCategories.map((d) => {
           const isActiveCountry = activeCountry === d.properties?.isoAlpha3;

@@ -1,7 +1,7 @@
 import type { GetStaticProps, NextPage } from "next";
 import Head from "next/head";
 import Footer from "../../components/Footer";
-import { Container, Heading, Text } from "theme-ui";
+import { Container, Grid, Heading, Text } from "theme-ui";
 import getNfpCountries from "../../lib/data/getNfpCountries";
 import * as d3 from "d3";
 import { geoBertin1953 } from "d3-geo-projection";
@@ -15,12 +15,26 @@ import { feature } from "topojson-client";
 import MarkGeometry from "../../components/MarkGeometry/MarkGeometry";
 import MapLayoutHeader from "../../components/MapLayout/MapLayoutHeader";
 import getCountryCodes from "../../lib/data/queries/country/getCountryCodes";
+import getBhosCountries from "../../lib/data/getBhosCountries";
+import getDutchCabinets from "../../lib/data/getDutchCabinets";
+import { DutchCabinet } from "../../types/DutchCabinet";
+import { BhosCountry } from "../../types/BhosCountry";
+import { union } from "d3";
+import useBhosCategories from "../../components/visuals/useBhosCategories";
+import BhosGradientDefs from "../../components/visuals/BhosGradientsDefs";
 
 type Props = {
   nfps: NfpCountry[];
+  dutchCabinets: DutchCabinet[];
+  bhosCountries: BhosCountry[];
 } & SharedPageProps;
 
-const NfpCountries: NextPage<Props> = ({ nfps, neCountriesTopoJson }) => {
+const NfpCountries: NextPage<Props> = ({
+  nfps,
+  neCountriesTopoJson,
+  dutchCabinets,
+  bhosCountries,
+}) => {
   const width = 900;
   const margin = 20;
   const maxSize = 50;
@@ -44,6 +58,22 @@ const NfpCountries: NextPage<Props> = ({ nfps, neCountriesTopoJson }) => {
 
   const selectedYears = [2000, 2005, 2009, 2013, 2022];
   const selection = selectedYears.map((y) => perYear.get(y));
+
+  const cabinetsWithBhosData = Array.from(
+    union(bhosCountries.map((d) => d.cabinet))
+  );
+
+  const geometries = feature(
+    neCountriesTopoJson,
+    neCountriesTopoJson.objects.ne_admin_0_countries
+  );
+
+  const {
+    colorScale,
+    bhosCountriesWithCategories,
+    getCategoryKey,
+    categoryCombinations,
+  } = useBhosCategories(bhosCountries);
 
   return (
     <>
@@ -106,20 +136,11 @@ const NfpCountries: NextPage<Props> = ({ nfps, neCountriesTopoJson }) => {
             </g>
           </svg>
 
-          <div
-            style={{
-              display: "grid",
-              gridTemplateColumns: "1fr 1fr 1fr",
-              gap: "1em 1em",
-            }}
-          >
+          <Grid columns={"1fr 1fr 1fr"} gap={"1em 1em"}>
             {selection.map((selectedYear, idx) => {
               const nfpCountryCodes = selectedYear?.map((d) => d.countryISO);
-              const polygons = feature(
-                neCountriesTopoJson,
-                neCountriesTopoJson.objects.ne_admin_0_countries
-              ).features.filter((f) =>
-                nfpCountryCodes?.includes(f.properties.ADM0_A3_NL)
+              const foucsCountries = geometries.features.filter(
+                (f) => nfpCountryCodes?.includes(f.properties.ADM0_A3_NL)
               );
 
               const projection = geoBertin1953();
@@ -137,7 +158,7 @@ const NfpCountries: NextPage<Props> = ({ nfps, neCountriesTopoJson }) => {
                   <MapLayoutBody bounds={bounds}>
                     <MapLayerBase countries={neCountriesTopoJson} />
                     <g>
-                      {polygons.map((p, idx) => (
+                      {foucsCountries.map((p, idx) => (
                         <MarkGeometry
                           key={`${p.properties.ADM0_A3}-${idx}`}
                           feature={p}
@@ -149,7 +170,64 @@ const NfpCountries: NextPage<Props> = ({ nfps, neCountriesTopoJson }) => {
                 </MapLayout>
               );
             })}
-          </div>
+          </Grid>
+          <Heading>Development Countries</Heading>
+          <Grid columns={"1fr 1fr 1fr"} gap={"1em 1em"}>
+            {dutchCabinets
+              .filter((d) => cabinetsWithBhosData.includes(d.name))
+              .map(({ name, dateStart, dateEnd }, idx) => {
+                const foucsCountries = geometries.features.filter((f) =>
+                  bhosCountries
+                    .filter((d) => d.cabinet === name)
+                    .map((d) => d.isoAlpha3)
+                    .includes(f.properties.ADM0_A3_NL)
+                );
+
+                const projection = geoBertin1953();
+                const bounds = {
+                  width: 300,
+                  height: 275,
+                };
+                return (
+                  <MapLayout key={idx} bounds={bounds} projection={projection}>
+                    <BhosGradientDefs
+                      categoryCombinations={categoryCombinations}
+                      getCategoryKey={getCategoryKey}
+                      colorScale={colorScale}
+                    />
+                    <MapLayoutHeader
+                      title={name}
+                      subtitle={`${dateStart}–${dateEnd}`}
+                    />
+                    <MapLayoutBody bounds={bounds}>
+                      <MapLayerBase countries={neCountriesTopoJson} />
+                      <g>
+                        {foucsCountries.map((p, idx) => {
+                          const bhosCountry = bhosCountriesWithCategories.find(
+                            (d) =>
+                              d.isoAlpha3 === p.properties.ADM0_A3_NL &&
+                              d.cabinet === name
+                          );
+                          return (
+                            <MarkGeometry
+                              key={`${p.properties.ADM0_A3_NL}-${idx}`}
+                              feature={p}
+                              fill={
+                                bhosCountry?.categories
+                                  ? `url(#${getCategoryKey(
+                                      bhosCountry.categories
+                                    )})`
+                                  : "transparent"
+                              }
+                            />
+                          );
+                        })}
+                      </g>
+                    </MapLayoutBody>
+                  </MapLayout>
+                );
+              })}
+          </Grid>
         </main>
       </Container>
 
@@ -162,11 +240,15 @@ export const getStaticProps: GetStaticProps<Props> = async () => {
   const nfps = await getNfpCountries();
   const neCountriesTopoJson = getCountries();
   const countries = await getCountryCodes();
+  const bhosCountries = await getBhosCountries();
+  const dutchCabinets = await getDutchCabinets();
   return {
     props: {
       nfps,
       neCountriesTopoJson,
       countries,
+      bhosCountries,
+      dutchCabinets,
     },
   };
 };
