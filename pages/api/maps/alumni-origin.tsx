@@ -115,7 +115,11 @@ export default async function handler(
       projection={mapOptions.projection}
       theme={mapOptions.theme}
     >
-      <MapLayoutHeader title={"ITC's alumni"} theme={mapOptions.theme} />
+      <MapLayoutHeader centered>
+        <text dominantBaseline={"hanging"} fontSize={"2em"}>
+          ITC&apos;s alumni
+        </text>
+      </MapLayoutHeader>
       <MapLayoutAside xOffset={0} yOffset={mapOptions.bounds?.frame?.top}>
         <LegendProportionalCircle
           data={data.map((d) => d._count.applicants ?? 0)}

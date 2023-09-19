@@ -150,11 +150,13 @@ const NfpCountries: NextPage<Props> = ({
               };
               return (
                 <MapLayout key={idx} bounds={bounds} projection={projection}>
-                  <MapLayoutHeader
-                    title={
-                      selectedYear ? selectedYear[0]?.year.toString() : " "
-                    }
-                  />
+                  <MapLayoutHeader centered>
+                    {selectedYear && (
+                      <text dominantBaseline={"hanging"}>
+                        {selectedYear[0]?.year.toString()}
+                      </text>
+                    )}
+                  </MapLayoutHeader>
                   <MapLayoutBody bounds={bounds}>
                     <MapLayerBase countries={neCountriesTopoJson} />
                     <g>
@@ -195,10 +197,17 @@ const NfpCountries: NextPage<Props> = ({
                       getCategoryKey={getCategoryKey}
                       colorScale={colorScale}
                     />
-                    <MapLayoutHeader
-                      title={name}
-                      subtitle={`${dateStart}–${dateEnd}`}
-                    />
+                    <MapLayoutHeader>
+                      <text dominantBaseline={"hanging"}>{name}</text>
+                      <text
+                        dominantBaseline={"hanging"}
+                        fontSize={".5em"}
+                        dy={"2em"}
+                      >
+                        {new Date(dateStart).getFullYear()}–
+                        {new Date(dateEnd).getFullYear()}
+                      </text>
+                    </MapLayoutHeader>
                     <MapLayoutBody bounds={bounds}>
                       <MapLayerBase countries={neCountriesTopoJson} />
                       <g>
