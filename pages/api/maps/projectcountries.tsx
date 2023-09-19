@@ -83,7 +83,6 @@ export default async function handler(
       theme={theme}
     >
       <MapLayoutHeader
-        bounds={mapOptions.bounds}
         title={"ITC's global project activity"}
         subtitle={"over 50 years"}
         theme={theme}

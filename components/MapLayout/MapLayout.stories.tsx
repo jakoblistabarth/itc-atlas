@@ -41,10 +41,7 @@ const meta = {
   render: (args) => {
     return (
       <MapLayout {...args}>
-        <MapLayoutHeader
-          bounds={args.bounds}
-          title={"Map title"}
-        ></MapLayoutHeader>
+        <MapLayoutHeader title={"Map title"}></MapLayoutHeader>
         <MapLayoutBody bounds={args.bounds}>
           <MapLayerBase {...args} countries={countries}></MapLayerBase>
         </MapLayoutBody>

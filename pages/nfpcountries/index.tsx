@@ -130,7 +130,6 @@ const NfpCountries: NextPage<Props> = ({ nfps, neCountriesTopoJson }) => {
               return (
                 <MapLayout key={idx} bounds={bounds} projection={projection}>
                   <MapLayoutHeader
-                    bounds={bounds}
                     title={
                       selectedYear ? selectedYear[0]?.year.toString() : " "
                     }

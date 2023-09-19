@@ -1,18 +1,18 @@
 import type { FC } from "react";
 import defaultTheme from "../../lib/styles/themes/defaultTheme";
-import { Bounds } from "../../types/MapOptions";
 import { MapTheme } from "../../types/MapTheme";
+import { useMapLayoutContext } from "./MapLayoutContext";
 
 type Props = {
-  bounds: Bounds;
   title: string;
   theme?: MapTheme;
   subtitle?: string;
 };
 
-const MapLayoutHeader: FC<Props> = ({ bounds, theme, title, subtitle }) => {
+const MapLayoutHeader: FC<Props> = ({ theme, title, subtitle }) => {
+  const { width } = useMapLayoutContext();
   return (
-    <g className="map-header" transform={`translate(${bounds.width / 2})`}>
+    <g className="map-header" transform={`translate(${width / 2})`}>
       <text
         fontFamily={theme?.fontFamily ?? defaultTheme.fontFamily}
         textAnchor="middle"
