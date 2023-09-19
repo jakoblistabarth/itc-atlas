@@ -4,6 +4,7 @@ import { ThemeProvider } from "theme-ui";
 
 import { theme } from "../styles/theme";
 import "@fontsource-variable/fraunces/full.css";
+import "@fontsource-variable/fraunces/full-italic.css";
 import "@fontsource-variable/inter/slnt.css";
 
 const MyApp = ({ Component, pageProps }: AppProps) => (

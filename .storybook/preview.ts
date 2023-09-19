@@ -3,6 +3,7 @@ import { withThemeFromJSXProvider } from "@storybook/addon-styling";
 import { theme } from "../styles/theme";
 import ITCAtlasTheme from "./ITCAtlasTheme";
 import "@fontsource-variable/fraunces/full.css";
+import "@fontsource-variable/fraunces/full-italic.css";
 import "@fontsource-variable/inter/slnt.css";
 
 export const decorators = [
