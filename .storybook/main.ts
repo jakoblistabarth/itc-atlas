@@ -43,9 +43,24 @@ const config: StorybookConfig = {
     );
     fileLoaderRule.exclude = /\.svg$/;
     config.module?.rules?.push({
-      test: /\.svg$/,
-      enforce: "pre",
-      loader: require.resolve("@svgr/webpack"),
+      test: /\.svg$/i,
+      use: {
+        loader: "@svgr/webpack",
+        options: {
+          svgoConfig: {
+            plugins: [
+              {
+                name: "preset-default",
+                params: {
+                  overrides: {
+                    removeViewBox: false,
+                  },
+                },
+              },
+            ],
+          },
+        },
+      },
     });
     return config;
   },
