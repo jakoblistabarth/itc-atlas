@@ -13,12 +13,13 @@ import IconProjects from "../public/images/icon_projects.svg";
 import IconIntroduction from "../public/images/icon_introduction.svg";
 import IconAppendix from "../public/images/icon_appendix.svg";
 import { HiCursorClick } from "react-icons/hi";
+import TextStyleSpec from "../components/TextStyleSpec";
 
-# ITC Atlas Spec Sheet
-
-test {theme.colors.primary}
+# ITC atlas spec sheet
 
 ## Colors
+
+### Main colors
 
 <ColorPalette>
   <ColorItem
@@ -42,23 +43,62 @@ test {theme.colors.primary}
   <ColorItem title="Accent color" colors={{ accent: "rgb(255,230,0)" }} />
 </ColorPalette>
 
+### Color palettes for thematic maps
+
+<ColorPalette>
+  <ColorItem
+    title="Qualitative maps"
+    subtitle=""
+    colors={{
+      yellow: "gold",
+      orange: "orange",
+      red: "red",
+      blue: "cornflowerblue",
+    }}
+  />
+</ColorPalette>
+
 ## Typography
 
-### Headlines
+### Layout
 
-<Typeset
-  fontSizes={theme.fontSizes.slice(-6).reverse()}
-  fontFamily={theme.fonts.heading}
-  sampleText={"ITC Atlas"}
+<TextStyleSpec
+  fontFamily={theme.fonts[theme.text.teaser.fontFamily]}
+  fontSizeScreen={theme.fontSizes[theme.text.teaser.fontSize]}
+  fontSizePrint={18}
+  fontWeight={theme.fontWeights[theme.text.teaser.fontWeight]}
+  fontStyle={theme.text.teaser.fontStyle}
+  sampleText={"This is a teaser that makes you curious to read the text."}
 />
 
-### Teaser
+<TextStyleSpec
+  styleName="Marginalia"
+  fontSizeScreen="10px"
+  fontSizePrint={7}
+  fontFamily="Inter Variable"
+  sampleText="Watch out! This is an important sidenote."
+/>
 
-<Typeset
-  fontSizes={[theme.fontSizes[theme.text.teaser.fontSize]]}
-  fontWeights={[theme.fontWeights[theme.text.teaser.fontWeight]]}
-  fontFamily="Fraunces"
-  sampleText={"ITC Atlas"}
+<TextStyleSpec
+  styleName="KPI (Key Performance Indicator)"
+  fontSizeScreen="40px"
+  fontSizePrint={40}
+  fontFamily="Fraunces Variable"
+  fontWeight="900"
+  fontStyle="italic"
+  sampleText="Here we go"
+/>
+
+### Map Labels
+
+<TextStyleSpec
+  styleName="Country Name"
+  fontSizeScreen="0.5em"
+  fontSizePrint={9}
+  fontFamily="Inter Variable"
+  sampleText="Netherlands"
+  textTransform="uppercase"
+  letterSpacing="0.5em"
 />
 
 ## Iconography
@@ -71,3 +111,10 @@ test {theme.colors.primary}
     <HiCursorClick />
   </IconItem>
 </IconGallery>
+
+## Map elements
+
+### Graticule
+
+The graticule should be present, in particular when a rather unusual projection is used.
+Nevertheless, it is always be in the background – it should not stand out.
