@@ -68,16 +68,16 @@ const meta = {
       return (
         <div style={{ width: "100%", height: "500px" }}>
           <Canvas
-            style={{ background: "black" }}
+            style={{ background: "white" }}
             orthographic
             camera={{ position: [0, 0, 100], zoom: 30 }}
             shadows
           >
-            <ambientLight args={[undefined, 0.1]} />
-            <hemisphereLight
-              color="#ffffff"
-              groundColor="#080820"
-              intensity={1.0}
+            <ambientLight args={[undefined, 2]} />
+            <directionalLight
+              position={[0, 5, 3]}
+              args={["white", 3]}
+              castShadow
             />
             <Story />
             <OrbitControls enablePan={false} />
