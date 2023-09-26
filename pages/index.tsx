@@ -159,7 +159,12 @@ const Home: NextPage = () => {
                 gridGap: 2,
               }}
             >
-              {["shader-test", "three-test", "maplayoutfluid-test"].map((d) => (
+              {[
+                "shader-test",
+                "three-test",
+                "maplayoutfluid-test",
+                "book-test",
+              ].map((d) => (
                 <Link key={d} href={`ui/${d}`}>
                   {d}
                 </Link>

@@ -26,6 +26,9 @@ const Page: NextPage = () => {
             <CardLink href={`${route}/departments`}>
               <Heading as="h2">Per country of origin and department</Heading>
             </CardLink>
+            <CardLink href={`${route}/theses`}>
+              <Heading as="h2">Overview of ITC&apos;s theses</Heading>
+            </CardLink>
           </Grid>
         </main>
       </Container>
