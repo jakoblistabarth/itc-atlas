@@ -1,0 +1,14 @@
+name: Deploy plesk app
+
+on:
+  push:
+    branches: [develop]
+
+jobs:
+  invoke_webhook:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Invoke webhook
+        uses: distributhor/workflow-webhook@v3
+        env:
+          webhook_url: ${{ secrets.PLESK_WEBHOOK_URL }}
