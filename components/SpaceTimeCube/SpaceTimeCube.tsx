@@ -160,9 +160,7 @@ const SpaceTimeCube: FC<PropTypes> = ({
               event.dateStart.getFullYear().toString() === selectedYear)
         )
       : eventsWithPosition;
-  console.log(
-    timeScale.ticks(30).sort((a, b) => b.getFullYear() - a.getFullYear())
-  );
+  
   return (
     <>
       <group
