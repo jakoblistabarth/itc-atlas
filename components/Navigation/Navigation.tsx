@@ -45,10 +45,16 @@ const Navigation: FC = () => {
           }}
         >
           <NavLink href="/introduction">Introduction</NavLink>
-          <NavLink href="/education">Education</NavLink>
-          <NavLink href="/research">Research</NavLink>
+          <NavLink disabled href="/education">
+            Education
+          </NavLink>
+          <NavLink disabled href="/research">
+            Research
+          </NavLink>
           <NavLink href="/projects">Projects</NavLink>
-          <NavLink href="/appendix">Appendix</NavLink>
+          <NavLink disabled href="/appendix">
+            Appendix
+          </NavLink>
         </Box>
       </nav>
     </Container>

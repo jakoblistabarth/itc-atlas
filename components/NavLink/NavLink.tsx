@@ -6,16 +6,22 @@ import { useRouter } from "next/router";
 
 type Props = React.PropsWithChildren<{
   href: string;
-  description?: string;
+  disabled?: boolean;
 }>;
 
-const NavLink: FC<Props> = ({ href, children }) => {
+const NavLink: FC<Props> = ({ href, children, disabled = false }) => {
   const { pathname } = useRouter();
   const isActive = pathname.startsWith(href);
   return (
     <Link
       href={href}
-      sx={{ variant: "styles.a", fontWeight: isActive ? "bold" : "regular" }}
+      onClick={disabled ? (e) => e.preventDefault() : undefined}
+      sx={{
+        variant: "styles.a",
+        fontWeight: isActive ? "bold" : "regular",
+        cursor: disabled ? "not-allowed" : "pointer",
+        opacity: disabled ? 0.5 : 1,
+      }}
     >
       {children}
     </Link>
