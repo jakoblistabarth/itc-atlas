@@ -147,6 +147,8 @@ const Home: NextPage = () => {
                 </Link>
               ))}
             </div>
+          </Box>
+          <Box as="section" variant="layout.section">
             <Heading as="h2">Playground</Heading>
             <Paragraph sx={{ mt: 3 }} variant="teaser">
               for devleopment purposes only
@@ -165,7 +167,7 @@ const Home: NextPage = () => {
                 "maplayoutfluid-test",
                 "book-test",
               ].map((d) => (
-                <Link key={d} href={`ui/${d}`}>
+                <Link key={d} href={`playground/${d}`}>
                   {d}
                 </Link>
               ))}
