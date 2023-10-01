@@ -1,0 +1,21 @@
+import {
+  ArgTypes,
+  Canvas,
+  Description,
+  Meta,
+  Title,
+  Subtitle,
+} from "@storybook/addon-docs";
+import * as PrismMapStories from "./PrismMap.stories";
+
+<Meta of={PrismMapStories} name="Docs" />
+
+<Title />
+<Subtitle />
+<Description />
+
+<ArgTypes />
+
+## Prism map with varying colors and extrusion
+
+<Canvas of={PrismMapStories.PrismMapWithExtrusionAndColor} />

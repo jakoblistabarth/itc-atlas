@@ -59,7 +59,7 @@ const meta = {
             camera={{ position: [0, 0, 50], zoom: 25 }}
             shadows
           >
-            <axesHelper />
+            <axesHelper scale={10} />
             <ambientLight args={[undefined, 0.1]} />
             <hemisphereLight
               color="#ffffff"

@@ -2,7 +2,7 @@ import * as d3 from "d3";
 import { union } from "d3";
 import { geoBertin1953 } from "d3-geo-projection";
 import type { GetStaticProps, NextPage } from "next";
-import { Grid, Heading, Paragraph, Text } from "theme-ui";
+import { Box, Grid, Heading, Paragraph, Text } from "theme-ui";
 import { feature } from "topojson-client";
 import MapLayerBase from "../../components/MapLayerBase";
 import MapLayout from "../../components/MapLayout";
@@ -21,6 +21,7 @@ import { BhosCountry } from "../../types/BhosCountry";
 import { DutchCabinet } from "../../types/DutchCabinet";
 import { NfpCountry } from "../../types/NfpCountry";
 import { SharedPageProps } from "../../types/Props";
+import PoliciesPrismMap from "../../components/PoliciesPrismMap";
 
 type Props = {
   nfps: NfpCountry[];
@@ -136,6 +137,12 @@ const NfpCountries: NextPage<Props> = ({
           </g>
         </svg>
 
+        <Box variant="layout.canvasStage">
+          <PoliciesPrismMap
+            topology={neCountriesTopoJson}
+            bhosCountries={bhosCountries}
+          />
+        </Box>
         <Paragraph>
           If all of this comes off as mixed-up to you, that&apos;s because it
           is! Quick: do you have a infinitely reconfigurable scheme for coping
@@ -200,7 +207,9 @@ const NfpCountries: NextPage<Props> = ({
           })}
         </Grid>
 
-        <Heading sx={{ mt: 5 }}>Development Countries</Heading>
+        <Heading sx={{ mt: 5 }}>
+          Focus countries of Dutch development policies
+        </Heading>
         <Grid columns={"1fr 1fr 1fr 1fr"} gap={"1em 1em"}>
           {dutchCabinets
             .filter((d) => cabinetsWithBhosData.includes(d.name))

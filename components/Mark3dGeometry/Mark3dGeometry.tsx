@@ -18,13 +18,14 @@ const Mark3dGeometry: FC<{
     <mesh
       onPointerEnter={() => setHover(true)}
       onPointerLeave={() => setHover(false)}
-      rotation={[Math.PI, 0, 0]} // taking into account the origin of svg coordinates in the top left rather than in the center
+      castShadow
+      receiveShadow
+      scale-y={-1} // taking into account the origin of svg coordinates in the top left rather than in the center
     >
       <extrudeGeometry args={[shape, { ...extrudeGeometryOptions }]} />
       <meshStandardMaterial
         color={hover ? new Color("grey") : new Color(color)}
         opacity={fillOpacity}
-        depthWrite={true}
         side={DoubleSide}
         transparent
       />

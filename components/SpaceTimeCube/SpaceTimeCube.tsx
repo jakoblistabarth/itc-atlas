@@ -6,7 +6,7 @@ import longitudeLatitudeTimeToXYZ from "../../lib/helpers/longitudeLatitudeTimeT
 import { fDateYear } from "../../lib/utilities/formaters";
 import { SpaceTimeCubeEvent } from "../../types/SpaceTimeCubeEvent";
 import type { Topology } from "topojson-specification";
-import PolygonMap3D from "../ExtrudedGeometries/ExtrudedGeometries";
+import PrismMap from "../PrismMap";
 
 type PropTypes = React.PropsWithChildren<{
   events: SpaceTimeCubeEvent[];
@@ -94,11 +94,11 @@ const SpaceTimeCube: FC<PropTypes> = ({
         );
       })}
       <group position-y={height / -2}>
-        <PolygonMap3D
+        <PrismMap
           topology={topology}
           topologyObject={topologyObject}
           width={side}
-          height={side}
+          length={side}
           projection={projection}
           color={"white"}
           extrudeGeometryOptions={{
