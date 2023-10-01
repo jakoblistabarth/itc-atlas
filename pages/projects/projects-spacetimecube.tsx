@@ -85,7 +85,7 @@ const ProjectSpaceTimeCube: NextPage<Props> = ({
     const minDate = min(events.map((d) => d.dateStart));
     const maxDate = max(events.map((d) => d.dateEnd ?? new Date()));
     return scaleTime<number, number>()
-      .domain([minDate ?? new Date("1952"), maxDate ?? new Date()])
+      .domain([maxDate ?? new Date(), minDate ?? new Date("1952")])
       .range([height / -2, height / 2])
       .nice();
   }, [events, height]);

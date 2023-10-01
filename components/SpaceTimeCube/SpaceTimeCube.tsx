@@ -160,19 +160,16 @@ const SpaceTimeCube: FC<PropTypes> = ({
               event.dateStart.getFullYear().toString() === selectedYear)
         )
       : eventsWithPosition;
-
+  console.log(
+    timeScale.ticks(30).sort((a, b) => b.getFullYear() - a.getFullYear())
+  );
   return (
     <>
       <group
         onPointerEnter={() => (document.body.style.cursor = "pointer")}
         onPointerLeave={() => (document.body.style.cursor = "auto")}
       >
-        {timeScale
-              .ticks(30)
-              .sort((a, b) => descending(a.getFullYear(), b.getFullYear()))
-              .map((d) => (
-                <option key={d.getTime()}>{d.getFullYear()}</option>
-         ))}
+        {timeScale.ticks(30).map((t, idx) => {
           const isActiveYear =
             selectedYear && t.getFullYear().toString() === selectedYear;
           return (
