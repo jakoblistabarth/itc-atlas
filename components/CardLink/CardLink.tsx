@@ -8,11 +8,25 @@ import { Card, Text } from "theme-ui";
 type Props = React.PropsWithChildren<{
   href: string;
   buttonText?: string;
+  disabled?: boolean;
 }>;
 
-const CardLink: FC<Props> = ({ href, buttonText = "more", children }) => {
+const CardLink: FC<Props> = ({
+  href,
+  buttonText = "more",
+  disabled = false,
+  children,
+}) => {
   return (
-    <Link href={href} sx={{ variant: "styles.a" }}>
+    <Link
+      onClick={disabled ? (e) => e.preventDefault() : undefined}
+      href={href}
+      sx={{
+        variant: "styles.a",
+        cursor: disabled ? "not-allowed" : "pointer",
+        opacity: disabled ? 0.5 : 1,
+      }}
+    >
       <Card
         sx={{
           "&:hover": {
