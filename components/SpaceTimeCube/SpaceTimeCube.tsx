@@ -100,7 +100,7 @@ const SpaceTimeCube: FC<PropTypes> = ({
           width={side}
           length={side}
           projection={projection}
-          color={"white"}
+          defaultColor={"white"}
           extrudeGeometryOptions={{
             depth: 0.05,
             bevelSize: 0.005,
