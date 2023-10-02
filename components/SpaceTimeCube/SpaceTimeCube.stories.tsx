@@ -55,6 +55,11 @@ const countries = getCountries();
 const meta = {
   title: "Map types/SpaceTimeCube",
   component: SpaceTimeCube,
+  parameters: {
+    status: {
+      type: "beta",
+    },
+  },
   argTypes: {
     side: {
       control: { type: "range", min: 0.1, max: 10, step: 0.1 },

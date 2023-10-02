@@ -16,6 +16,11 @@ const projection = geoRobinson()
 const meta = {
   title: "Map Elements/Labels/LabelArea",
   component: LabelArea,
+  parameters: {
+    status: {
+      type: "beta",
+    },
+  },
   args: {
     children: "Label Text",
     graticuleType: "lon",

@@ -8,6 +8,11 @@ const height = 300;
 const meta = {
   title: "Shapes/IsoCube",
   component: IsoCube,
+  parameters: {
+    status: {
+      type: "beta",
+    },
+  },
   args: {
     xy: [width / 2, height / 2],
     side: 20,

@@ -22,6 +22,7 @@
   },
   "dependencies": {
     "@emotion/react": "^11.11.1",
+    "@etchteam/storybook-addon-status": "^4.2.4",
     "@floating-ui/react": "^0.25.4",
     "@floating-ui/react-dom": "^2.0.2",
     "@fontsource-variable/fraunces": "^5.0.13",

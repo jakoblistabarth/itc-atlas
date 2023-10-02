@@ -74,7 +74,6 @@ type Story = StoryObj<typeof meta>;
 
 export const DefaultPrismMap: Story = {};
 export const PrismMapWithExtrusionAndColor: Story = {
-  tags: ["wip"], //TODO: add this tag to sidebar?
   args: {
     projection: geoBaker(),
     colorScale: scaleOrdinal<string, string, string>()

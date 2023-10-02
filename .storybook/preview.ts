@@ -25,6 +25,20 @@ export const parameters = {
       date: /Date$/,
     },
   },
+  status: {
+    statuses: {
+      beta: {
+        background: "#ff3438",
+        color: "#680002",
+        description: "This component is still work in progress",
+      },
+      stable: {
+        background: "#d7ff80",
+        color: "#58830f",
+        description: "This component is stable",
+      },
+    },
+  },
   docs: {
     theme: ITCAtlasTheme,
     source: {

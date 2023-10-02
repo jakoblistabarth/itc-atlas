@@ -15,12 +15,6 @@ const config: StorybookConfig = {
     "@storybook/addon-interactions",
     "@storybook/addon-styling",
     {
-      name: "storybook-addon-swc",
-      options: {
-        enableSwcMinify: false,
-      },
-    },
-    {
       name: "@storybook/addon-docs",
       options: {
         mdxPluginOptions: {
@@ -30,6 +24,13 @@ const config: StorybookConfig = {
         },
       },
     },
+    {
+      name: "storybook-addon-swc",
+      options: {
+        enableSwcMinify: false,
+      },
+    },
+    "@etchteam/storybook-addon-status",
   ],
   staticDirs: ["../public", "../data/topographic"],
   framework: {
