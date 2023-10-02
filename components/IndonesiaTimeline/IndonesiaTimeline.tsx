@@ -247,7 +247,7 @@ const IndonesiaTimeline: FC<Props> = ({
       width={"100%"}
       height={"100%"}
       fontSize="6"
-      fontFamily="Inter"
+      fontFamily="Inter Variable"
       viewBox={`0 0 ${width} ${height}`}
     >
       <Timeline xScale={xScale}>
@@ -374,7 +374,10 @@ const IndonesiaTimeline: FC<Props> = ({
                           fill={itcGreen}
                           fontSize={9}
                         >
-                          <tspan fontWeight={"bold"} fontFamily={"Fraunces"}>
+                          <tspan
+                            fontWeight={"bold"}
+                            fontFamily={"Fraunces Variable"}
+                          >
                             {d}
                           </tspan>
                           <tspan x="0" dy="10">

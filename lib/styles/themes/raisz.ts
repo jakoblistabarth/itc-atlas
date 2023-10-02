@@ -20,7 +20,7 @@ const raisz: MapTheme = {
     strokeWidth: 0.5,
   },
   graticuleLabel: {
-    fontFamily: "Fraunces",
+    fontFamily: "Fraunces Variable",
     fontWeight: "bold",
     fontStyle: "italic",
   },
@@ -52,7 +52,7 @@ const raisz: MapTheme = {
     strokeWidth: 1,
   },
   label: {
-    fontFamily: "Fraunces",
+    fontFamily: "Fraunces Variable",
     fontSize: 8,
   },
 };

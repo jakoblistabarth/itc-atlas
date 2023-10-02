@@ -5,7 +5,7 @@ const TimelineHeader: FC<PropsWithChildren<SVGProps<SVGTextElement>>> = ({
   ...rest
 }) => {
   return (
-    <text fontFamily={rest.fontFamily ?? "Fraunces"} {...rest}>
+    <text fontFamily={rest.fontFamily ?? "Fraunces Variable"} {...rest}>
       {children}
     </text>
   );

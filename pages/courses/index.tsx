@@ -233,7 +233,7 @@ const CourseGenealogyPage: NextPage<Props> = ({ courseGenealogy }) => {
                             position={sourcePos}
                             placement={LabelPlacement.LEFT}
                             fontSize={6}
-                            fontFamily={"Fraunces"}
+                            fontFamily={"Fraunces Variable"}
                             fill={"black"}
                             stroke={"white"}
                             strokeWidth={2}

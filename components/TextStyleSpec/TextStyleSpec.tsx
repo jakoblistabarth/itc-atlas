@@ -41,7 +41,7 @@ const TextStyleSpec: FC<Props> = ({
   fontSizeScreen,
   fontSizePrint,
   fontFamily,
-  fontStyle = "regular",
+  fontStyle = "normal",
   fontWeight = "normal",
   textTransform,
   letterSpacing,

@@ -30,7 +30,7 @@ const Home: NextPage = () => {
         >
           <Text
             sx={{
-              fontFamily: "Fraunces",
+              fontFamily: "Fraunces Variable",
               fontStyle: "italic",
               color: "background",
               fontSize: [2, 7],

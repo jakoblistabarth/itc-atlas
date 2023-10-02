@@ -36,7 +36,7 @@ const TimelineGrid: FC<Props> = ({ height, margin = 0 }) => {
           <LabelPoint
             position={new Vector2(xScale(tick), height)}
             placement={LabelPlacement.TOP}
-            fontFamily={"Inter"}
+            fontFamily={"Inter Variable"}
             fontSize={6}
           >
             {fDateYear(tick)}

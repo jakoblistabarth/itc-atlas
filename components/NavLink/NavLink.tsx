@@ -18,7 +18,7 @@ const NavLink: FC<Props> = ({ href, children, disabled = false }) => {
       onClick={disabled ? (e) => e.preventDefault() : undefined}
       sx={{
         variant: "styles.a",
-        fontWeight: isActive ? "bold" : "regular",
+        fontWeight: isActive ? "bold" : "normal",
         cursor: disabled ? "not-allowed" : "pointer",
         opacity: disabled ? 0.5 : 1,
       }}
