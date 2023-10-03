@@ -59,8 +59,8 @@ const Home: NextPage = () => {
       description: "ITC's PhDs and PhD candidates.",
     },
     {
-      href: "/nfpcountries",
-      children: "NFP Countries",
+      href: "/development-policies",
+      children: "Development Policies",
       description: "Policy changes over time.",
     },
   ];
