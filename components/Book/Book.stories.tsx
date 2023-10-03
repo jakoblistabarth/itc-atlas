@@ -2,7 +2,13 @@ import { Meta, StoryObj } from "@storybook/react";
 import { Canvas } from "@react-three/fiber";
 
 import Book from ".";
-import { Environment, OrbitControls } from "@react-three/drei";
+import {
+  AccumulativeShadows,
+  Center,
+  Environment,
+  OrbitControls,
+  RandomizedLight,
+} from "@react-three/drei";
 
 const meta = {
   title: "Shapes/Book",
@@ -18,10 +24,16 @@ const meta = {
   decorators: [
     (Story) => (
       <div style={{ width: "100%", height: "500px" }}>
-        <Canvas shadows orthographic camera={{ zoom: 500 }}>
+        <Canvas
+          shadows
+          orthographic
+          camera={{ zoom: 500, position: [3, 3, -3] }}
+        >
           <OrbitControls makeDefault />
           <Environment preset="apartment" />
-          <Story />
+          <group position={[0, 0.02, 0]}>
+            <Story />
+          </group>
         </Canvas>
       </div>
     ),

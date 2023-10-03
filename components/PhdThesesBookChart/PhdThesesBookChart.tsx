@@ -1,4 +1,4 @@
-import { FC } from "react";
+import { FC, useState } from "react";
 import { PhdTheses } from "../../lib/data/queries/phd/getPhdTheses";
 import { Canvas } from "@react-three/fiber";
 import Book from "../Book";
@@ -19,6 +19,10 @@ type Props = {
 };
 
 const PhdThesesBookChart: FC<Props> = ({ thesesByYear, colorScale }) => {
+  const [hoverInfo, setHoverInfo] = useState<PhdTheses[number] | undefined>(
+    undefined
+  );
+  console.log({ hoverInfo });
   const [min, max] = extent(Array.from(thesesByYear.keys()));
   const [start, end] = [min ?? 0, max ? max + 1 : 1];
   const spiralPoints = getSpiralPoints(end + 1 - start, 3, Math.PI * 2 * 2);
@@ -48,6 +52,7 @@ const PhdThesesBookChart: FC<Props> = ({ thesesByYear, colorScale }) => {
                 rotation={roatation}
                 theses={thesesByYear.get(year) ?? []}
                 colorScale={colorScale}
+                handleBookClick={(thesis) => setHoverInfo(thesis)}
               />
             ) : (
               <Empty position={position} rotation={roatation} />
@@ -55,7 +60,7 @@ const PhdThesesBookChart: FC<Props> = ({ thesesByYear, colorScale }) => {
           })}
         </group>
         <Environment preset="apartment" />
-        <AccumulativeShadows opacity={0.3} scale={30} resolution={1024 * 2 * 2}>
+        <AccumulativeShadows opacity={0.3} resolution={1024 * 2 * 2}>
           <RandomizedLight
             ambient={0.65}
             size={10}
@@ -72,9 +77,15 @@ const PhdThesesBookChart: FC<Props> = ({ thesesByYear, colorScale }) => {
 type BookStackProps = {
   theses: PhdTheses;
   colorScale: ScaleOrdinal<string, string, string>;
+  handleBookClick: (thesis: PhdTheses[number]) => void;
 } & JSX.IntrinsicElements["group"];
 
-const BookStack: FC<BookStackProps> = ({ theses, colorScale, ...rest }) => {
+const BookStack: FC<BookStackProps> = ({
+  theses,
+  colorScale,
+  handleBookClick,
+  ...rest
+}) => {
   return (
     <group {...rest}>
       {theses.map((d, idx) => (
@@ -85,6 +96,7 @@ const BookStack: FC<BookStackProps> = ({ theses, colorScale, ...rest }) => {
           position-x={randomUniform(-0.05, 0.05)()}
           position-y={-0.01 + 0.02 * (idx + 1)}
           position-z={randomUniform(-0.05, 0.05)()}
+          handleClick={() => handleBookClick(d)}
         />
       ))}
     </group>
