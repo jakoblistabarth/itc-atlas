@@ -2,12 +2,12 @@
 
 import Link from "next/link";
 import { FC } from "react";
-import { MdArrowBack } from "react-icons/md";
+import { HiOutlineHome } from "react-icons/hi";
 
 const BackToHome: FC = () => {
   return (
     <Link href="/" sx={{ variant: "styles.a" }}>
-      <MdArrowBack /> Back to home
+      <HiOutlineHome /> back home
     </Link>
   );
 };
