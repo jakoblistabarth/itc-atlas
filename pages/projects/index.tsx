@@ -62,7 +62,7 @@ const Projects: NextPage = () => {
   return (
     <>
       <Seo title="ITC's projects" />
-      <ChapterHeader chapterName="ITC's projects" />
+      <ChapterHeader chapterName="Projects" />
 
       <Container>
         <main>
