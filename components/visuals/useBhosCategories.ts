@@ -26,9 +26,15 @@ const useBhosCategories = (countries: BhosCountry[]) => {
     return acc;
   }, []);
 
+  const colorMap = new Map([
+    ["General Focus Country", "teal"],
+    ["Transition", "turquoise"],
+    ["Trade Relations", "rgb(185, 195, 255)"],
+  ]);
+
   const colorScale = scaleOrdinal<string, string>()
     .domain(categories)
-    .range(["teal", "gold", "orange", "red", "cornflowerblue"]);
+    .range(categories.map((d) => colorMap.get(d) ?? "rgb(245,245,245)"));
 
   const categoryCombinations = bhosCountriesWithCategories.reduce(
     (acc: string[][], d) => {

@@ -22,6 +22,8 @@ import { DutchCabinet } from "../../types/DutchCabinet";
 import { NfpCountry } from "../../types/NfpCountry";
 import { SharedPageProps } from "../../types/Props";
 import PoliciesPrismMap from "../../components/PoliciesPrismMap";
+import MapLayoutFluid from "../../components/MapLayout/MapLayoutFluid";
+import LegendNominal from "../../components/LegendNominal";
 
 type Props = {
   nfps: NfpCountry[];
@@ -89,6 +91,54 @@ const NfpCountries: NextPage<Props> = ({
           globally, you may also reintermediate magnetically. Without
           development, you will lack experiences.
         </Paragraph>
+
+        <Heading sx={{ mt: 5 }}>Current Dutch development policy</Heading>
+        <Heading as="h3">Rutte IV</Heading>
+        <MapLayoutFluid projection={geoBertin1953()}>
+          <BhosGradientDefs
+            categoryCombinations={categoryCombinations}
+            getCategoryKey={getCategoryKey}
+            colorScale={colorScale}
+          />
+
+          <MapLayerBase countries={neCountriesTopoJson} />
+          <g>
+            {geometries.features.map((f, idx) => {
+              const bhosCountry = bhosCountriesWithCategories.find(
+                (d) =>
+                  d.isoAlpha3 === f.properties.ADM0_A3_NL &&
+                  d.cabinet === "Rutte IV"
+              );
+              return (
+                <MarkGeometry
+                  key={`${f.properties.ADM0_A3_NL}-${idx}`}
+                  feature={f}
+                  fill={
+                    bhosCountry?.categories
+                      ? `url(#${getCategoryKey(bhosCountry.categories)})`
+                      : "transparent"
+                  }
+                  stroke="white"
+                />
+              );
+            })}
+          </g>
+          <LegendNominal
+            transform="translate(10 10)"
+            entries={bhosCountries
+              .filter((d) => d.cabinet === "Rutte IV")
+              .reduce(
+                (acc: { label: string; color: string }[], { category }) => {
+                  if (acc.map((d) => d.label).includes(category)) return acc;
+                  return [
+                    ...acc,
+                    { label: category, color: colorScale(category) },
+                  ];
+                },
+                []
+              )}
+          />
+        </MapLayoutFluid>
 
         <Heading sx={{ mt: 5 }}>Number of focus countries over time</Heading>
         <svg width={width} height={150}>
@@ -159,6 +209,56 @@ const NfpCountries: NextPage<Props> = ({
           development, you will lack experiences.
         </Paragraph>
 
+        <Heading sx={{ mt: 5 }}>
+          Focus countries of Dutch development policies
+        </Heading>
+        <Grid columns={"1fr 1fr 1fr 1fr"} gap={"1em 1em"}>
+          {dutchCabinets
+            .filter((d) => cabinetsWithBhosData.includes(d.name))
+            .map(({ name, dateStart, dateEnd }, idx) => {
+              const foucsCountries = geometries.features.filter((f) =>
+                bhosCountries
+                  .filter((d) => d.category === "General Focus Country")
+                  .filter((d) => d.cabinet === name)
+                  .map((d) => d.isoAlpha3)
+                  .includes(f.properties.ADM0_A3_NL)
+              );
+
+              const projection = geoBertin1953();
+              const bounds = {
+                width: 250,
+                height: 200,
+              };
+              return (
+                <MapLayout key={idx} bounds={bounds} projection={projection}>
+                  <MapLayoutHeader>
+                    <text dominantBaseline={"hanging"}>{name}</text>
+                    <text
+                      dominantBaseline={"hanging"}
+                      fontSize={".5em"}
+                      dy={"2em"}
+                    >
+                      {new Date(dateStart).getFullYear()}–
+                      {new Date(dateEnd).getFullYear()}
+                    </text>
+                  </MapLayoutHeader>
+                  <MapLayoutBody bounds={bounds}>
+                    <MapLayerBase countries={neCountriesTopoJson} />
+                    <g>
+                      {foucsCountries.map((p, idx) => (
+                        <MarkGeometry
+                          key={`${p.properties.ADM0_A3_NL}-${idx}`}
+                          feature={p}
+                          fill={"teal"}
+                        />
+                      ))}
+                    </g>
+                  </MapLayoutBody>
+                </MapLayout>
+              );
+            })}
+        </Grid>
+
         <Heading>NFP countries</Heading>
         <Paragraph>
           NFP countries are Without preplanned cyber-Total Quality Control,
@@ -169,7 +269,7 @@ const NfpCountries: NextPage<Props> = ({
           capacity to synthesize interactively. If all of this sounds
           astonishing to you.
         </Paragraph>
-        <Grid columns={"1fr 1fr 1fr"} gap={"1em 1em"} sx={{ mt: 3 }}>
+        <Grid columns={"1fr 1fr 1fr 1fr"} gap={"1em 1em"} sx={{ mt: 3 }}>
           {selection.map((selectedYear, idx) => {
             const nfpCountryCodes = selectedYear?.map((d) => d.countryISO);
             const foucsCountries = geometries.features.filter(
@@ -178,8 +278,8 @@ const NfpCountries: NextPage<Props> = ({
 
             const projection = geoBertin1953();
             const bounds = {
-              width: 300,
-              height: 225,
+              width: 250,
+              height: 200,
             };
             return (
               <MapLayout key={idx} bounds={bounds} projection={projection}>
@@ -197,7 +297,7 @@ const NfpCountries: NextPage<Props> = ({
                       <MarkGeometry
                         key={`${p.properties.ADM0_A3}-${idx}`}
                         feature={p}
-                        style={{ fill: "black" }}
+                        style={{ fill: "teal" }}
                       />
                     ))}
                   </g>
@@ -205,73 +305,6 @@ const NfpCountries: NextPage<Props> = ({
               </MapLayout>
             );
           })}
-        </Grid>
-
-        <Heading sx={{ mt: 5 }}>
-          Focus countries of Dutch development policies
-        </Heading>
-        <Grid columns={"1fr 1fr 1fr 1fr"} gap={"1em 1em"}>
-          {dutchCabinets
-            .filter((d) => cabinetsWithBhosData.includes(d.name))
-            .map(({ name, dateStart, dateEnd }, idx) => {
-              const foucsCountries = geometries.features.filter((f) =>
-                bhosCountries
-                  .filter((d) => d.cabinet === name)
-                  .map((d) => d.isoAlpha3)
-                  .includes(f.properties.ADM0_A3_NL)
-              );
-
-              const projection = geoBertin1953();
-              const bounds = {
-                width: 250,
-                height: 200,
-              };
-              return (
-                <MapLayout key={idx} bounds={bounds} projection={projection}>
-                  <BhosGradientDefs
-                    categoryCombinations={categoryCombinations}
-                    getCategoryKey={getCategoryKey}
-                    colorScale={colorScale}
-                  />
-                  <MapLayoutHeader>
-                    <text dominantBaseline={"hanging"}>{name}</text>
-                    <text
-                      dominantBaseline={"hanging"}
-                      fontSize={".5em"}
-                      dy={"2em"}
-                    >
-                      {new Date(dateStart).getFullYear()}–
-                      {new Date(dateEnd).getFullYear()}
-                    </text>
-                  </MapLayoutHeader>
-                  <MapLayoutBody bounds={bounds}>
-                    <MapLayerBase countries={neCountriesTopoJson} />
-                    <g>
-                      {foucsCountries.map((p, idx) => {
-                        const bhosCountry = bhosCountriesWithCategories.find(
-                          (d) =>
-                            d.isoAlpha3 === p.properties.ADM0_A3_NL &&
-                            d.cabinet === name
-                        );
-                        return (
-                          <MarkGeometry
-                            key={`${p.properties.ADM0_A3_NL}-${idx}`}
-                            feature={p}
-                            fill={
-                              bhosCountry?.categories
-                                ? `url(#${getCategoryKey(
-                                    bhosCountry.categories
-                                  )})`
-                                : "transparent"
-                            }
-                          />
-                        );
-                      })}
-                    </g>
-                  </MapLayoutBody>
-                </MapLayout>
-              );
-            })}
         </Grid>
       </BasePage>
     </>

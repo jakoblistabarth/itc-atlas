@@ -58,7 +58,13 @@ const BtorsAndCabinets: FC<Props> = ({
     categoryCombinations,
     colorScale,
     getCategoryKey,
-  } = useBhosCategories(bhosCountries);
+  } = useBhosCategories(
+    bhosCountries.filter((d) =>
+      ["General Focus Country", "Transition", "Trade Relations"].includes(
+        d.category
+      )
+    )
+  );
   const projection = geoBertin1953();
 
   const countries = useMemo(
@@ -131,7 +137,7 @@ const BtorsAndCabinets: FC<Props> = ({
         <LegendNominal
           transform="translate(0 10)"
           fontSize={10}
-          columnWidth={200}
+          columnWidth={150}
           columns={3}
           entries={colorScale
             .domain()
