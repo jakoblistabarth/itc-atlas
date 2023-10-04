@@ -1,7 +1,7 @@
 /** @jsxImportSource theme-ui */
 
 import Footer from "../Footer";
-import { Container, Heading } from "theme-ui";
+import { Box, Container, Heading } from "theme-ui";
 import Seo from "../Seo";
 import Header from "../Header";
 import { FC, PropsWithChildren } from "react";
@@ -19,7 +19,9 @@ const PageBase: FC<Props> = ({ title, renderTitle = true, children }) => {
 
       <Container>
         <main>
-          {renderTitle && <Heading as="h1">{title}</Heading>}
+          <Box variant="layout.section">
+            {renderTitle && <Heading as="h1">{title}</Heading>}
+          </Box>
           {children}
         </main>
       </Container>

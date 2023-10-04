@@ -69,14 +69,15 @@ const Page: NextPage<Props> = ({
 
   return (
     <PageHeroVisual title="Staff travels over time" heroVisual={heroVisual}>
-      <Paragraph variant="teaser">
-        Where does ITC staff travel and what for? To answer this question we
-        need to take a closer look on different travel destination, the
-        development over time and the purpose of these travels. Two datasets are
-        the basis for this analysis: the &ldquo;Back to Office Reports&rdquo;
-        and all flights booked by ITC&apos;s travel angency for 2019.
-      </Paragraph>
       <Box as="section" variant="layout.section">
+        <Paragraph variant="teaser">
+          Where does ITC staff travel and what for? To answer this question we
+          need to take a closer look on different travel destination, the
+          development over time and the purpose of these travels. Two datasets
+          are the basis for this analysis: the &ldquo;Back to Office
+          Reports&rdquo; and all flights booked by ITC&apos;s travel angency for
+          2019.
+        </Paragraph>
         <Box
           sx={{ display: "grid", gridTemplateColumns: "2fr 1fr", columnGap: 5 }}
         >

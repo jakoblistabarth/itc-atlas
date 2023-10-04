@@ -1,7 +1,7 @@
 /** @jsxImportSource theme-ui */
 
 import Footer from "../Footer";
-import { Container, Heading } from "theme-ui";
+import { Box, Container, Heading } from "theme-ui";
 import Seo from "../Seo";
 import { FC, PropsWithChildren, ReactElement } from "react";
 import Navigation from "../Navigation";
@@ -22,7 +22,9 @@ const HeroVisualPage: FC<Props> = ({ title, heroVisual, children }) => {
           {heroVisual}
         </Container>
         <Container>
-          <Heading as="h1">{title}</Heading>
+          <Box variant="layout.section">
+            <Heading as="h1">{title}</Heading>
+          </Box>
           {children}
         </Container>
       </main>

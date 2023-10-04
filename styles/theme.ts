@@ -72,6 +72,7 @@ export const theme: Theme = {
       pt: 5,
     },
     section: {
+      p: [3, 0],
       my: 4,
     },
     inlineMap: {

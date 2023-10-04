@@ -1,7 +1,7 @@
 /** @jsxImportSource theme-ui */
 
 import type { NextPage } from "next";
-import { Container, Heading, Paragraph } from "theme-ui";
+import { Box, Container, Heading, Paragraph } from "theme-ui";
 import ChapterHeader from "../../components/ChapterHeader";
 import ChapterHighlights from "../../components/ChapterHighlights";
 import ChapterNavigation from "../../components/ChapterNavigation";
@@ -16,7 +16,7 @@ const Introduction: NextPage = () => {
 
       <Container>
         <main>
-          <section sx={{ my: 4 }}>
+          <Box as={"section"} variant={"layout.section"}>
             <Heading as="h1">Chapter Introduction</Heading>
             <Paragraph variant="teaser">
               Introducing one of the world leading institutions for academic
@@ -30,18 +30,20 @@ const Introduction: NextPage = () => {
               with societal partners such as ngo’s, knowledge institutions, and
               the private sector.
             </Paragraph>
-          </section>
+          </Box>
 
-          <ChapterHighlights
-            highlights={[
-              {
-                href: "introduction/indonesia",
-                title: "ITC's impact in Indonesia",
-              },
-              { href: "introduction/travels", title: "ITC's travels" },
-              { href: "", title: "A brief history of GIS technology" },
-            ]}
-          />
+          <Box as={"section"} variant={"layout.section"}>
+            <ChapterHighlights
+              highlights={[
+                {
+                  href: "introduction/indonesia",
+                  title: "ITC's impact in Indonesia",
+                },
+                { href: "introduction/travels", title: "ITC's travels" },
+                { href: "", title: "A brief history of GIS technology" },
+              ]}
+            />
+          </Box>
 
           <ChapterNavigation title="Other chapters" />
         </main>

@@ -6,7 +6,7 @@ import * as aq from "arquero";
 import type { NextPage } from "next";
 import { useRouter } from "next/router";
 import useSWR from "swr";
-import { Container, Grid, Heading, Paragraph } from "theme-ui";
+import { Box, Container, Grid, Heading, Paragraph } from "theme-ui";
 import CardLink from "../../components/CardLink";
 import ChapterHeader from "../../components/ChapterHeader";
 import Footer from "../../components/Footer";
@@ -66,31 +66,35 @@ const Projects: NextPage = () => {
 
       <Container>
         <main>
-          <Heading as="h2">Chapter Projects</Heading>
-          <Paragraph variant="teaser">
-            Insights into ITC&apos;s projects around the globe.
-          </Paragraph>
-          <Paragraph>
-            The last decade the thematic focus was more consistent, but the
-            geographic focus continues to shift, reflecting political choices.
-            Development cooperation is seen as bilateral cooperation among
-            stakeholders. From the Dutch side the national government works with
-            societal partners such as ngo’s, knowledge institutions, and the
-            private sector.
-          </Paragraph>
+          <Box as="section" variant="layout.section">
+            <Heading as="h2">Chapter Projects</Heading>
+            <Paragraph variant="teaser">
+              Insights into ITC&apos;s projects around the globe.
+            </Paragraph>
+            <Paragraph>
+              The last decade the thematic focus was more consistent, but the
+              geographic focus continues to shift, reflecting political choices.
+              Development cooperation is seen as bilateral cooperation among
+              stakeholders. From the Dutch side the national government works
+              with societal partners such as NGO&apos;s, knowledge institutions,
+              and the private sector.
+            </Paragraph>
+          </Box>
 
-          <ChapterHighlights
-            highlights={[
-              {
-                href: "projects/project-explorer-3d",
-                title: "The globe of projects",
-              },
-              {
-                href: "projects/projects-spacetimecube",
-                title: "Projects over time",
-              },
-            ]}
-          />
+          <Box as="section" variant="layout.section">
+            <ChapterHighlights
+              highlights={[
+                {
+                  href: "projects/project-explorer-3d",
+                  title: "The globe of projects",
+                },
+                {
+                  href: "projects/projects-spacetimecube",
+                  title: "Projects over time",
+                },
+              ]}
+            />
+          </Box>
 
           <Grid variant={"navigation"}>
             {links.map((l, idx) => (
