@@ -48,7 +48,7 @@ const Page: NextPage<Props> = ({ neCountriesTopoJson, btorsByYear }) => {
   };
 
   return (
-    <PageBase title="MapLayoutFluid Test">
+    <PageBase title="MapLayoutFluid test">
       <Box variant="layout.inlineMap">
         <MapLayoutFluid projection={geoEquirectangular()} extent={extentAut}>
           <TestMap neCountriesTopoJson={neCountriesTopoJson} />

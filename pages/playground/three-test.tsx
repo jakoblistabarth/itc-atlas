@@ -8,7 +8,7 @@ import { Box } from "theme-ui";
 
 const ThreeTest: NextPage = () => {
   return (
-    <PageBase title="Three Line Rendering Test">
+    <PageBase title="Three line rendering test">
       <Box variant="layout.canvasStage" sx={{ height: "500px" }}>
         <Canvas orthographic camera={{ zoom: 100 }}>
           <axesHelper />

@@ -1,6 +1,6 @@
 import { group, scaleOrdinal } from "d3";
 import type { GetStaticProps, NextPage } from "next";
-import BasePage from "../../components/PageBase/PageBase";
+import PageBase from "../../components/PageBase/PageBase";
 import PhdThesesBookChart from "../../components/PhdThesesBookChart";
 import getPhdTheses, {
   PhdTheses,
@@ -39,7 +39,7 @@ const Page: NextPage<Props> = ({ phdTheses, departments }) => {
     .unknown("grey");
 
   return (
-    <BasePage title="Phd theses">
+    <PageBase title="Phd theses">
       <PhdThesesBookChart colorScale={colorScale} thesesByYear={thesesByYear} />
       <svg height={400}>
         <LegendNominal
@@ -50,7 +50,7 @@ const Page: NextPage<Props> = ({ phdTheses, departments }) => {
             .map((d) => ({ label: d, color: colorScale(d) }))}
         />
       </svg>
-    </BasePage>
+    </PageBase>
   );
 };
 

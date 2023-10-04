@@ -11,7 +11,7 @@ type Props = PropsWithChildren<{
   renderTitle?: boolean;
 }>;
 
-const BasePage: FC<Props> = ({ title, renderTitle = true, children }) => {
+const PageBase: FC<Props> = ({ title, renderTitle = true, children }) => {
   return (
     <>
       <Seo title={title} />
@@ -29,4 +29,4 @@ const BasePage: FC<Props> = ({ title, renderTitle = true, children }) => {
   );
 };
 
-export default BasePage;
+export default PageBase;

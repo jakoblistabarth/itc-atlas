@@ -37,19 +37,9 @@ const Home: NextPage = () => {
       description: "Insights into ITC's employee composition.",
     },
     {
-      href: "/employments",
-      children: "Employments",
-      description: "Insights into ITC's emplpoyments.",
-    },
-    {
       href: "/applicants",
       children: "Applicants",
       description: "ITC's applicants.",
-    },
-    {
-      href: "/applications",
-      children: "Applications",
-      description: "ITC's applications.",
     },
     {
       href: "/phds",
@@ -157,7 +147,7 @@ const Home: NextPage = () => {
               }}
             >
               {[
-                "shader-test",
+                "blockdiagram-test",
                 "three-test",
                 "maplayoutfluid-test",
                 "book-test",

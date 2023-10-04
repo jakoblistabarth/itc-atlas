@@ -9,7 +9,7 @@ import MapLayout from "../../components/MapLayout";
 import MapLayoutBody from "../../components/MapLayout/MapLayoutBody";
 import MapLayoutHeader from "../../components/MapLayout/MapLayoutHeader";
 import MarkGeometry from "../../components/MarkGeometry/MarkGeometry";
-import BasePage from "../../components/PageBase/PageBase";
+import PageBase from "../../components/PageBase/PageBase";
 import BhosGradientDefs from "../../components/visuals/BhosGradientsDefs";
 import useBhosCategories from "../../components/visuals/useBhosCategories";
 import getBhosCountries from "../../lib/data/getBhosCountries";
@@ -79,7 +79,7 @@ const NfpCountries: NextPage<Props> = ({
 
   return (
     <>
-      <BasePage title="Development Policies">
+      <PageBase title="Development Policies">
         <Text variant="teaser">
           Insights into the moved history of Dutch development approaches in the
           last 70 years
@@ -306,7 +306,7 @@ const NfpCountries: NextPage<Props> = ({
             );
           })}
         </Grid>
-      </BasePage>
+      </PageBase>
     </>
   );
 };

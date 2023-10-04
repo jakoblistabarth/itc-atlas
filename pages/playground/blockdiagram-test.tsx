@@ -2,7 +2,7 @@
 
 import { Canvas } from "@react-three/fiber";
 import type { GetStaticProps, NextPage } from "next";
-import BlockDiagram from "../../components/BlockDiagram/";
+import BlockDiagram from "../../components/BlockDiagram";
 import BlockDiagramMarker from "../../components/BlockDiagram/BlockDiagramMarker";
 import useSWR from "swr";
 import PageBase from "../../components/PageBase";
@@ -14,12 +14,12 @@ import BlockDiagramEnvironment from "../../components/BlockDiagram/BlockDiagramE
 
 type Props = SharedPageProps;
 
-const ShaderTest: NextPage<Props> = () => {
+const Page: NextPage<Props> = () => {
   const side = 1;
   const aut = useSWR("/api/data/elevationModel/Grossglockner");
 
   return (
-    <PageBase title="Shader Test">
+    <PageBase title="Block diagram test">
       <Heading as="h2" sx={{ mt: 5 }}>
         Großglockner
       </Heading>
@@ -61,7 +61,7 @@ const ShaderTest: NextPage<Props> = () => {
     </PageBase>
   );
 };
-export default ShaderTest;
+export default Page;
 
 export const getStaticProps: GetStaticProps<Props> = async () => {
   const [countries, neCountriesTopoJson] = await Promise.all([

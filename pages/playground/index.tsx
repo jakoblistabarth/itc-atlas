@@ -11,10 +11,10 @@ const Home: NextPage = () => {
 
   return (
     <>
-      <PageBase title="UI tests">
+      <PageBase title="Playground">
         <Grid variant="navigation">
           {[
-            "shader-test",
+            "blockdiagram-test",
             "three-test",
             "maplayoutfluid-test",
             "book-test",

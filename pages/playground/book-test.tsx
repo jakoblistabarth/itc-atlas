@@ -7,16 +7,15 @@ import {
   RandomizedLight,
 } from "@react-three/drei";
 import { Canvas } from "@react-three/fiber";
-import type { NextPage } from "next";
-import { Box, Text } from "theme-ui";
-import PageBase from "../../components/PageBase";
-import Book from "../../components/Book";
 import { randomInt, randomUniform, range } from "d3";
+import type { NextPage } from "next";
+import { Box } from "theme-ui";
+import Book from "../../components/Book";
+import PageBase from "../../components/PageBase";
 
 const Page: NextPage = () => {
   return (
-    <PageBase title="Book Test">
-      <Text>PhD theses</Text>
+    <PageBase title="Book test">
       <Box variant="layout.canvasStage" sx={{ height: "500px" }}>
         <Canvas
           orthographic
