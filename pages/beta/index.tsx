@@ -4,6 +4,8 @@ import type { NextPage } from "next";
 import { Box, Container, Heading, Paragraph } from "theme-ui";
 import PageBase from "../../components/PageBase";
 import Link from "next/link";
+import Callout from "../../components/Callout";
+import { BiBug } from "react-icons/bi";
 
 const Page: NextPage = () => {
   return (
@@ -15,27 +17,26 @@ const Page: NextPage = () => {
               We&apos;re working on an online atlas for ITC. The website
               you&apos;re looking at right now is still in beta.
             </Paragraph>
-            <Heading as="h2">
-              What does the beta phase that mean for you?
-            </Heading>
+            <Heading as="h2">What does the beta phase mean for you?</Heading>
+            <Callout Icon={BiBug}>Watch out for bugs!</Callout>
             <Paragraph>
-              Generally, that means that the website itself as well as the maps
-              and visuals it contains and the texts are not final. Please expect
-              to encounter prelimary content and bugs. In particular it means
-              that maps, visuals and even entire pages might be renamed,
-              modified or might even dissappear as we are incrementally move
-              forward to the final product.
+              Generally, that means that the website itself and its maps,
+              visuals and the texts are not final. Please expect to encounter
+              preliminary content and bugs. In particular, it means that maps,
+              visuals and even entire pages might be renamed, modified or even
+              disappear completely as we incrementally move forward to the final
+              product.
             </Paragraph>
 
             <Heading as="h2">What does the beta phase mean for us?</Heading>
             <Paragraph>
-              Well, obviously a lot of work left. At the moment we are busy
-              improving the individual components used on this website (see the{" "}
+              Well, obviously a lot of work on our table. We are busy improving
+              the individual components used on this website (see the{" "}
               <Link href={"https://component-library-itc-atlas.netlify.app/"}>
                 component library
               </Link>
-              ) and compiling maps and visualiszations. Updating this publicly
-              available instance frequently as we go.
+              ) and compiling maps and visualizations. We&apos;re updating this
+              publicly available instance frequently as we go.
             </Paragraph>
 
             <Heading as="h2">Why this atlas?</Heading>
