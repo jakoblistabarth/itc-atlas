@@ -26,7 +26,7 @@ const PhdThesesBookChart: FC<Props> = ({ thesesByYear, colorScale }) => {
       <Canvas
         shadows
         orthographic
-        camera={{ zoom: 60, position: [10, 5, -10], near: 0, far: 50 }}
+        camera={{ zoom: 60, position: [10, 5, -10], near: 0 }}
       >
         <group position-x={width / -2}>
           {Array.from(thesesByYear.keys()).map((year, idx) => (
@@ -42,7 +42,7 @@ const PhdThesesBookChart: FC<Props> = ({ thesesByYear, colorScale }) => {
         <AccumulativeShadows opacity={0.3} scale={30} resolution={1024 * 2 * 2}>
           <RandomizedLight
             ambient={0.65}
-            near={0}
+            size={20}
             position={[20, 10, 25]}
             mapSize={1024 * 2}
           />
