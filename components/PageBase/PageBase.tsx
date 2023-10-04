@@ -8,9 +8,10 @@ import { FC, PropsWithChildren } from "react";
 
 type Props = PropsWithChildren<{
   title: string;
+  renderTitle?: boolean;
 }>;
 
-const BasePage: FC<Props> = ({ title, children }) => {
+const BasePage: FC<Props> = ({ title, renderTitle = true, children }) => {
   return (
     <>
       <Seo title={title} />
@@ -18,7 +19,7 @@ const BasePage: FC<Props> = ({ title, children }) => {
 
       <Container>
         <main>
-          <Heading as="h1">{title}</Heading>
+          {renderTitle && <Heading as="h1">{title}</Heading>}
           {children}
         </main>
       </Container>

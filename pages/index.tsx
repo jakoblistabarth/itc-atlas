@@ -1,15 +1,13 @@
 /** @jsxImportSource theme-ui */
 
 import type { NextPage } from "next";
-import Footer from "../components/Footer";
 import { Box, Container, Heading, Paragraph, Text } from "theme-ui";
 import Building, { ITClocations } from "../components/Building";
 import { Group } from "@visx/group";
 import useMeasure from "react-use-measure";
 import Link from "../components/Link";
 import ChapterNavigation from "../components/ChapterNavigation";
-import Seo from "../components/Seo";
-import Header from "../components/Header";
+import PageBase from "../components/PageBase";
 
 const Home: NextPage = () => {
   const links = [
@@ -69,10 +67,7 @@ const Home: NextPage = () => {
   const height = width / 5;
 
   return (
-    <>
-      <Seo title="Home" />
-      <Header />
-
+    <PageBase title="Home" renderTitle={false}>
       <Container>
         <main>
           <Box as="section" variant="layout.section">
@@ -175,9 +170,7 @@ const Home: NextPage = () => {
           </Box>
         </main>
       </Container>
-
-      <Footer />
-    </>
+    </PageBase>
   );
 };
 

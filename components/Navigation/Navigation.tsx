@@ -4,6 +4,7 @@ import { FC } from "react";
 import { Box, Container } from "theme-ui";
 import { HiOutlineHome } from "react-icons/hi";
 import NavLink from "../NavLink";
+import BetaBadge from "../BetaBadge";
 
 const Navigation: FC = () => {
   return (
@@ -11,7 +12,8 @@ const Navigation: FC = () => {
       <nav
         sx={{
           display: "flex",
-          a: {
+          alignItems: "baseline",
+          "> div > a": {
             p: 2,
             transition: "background .2s",
             borderRadius: 2,
@@ -28,7 +30,7 @@ const Navigation: FC = () => {
             alignItems: "center",
             borderRadius: 2,
             mr: 3,
-            px: 1,
+            p: 1,
           }}
         >
           <NavLink href="/">
@@ -55,6 +57,9 @@ const Navigation: FC = () => {
           <NavLink disabled href="/appendix">
             Appendix
           </NavLink>
+        </Box>
+        <Box sx={{ ml: 5 }}>
+          <BetaBadge />
         </Box>
       </nav>
     </Container>
