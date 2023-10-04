@@ -1,6 +1,6 @@
 import { ScaleOrdinal, randomUniform } from "d3";
 import { PhdTheses } from "../../lib/data/queries/phd/getPhdTheses";
-import { FC } from "react";
+import { FC, memo } from "react";
 import Book from "../Book";
 
 type BookStackProps = {
@@ -18,7 +18,7 @@ const BookStack: FC<BookStackProps> = ({
   return (
     <group {...rest}>
       {theses.map((d, idx) => (
-        <Book
+        <MemoizedBook
           key={idx}
           color={colorScale(d.departmentMainId ?? "na")}
           rotation-y={Math.PI / 2 + randomUniform(-0.1, 0.1)()}
@@ -31,5 +31,7 @@ const BookStack: FC<BookStackProps> = ({
     </group>
   );
 };
+
+const MemoizedBook = memo(Book);
 
 export default BookStack;

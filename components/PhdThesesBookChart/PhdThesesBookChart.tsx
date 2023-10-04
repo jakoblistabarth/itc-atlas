@@ -1,4 +1,4 @@
-import { FC, useState } from "react";
+import { FC, memo, useState } from "react";
 import { PhdTheses } from "../../lib/data/queries/phd/getPhdTheses";
 import { Canvas } from "@react-three/fiber";
 import Book from "../Book";
@@ -46,7 +46,7 @@ const PhdThesesBookChart: FC<Props> = ({ thesesByYear, colorScale }) => {
               0
             );
             return thesesByYear.get(year) ? (
-              <BookStack
+              <MemoizedBookStack
                 key={year}
                 position={position}
                 rotation={roatation}
@@ -111,5 +111,6 @@ const Empty: FC<JSX.IntrinsicElements["group"]> = ({ ...rest }) => (
     </mesh>
   </group>
 );
+const MemoizedBookStack = memo(BookStack);
 
 export default PhdThesesBookChart;
