@@ -2,7 +2,7 @@ import { FC } from "react";
 import { PhdTheses } from "../../lib/data/queries/phd/getPhdTheses";
 import { Canvas } from "@react-three/fiber";
 import Book from "../Book";
-import { ScaleOrdinal, extent, randomUniform } from "d3";
+import { ScaleOrdinal, extent, randomUniform, range } from "d3";
 import { Box } from "theme-ui";
 import {
   AccumulativeShadows,
@@ -10,6 +10,8 @@ import {
   OrbitControls,
   RandomizedLight,
 } from "@react-three/drei";
+import { getSpiralPoints } from "./PhdThesesBookChart.helpers";
+import { Euler, Vector3 } from "three";
 
 type Props = {
   thesesByYear: Map<number, PhdTheses>;
@@ -18,32 +20,46 @@ type Props = {
 
 const PhdThesesBookChart: FC<Props> = ({ thesesByYear, colorScale }) => {
   const [min, max] = extent(Array.from(thesesByYear.keys()));
-  const gap = 0.5;
-  const width = 0.5 * ((max ?? 1) - (min ?? 0));
-
+  const [start, end] = [min ?? 0, max ? max + 1 : 1];
+  const spiralPoints = getSpiralPoints(end + 1 - start, 3, Math.PI * 2 * 2);
   return (
     <Box variant="layout.canvasStage">
       <Canvas
         shadows
         orthographic
-        camera={{ zoom: 60, position: [10, 5, -10], near: 0 }}
+        camera={{ zoom: 100, position: [10, 5, -10], near: 0 }}
       >
-        <group position-x={width / -2}>
-          {Array.from(thesesByYear.keys()).map((year, idx) => (
-            <BookStack
-              position={[gap * idx + gap, 0, 0]}
-              key={year}
-              theses={thesesByYear.get(year) ?? []}
-              colorScale={colorScale}
-            />
-          ))}
+        <group>
+          {range(start, end + 1).map((year, idx) => {
+            const position = new Vector3(
+              spiralPoints[idx].x,
+              0,
+              spiralPoints[idx].y
+            );
+            const roatation = new Euler(
+              0,
+              -spiralPoints[idx].theta + Math.PI,
+              0
+            );
+            return thesesByYear.get(year) ? (
+              <BookStack
+                key={year}
+                position={position}
+                rotation={roatation}
+                theses={thesesByYear.get(year) ?? []}
+                colorScale={colorScale}
+              />
+            ) : (
+              <Empty position={position} rotation={roatation} />
+            );
+          })}
         </group>
         <Environment preset="apartment" />
         <AccumulativeShadows opacity={0.3} scale={30} resolution={1024 * 2 * 2}>
           <RandomizedLight
             ambient={0.65}
-            size={20}
-            position={[20, 10, 25]}
+            size={10}
+            position={[10, 10, 15]}
             mapSize={1024 * 2}
           />
         </AccumulativeShadows>
@@ -67,12 +83,21 @@ const BookStack: FC<BookStackProps> = ({ theses, colorScale, ...rest }) => {
           color={colorScale(d.departmentMainId ?? "na")}
           rotation-y={Math.PI / 2 + randomUniform(-0.1, 0.1)()}
           position-x={randomUniform(-0.05, 0.05)()}
-          position-y={0.04 * (idx + 1)}
+          position-y={-0.01 + 0.02 * (idx + 1)}
           position-z={randomUniform(-0.05, 0.05)()}
         />
       ))}
     </group>
   );
 };
+
+const Empty: FC<JSX.IntrinsicElements["group"]> = ({ ...rest }) => (
+  <group {...rest}>
+    <mesh rotation-x={Math.PI / -2}>
+      <planeGeometry args={[0.21, 0.297]} />
+      <meshStandardMaterial color={"lightgrey"} opacity={0.2} transparent />
+    </mesh>
+  </group>
+);
 
 export default PhdThesesBookChart;
