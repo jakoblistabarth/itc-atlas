@@ -27,8 +27,7 @@ export default async function handler(
     deviceScaleFactor: 6,
   });
 
-  // TODO: use a env variable with the absolute url of the website here?
-  await page.goto("http://localhost:3000/flights2019/flights3D");
+  await page.goto(`${process.env.SITE_URL}/flights2019/flights3D`);
 
   const selector = "div[data-ready='true'] canvas";
   await page.waitForSelector(selector); // wait for the selector to load
