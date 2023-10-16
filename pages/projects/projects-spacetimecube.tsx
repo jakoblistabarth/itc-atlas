@@ -3,7 +3,7 @@
 import { OrbitControls } from "@react-three/drei";
 import { Canvas } from "@react-three/fiber";
 import type { GetStaticProps, NextPage } from "next";
-import { Box, Card, Heading, Select, Text } from "theme-ui";
+import { Box, Card, Heading, Text } from "theme-ui";
 import getCountries from "../../lib/data/getCountries";
 import { SharedPageProps } from "../../types/Props";
 import { useMemo, useState } from "react";
@@ -85,10 +85,11 @@ const ProjectSpaceTimeCube: NextPage<Props> = ({
     const minDate = min(events.map((d) => d.dateStart));
     const maxDate = max(events.map((d) => d.dateEnd ?? new Date()));
     return scaleTime<number, number>()
-      .domain([maxDate ?? new Date(), minDate ?? new Date("1952")])
+      .domain([minDate ?? new Date("1952"), maxDate ?? new Date()])
       .range([height / -2, height / 2])
       .nice();
   }, [events, height]);
+  const years = Array.from(new Array(2026).keys()).slice(1985);
 
   return (
     <PageBase title="Projects Space Time Cube">
@@ -98,18 +99,44 @@ const ProjectSpaceTimeCube: NextPage<Props> = ({
           Select certain year in the box to see all projects for this year.
         </Callout>
         <Box sx={{ display: "flex", gap: "3" }}>
-          <Select
-            onChange={(event) => {
-              setSelectedYear(event.target.value);
-            }}
-          >
-            {timeScale.ticks(30).map((d) => (
-              <option key={d.getTime()}>{d.getFullYear()}</option>
-            ))}
-          </Select>
-          <Button onClick={() => setSelectedYear(undefined)}>
-            <HiXMark />
-          </Button>
+          <div>
+            <input
+              id="slider"
+              type="range"
+              list="tickmarks"
+              style={{ width: "500px" }}
+              name="year"
+              min="0"
+              max="40"
+              step="1"
+              defaultValue="0"
+              onChange={(e) => {
+                const yearIndex = parseInt(e.target.value, 10);
+                setSelectedYear(years[yearIndex] + "");
+              }}
+            ></input>
+            <datalist
+              id="tickmarks"
+              style={{
+                display: "flex",
+                flexDirection: "row",
+                justifyContent: "space-between",
+              }}
+            >
+              <option label="1985">0</option>
+              <option label="1990">5</option>
+              <option label="1995">10</option>
+              <option label="2000">15</option>
+              <option label="2005">20</option>
+              <option label="2010">25</option>
+              <option label="2015">30</option>
+              <option label="2020">35</option>
+              <option label="2025">40</option>
+            </datalist>
+            <Button onClick={() => setSelectedYear(undefined)}>
+              <HiXMark />
+            </Button>
+          </div>
         </Box>
 
         {selectedCountries.length > 0 && (
