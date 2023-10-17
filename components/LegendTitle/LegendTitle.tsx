@@ -1,5 +1,3 @@
-/** @jsxImportSource theme-ui */
-
 import { FC, SVGProps } from "react";
 
 type Props = React.PropsWithChildren<
@@ -9,7 +7,7 @@ type Props = React.PropsWithChildren<
 const LegendTitle: FC<Props> = ({ fontSize = 9, children, ...rest }) => {
   return (
     <text
-      sx={{ fontFamily: "heading" }}
+      className="font-serif"
       fontWeight={"bold"}
       fontSize={fontSize}
       dy={fontSize}

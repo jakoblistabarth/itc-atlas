@@ -1,5 +1,3 @@
-/** @jsxImportSource theme-ui */
-
 import {
   FC,
   useCallback,
@@ -14,7 +12,7 @@ import Tooltip from "../Tooltip/";
 import { TooltipTrigger } from "../Tooltip/TooltipTrigger";
 import TooltipContent from "../Tooltip/TooltipContent";
 import { ScaleLinear, ascending, range } from "d3";
-import { Text } from "theme-ui";
+import KPI from "../KPI";
 
 type Props = {
   mouseEnterLeaveHandler: (identifier?: string) => void;
@@ -54,7 +52,7 @@ const LinePath: FC<Props> = ({
 
   const xScaleReverse = useMemo(
     () => (x: number) => Math.round(xScale.invert(x)),
-    [xScale]
+    [xScale],
   );
 
   useEffect(() => {
@@ -68,16 +66,16 @@ const LinePath: FC<Props> = ({
       setLeft(event.pageX + 15);
       setTop(event.pageY - 15);
     },
-    [setLeft, setTop, setCursorX]
+    [setLeft, setTop, setCursorX],
   );
 
   const onMouseLeave = useCallback(
     () => mouseEnterLeaveHandler(undefined),
-    [mouseEnterLeaveHandler]
+    [mouseEnterLeaveHandler],
   );
   const onMouseEnter = useCallback(
     () => mouseEnterLeaveHandler(identifier),
-    [mouseEnterLeaveHandler, identifier]
+    [mouseEnterLeaveHandler, identifier],
   );
 
   const x = cursorX && lineX && Math.round(cursorX - lineX - 4);
@@ -133,7 +131,7 @@ const LinePath: FC<Props> = ({
               <circle
                 cx={xScale(xScaleReverse(x ?? 0))}
                 cy={yScale(
-                  data.find((d) => d.x === xScaleReverse(x ?? 0))?.y ?? 0
+                  data.find((d) => d.x === xScaleReverse(x ?? 0))?.y ?? 0,
                 )}
                 fill="transparent"
                 strokeWidth={1}
@@ -152,9 +150,9 @@ const LinePath: FC<Props> = ({
           {xLabel && <>{xLabel}: </>}
           {cursorX ? xScaleReverse(x ?? 0) : undefined}
           <br />
-          <Text variant="kpi">
-            {data.find((d) => d.x === xScaleReverse(x ?? 0))?.y}
-          </Text>
+          <KPI
+            number={data.find((d) => d.x === xScaleReverse(x ?? 0))?.y ?? 0}
+          />
           {yLabel && <div>{yLabel}</div>}
         </div>
       </TooltipContent>

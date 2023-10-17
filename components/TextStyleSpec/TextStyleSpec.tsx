@@ -1,7 +1,4 @@
-/** @jsxImportSource theme-ui */
-
 import { FC, PropsWithChildren } from "react";
-import { Grid, StylePropertyValue } from "theme-ui";
 import CSS from "csstype";
 
 type Props = {
@@ -15,22 +12,12 @@ type Props = {
   fontFamily: string;
   fontStyle?: string;
   fontWeight?: string;
-  textTransform?: StylePropertyValue<CSS.Property.TextTransform>;
+  textTransform?: CSS.Property.TextTransform;
   letterSpacing?: number;
 };
 
 const DockBlock: FC<PropsWithChildren> = ({ children }) => (
-  <div
-    sx={{
-      mt: 4,
-      mb: 2,
-      boxShadow: "rgba(0, 0, 0, 0.10) 0 1px 3px 0",
-      border: "1px solid hsla(203, 50%, 30%, 0.15)",
-      borderRadius: "4px",
-      background: "white",
-      padding: 4,
-    }}
-  >
+  <div className="!my-5 rounded-md border border-gray-200 bg-white p-5 shadow">
     {children}
   </div>
 );
@@ -48,17 +35,12 @@ const TextStyleSpec: FC<Props> = ({
 }) => {
   return (
     <DockBlock>
-      <Grid
-        columns="minmax(50px, 250px) 1fr"
-        column-gap={2}
-        row-gap={5}
-        sx={{ alignItems: "baseline" }}
-      >
-        <div sx={{ fontSize: "12px", color: "grey" }}>
+      <div className="grid grid-cols-[minmax(50px,_250px)_1fr] items-baseline gap-x-2 gap-y-5">
+        <div className="!text-xs text-gray-500">
           {fontSizeScreen} | {fontSizePrint}pt
         </div>
         <div
-          sx={{
+          style={{
             fontSize: fontSizeScreen,
             fontFamily,
             fontStyle,
@@ -69,14 +51,14 @@ const TextStyleSpec: FC<Props> = ({
         >
           {sampleText}
         </div>
-        <div sx={{ fontSize: "12px", color: "grey" }}>
+        <div className="!text-xs text-gray-500">
           <strong>{styleName}</strong>
           <br />
           {fontFamily} · {fontWeight} · {fontStyle}{" "}
           {letterSpacing && `· ${letterSpacing}`}{" "}
           {textTransform && `· ${textTransform}`}
         </div>
-      </Grid>
+      </div>
     </DockBlock>
   );
 };

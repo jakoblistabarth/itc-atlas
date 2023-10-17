@@ -3,7 +3,6 @@ import * as d3 from "d3";
 import { geoBertin1953 } from "d3-geo-projection";
 import type { Feature, FeatureCollection, Point } from "geojson";
 import type { GetStaticProps, NextPage } from "next";
-import { Container } from "theme-ui";
 import LegendProportionalCircle from "../../components/LegendProportionalCircle";
 import MapLayerBase from "../../components/MapLayerBase";
 import MapLayoutFluid from "../../components/MapLayout/MapLayoutFluid";
@@ -17,6 +16,7 @@ import getCountryWithEmployeeCount, {
 import prisma from "../../prisma/client";
 import { NeCountriesTopoJson } from "../../types/NeTopoJson";
 import { SharedPageProps } from "../../types/Props";
+import Container from "../../components/Container";
 
 type Props = {
   countryWithEmployeeCount: CountryWithEmployeeCount;
@@ -52,7 +52,7 @@ const StaffOrigin: NextPage<Props> = ({
       })
       .filter((feature: Feature) => feature.properties?.employeeCount)
       .sort((a: Feature, b: Feature) =>
-        d3.descending(a.properties?.employeeCount, b.properties?.employeeCount)
+        d3.descending(a.properties?.employeeCount, b.properties?.employeeCount),
       ),
   };
 
@@ -85,7 +85,7 @@ const StaffOrigin: NextPage<Props> = ({
             </g>
             <LegendProportionalCircle
               data={points.features.map(
-                (feature) => feature.properties?.employeeCount
+                (feature) => feature.properties?.employeeCount,
               )}
               scaleRadius={scale}
               title={"Staff members per Country"}

@@ -1,16 +1,17 @@
-/** @jsxImportSource theme-ui */
-
 import NextLink from "next/link";
-import { FC } from "react";
+import { FC, PropsWithChildren } from "react";
 
-type Props = React.PropsWithChildren<{
+type Props = PropsWithChildren<{
   href: string;
   description?: string;
 }>;
 
 const Link: FC<Props> = ({ href, children }) => {
   return (
-    <NextLink href={href} sx={{ variant: "styles.a" }}>
+    <NextLink
+      href={href}
+      className="text-itc-green no-underline transition-colors hover:text-itc-blue"
+    >
       {children}
     </NextLink>
   );

@@ -1,13 +1,14 @@
-/** @jsxImportSource theme-ui */
-
-import type { NextPage } from "next";
-import { Box, Container, Heading, Paragraph, Text } from "theme-ui";
-import Building, { ITClocations } from "../components/Building";
 import { Group } from "@visx/group";
+import type { NextPage } from "next";
 import useMeasure from "react-use-measure";
-import Link from "../components/Link";
+import Building, { ITClocations } from "../components/Building";
 import ChapterNavigation from "../components/ChapterNavigation";
+import Container from "../components/Container";
+import Link from "../components/Link";
 import PageBase from "../components/PageBase";
+import Section from "../components/Section";
+import Teaser from "../components/Teaser";
+import Paragraph from "../components/Paragraph";
 
 const Home: NextPage = () => {
   const links = [
@@ -51,6 +52,11 @@ const Home: NextPage = () => {
       children: "Development Policies",
       description: "Policy changes over time.",
     },
+    {
+      href: "/courses",
+      children: "Courses",
+      description: "ITC's courses",
+    },
   ];
 
   const [heroVizRef, { width }] = useMeasure();
@@ -59,106 +65,82 @@ const Home: NextPage = () => {
   return (
     <PageBase title="Home" renderTitle={false}>
       <Container>
-        <main>
-          <Box as="section" variant="layout.section">
-            <div
-              sx={{
-                width: "100%",
-                height: "220px",
-                padding: "1em",
-              }}
+        <Section>
+          <div className="h-[220px] w-full p-4">
+            <svg
+              ref={heroVizRef}
+              width="100%"
+              height="100%"
+              viewBox={`0 0 ${width} ${height}`}
             >
-              <svg
-                ref={heroVizRef}
-                width="100%"
-                height="100%"
-                viewBox={`0 0 ${width} ${height}`}
-              >
-                <line
-                  x2={"100%"}
-                  y1={width / 5.4}
-                  y2={width / 5.4}
-                  stroke="teal"
-                />
-                {Array.from(ITClocations.entries()).map(([location], i) => {
-                  const buildingWith = width / 4;
-                  return (
-                    <Group
-                      key={location}
-                      top={buildingWith / 2}
-                      left={buildingWith + (i * buildingWith) / 2}
-                    >
-                      <Building
-                        width={buildingWith}
-                        location={location}
-                        color={"teal"}
-                      />
-                    </Group>
-                  );
-                })}
-              </svg>
-            </div>
-            <Heading as="h1">Atlas of the world of ITC</Heading>
-            <Text variant="teaser">The impact of capacity development</Text>
-          </Box>
+              <line
+                x2={"100%"}
+                y1={width / 5.4}
+                y2={width / 5.4}
+                stroke="teal"
+              />
+              {Array.from(ITClocations.entries()).map(([location], i) => {
+                const buildingWith = width / 4;
+                return (
+                  <Group
+                    key={location}
+                    top={buildingWith / 2}
+                    left={buildingWith + (i * buildingWith) / 2}
+                  >
+                    <Building
+                      width={buildingWith}
+                      location={location}
+                      color={"teal"}
+                    />
+                  </Group>
+                );
+              })}
+            </svg>
+          </div>
+          <h1>Atlas of the world of ITC</h1>
+          <Teaser>The impact of capacity development</Teaser>
+        </Section>
 
-          <Box as="section" variant="layout.section">
-            <Paragraph>
-              ITC’s mission is capacity development. We apply, share and
-              facilitate the effective use of geo-information and earth
-              observation knowledge and tools for tackling global wicked
-              problems. Our activities in education and research are applied in
-              our knowledge domains of Disaster Resilience, Resource
-              Security,Geohealth, and Geo-Ai.
-            </Paragraph>
-          </Box>
+        <Section>
+          <Paragraph>
+            ITC&apos;s mission is capacity development. We apply, share and
+            facilitate the effective use of geo-information and earth
+            observation knowledge and tools for tackling global wicked problems.
+            Our activities in education and research are applied in our
+            knowledge domains of Disaster Resilience, Resource
+            Security,Geohealth, and Geo-Ai.
+          </Paragraph>
+        </Section>
 
-          <ChapterNavigation />
+        <ChapterNavigation />
 
-          <Box as="section" variant="layout.section">
-            <Heading as="h2">Quicklinks</Heading>
-            <Paragraph variant="teaser">based on data sources</Paragraph>
-            <div
-              sx={{
-                mt: 2,
-                display: "grid",
-                gridTemplateColumns: "repeat(3, 1fr)",
-                gridGap: 2,
-              }}
-            >
-              {links.map((l, idx) => (
-                <Link key={idx} href={l.href}>
-                  {l.children}
-                </Link>
-              ))}
-            </div>
-          </Box>
-          <Box as="section" variant="layout.section">
-            <Heading as="h2">Playground</Heading>
-            <Paragraph sx={{ mt: 3 }} variant="teaser">
-              for devleopment purposes only
-            </Paragraph>
-            <div
-              sx={{
-                mt: 2,
-                display: "grid",
-                gridTemplateColumns: "repeat(3, 1fr)",
-                gridGap: 2,
-              }}
-            >
-              {[
-                "blockdiagram-test",
-                "three-test",
-                "maplayoutfluid-test",
-                "book-test",
-              ].map((d) => (
-                <Link key={d} href={`playground/${d}`}>
-                  {d}
-                </Link>
-              ))}
-            </div>
-          </Box>
-        </main>
+        <Section>
+          <h2>Quicklinks</h2>
+          <Teaser>based on data sources</Teaser>
+          <div className="mt-2 grid grid-cols-3 gap-2">
+            {links.map((l, idx) => (
+              <Link key={idx} href={l.href}>
+                {l.children}
+              </Link>
+            ))}
+          </div>
+        </Section>
+        <Section>
+          <h2>Playground</h2>
+          <Teaser>for development purposes only</Teaser>
+          <div className="mt-4 grid grid-cols-3 gap-3">
+            {[
+              "blockdiagram-test",
+              "three-test",
+              "maplayoutfluid-test",
+              "book-test",
+            ].map((d) => (
+              <Link key={d} href={`playground/${d}`}>
+                {d}
+              </Link>
+            ))}
+          </div>
+        </Section>
       </Container>
     </PageBase>
   );

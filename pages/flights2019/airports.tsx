@@ -2,7 +2,6 @@ import * as d3 from "d3";
 import { geoBertin1953 } from "d3-geo-projection";
 import { FeatureCollection, Point } from "geojson";
 import type { GetStaticProps, NextPage } from "next";
-import { Container } from "theme-ui";
 import { Vector2 } from "three";
 import LabelPoint from "../../components/LabelPoint";
 import LegendProportionalCircle from "../../components/LegendProportionalCircle";
@@ -21,6 +20,7 @@ import getCountryCodes from "../../lib/data/queries/country/getCountryCodes";
 import defaultTheme from "../../lib/styles/themes/defaultTheme";
 import { fInt } from "../../lib/utilities/formaters";
 import { SharedPageProps } from "../../types/Props";
+import Container from "../../components/Container";
 
 type Props = {
   airports: FeatureCollection<Point, AirportPropertiesWithCount>;
@@ -32,12 +32,12 @@ const Airports: NextPage<Props> = ({ airports, neCountriesTopoJson }) => {
   const airportsGeo: FeatureCollection<Point, AirportPropertiesWithCount> = {
     type: "FeatureCollection",
     features: airports.features.sort((a, b) =>
-      d3.descending(a.properties?.value, b.properties?.value)
+      d3.descending(a.properties?.value, b.properties?.value),
     ),
   };
 
   const flightCount = airportsGeo.features.map(
-    (feature) => feature.properties.value
+    (feature) => feature.properties.value,
   );
   const minRange = d3.min(flightCount);
   const maxRange = d3.max(flightCount);
@@ -91,7 +91,7 @@ const Airports: NextPage<Props> = ({ airports, neCountriesTopoJson }) => {
             <g>
               <LegendProportionalCircle
                 data={airports.features.map(
-                  (feature) => feature.properties?.value
+                  (feature) => feature.properties?.value,
                 )}
                 scaleRadius={scale}
                 title={"Flights per Airport"}

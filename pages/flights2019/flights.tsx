@@ -1,12 +1,9 @@
-/** @jsxImportSource theme-ui */
-
 import { geoPath } from "d3-geo";
 import { geoBertin1953 } from "d3-geo-projection";
 import type { NextPage } from "next";
 import { CiPalette } from "react-icons/ci";
 import { MdTour } from "react-icons/md";
 import { Step } from "react-joyride";
-import { Button, Container } from "theme-ui";
 import FlightsFlowMap from "../../components/FlightsFlowMap";
 import MapLayerBase from "../../components/MapLayerBase";
 import MapLayerTissotsIndicatrices from "../../components/MapLayerTissotsIndicatrices";
@@ -19,6 +16,7 @@ import getCountries from "../../lib/data/getCountries";
 import getOdMatrix from "../../lib/data/getOdMatrix";
 import type { OdMatrix } from "../../types/OdMatrix";
 import { SharedPageProps } from "../../types/Props";
+import Container from "../../components/Container";
 
 type Props = {
   odMatrix: OdMatrix;
@@ -50,9 +48,9 @@ const Flights: NextPage<Props> = ({ odMatrix, neCountriesTopoJson }) => {
     },
     {
       content: (
-        <div sx={{ textAlign: "left" }}>
-          <p sx={{ fontFamily: "heading", mt: 0 }}>
-            <CiPalette sx={{ mb: -1, mr: 2 }} />
+        <div className="text-left">
+          <p className="font-serif">
+            <CiPalette className="mb-[-1rem] mr-2" />
             Design
           </p>
           <Tissot />
@@ -63,18 +61,18 @@ const Flights: NextPage<Props> = ({ odMatrix, neCountriesTopoJson }) => {
           </p>
           <details>
             <summary>More</summary>
-            <table sx={{ fontSize: 1, td: { pr: 3 } }}>
+            <table className="text-xs">
               <tr>
-                <td>Alias</td>
-                <td>Bertin1953</td>
+                <td className="pr-3">Alias</td>
+                <td className="pr-3">Bertin1953</td>
               </tr>
               <tr>
-                <td>Domain</td>
-                <td>2D</td>
+                <td className="pr-3">Domain</td>
+                <td className="pr-3">2D</td>
               </tr>
               <tr>
-                <td>formulation</td>
-                <td>Philippe Rivière (2017)</td>
+                <td className="pr-3">formulation</td>
+                <td className="pr-3">Philippe Rivière (2017)</td>
               </tr>
             </table>
           </details>
@@ -105,15 +103,15 @@ const Flights: NextPage<Props> = ({ odMatrix, neCountriesTopoJson }) => {
           </MapLayoutFluid>
           <Tour steps={steps} />
           {/* TODO: implement tour restarting */}
-          <Button
-            variant="muted"
+          <button
+            className="bg-itc-green-50 flex items-center p-2"
             onClick={() => {
               console.log("restarting tour …");
             }}
           >
-            <MdTour style={{ marginRight: 5 }} />
+            <MdTour className="mr-2" />
             Restart Tour
-          </Button>
+          </button>
         </main>
       </Container>
     </PageBase>

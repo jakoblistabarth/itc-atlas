@@ -1,5 +1,3 @@
-/** @jsxImportSource theme-ui */
-
 import { ScaleLinear, format } from "d3";
 import type { FC, SVGProps } from "react";
 

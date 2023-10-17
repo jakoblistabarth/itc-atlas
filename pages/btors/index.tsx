@@ -1,22 +1,24 @@
 import type { NextPage } from "next";
-import { Container, Grid, Heading, Text } from "theme-ui";
 import CardLink from "../../components/CardLink";
 import PageBase from "../../components/PageBase/PageBase";
+import Container from "../../components/Container";
+import Teaser from "../../components/Teaser";
+import SecondaryNavigation from "../../components/SecondaryNavigation";
 
 const Page: NextPage = () => (
   <PageBase title="BTORS">
     <Container>
       <main>
-        <Text variant="teaser">
+        <Teaser>
           Insights into ITC&apos;s travels around the globe through the
           &quot;Back to Office&quot; reports.
-        </Text>
+        </Teaser>
 
-        <Grid variant="navigation">
+        <SecondaryNavigation>
           <CardLink href={`/btors/travels-by-department`}>
-            <Heading as="h2">By department</Heading>
+            <h2>By department</h2>
           </CardLink>
-        </Grid>
+        </SecondaryNavigation>
       </main>
     </Container>
   </PageBase>

@@ -3,7 +3,6 @@ import { geoInterruptedMollweide } from "d3-geo-projection";
 import type { GetStaticProps, NextPage } from "next";
 import { useState } from "react";
 import useSWR from "swr";
-import { Container } from "theme-ui";
 import LegendNominal from "../../components/LegendNominal";
 import MapLayerBase from "../../components/MapLayerBase";
 import MapLayoutFluid from "../../components/MapLayout/MapLayoutFluid";
@@ -15,6 +14,7 @@ import { departmentColorScale } from "../../lib/styles/departmentColorScale";
 import defaultTheme from "../../lib/styles/themes/defaultTheme";
 import prisma from "../../prisma/client";
 import { SharedPageProps } from "../../types/Props";
+import Container from "../../components/Container";
 
 type Props = {
   phdsByCountryByDepartment: Awaited<

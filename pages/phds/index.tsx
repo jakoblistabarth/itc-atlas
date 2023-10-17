@@ -1,8 +1,10 @@
 import type { NextPage } from "next";
 import { useRouter } from "next/router";
-import { Container, Grid, Heading, Text } from "theme-ui";
 import CardLink from "../../components/CardLink";
 import PageBase from "../../components/PageBase";
+import Container from "../../components/Container";
+import Teaser from "../../components/Teaser";
+import SecondaryNavigation from "../../components/SecondaryNavigation";
 
 const Page: NextPage = () => {
   const { route } = useRouter();
@@ -11,16 +13,16 @@ const Page: NextPage = () => {
     <PageBase title="ITC's PhDs">
       <Container>
         <main>
-          <Text variant="teaser">Insights into ITC&apos;s PhDs.</Text>
+          <Teaser>Insights into ITC&apos;s PhDs.</Teaser>
 
-          <Grid variant="navigation">
+          <SecondaryNavigation>
             <CardLink href={`${route}/departments`}>
-              <Heading as="h2">Per country of origin and department</Heading>
+              <h2>Per country of origin and department</h2>
             </CardLink>
             <CardLink href={`${route}/theses`}>
-              <Heading as="h2">Overview of ITC&apos;s theses</Heading>
+              <h2>Overview of ITC&apos;s theses</h2>
             </CardLink>
-          </Grid>
+          </SecondaryNavigation>
         </main>
       </Container>
     </PageBase>

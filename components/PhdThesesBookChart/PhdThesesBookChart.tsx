@@ -3,7 +3,6 @@ import { PhdTheses } from "../../lib/data/queries/phd/getPhdTheses";
 import { Canvas } from "@react-three/fiber";
 import Book from "../Book";
 import { ScaleOrdinal, extent, randomUniform, range } from "d3";
-import { Box } from "theme-ui";
 import {
   AccumulativeShadows,
   Environment,
@@ -12,6 +11,7 @@ import {
 } from "@react-three/drei";
 import { getSpiralPoints } from "./PhdThesesBookChart.helpers";
 import { Euler, Vector3 } from "three";
+import CanvasStage from "../CanvasStage";
 
 type Props = {
   thesesByYear: Map<number, PhdTheses>;
@@ -23,7 +23,7 @@ const PhdThesesBookChart: FC<Props> = ({ thesesByYear, colorScale }) => {
   const [start, end] = [min ?? 0, max ? max + 1 : 1];
   const spiralPoints = getSpiralPoints(end + 1 - start, 3, Math.PI * 2 * 2);
   return (
-    <Box variant="layout.canvasStage">
+    <CanvasStage>
       <Canvas
         shadows
         orthographic
@@ -34,12 +34,12 @@ const PhdThesesBookChart: FC<Props> = ({ thesesByYear, colorScale }) => {
             const position = new Vector3(
               spiralPoints[idx].x,
               0,
-              spiralPoints[idx].y
+              spiralPoints[idx].y,
             );
             const roatation = new Euler(
               0,
               -spiralPoints[idx].theta + Math.PI,
-              0
+              0,
             );
             return thesesByYear.get(year) ? (
               <BookStack
@@ -65,7 +65,7 @@ const PhdThesesBookChart: FC<Props> = ({ thesesByYear, colorScale }) => {
         </AccumulativeShadows>
         <OrbitControls minZoom={40} maxPolarAngle={Math.PI / 2} makeDefault />
       </Canvas>
-    </Box>
+    </CanvasStage>
   );
 };
 

@@ -1,10 +1,9 @@
-/** @jsxImportSource theme-ui */
-
 import type { NextPage } from "next";
-import { Grid } from "theme-ui";
 import CardLink from "../../components/CardLink";
 import { useRouter } from "next/router";
 import PageBase from "../../components/PageBase";
+import Container from "../../components/Container";
+import SecondaryNavigation from "../../components/SecondaryNavigation";
 
 const Home: NextPage = () => {
   const { route } = useRouter();
@@ -12,18 +11,20 @@ const Home: NextPage = () => {
   return (
     <>
       <PageBase title="Playground">
-        <Grid variant="navigation">
-          {[
-            "blockdiagram-test",
-            "three-test",
-            "maplayoutfluid-test",
-            "book-test",
-          ].map((d) => (
-            <CardLink key={d} href={`${route}/${d}`}>
-              {d}
-            </CardLink>
-          ))}
-        </Grid>
+        <Container>
+          <SecondaryNavigation>
+            {[
+              "blockdiagram-test",
+              "three-test",
+              "maplayoutfluid-test",
+              "book-test",
+            ].map((d) => (
+              <CardLink key={d} href={`${route}/${d}`}>
+                <h2>{d}</h2>
+              </CardLink>
+            ))}
+          </SecondaryNavigation>
+        </Container>
       </PageBase>
     </>
   );

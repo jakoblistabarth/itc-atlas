@@ -6,13 +6,17 @@ import * as aq from "arquero";
 import type { NextPage } from "next";
 import { useRouter } from "next/router";
 import useSWR from "swr";
-import { Box, Container, Grid, Heading, Paragraph } from "theme-ui";
 import CardLink from "../../components/CardLink";
 import ChapterHeader from "../../components/ChapterHeader";
 import Footer from "../../components/Footer";
 import Seo from "../../components/Seo";
 import SummaryTable from "../../components/SummaryTable";
 import ChapterHighlights from "../../components/ChapterHighlights";
+import Container from "../../components/Container";
+import Section from "../../components/Section";
+import Teaser from "../../components/Teaser";
+import Paragraph from "../../components/Paragraph";
+import SecondaryNavigation from "../../components/SecondaryNavigation";
 
 const Projects: NextPage = () => {
   const { data, error, isLoading } = useSWR("/api/data/project/");
@@ -66,11 +70,9 @@ const Projects: NextPage = () => {
 
       <Container>
         <main>
-          <Box as="section" variant="layout.section">
-            <Heading as="h2">Chapter Projects</Heading>
-            <Paragraph variant="teaser">
-              Insights into ITC&apos;s projects around the globe.
-            </Paragraph>
+          <Section>
+            <h2>Chapter Projects</h2>
+            <Teaser>Insights into ITC&apos;s projects around the globe.</Teaser>
             <Paragraph>
               The last decade the thematic focus was more consistent, but the
               geographic focus continues to shift, reflecting political choices.
@@ -79,9 +81,9 @@ const Projects: NextPage = () => {
               with societal partners such as NGO&apos;s, knowledge institutions,
               and the private sector.
             </Paragraph>
-          </Box>
+          </Section>
 
-          <Box as="section" variant="layout.section">
+          <Section>
             <ChapterHighlights
               highlights={[
                 {
@@ -94,22 +96,24 @@ const Projects: NextPage = () => {
                 },
               ]}
             />
-          </Box>
+          </Section>
 
-          <Grid variant={"navigation"}>
-            {links.map((l, idx) => (
-              <CardLink key={idx} href={l.href}>
-                <Heading as="h2">{l.children}</Heading>
-              </CardLink>
-            ))}
-          </Grid>
+          <Section>
+            <SecondaryNavigation>
+              {links.map((l, idx) => (
+                <CardLink key={idx} href={l.href}>
+                  <h2>{l.children}</h2>
+                </CardLink>
+              ))}
+            </SecondaryNavigation>
+          </Section>
 
           {error && <div>failed to load</div>}
           {isLoading && <div>Loading …</div>}
           {!isLoading && !error && (
-            <>
+            <Section>
               <SummaryTable data={aq.from(data)} />
-              <div className="ag-theme-material" style={{ height: 500 }}>
+              <div className="ag-theme-material mt-5 h-[500px]">
                 <AgGridReact
                   rowData={data}
                   columnDefs={columnDefs}
@@ -117,7 +121,7 @@ const Projects: NextPage = () => {
                   pagination={true}
                 />
               </div>
-            </>
+            </Section>
           )}
         </main>
       </Container>

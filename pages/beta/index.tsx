@@ -1,23 +1,24 @@
-/** @jsxImportSource theme-ui */
-
 import type { NextPage } from "next";
-import { Box, Container, Heading, Paragraph } from "theme-ui";
 import PageBase from "../../components/PageBase";
 import Link from "next/link";
 import Callout from "../../components/Callout";
 import { BiBug } from "react-icons/bi";
+import Container from "../../components/Container";
+import Section from "../../components/Section";
+import Teaser from "../../components/Teaser";
+import Paragraph from "../../components/Paragraph";
 
 const Page: NextPage = () => {
   return (
     <PageBase title="ITC Atlas – beta version">
       <Container>
         <main>
-          <Box as="section" variant="layout.section">
-            <Paragraph variant="text.teaser">
+          <Section>
+            <Teaser>
               We&apos;re working on an online atlas for ITC. The website
               you&apos;re looking at right now is still in beta.
-            </Paragraph>
-            <Heading as="h2">What does the beta phase mean for you?</Heading>
+            </Teaser>
+            <h2>What does the beta phase mean for you?</h2>
             <Callout Icon={BiBug}>Watch out for bugs!</Callout>
             <Paragraph>
               Generally, that means that the website itself and its maps,
@@ -28,7 +29,7 @@ const Page: NextPage = () => {
               product.
             </Paragraph>
 
-            <Heading as="h2">What does the beta phase mean for us?</Heading>
+            <h2>What does the beta phase mean for us?</h2>
             <Paragraph>
               Well, obviously a lot of work on our table. We are busy improving
               the individual components used on this website (see the{" "}
@@ -39,7 +40,7 @@ const Page: NextPage = () => {
               publicly available instance frequently as we go.
             </Paragraph>
 
-            <Heading as="h2">Why this atlas?</Heading>
+            <h2>Why this atlas?</h2>
             <Paragraph>
               ITC&apos;s mission is capacity development. We apply, share and
               facilitate the effective use of geo-information and earth
@@ -58,7 +59,7 @@ const Page: NextPage = () => {
               agendas. The graphics assist to identify and analyse the best
               practices and lessons learned to be applied in future activities.
             </Paragraph>
-          </Box>
+          </Section>
         </main>
       </Container>
     </PageBase>

@@ -2,7 +2,6 @@ import * as d3 from "d3";
 import { union } from "d3";
 import { geoBertin1953 } from "d3-geo-projection";
 import type { GetStaticProps, NextPage } from "next";
-import { Box, Grid, Heading, Paragraph, Text } from "theme-ui";
 import { feature } from "topojson-client";
 import MapLayerBase from "../../components/MapLayerBase";
 import MapLayout from "../../components/MapLayout";
@@ -24,6 +23,11 @@ import { SharedPageProps } from "../../types/Props";
 import PoliciesPrismMap from "../../components/PoliciesPrismMap";
 import MapLayoutFluid from "../../components/MapLayout/MapLayoutFluid";
 import LegendNominal from "../../components/LegendNominal";
+import Teaser from "../../components/Teaser";
+import Paragraph from "../../components/Paragraph";
+import Container from "../../components/Container";
+import Section from "../../components/Section";
+import CanvasStage from "../../components/CanvasStage";
 
 type Props = {
   nfps: NfpCountry[];
@@ -42,11 +46,11 @@ const NfpCountries: NextPage<Props> = ({
   const maxSize = 50;
 
   const yearDomain = d3.extent(
-    nfps.map((nfp) => new Date(nfp.year.toString()))
+    nfps.map((nfp) => new Date(nfp.year.toString())),
   );
   const perYear = d3.group(nfps, (d) => d.year);
   const countDomain = d3.extent(
-    [...Array.from(perYear.values())].map((countries) => countries.length)
+    [...Array.from(perYear.values())].map((countries) => countries.length),
   );
 
   const scale = d3
@@ -62,12 +66,12 @@ const NfpCountries: NextPage<Props> = ({
   const selection = selectedYears.map((y) => perYear.get(y));
 
   const cabinetsWithBhosData = Array.from(
-    union(bhosCountries.map((d) => d.cabinet))
+    union(bhosCountries.map((d) => d.cabinet)),
   );
 
   const geometries = feature(
     neCountriesTopoJson,
-    neCountriesTopoJson.objects.ne_admin_0_countries
+    neCountriesTopoJson.objects.ne_admin_0_countries,
   );
 
   const {
@@ -80,232 +84,247 @@ const NfpCountries: NextPage<Props> = ({
   return (
     <>
       <PageBase title="Development Policies">
-        <Text variant="teaser">
-          Insights into the moved history of Dutch development approaches in the
-          last 70 years
-        </Text>
+        <Container>
+          <Teaser>
+            Insights into the moved history of Dutch development approaches in
+            the last 70 years
+          </Teaser>
 
-        <Paragraph>
-          A company that can incubate faithfully will (at some unspecified point
-          in the future) be able to orchestrate correctly. If you productize
-          globally, you may also reintermediate magnetically. Without
-          development, you will lack experiences.
-        </Paragraph>
+          <Paragraph>
+            A company that can incubate faithfully will (at some unspecified
+            point in the future) be able to orchestrate correctly. If you
+            productize globally, you may also reintermediate magnetically.
+            Without development, you will lack experiences.
+          </Paragraph>
 
-        <Heading sx={{ mt: 5 }}>Current Dutch development policy</Heading>
-        <Heading as="h3">Rutte IV</Heading>
-        <MapLayoutFluid projection={geoBertin1953()}>
-          <BhosGradientDefs
-            categoryCombinations={categoryCombinations}
-            getCategoryKey={getCategoryKey}
-            colorScale={colorScale}
-          />
+          <Section>
+            <h2 className="mt-5">Current Dutch development policy</h2>
+            <h3>Rutte IV</h3>
+            <MapLayoutFluid projection={geoBertin1953()}>
+              <BhosGradientDefs
+                categoryCombinations={categoryCombinations}
+                getCategoryKey={getCategoryKey}
+                colorScale={colorScale}
+              />
 
-          <MapLayerBase countries={neCountriesTopoJson} />
-          <g>
-            {geometries.features.map((f, idx) => {
-              const bhosCountry = bhosCountriesWithCategories.find(
-                (d) =>
-                  d.isoAlpha3 === f.properties.ADM0_A3_NL &&
-                  d.cabinet === "Rutte IV"
-              );
-              return (
-                <MarkGeometry
-                  key={`${f.properties.ADM0_A3_NL}-${idx}`}
-                  feature={f}
-                  fill={
-                    bhosCountry?.categories
-                      ? `url(#${getCategoryKey(bhosCountry.categories)})`
-                      : "transparent"
-                  }
-                  stroke="white"
-                />
-              );
-            })}
-          </g>
-          <LegendNominal
-            transform="translate(10 10)"
-            entries={bhosCountries
-              .filter((d) => d.cabinet === "Rutte IV")
-              .reduce(
-                (acc: { label: string; color: string }[], { category }) => {
-                  if (acc.map((d) => d.label).includes(category)) return acc;
-                  return [
-                    ...acc,
-                    { label: category, color: colorScale(category) },
-                  ];
-                },
-                []
-              )}
-          />
-        </MapLayoutFluid>
-
-        <Heading sx={{ mt: 5 }}>Number of focus countries over time</Heading>
-        <svg width={width} height={150}>
-          <g transform={`translate(${margin}, ${margin})`}>
-            {d3
-              .range(
-                yearDomain[0]?.getFullYear() ?? 0,
-                (yearDomain[1]?.getFullYear() ?? 0) + 1,
-                1
-              )
-              .map((year) => {
-                const yearDate = new Date(year.toString());
-                const yearData = perYear.get(year);
-                return (
-                  <g
-                    key={year}
-                    transform={`translate(${scaleTime(yearDate)}, ${maxSize})`}
-                  >
-                    <circle
-                      cx={maxSize}
-                      cy={0}
-                      r={yearData ? scale(yearData.length) : 1}
-                      fill={yearData ? "black" : "lightgrey"}
-                      fillOpacity={yearData ? 0.2 : 1}
-                      stroke={yearData ? "black" : "none"}
+              <MapLayerBase countries={neCountriesTopoJson} />
+              <g>
+                {geometries.features.map((f, idx) => {
+                  const bhosCountry = bhosCountriesWithCategories.find(
+                    (d) =>
+                      d.isoAlpha3 === f.properties.ADM0_A3_NL &&
+                      d.cabinet === "Rutte IV",
+                  );
+                  return (
+                    <MarkGeometry
+                      key={`${f.properties.ADM0_A3_NL}-${idx}`}
+                      feature={f}
+                      fill={
+                        bhosCountry?.categories
+                          ? `url(#${getCategoryKey(bhosCountry.categories)})`
+                          : "transparent"
+                      }
+                      stroke="white"
                     />
-                    <line
-                      x1={maxSize}
-                      y1={5}
-                      x2={maxSize}
-                      y2={maxSize / 2 + 5}
-                      strokeWidth={0.5}
-                      stroke={"grey"}
-                    />
-                    <text
-                      fontSize={"10"}
-                      textAnchor="middle"
-                      x={maxSize}
-                      y={maxSize / 2 + 20}
+                  );
+                })}
+              </g>
+              <LegendNominal
+                transform="translate(10 10)"
+                entries={bhosCountries
+                  .filter((d) => d.cabinet === "Rutte IV")
+                  .reduce(
+                    (acc: { label: string; color: string }[], { category }) => {
+                      if (acc.map((d) => d.label).includes(category))
+                        return acc;
+                      return [
+                        ...acc,
+                        { label: category, color: colorScale(category) },
+                      ];
+                    },
+                    [],
+                  )}
+              />
+            </MapLayoutFluid>
+          </Section>
+
+          <Section>
+            <h2>Number of focus countries over time</h2>
+            <svg width={width} height={150}>
+              <g transform={`translate(${margin}, ${margin})`}>
+                {d3
+                  .range(
+                    yearDomain[0]?.getFullYear() ?? 0,
+                    (yearDomain[1]?.getFullYear() ?? 0) + 1,
+                    1,
+                  )
+                  .map((year) => {
+                    const yearDate = new Date(year.toString());
+                    const yearData = perYear.get(year);
+                    return (
+                      <g
+                        key={year}
+                        transform={`translate(${scaleTime(
+                          yearDate,
+                        )}, ${maxSize})`}
+                      >
+                        <circle
+                          cx={maxSize}
+                          cy={0}
+                          r={yearData ? scale(yearData.length) : 1}
+                          fill={yearData ? "black" : "lightgrey"}
+                          fillOpacity={yearData ? 0.2 : 1}
+                          stroke={yearData ? "black" : "none"}
+                        />
+                        <line
+                          x1={maxSize}
+                          y1={5}
+                          x2={maxSize}
+                          y2={maxSize / 2 + 5}
+                          strokeWidth={0.5}
+                          stroke={"grey"}
+                        />
+                        <text
+                          fontSize={"10"}
+                          textAnchor="middle"
+                          x={maxSize}
+                          y={maxSize / 2 + 20}
+                        >
+                          {year}
+                        </text>
+                      </g>
+                    );
+                  })}
+              </g>
+            </svg>
+
+            <CanvasStage>
+              <PoliciesPrismMap
+                topology={neCountriesTopoJson}
+                bhosCountries={bhosCountries}
+              />
+            </CanvasStage>
+            <Paragraph>
+              If all of this comes off as mixed-up to you, that&apos;s because
+              it is! Quick: do you have a infinitely reconfigurable scheme for
+              coping with emerging methodologies? Is it more important for
+              something to be dynamic or to be customer-directed? What does the
+              buzzword &quot;technologies&quot; really mean? Think granular.
+              Without macro-vertical CAE, you will lack synergies. Imagine a
+              combination of ActionScript and PHP. We pride ourselves not only
+              on our robust feature set, but our vertical, customized efficient,
+              user-centric TQM and non-complex use is usually considered an
+              amazing achievement. A company that can incubate faithfully will
+              (at some unspecified point in the future) be able to orchestrate
+              correctly. If you productize globally, you may also reintermediate
+              magnetically. Without development, you will lack experiences.
+            </Paragraph>
+          </Section>
+
+          <Section>
+            <h2>Focus countries of Dutch development policies</h2>
+            <div className="grid grid-cols-4 gap-1">
+              {dutchCabinets
+                .filter((d) => cabinetsWithBhosData.includes(d.name))
+                .map(({ name, dateStart, dateEnd }, idx) => {
+                  const foucsCountries = geometries.features.filter((f) =>
+                    bhosCountries
+                      .filter((d) => d.category === "General Focus Country")
+                      .filter((d) => d.cabinet === name)
+                      .map((d) => d.isoAlpha3)
+                      .includes(f.properties.ADM0_A3_NL),
+                  );
+
+                  const projection = geoBertin1953();
+                  const bounds = {
+                    width: 250,
+                    height: 200,
+                  };
+                  return (
+                    <MapLayout
+                      key={idx}
+                      bounds={bounds}
+                      projection={projection}
                     >
-                      {year}
-                    </text>
-                  </g>
+                      <MapLayoutHeader>
+                        <text dominantBaseline={"hanging"}>{name}</text>
+                        <text
+                          dominantBaseline={"hanging"}
+                          fontSize={".5em"}
+                          dy={"2em"}
+                        >
+                          {new Date(dateStart).getFullYear()}–
+                          {new Date(dateEnd).getFullYear()}
+                        </text>
+                      </MapLayoutHeader>
+                      <MapLayoutBody bounds={bounds}>
+                        <MapLayerBase countries={neCountriesTopoJson} />
+                        <g>
+                          {foucsCountries.map((p, idx) => (
+                            <MarkGeometry
+                              key={`${p.properties.ADM0_A3_NL}-${idx}`}
+                              feature={p}
+                              fill={"teal"}
+                            />
+                          ))}
+                        </g>
+                      </MapLayoutBody>
+                    </MapLayout>
+                  );
+                })}
+            </div>
+          </Section>
+
+          <Section>
+            <h2>NFP countries</h2>
+            <Paragraph>
+              NFP countries are Without preplanned cyber-Total Quality Control,
+              aggregation are forced to become cross-media? We think that most
+              C2C2C web-based applications use far too much Perl, and not enough
+              OWL. Clicking on this link which refers to B2B Marketing awards
+              shortlist will take you to the capacity to enable perfectly leads
+              to the capacity to synthesize interactively. If all of this sounds
+              astonishing to you.
+            </Paragraph>
+            <div className="mt-5 grid grid-cols-4 gap-4">
+              {selection.map((selectedYear, idx) => {
+                const nfpCountryCodes = selectedYear?.map((d) => d.countryISO);
+                const foucsCountries = geometries.features.filter(
+                  (f) => nfpCountryCodes?.includes(f.properties.ADM0_A3_NL),
+                );
+
+                const projection = geoBertin1953();
+                const bounds = {
+                  width: 250,
+                  height: 200,
+                };
+                return (
+                  <MapLayout key={idx} bounds={bounds} projection={projection}>
+                    <MapLayoutHeader centered>
+                      {selectedYear && (
+                        <text dominantBaseline={"hanging"}>
+                          {selectedYear[0]?.year.toString()}
+                        </text>
+                      )}
+                    </MapLayoutHeader>
+                    <MapLayoutBody bounds={bounds}>
+                      <MapLayerBase countries={neCountriesTopoJson} />
+                      <g>
+                        {foucsCountries.map((p, idx) => (
+                          <MarkGeometry
+                            key={`${p.properties.ADM0_A3}-${idx}`}
+                            feature={p}
+                            style={{ fill: "teal" }}
+                          />
+                        ))}
+                      </g>
+                    </MapLayoutBody>
+                  </MapLayout>
                 );
               })}
-          </g>
-        </svg>
-
-        <Box variant="layout.canvasStage">
-          <PoliciesPrismMap
-            topology={neCountriesTopoJson}
-            bhosCountries={bhosCountries}
-          />
-        </Box>
-        <Paragraph>
-          If all of this comes off as mixed-up to you, that&apos;s because it
-          is! Quick: do you have a infinitely reconfigurable scheme for coping
-          with emerging methodologies? Is it more important for something to be
-          dynamic or to be customer-directed? What does the buzzword
-          &quot;technologies&quot; really mean? Think granular. Without
-          macro-vertical CAE, you will lack synergies. Imagine a combination of
-          ActionScript and PHP. We pride ourselves not only on our robust
-          feature set, but our vertical, customized efficient, user-centric TQM
-          and non-complex use is usually considered an amazing achievement. A
-          company that can incubate faithfully will (at some unspecified point
-          in the future) be able to orchestrate correctly. If you productize
-          globally, you may also reintermediate magnetically. Without
-          development, you will lack experiences.
-        </Paragraph>
-
-        <Heading sx={{ mt: 5 }}>
-          Focus countries of Dutch development policies
-        </Heading>
-        <Grid columns={"1fr 1fr 1fr 1fr"} gap={"1em 1em"}>
-          {dutchCabinets
-            .filter((d) => cabinetsWithBhosData.includes(d.name))
-            .map(({ name, dateStart, dateEnd }, idx) => {
-              const foucsCountries = geometries.features.filter((f) =>
-                bhosCountries
-                  .filter((d) => d.category === "General Focus Country")
-                  .filter((d) => d.cabinet === name)
-                  .map((d) => d.isoAlpha3)
-                  .includes(f.properties.ADM0_A3_NL)
-              );
-
-              const projection = geoBertin1953();
-              const bounds = {
-                width: 250,
-                height: 200,
-              };
-              return (
-                <MapLayout key={idx} bounds={bounds} projection={projection}>
-                  <MapLayoutHeader>
-                    <text dominantBaseline={"hanging"}>{name}</text>
-                    <text
-                      dominantBaseline={"hanging"}
-                      fontSize={".5em"}
-                      dy={"2em"}
-                    >
-                      {new Date(dateStart).getFullYear()}–
-                      {new Date(dateEnd).getFullYear()}
-                    </text>
-                  </MapLayoutHeader>
-                  <MapLayoutBody bounds={bounds}>
-                    <MapLayerBase countries={neCountriesTopoJson} />
-                    <g>
-                      {foucsCountries.map((p, idx) => (
-                        <MarkGeometry
-                          key={`${p.properties.ADM0_A3_NL}-${idx}`}
-                          feature={p}
-                          fill={"teal"}
-                        />
-                      ))}
-                    </g>
-                  </MapLayoutBody>
-                </MapLayout>
-              );
-            })}
-        </Grid>
-
-        <Heading>NFP countries</Heading>
-        <Paragraph>
-          NFP countries are Without preplanned cyber-Total Quality Control,
-          aggregation are forced to become cross-media? We think that most C2C2C
-          web-based applications use far too much Perl, and not enough OWL.
-          Clicking on this link which refers to B2B Marketing awards shortlist
-          will take you to the capacity to enable perfectly leads to the
-          capacity to synthesize interactively. If all of this sounds
-          astonishing to you.
-        </Paragraph>
-        <Grid columns={"1fr 1fr 1fr 1fr"} gap={"1em 1em"} sx={{ mt: 3 }}>
-          {selection.map((selectedYear, idx) => {
-            const nfpCountryCodes = selectedYear?.map((d) => d.countryISO);
-            const foucsCountries = geometries.features.filter(
-              (f) => nfpCountryCodes?.includes(f.properties.ADM0_A3_NL)
-            );
-
-            const projection = geoBertin1953();
-            const bounds = {
-              width: 250,
-              height: 200,
-            };
-            return (
-              <MapLayout key={idx} bounds={bounds} projection={projection}>
-                <MapLayoutHeader centered>
-                  {selectedYear && (
-                    <text dominantBaseline={"hanging"}>
-                      {selectedYear[0]?.year.toString()}
-                    </text>
-                  )}
-                </MapLayoutHeader>
-                <MapLayoutBody bounds={bounds}>
-                  <MapLayerBase countries={neCountriesTopoJson} />
-                  <g>
-                    {foucsCountries.map((p, idx) => (
-                      <MarkGeometry
-                        key={`${p.properties.ADM0_A3}-${idx}`}
-                        feature={p}
-                        style={{ fill: "teal" }}
-                      />
-                    ))}
-                  </g>
-                </MapLayoutBody>
-              </MapLayout>
-            );
-          })}
-        </Grid>
+            </div>
+          </Section>
+        </Container>
       </PageBase>
     </>
   );

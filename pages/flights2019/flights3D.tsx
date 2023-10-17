@@ -3,13 +3,13 @@ import { Canvas } from "@react-three/fiber";
 import * as d3 from "d3";
 import type { NextPage } from "next";
 import { Suspense, useState } from "react";
-import { Container } from "theme-ui";
 import Globe, { FallBackGlobe } from "../../components/Globe/";
 import GlobeEnvironment from "../../components/Globe/GlobeEnvironment";
 import Mark3dFlow from "../../components/Mark3dFlow";
 import PageBase from "../../components/PageBase";
 import getOdMatrix from "../../lib/data/getOdMatrix";
 import type { OdMatrix } from "../../types/OdMatrix";
+import Container from "../../components/Container";
 
 type Props = {
   odMatrix: OdMatrix;
@@ -19,7 +19,7 @@ const earthRadius = 1;
 
 const Flights: NextPage<Props> = ({ odMatrix }) => {
   const flightsPerRoute = odMatrix.flows.features.map(
-    (flow) => flow.properties?.value
+    (flow) => flow.properties?.value,
   );
   const min = d3.min(flightsPerRoute);
   const max = d3.max(flightsPerRoute);

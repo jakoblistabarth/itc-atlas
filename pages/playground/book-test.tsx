@@ -1,5 +1,3 @@
-/** @jsxImportSource theme-ui */
-
 import {
   AccumulativeShadows,
   Environment,
@@ -9,14 +7,14 @@ import {
 import { Canvas } from "@react-three/fiber";
 import { randomInt, randomUniform, range } from "d3";
 import type { NextPage } from "next";
-import { Box } from "theme-ui";
 import Book from "../../components/Book";
 import PageBase from "../../components/PageBase";
+import CanvasStage from "../../components/CanvasStage";
 
 const Page: NextPage = () => {
   return (
     <PageBase title="Book test">
-      <Box variant="layout.canvasStage" sx={{ height: "500px" }}>
+      <CanvasStage>
         <Canvas
           orthographic
           shadows
@@ -45,11 +43,11 @@ const Page: NextPage = () => {
                     randomUniform(-0.05, 0.05)(),
                   ]}
                 />
-              ))
+              )),
             )}
           </group>
         </Canvas>
-      </Box>
+      </CanvasStage>
     </PageBase>
   );
 };

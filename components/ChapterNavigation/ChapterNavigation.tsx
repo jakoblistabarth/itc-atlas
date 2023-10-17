@@ -1,44 +1,42 @@
-/** @jsxImportSource theme-ui */
-
 import { FC } from "react";
-import { Heading, Grid, Box } from "theme-ui";
 import CardLink from "../CardLink";
 import IconResearch from "../../public/images/icon_research.svg";
 import IconEducation from "../../public/images/icon_education.svg";
 import IconProjects from "../../public/images/icon_projects.svg";
 import IconIntroduction from "../../public/images/icon_introduction.svg";
 import IconAppendix from "../../public/images/icon_appendix.svg";
+import Section from "../Section";
 
 type Props = {
   title?: string;
 };
 
 const ChapterNavigation: FC<Props> = ({ title = "Chapters" }) => (
-  <Box as="section" variant="layout.section">
-    <Heading as="h2">{title}</Heading>
-    <Grid variant="navigation">
+  <Section>
+    <h2>{title}</h2>
+    <div className="mb-4 mt-2 grid max-w-4xl grid-cols-[repeat(auto-fill,_minmax(240px,_1fr))] gap-3">
       <CardLink href="/introduction">
         <IconIntroduction width={"2em"} height={"2em"} opacity={0.2} />
-        <Heading as="h3">Introduction</Heading>
+        <h3>Introduction</h3>
       </CardLink>
       <CardLink disabled={true} href="/research">
         <IconResearch width={"2em"} height={"2em"} opacity={0.2} />
-        <Heading as="h3">Chapter Research</Heading>
+        <h3>Chapter Research</h3>
       </CardLink>
       <CardLink disabled={true} href="/education">
         <IconEducation width={"2em"} height={"2em"} opacity={0.2} />
-        <Heading as="h3">Chapter Education</Heading>
+        <h3>Chapter Education</h3>
       </CardLink>
       <CardLink href="/projects">
         <IconProjects width={"2em"} height={"2em"} opacity={0.2} />
-        <Heading as="h3">Chapter Projects</Heading>
+        <h3>Chapter Projects</h3>
       </CardLink>
       <CardLink disabled={true} href="/appendix">
         <IconAppendix width={"2em"} height={"2em"} opacity={0.2} />
-        <Heading as="h3">Appendix</Heading>
+        <h3>Appendix</h3>
       </CardLink>
-    </Grid>
-  </Box>
+    </div>
+  </Section>
 );
 
 export default ChapterNavigation;

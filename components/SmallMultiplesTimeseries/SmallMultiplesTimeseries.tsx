@@ -1,11 +1,8 @@
-/** @jsxImportSource theme-ui */
-
 import { FC } from "react";
 import Sparkline from "../Sparkline";
 import { max, scaleLinear } from "d3";
 import { LinePathDatum } from "../LinePath/LinePathBase";
 import useMeasure from "react-use-measure";
-import { Box } from "theme-ui";
 
 type Props = {
   height?: number;
@@ -28,21 +25,21 @@ const SmallMultiplesTimeSeries: FC<Props> = ({ data, height = 50 }) => {
     .range([margin, width - margin]);
   const yScale = scaleLinear().domain([0, maxY]).range([height, 0]);
   return (
-    <Box ref={ref} sx={{ display: "grid", grid: "auto-flow / 1fr", gap: 4 }}>
+    <div ref={ref} className="grid gap-4">
       {data.map(({ label, data }) => {
         return (
-          <Box key={label}>
-            <h5 sx={{ mt: "0" }}>{label}</h5>
+          <div key={label}>
+            <h5>{label}</h5>
             <Sparkline
               xScale={xScale}
               yScale={yScale}
               label={label}
               data={data}
             />
-          </Box>
+          </div>
         );
       })}
-    </Box>
+    </div>
   );
 };
 

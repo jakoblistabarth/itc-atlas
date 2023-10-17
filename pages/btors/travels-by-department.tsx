@@ -1,8 +1,5 @@
-/** @jsxImportSource theme-ui */
-
 import { geoBertin1953 } from "d3-geo-projection";
 import type { GetStaticProps, NextPage } from "next";
-import { Box, Container } from "theme-ui";
 import MapLayoutFluid from "../../components/MapLayout/MapLayoutFluid";
 import PageBase from "../../components/PageBase";
 import BtorsByDepartment from "../../components/visuals/maps/BtorsByDepartment";
@@ -12,6 +9,8 @@ import getBtorsGroupedByRegionByDepartment, {
 } from "../../lib/data/queries/btors/getBtorsGroupedByRegionByDepartment";
 import getCountryCodes from "../../lib/data/queries/country/getCountryCodes";
 import { SharedPageProps } from "../../types/Props";
+import Container from "../../components/Container";
+import Section from "../../components/Section";
 
 type Props = SharedPageProps & {
   btorsByDepartment: BtorsGroupedByRegionByDepartment;
@@ -26,7 +25,7 @@ const Page: NextPage<Props> = ({
     <PageBase title="Travels by department">
       <Container>
         <main>
-          <Box as="section" variant="layout.section">
+          <Section>
             <MapLayoutFluid projection={geoBertin1953()}>
               <BtorsByDepartment
                 neCountries={neCountriesTopoJson}
@@ -34,7 +33,7 @@ const Page: NextPage<Props> = ({
                 btors={btorsByDepartment}
               />
             </MapLayoutFluid>
-          </Box>
+          </Section>
         </main>
       </Container>
     </PageBase>
@@ -45,7 +44,7 @@ export default Page;
 
 export const getStaticProps: GetStaticProps<Props> = async () => {
   const [btorsByDepartment, neCountriesTopoJson, countries] = await Promise.all(
-    [getBtorsGroupedByRegionByDepartment(), getCountries(), getCountryCodes()]
+    [getBtorsGroupedByRegionByDepartment(), getCountries(), getCountryCodes()],
   );
 
   return {

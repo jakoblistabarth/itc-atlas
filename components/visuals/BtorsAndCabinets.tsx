@@ -1,11 +1,8 @@
-/** @jsxImportSource theme-ui */
-
 import { FC, useMemo, useState } from "react";
 import { NeCountriesTopoJson } from "../../types/NeTopoJson";
 import BtorsByYear from "./charts/BtorsByYear";
 import { BtorsGroupedByYear } from "../../lib/data/queries/btors/getBtorsGroupedByYear";
 import { BhosCountry } from "../../types/BhosCountry";
-import { Button, Flex, Text } from "theme-ui";
 import { DutchCabinet } from "../../types/DutchCabinet";
 import MapLayerBase from "../MapLayerBase";
 import { geoBertin1953 } from "d3-geo-projection";
@@ -23,6 +20,8 @@ import getCountryName from "../../lib/getCountryName";
 import BhosGradientDefs from "./BhosGradientsDefs";
 import useBhosCategories from "./useBhosCategories";
 import { union } from "d3";
+import clsx from "clsx";
+import Paragraph from "../Paragraph";
 
 type Props = {
   neCountries: NeCountriesTopoJson;
@@ -40,17 +39,17 @@ const BtorsAndCabinets: FC<Props> = ({
   neCountries,
 }) => {
   const [activeCabinet, setActiveCabinet] = useState(
-    dutchCabinets[dutchCabinets.length - 1].name
+    dutchCabinets[dutchCabinets.length - 1].name,
   );
   const [activeCountry, setActiveCountry] = useState<string | undefined>(
-    undefined
+    undefined,
   );
 
   const cabinetsWithBhosData = Array.from(
-    union(bhosCountries.map((d) => d.cabinet))
+    union(bhosCountries.map((d) => d.cabinet)),
   );
   const filteredCabinets = dutchCabinets.filter((d) =>
-    cabinetsWithBhosData.includes(d.name)
+    cabinetsWithBhosData.includes(d.name),
   );
 
   const {
@@ -61,26 +60,26 @@ const BtorsAndCabinets: FC<Props> = ({
   } = useBhosCategories(
     bhosCountries.filter((d) =>
       ["General Focus Country", "Transition", "Trade Relations"].includes(
-        d.category
-      )
-    )
+        d.category,
+      ),
+    ),
   );
   const projection = geoBertin1953();
 
   const countries = useMemo(
     () => feature(neCountries, neCountries.objects.ne_admin_0_countries),
-    [neCountries]
+    [neCountries],
   );
 
   const countriesWithCategories = useMemo(() => {
     const selectedBhosCountries = bhosCountriesWithCategories.filter(
-      (d) => d.cabinet === activeCabinet
+      (d) => d.cabinet === activeCabinet,
     );
 
     const countriesWithCategories: Feature[] = countries.features.map(
       (d, idx) => {
         const match = selectedBhosCountries.find(
-          (country) => d.properties.ADM0_A3_NL === country.isoAlpha3
+          (country) => d.properties.ADM0_A3_NL === country.isoAlpha3,
         );
         return {
           ...d,
@@ -90,7 +89,7 @@ const BtorsAndCabinets: FC<Props> = ({
             categories: match?.categories,
           },
         };
-      }
+      },
     );
     return countriesWithCategories;
   }, [countries, activeCabinet, bhosCountriesWithCategories]);
@@ -98,41 +97,35 @@ const BtorsAndCabinets: FC<Props> = ({
   return (
     <div>
       <Callout Icon={HiCursorClick} title="Tipp">
-        <Text as="p">
+        <Paragraph>
           Select cabinet of interest and hover over countries (or the lines in
           the line chart) to get additional information.
-        </Text>
+        </Paragraph>
       </Callout>
-      <Flex
-        sx={{
-          flexWrap: "nowrap",
-          whiteSpace: "nowrap",
-          overflowX: "auto",
-          gap: 2,
-          mt: 2,
-          mb: 3,
-          pb: 2,
-          scrollbarWidth: "thin",
-        }}
-      >
+      <div className="pn-2 scroll mb-2 mt-2 flex flex-nowrap gap-2 overflow-x-auto whitespace-nowrap">
         {filteredCabinets.map((d) => (
-          <Button
-            variant="muted"
+          <button
             key={d.name}
-            sx={{
-              "&:firstChild": { marginLeft: "auto" },
-              "&:lastChild": { marginRight: "auto" },
-              minWidth: 100,
-              borderWidth: 1,
-              borderColor: activeCabinet === d.name ? "primary" : "transparent",
-              borderStyle: "solid",
-            }}
+            className={clsx(
+              "border-1 min-w-[100px] border-solid",
+              activeCabinet === d.name
+                ? "border-itc-green"
+                : "border-transparent",
+            )}
+            // sx={{
+            //   "&:firstChild": { marginLeft: "auto" },
+            //   "&:lastChild": { marginRight: "auto" },
+            //   minWidth: 100,
+            //   borderWidth: 1,
+            //   borderColor: activeCabinet === d.name ? "primary" : "transparent",
+            //   borderStyle: "solid",
+            // }}
             onClick={() => setActiveCabinet(d.name)}
           >
             {d.name}
-          </Button>
+          </button>
         ))}
-      </Flex>
+      </div>
       <svg width={"100%"} height={"50px"}>
         <LegendNominal
           transform="translate(0 10)"
@@ -175,7 +168,7 @@ const BtorsAndCabinets: FC<Props> = ({
                       setActiveCountry(d.properties?.isoAlpha3)
                     }
                     onMouseLeave={() => setActiveCountry(undefined)}
-                    sx={{ transition: "opacity .5s" }}
+                    className="transition-opacity duration-500"
                     opacity={
                       !isActiveCountry && !d.properties?.categories ? 0.05 : 1
                     }
@@ -183,9 +176,7 @@ const BtorsAndCabinets: FC<Props> = ({
                 </g>
               </TooltipTrigger>
               <TooltipContent>
-                <Text as="h4">
-                  {getCountryName(d.properties?.isoAlpha3, neCountries)}
-                </Text>
+                <h4>{getCountryName(d.properties?.isoAlpha3, neCountries)}</h4>
                 {d.properties?.categories &&
                   d.properties?.categories.map(
                     (category: string, i: number) => (
@@ -196,7 +187,7 @@ const BtorsAndCabinets: FC<Props> = ({
                           fill={colorScale(category)}
                         />
                       </svg>
-                    )
+                    ),
                   )}
               </TooltipContent>
             </Tooltip>

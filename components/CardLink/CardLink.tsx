@@ -1,9 +1,7 @@
-/** @jsxImportSource theme-ui */
-
+import clsx from "clsx";
 import Link from "next/link";
 import React, { FC } from "react";
 import { MdArrowForward } from "react-icons/md";
-import { Card, Text } from "theme-ui";
 
 type Props = React.PropsWithChildren<{
   href: string;
@@ -21,33 +19,21 @@ const CardLink: FC<Props> = ({
     <Link
       onClick={disabled ? (e) => e.preventDefault() : undefined}
       href={href}
-      sx={{
-        variant: "styles.a",
-        cursor: disabled ? "not-allowed" : "pointer",
-        opacity: disabled ? 0.5 : 1,
-      }}
+      className={clsx(disabled && "cursor-not-allowed opacity-50")}
     >
-      <Card
-        sx={{
-          "&:hover": {
-            transform: "scale(1.025)",
-            ".icon": {
-              opacity: 1,
-            },
-          },
-        }}
+      <div
+        className={clsx(
+          "rounded-sm p-3 shadow",
+          !disabled &&
+            "group transition-transform duration-500 hover:scale-105",
+        )}
       >
         {children}
-        <div sx={{ mt: 2 }}>
-          <Text>
-            {buttonText}{" "}
-            <MdArrowForward
-              className="icon"
-              sx={{ opacity: 0, transition: "opacity .5s" }}
-            />
-          </Text>
+        <div className="mt-2 flex items-center gap-1">
+          {buttonText}
+          <MdArrowForward className="icon opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
         </div>
-      </Card>
+      </div>
     </Link>
   );
 };

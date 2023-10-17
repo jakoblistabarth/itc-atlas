@@ -6,7 +6,6 @@ import {
   IconGallery,
   IconItem,
 } from "@storybook/addon-docs";
-import { theme } from "../styles/theme";
 import IconResearch from "../public/images/icon_research.svg";
 import IconEducation from "../public/images/icon_education.svg";
 import IconProjects from "../public/images/icon_projects.svg";
@@ -14,6 +13,10 @@ import IconIntroduction from "../public/images/icon_introduction.svg";
 import IconAppendix from "../public/images/icon_appendix.svg";
 import { HiCursorClick } from "react-icons/hi";
 import TextStyleSpec from "../components/TextStyleSpec";
+import resolveConfig from "tailwindcss/resolveConfig";
+import tailwindConfig from "../tailwind.config.js";
+
+export const twConfig = resolveConfig(tailwindConfig);
 
 # ITC atlas spec sheet
 
@@ -25,19 +28,19 @@ import TextStyleSpec from "../components/TextStyleSpec";
   <ColorItem
     title="Primary"
     subtitle="Primary brand color"
-    colors={{ "ITC green": theme.colors.primary }}
+    colors={{ "ITC green": twConfig.theme.colors["itc-green"].DEFAULT }}
   />
   <ColorItem
     title="Secondary"
     subtitle="Secondary brand color"
-    colors={{ "ITC blue": theme.colors.secondary }}
+    colors={{ "ITC blue": twConfig.theme.colors["itc-blue"].DEFAULT }}
   />
   <ColorItem
     title="Muted brand colors"
     subtitle=""
     colors={{
-      "ITC green muted": theme.colors.muted,
-      "ITC blue muted": "rgb(185, 195, 255)",
+      "ITC green muted": twConfig.theme.colors["itc-green"][50],
+      "ITC blue muted": twConfig.theme.colors["itc-blue"][50],
     }}
   />
   <ColorItem title="Accent color" colors={{ accent: "rgb(255,230,0)" }} />
@@ -63,11 +66,11 @@ import TextStyleSpec from "../components/TextStyleSpec";
 ### Layout
 
 <TextStyleSpec
-  fontFamily={theme.fonts[theme.text.teaser.fontFamily]}
-  fontSizeScreen={theme.fontSizes[theme.text.teaser.fontSize]}
+  fontFamily={twConfig.theme.fontFamily["serif"]}
+  fontSizeScreen={twConfig.theme.fontSize["2xl"][0]}
   fontSizePrint={18}
-  fontWeight={theme.fontWeights[theme.text.teaser.fontWeight]}
-  fontStyle={theme.text.teaser.fontStyle}
+  fontWeight={twConfig.theme.fontWeight.normal}
+  fontStyle={"italic"}
   sampleText={"This is a teaser that makes you curious to read the text."}
 />
 

@@ -1,7 +1,4 @@
-/** @jsxImportSource theme-ui */
-
 import { FC } from "react";
-import { Box, Text } from "theme-ui";
 import Header from "../Header";
 import ChapterIcon from "../ChapterIcon";
 import { isChapter } from "../../types/Chapter";
@@ -13,48 +10,25 @@ type Props = {
 
 const ChapterHeader: FC<Props> = ({ chapterName, icon = true }) => {
   return (
-    <Box
-      sx={{
-        background: "primary",
-      }}
-    >
+    <div className="relative overflow-hidden bg-itc-green">
       {icon && (
-        <Box
-          sx={{ top: 0, left: 0, position: "absolute", pointerEvents: "none" }}
-        >
+        <div className="left-o pointer-events-none absolute top-0">
           <ChapterIcon
             width={"40vw"}
             height={"40vw"}
-            sx={{
-              filter: "invert(1)",
-              mixBlendMode: "screen",
-            }}
+            className="mix-blend-screen invert"
             opacity={0.1}
             chapter={isChapter(chapterName) ? chapterName : undefined}
           />
-        </Box>
+        </div>
       )}
       <Header />
-      <Box
-        sx={{
-          py: [4, 6],
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-        }}
-      >
-        <Text
-          sx={{
-            fontFamily: "Fraunces Variable",
-            fontStyle: "italic",
-            color: "background",
-            fontSize: [5, 7],
-          }}
-        >
+      <div className="flex flex-col items-center py-10 md:py-32">
+        <div className="font-serif text-xl italic text-white md:text-7xl">
           {chapterName}
-        </Text>
-      </Box>
-    </Box>
+        </div>
+      </div>
+    </div>
   );
 };
 

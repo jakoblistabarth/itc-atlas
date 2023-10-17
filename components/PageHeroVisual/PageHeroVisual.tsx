@@ -1,10 +1,9 @@
-/** @jsxImportSource theme-ui */
-
 import Footer from "../Footer";
-import { Box, Container, Heading } from "theme-ui";
 import Seo from "../Seo";
 import { FC, PropsWithChildren, ReactElement } from "react";
-import Navigation from "../Navigation";
+import Container from "../Container";
+import Section from "../Section";
+import Header from "../Header";
 
 type Props = PropsWithChildren<{
   heroVisual: ReactElement;
@@ -15,16 +14,14 @@ const HeroVisualPage: FC<Props> = ({ title, heroVisual, children }) => {
   return (
     <>
       <Seo title={title} />
-      <Navigation />
+      <Header />
 
       <main>
-        <Container sx={{ width: "100%", maxWidth: "none", px: 4 }}>
-          {heroVisual}
-        </Container>
+        <div className="px-4">{heroVisual}</div>
         <Container>
-          <Box variant="layout.section">
-            <Heading as="h1">{title}</Heading>
-          </Box>
+          <Section>
+            <h1>{title}</h1>
+          </Section>
           {children}
         </Container>
       </main>

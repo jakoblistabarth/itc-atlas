@@ -1,51 +1,20 @@
-/** @jsxImportSource theme-ui */
-
 import { FC } from "react";
-import { Box, Container } from "theme-ui";
 import { HiOutlineHome } from "react-icons/hi";
 import NavLink from "../NavLink";
 import BetaBadge from "../BetaBadge";
+import Container from "../Container";
+import Link from "../Link";
 
 const Navigation: FC = () => {
   return (
-    <Container sx={{ pt: 4 }}>
-      <nav
-        sx={{
-          display: "flex",
-          alignItems: "baseline",
-          "> div > a": {
-            p: 2,
-            transition: "background .2s",
-            borderRadius: 2,
-            "&:hover": {
-              background: "muted",
-            },
-          },
-        }}
-      >
-        <div
-          sx={{
-            background: "background",
-            display: "flex",
-            alignItems: "center",
-            borderRadius: 2,
-            mr: 3,
-            p: 1,
-          }}
-        >
-          <NavLink href="/">
+    <Container>
+      <nav className="flex items-stretch">
+        <div className="mr-3 flex w-10 items-center justify-center rounded-md bg-white p-1">
+          <Link href="/">
             <HiOutlineHome />
-          </NavLink>
+          </Link>
         </div>
-        <Box
-          sx={{
-            display: "inline-flex",
-            gap: 3,
-            borderRadius: 2,
-            background: "background",
-            p: 1,
-          }}
-        >
+        <div className="inline-flex gap-x-2 rounded-md bg-white p-1">
           <NavLink href="/introduction">Introduction</NavLink>
           <NavLink disabled href="/education">
             Education
@@ -57,10 +26,10 @@ const Navigation: FC = () => {
           <NavLink disabled href="/appendix">
             Appendix
           </NavLink>
-        </Box>
-        <Box sx={{ ml: 5 }}>
+        </div>
+        <div className="ml-5 flex items-center">
           <BetaBadge />
-        </Box>
+        </div>
       </nav>
     </Container>
   );

@@ -1,11 +1,9 @@
-/** @jsxImportSource theme-ui */
-
 import { FC } from "react";
 import Navigation from "../Navigation";
 
 const Header: FC = () => {
   return (
-    <header>
+    <header className="mt-5">
       <Navigation />
     </header>
   );

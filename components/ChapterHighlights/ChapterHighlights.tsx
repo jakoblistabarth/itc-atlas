@@ -1,7 +1,4 @@
-/** @jsxImportSource theme-ui */
-
 import { FC } from "react";
-import { Box, Heading } from "theme-ui";
 import { MdArrowForward } from "react-icons/md";
 import Link from "../Link";
 
@@ -10,30 +7,17 @@ type Props = {
 };
 
 const ChapterHighlights: FC<Props> = ({ highlights }) => (
-  <Box
-    sx={{
-      p: 3,
-      borderRadius: 2,
-      my: 4,
-      background: "muted",
-    }}
-  >
-    <Heading as="h2">Highlights</Heading>
-    <ul
-      sx={{
-        listStyleType: "none",
-        pl: 0,
-        li: { mt: 2, display: "flex", alignItems: "center" },
-      }}
-    >
+  <div className="my-4 max-w-2xl rounded-sm bg-itc-green-50 p-3">
+    <h2>Highlights</h2>
+    <ul className="list-none">
       {highlights.map(({ href, title }, i) => (
-        <li key={i}>
-          <MdArrowForward sx={{ mr: 2 }} />
+        <li className="mt-1 flex items-center" key={i}>
+          <MdArrowForward className="mr-2" />
           <Link href={href}>{title}</Link>
         </li>
       ))}
     </ul>
-  </Box>
+  </div>
 );
 
 export default ChapterHighlights;
