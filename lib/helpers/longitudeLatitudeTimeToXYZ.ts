@@ -13,10 +13,10 @@ import { Vector2, Vector3 } from "three";
 const longitudeLatitudeTimeToXYZ = (
   coordinates: Vector2,
   dateTime: Date,
-  tScale: ScaleTime<number, number>,
+  timeScale: ScaleTime<number, number>,
   projection: GeoProjection
 ) => {
-  const y = tScale(dateTime);
+  const y = timeScale(dateTime);
   const [x, z] = projection([coordinates.x, coordinates.y]) ?? [0, 0];
   return new Vector3(x, y, z);
 };
