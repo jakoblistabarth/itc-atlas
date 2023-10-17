@@ -1,5 +1,3 @@
-/** @jsxImportSource theme-ui */
-
 import { descending, max, scaleSqrt } from "d3";
 import type { Feature, FeatureCollection, Point } from "geojson";
 import { FC, useState } from "react";
@@ -45,7 +43,7 @@ const AlumniOrigin: FC<Props> = ({
 
   const geographies = feature(
     neCountriesTopoJson,
-    neCountriesTopoJson.objects.ne_admin_0_countries
+    neCountriesTopoJson.objects.ne_admin_0_countries,
   );
 
   type CountryPropertiesWithAlumniCount = CountryProperties & {
@@ -58,7 +56,7 @@ const AlumniOrigin: FC<Props> = ({
 
   const { data: filteredApplicants, isLoading: filteredApplicantsIsLoading } =
     useSWR<Awaited<ReturnType<typeof getCountryWithApplicantCount>>>(
-      "/api/data/country/count/applicant?level=" + level
+      "/api/data/country/count/applicant?level=" + level,
     );
 
   const mapData = filteredApplicants ?? applicants;
@@ -86,10 +84,10 @@ const AlumniOrigin: FC<Props> = ({
       })
       .filter(
         (feature: Feature): feature is Feature =>
-          !!feature.properties?.alumniCount
+          !!feature.properties?.alumniCount,
       ) //TODO: replace by filter > 0
       .sort((a: Feature, b: Feature) =>
-        descending(a.properties?.alumniCount, b.properties?.alumniCount)
+        descending(a.properties?.alumniCount, b.properties?.alumniCount),
       ),
   };
 
@@ -101,7 +99,7 @@ const AlumniOrigin: FC<Props> = ({
         (d) => d.examYear,
         (d) => d._count._all,
         minX,
-        maxX
+        maxX,
       )
     : [];
 
@@ -151,8 +149,7 @@ const AlumniOrigin: FC<Props> = ({
                     <strong>{properties?.NAME_EN}</strong>
                     <br />
                     {properties?.alumniCount}{" "}
-                    <span sx={{ textDecoration: "underline" }}>{level}</span>{" "}
-                    alumni
+                    <span className="no-underline">{level}</span> alumni
                   </div>
                   <div>
                     {sparklineDataFilled && (
@@ -163,9 +160,9 @@ const AlumniOrigin: FC<Props> = ({
                       />
                     )}
                   </div>
-                  <p sx={{ color: "grey", m: 0 }}>
-                    All alumni over time <MdArrowForward />
-                  </p>
+                  <div className="flex items-baseline text-gray-500">
+                    <div>All alumni over time</div> <MdArrowForward />
+                  </div>
                 </TooltipContent>
               )}
             </Tooltip>
@@ -175,7 +172,7 @@ const AlumniOrigin: FC<Props> = ({
         {!filteredApplicantsIsLoading &&
           points.features.slice(0, 3).map((point, idx) => {
             const coords = projection(
-              point.geometry.coordinates as [number, number]
+              point.geometry.coordinates as [number, number],
             );
             const pos = coords ? new Vector2(...coords) : undefined;
             return (

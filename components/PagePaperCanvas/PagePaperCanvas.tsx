@@ -1,5 +1,3 @@
-/** @jsxImportSource theme-ui */
-
 import Footer from "../Footer";
 import Seo from "../Seo";
 import Header from "../Header";
@@ -13,27 +11,11 @@ const PaperCanvasPage: FC<Props> = ({ title, children }) => {
   return (
     <>
       <Seo title={title} />
-      <div sx={{ background: "rgb(230,230,230)" }}>
+      <div className="bg-gray-100 pt-5">
         <Header />
 
-        <main
-          sx={{
-            p: 3,
-            minWidth: "100vw",
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-          }}
-        >
-          <div
-            sx={{
-              background: "white",
-              boxShadow: 1,
-              p: 3,
-              borderRadius: 1,
-              pointerEvents: "none",
-            }}
-          >
+        <main className="min-width-full mt-5 flex items-center justify-center">
+          <div className="pointer-events-none rounded-md bg-white p-5 shadow-md">
             {children}
           </div>
         </main>

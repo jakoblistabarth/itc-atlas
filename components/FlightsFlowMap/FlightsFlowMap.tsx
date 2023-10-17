@@ -1,7 +1,6 @@
 import { max, min, scaleLinear } from "d3";
 import { FC } from "react";
 import { Vector2 } from "three";
-import { itc_blue, itc_green } from "../../styles/theme";
 import { NeCountriesTopoJson } from "../../types/NeTopoJson";
 import { OdMatrix } from "../../types/OdMatrix";
 import LabelPoint from "../LabelPoint";
@@ -11,6 +10,10 @@ import MapLayerFlow, { FlowPointStyleProps } from "../MapLayerFlow";
 import { useMapLayoutContext } from "../MapLayout/MapLayoutContext";
 import { FlowStyleProps } from "../MarkFlow/";
 import { getFlowPoints } from "../MarkFlow/MarkFlow.helpers";
+import resolveConfig from "tailwindcss/resolveConfig";
+import tailwindConfig from "../../tailwind.config.js";
+
+export const twConfig = resolveConfig(tailwindConfig);
 
 type Props = {
   neCountriesTopoJson: NeCountriesTopoJson;
@@ -21,7 +24,7 @@ const FlightsFlowMap: FC<Props> = ({ neCountriesTopoJson, odMatrix }) => {
   const { projection } = useMapLayoutContext();
 
   const flightsPerRoute = odMatrix.flows.features.map(
-    (flow) => flow.properties?.value
+    (flow) => flow.properties?.value,
   );
   const minCount = min(flightsPerRoute);
   const maxCount = max(flightsPerRoute);
@@ -30,12 +33,14 @@ const FlightsFlowMap: FC<Props> = ({ neCountriesTopoJson, odMatrix }) => {
     .range([1, 15]);
 
   const flowStyle: FlowStyleProps = {
-    stroke: itc_green,
+    // @ts-expect-error TODO: refactor to get rid of styleProp
+    stroke: twConfig.theme?.colors?.["itc-green"]?.DEFAULT,
     opacity: 0.2,
     arrowShape: "tip",
   };
   const pointStyle: FlowPointStyleProps = {
-    fill: itc_blue,
+    // @ts-expect-error TODO: refactor to get rid of styleProp
+    fill: twConfig.theme?.colors?.["itc-blue"].DEFAULT,
     fillOpacity: 1,
     stroke: "none",
   };

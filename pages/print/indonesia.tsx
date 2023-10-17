@@ -1,5 +1,3 @@
-/** @jsxImportSource theme-ui */
-
 import type { NextPage } from "next";
 import IndonesiaTimeline from "../../components/IndonesiaTimeline";
 import PagePaperCanvas from "../../components/PagePaperCanvas";
@@ -45,7 +43,7 @@ const Page: NextPage<Props> = ({
   projects,
 }) => (
   <PagePaperCanvas title="Indonesia Timeline">
-    <div sx={{ width: 1280 }}>
+    <div style={{ width: 1280 }}>
       <IndonesiaTimeline
         applications={applications}
         btors={btors}

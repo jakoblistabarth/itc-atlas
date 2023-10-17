@@ -1,0 +1,14 @@
+name: Deploy plesk app
+
+on:
+  push:
+    branches: [develop]
+
+jobs:
+  invoke_webhook:
+    runs-on: ubuntu-latest
+    env:
+      PLESK_WEBHOOK_URL: ${{ secrets.PLESK_WEBHOOK_URL }}
+    steps:
+      - name: Invoke webhook
+        run: curl -kIX POST $PLESK_WEBHOOK_URL

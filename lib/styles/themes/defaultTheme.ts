@@ -4,7 +4,7 @@ const lightgrey = "#f0f0f0";
 const darkgrey = "#dcdcdc";
 
 const defaultTheme: MapTheme = {
-  fontFamily: "InterVariable",
+  fontFamily: "Inter Variable",
   hasOutline: true,
   hasShadow: false,
   background: { fill: lightgrey },

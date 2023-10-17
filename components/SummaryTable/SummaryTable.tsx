@@ -1,5 +1,3 @@
-/** @jsxImportSource theme-ui */
-
 import { FC } from "react";
 import { BiBracket } from "react-icons/bi";
 import {
@@ -16,8 +14,8 @@ import {
 } from "./SummaryTable.helpers";
 import SummaryTableCard from "./SummaryTableCard";
 import Snapshot from "../Snapshot";
-import { Heading } from "theme-ui";
 import ColumnTable from "arquero/dist/types/table/column-table";
+import clsx from "clsx";
 
 const getColumnIcon = (type: ColumnDataType) => {
   switch (type) {
@@ -41,52 +39,23 @@ const SummaryTable: FC<SummaryTableProps> = ({ data, title }) => {
   const stdata = getSummaryTableData(data);
   return (
     <>
-      {title && <Heading as="h2">{title}</Heading>}
-      <div
-        sx={{
-          display: "grid",
-          gridTemplateColumns: "100px auto",
-          columnGap: "4",
-        }}
-      >
+      {title && <h2>{title}</h2>}
+      <div className="grid grid-cols-[100px_auto] gap-x-5">
         <SummaryTableCard data={stdata} />
         <div>
           <table
-            sx={{
-              fontSize: 1,
-              borderCollapse: "collapse",
-              "td:first-of-type": {
-                padding: ".5em",
-              },
-              td: {
-                padding: "0.5em 2em 0.5em 0",
-                svg: {
-                  display: "flex",
-                },
-              },
-              tr: {
-                borderBottom: "1px solid lightgrey",
-              },
-            }}
+            className="border-collapse text-sm"
+            //TODO: add padding to rows/tds
           >
-            <thead
-              sx={{
-                fontSize: 0,
-                fontWeight: "bold",
-                textAlign: "left",
-                th: {
-                  py: 2,
-                },
-              }}
-            >
-              <tr>
-                <th></th>
-                <th>Column</th>
-                <th>Snapshot</th>
-                <th>Missing</th>
-                <th>Mean</th>
-                <th>Median</th>
-                <th>SD</th>
+            <thead className="py text-left text-xs">
+              <tr className="border-b border-gray-100">
+                <th className="py-2 font-normal"></th>
+                <th className="py-2 font-normal">Column</th>
+                <th className="py-2 font-normal">Snapshot</th>
+                <th className="py-2 font-normal">Missing</th>
+                <th className="py-2 font-normal">Mean</th>
+                <th className="py-2 font-normal">Median</th>
+                <th className="py-2 font-normal">SD</th>
               </tr>
             </thead>
             <tbody>
@@ -96,23 +65,20 @@ const SummaryTable: FC<SummaryTableProps> = ({ data, title }) => {
                   if (!color) return;
                 }
                 return (
-                  <tr key={`${column.name}-${idx}`}>
+                  <tr
+                    key={`${column.name}-${idx}`}
+                    className="border-b border-gray-100"
+                  >
                     <td
-                      sx={{
-                        borderColor: color.baseColor,
-                        borderLeftStyle: "solid",
-                        borderLeftWidth: "3px",
-                      }}
+                      className="border-l-4 border-blue-700 first-of-type:p-2"
+                      style={{ borderColor: color.baseColor }}
                     >
                       {getColumnIcon(column.type)}
                     </td>
-                    <td sx={{ maxWidth: "160px" }}>
+                    <td className="max-w-[160px]">
                       <div
-                        sx={{
-                          overflowX: "auto",
-                          whiteSpace: "nowrap",
-                          scrollbarWidth: "none",
-                        }}
+                        className="scroll overflow-x-auto whitespace-nowrap"
+                        style={{ scrollbarWidth: "none" }}
                       >
                         {column.name}
                       </div>
@@ -121,11 +87,10 @@ const SummaryTable: FC<SummaryTableProps> = ({ data, title }) => {
                       <Snapshot column={column} />
                     </td>
                     <td
-                      sx={{
-                        color: column.stats?.missing > 0.5 ? "red" : undefined,
-                        fontWeight:
-                          column.stats?.missing > 0.5 ? "bold" : undefined,
-                      }}
+                      className={clsx(
+                        column.stats?.missing > 0.25 &&
+                          "font-bold text-red-500",
+                      )}
                     >
                       {fPercentage(column.stats.missing)}
                     </td>

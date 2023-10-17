@@ -6,68 +6,137 @@ import {
   IconGallery,
   IconItem,
 } from "@storybook/addon-docs";
-import { theme } from "../styles/theme";
 import IconResearch from "../public/images/icon_research.svg";
 import IconEducation from "../public/images/icon_education.svg";
 import IconProjects from "../public/images/icon_projects.svg";
 import IconIntroduction from "../public/images/icon_introduction.svg";
 import IconAppendix from "../public/images/icon_appendix.svg";
 import { HiCursorClick } from "react-icons/hi";
+import TextStyleSpec from "../components/TextStyleSpec";
+import resolveConfig from "tailwindcss/resolveConfig";
+import tailwindConfig from "../tailwind.config.js";
 
-# ITC Atlas Spec Sheet
+export const twConfig = resolveConfig(tailwindConfig);
 
-test {theme.colors.primary}
+# ITC atlas spec sheet
 
 ## Colors
+
+### Main colors
 
 <ColorPalette>
   <ColorItem
     title="Primary"
     subtitle="Primary brand color"
-    colors={{ "ITC green": theme.colors.primary }}
+    colors={{ "ITC green": twConfig.theme.colors["itc-green"].DEFAULT }}
   />
   <ColorItem
     title="Secondary"
     subtitle="Secondary brand color"
-    colors={{ "ITC blue": theme.colors.secondary }}
+    colors={{ "ITC blue": twConfig.theme.colors["itc-blue"].DEFAULT }}
   />
   <ColorItem
     title="Muted brand colors"
     subtitle=""
     colors={{
-      "ITC green muted": theme.colors.muted,
-      "ITC blue muted": "rgb(185, 195, 255)",
+      "ITC green muted": twConfig.theme.colors["itc-green"][50],
+      "ITC blue muted": twConfig.theme.colors["itc-blue"][50],
     }}
   />
   <ColorItem title="Accent color" colors={{ accent: "rgb(255,230,0)" }} />
 </ColorPalette>
 
+### Color palettes for thematic maps
+
+<ColorPalette>
+  <ColorItem
+    title="Qualitative maps"
+    subtitle=""
+    colors={{
+      yellow: "gold",
+      orange: "orange",
+      red: "red",
+      blue: "cornflowerblue",
+    }}
+  />
+</ColorPalette>
+
 ## Typography
 
-### Headlines
+### Layout
 
-<Typeset
-  fontSizes={theme.fontSizes.slice(-6).reverse()}
-  fontFamily={theme.fonts.heading}
-  sampleText={"ITC Atlas"}
+<TextStyleSpec
+  fontFamily={twConfig.theme.fontFamily["serif"]}
+  fontSizeScreen={twConfig.theme.fontSize["2xl"][0]}
+  fontSizePrint={18}
+  fontWeight={twConfig.theme.fontWeight.normal}
+  fontStyle={"italic"}
+  sampleText={"This is a teaser that makes you curious to read the text."}
 />
 
-### Teaser
+<TextStyleSpec
+  styleName="Marginalia"
+  fontSizeScreen="10px"
+  fontSizePrint={7}
+  fontFamily="Inter Variable"
+  sampleText="Watch out! This is an important sidenote."
+/>
 
-<Typeset
-  fontSizes={[theme.fontSizes[theme.text.teaser.fontSize]]}
-  fontWeights={[theme.fontWeights[theme.text.teaser.fontWeight]]}
-  fontFamily="Fraunces"
-  sampleText={"ITC Atlas"}
+<TextStyleSpec
+  styleName="KPI (Key Performance Indicator)"
+  fontSizeScreen="40px"
+  fontSizePrint={40}
+  fontFamily="Fraunces Variable"
+  fontWeight="900"
+  fontStyle="italic"
+  sampleText="Here we go"
+/>
+
+### Map Labels
+
+<TextStyleSpec
+  styleName="Country Name"
+  fontSizeScreen="0.5em"
+  fontSizePrint={9}
+  fontFamily="Inter Variable"
+  sampleText="Netherlands"
+  textTransform="uppercase"
+  letterSpacing="0.5em"
 />
 
 ## Iconography
+
+### Atlas specific icons
 
 <IconGallery>
   <IconItem name="chapter Introduction">
     <IconIntroduction width="100px" height="100px" />
   </IconItem>
-  <IconItem name="chapter xy">
+  <IconItem name="chapter Research">
+    <IconResearch width="100px" height="100px" />
+  </IconItem>
+  <IconItem name="chapter Education">
+    <IconEducation width="100px" height="100px" />
+  </IconItem>
+  <IconItem name="chapter Projects">
+    <IconProjects width="100px" height="100px" />
+  </IconItem>
+  <IconItem name="chapter Appendix">
+    <IconAppendix width="100px" height="100px" />
+  </IconItem>
+</IconGallery>
+
+### Third party icons
+
+<IconGallery>
+  <IconItem name="Hint for interaction">
     <HiCursorClick />
   </IconItem>
 </IconGallery>
+
+## Map elements
+
+### Graticule
+
+The graticule should be present, in particular when a rather unusual projection is used.
+Nevertheless, it is always be in the background – it should not stand out.

@@ -1,5 +1,3 @@
-/** @jsxImportSource theme-ui */
-
 import { FC, SVGProps } from "react";
 import { LinePath } from "@visx/shape";
 import { ScaleLinear } from "d3";
@@ -32,7 +30,7 @@ const LinePathBase: FC<Props> = ({
       strokeWidth={isSelected || isFocus ? 2 : 0.5}
       strokeLinejoin="round"
       strokeLinecap="round"
-      sx={{ transition: "opacity .5s" }}
+      className="transition-opacity duration-500"
       opacity={isSelected || (!isSelection && isFocus) ? 1 : 0.05}
       cursor="pointer"
       {...rest}

@@ -1,8 +1,5 @@
-/** @jsxImportSource theme-ui */
-
 import type { GetStaticProps, NextPage } from "next";
 import { Step } from "react-joyride";
-import { Box, Heading, Paragraph } from "theme-ui";
 import PageHeroVisual from "../../components/PageHeroVisual";
 import IndonesiaTimeline from "../../components/IndonesiaTimeline";
 import Annotations from "../../components/IndonesiaTimeline/Annotations";
@@ -27,6 +24,9 @@ import { LongTermMission } from "../../types/LongTermMission";
 import { Minister } from "../../types/Minister";
 import { NeCountriesTopoJson } from "../../types/NeTopoJson";
 import { ProjectIndonesia } from "../../types/Project";
+import Teaser from "../../components/Teaser";
+import Section from "../../components/Section";
+import Paragraph from "../../components/Paragraph";
 
 type Props = {
   projects: ProjectIndonesia[];
@@ -101,15 +101,13 @@ const Page: NextPage<Props> = ({
 
   return (
     <PageHeroVisual title="ITC's Impact in Indonesia" heroVisual={heroVisual}>
-      <Paragraph variant="teaser">
+      <Teaser>
         ITC and changing government policies illustrated by its activities in
         Indonesia.
-      </Paragraph>
-      <Box as="section" variant="layout.section">
-        <Box
-          sx={{ display: "grid", gridTemplateColumns: "2fr 1fr", columnGap: 5 }}
-        >
-          <Box>
+      </Teaser>
+      <Section>
+        <div className="grid grid-cols-[2fr_1fr] gap-x-5">
+          <div>
             <Paragraph>
               During the twentieth century traditional development cooperation
               was oriented to poverty reduction and rather broad in scope and
@@ -153,9 +151,9 @@ const Page: NextPage<Props> = ({
               More detailed information on the long standing relation between
               ITC and Indonesia can be found in the finished Atlas.
             </Paragraph>
-          </Box>
-          <Box>
-            <Heading as="h2">Indonesia</Heading>
+          </div>
+          <div>
+            <h2>Indonesia</h2>
             <LocatorMap
               neCountriesTopoJson={neCountries}
               highlight={["IDN"]}
@@ -187,9 +185,9 @@ const Page: NextPage<Props> = ({
                 },
               ]}
             />
-          </Box>
-        </Box>
-      </Box>
+          </div>
+        </div>
+      </Section>
     </PageHeroVisual>
   );
 };

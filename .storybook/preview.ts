@@ -1,18 +1,18 @@
-import { ThemeProvider } from "theme-ui";
-import { withThemeFromJSXProvider } from "@storybook/addon-styling";
-import { theme } from "../styles/theme";
-import ITCAtlasTheme from "./ITCAtlasTheme";
+import "@fontsource-variable/fraunces/full-italic.css";
 import "@fontsource-variable/fraunces/full.css";
 import "@fontsource-variable/inter/slnt.css";
+import { withThemeByDataAttribute } from "@storybook/addon-styling";
+import "../styles/globals.css";
+import ITCAtlasTheme from "./ITCAtlasTheme";
 
 export const decorators = [
-  //TODO: add switcher for theme-ui color modes
-  withThemeFromJSXProvider({
+  withThemeByDataAttribute({
     themes: {
-      default: theme,
+      light: "light",
+      dark: "dark",
     },
-    defaultTheme: "default",
-    Provider: ThemeProvider,
+    defaultTheme: "light",
+    attributeName: "data-mode",
   }),
 ];
 
@@ -22,6 +22,20 @@ export const parameters = {
     matchers: {
       color: /(background|color|fill|stroke)$/i,
       date: /Date$/,
+    },
+  },
+  status: {
+    statuses: {
+      beta: {
+        background: "#ff3438",
+        color: "#680002",
+        description: "This component is still work in progress",
+      },
+      stable: {
+        background: "#d7ff80",
+        color: "#58830f",
+        description: "This component is stable",
+      },
     },
   },
   docs: {

@@ -1,5 +1,3 @@
-/** @jsxImportSource theme-ui */
-
 import type { FC, SVGProps } from "react";
 import Delft1 from "/public/images/building-kanaalweg.svg";
 import Delft2 from "/public/images/building-kanaalweg4.svg";

@@ -1,5 +1,3 @@
-/** @jsxImportSource theme-ui */
-
 import { Group } from "@visx/group";
 import { Text } from "@visx/text";
 import {
@@ -13,7 +11,6 @@ import {
 } from "d3";
 import { FC, PropsWithChildren, useEffect, useState } from "react";
 import useMeasure from "react-use-measure";
-import { Text as TextTui } from "theme-ui";
 import { Vector2 } from "three";
 import getITCNames from "../../lib/data/getITCNames";
 import getPolicyTopics from "../../lib/data/getPolicyTopics";
@@ -39,6 +36,7 @@ import Tooltip from "../Tooltip/";
 import TooltipContent from "../Tooltip/TooltipContent";
 import { TooltipTrigger } from "../Tooltip/TooltipTrigger";
 import TopicPatterns from "./TopicPatterns";
+import KPI from "../KPI";
 
 type Props = PropsWithChildren<{
   applications: ApplicationByYearWithCount;
@@ -184,7 +182,7 @@ const IndonesiaTimeline: FC<Props> = ({
         dateStart: new Date(ltm.dateStart),
         dateEnd: new Date(ltm.dateEnd),
       };
-    }
+    },
   );
   const ltmYScale = scaleBand()
     .domain(longTermMissions.map((d) => d.project))
@@ -247,7 +245,7 @@ const IndonesiaTimeline: FC<Props> = ({
       width={"100%"}
       height={"100%"}
       fontSize="6"
-      fontFamily="Inter"
+      fontFamily="Inter Variable"
       viewBox={`0 0 ${width} ${height}`}
     >
       <Timeline xScale={xScale}>
@@ -347,7 +345,7 @@ const IndonesiaTimeline: FC<Props> = ({
                       />
                       <g
                         transform={`translate(${xScale(
-                          new Date(currentLocation.moveInDate)
+                          new Date(currentLocation.moveInDate),
                         )} 0)`}
                       >
                         <line
@@ -374,7 +372,10 @@ const IndonesiaTimeline: FC<Props> = ({
                           fill={itcGreen}
                           fontSize={9}
                         >
-                          <tspan fontWeight={"bold"} fontFamily={"Fraunces"}>
+                          <tspan
+                            fontWeight={"bold"}
+                            fontFamily={"Fraunces Variable"}
+                          >
                             {d}
                           </tspan>
                           <tspan x="0" dy="10">
@@ -481,7 +482,7 @@ const IndonesiaTimeline: FC<Props> = ({
                     position={
                       new Vector2(
                         xScale(topic?.dateStart ?? 0),
-                        topicYScale(topic?.name ?? "")
+                        topicYScale(topic?.name ?? ""),
                       )
                     }
                   >
@@ -531,7 +532,7 @@ const IndonesiaTimeline: FC<Props> = ({
                                 fill={"white"}
                               >
                                 {partnersScale(
-                                  (e.data?.projectPartner as string) ?? ""
+                                  (e.data?.projectPartner as string) ?? "",
                                 )}
                               </text>
                             </g>
@@ -610,7 +611,7 @@ const IndonesiaTimeline: FC<Props> = ({
                         />
                       </TooltipTrigger>
                       <TooltipContent>
-                        <TextTui variant="kpi">{e.size}</TextTui>
+                        {e.size && <KPI number={e.size}></KPI>}
                         <div>alumni in</div>
                         <strong>{e.dateStart.getFullYear()}</strong>
                       </TooltipContent>

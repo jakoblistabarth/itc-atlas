@@ -28,15 +28,19 @@ const nextConfig = {
       );
     }
     config.module.rules.push({
-      test: /\.svg$/,
+      test: /\.svg$/i,
       use: {
         loader: "@svgr/webpack",
         options: {
           svgoConfig: {
             plugins: [
               {
-                name: "removeViewBox",
-                active: false,
+                name: "preset-default",
+                params: {
+                  overrides: {
+                    removeViewBox: false,
+                  },
+                },
               },
             ],
           },

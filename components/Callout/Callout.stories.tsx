@@ -1,5 +1,4 @@
 import { Meta, StoryObj } from "@storybook/react";
-import { Text } from "theme-ui";
 
 import Callout from ".";
 import { HiCursorClick } from "react-icons/hi";
@@ -8,7 +7,7 @@ const meta = {
   title: "UI/Callout",
   component: Callout,
   args: {
-    children: <Text as="p">This is a simple callout text.</Text>,
+    children: <p>This is a simple callout text.</p>,
   },
 } satisfies Meta<typeof Callout>;
 export default meta;

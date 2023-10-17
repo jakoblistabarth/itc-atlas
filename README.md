@@ -1,6 +1,6 @@
 # ITC Atlas
 
-This atlas on ITC and its global activities is a [Next.js](https://nextjs.org/) project.
+This atlas about ITC (_Faculty of Geo-information Science and Earth Observation | University of Twente_) and its global activities is a [Next.js](https://nextjs.org/) project.
 
 ## Getting Started 🚀
 
@@ -14,7 +14,7 @@ npm i
 
 ### 2. Static data sources
 
-Load and create the required static data sets with
+Load and create the required static data sets with:
 
 ```bash
 npm run setup-data
@@ -25,28 +25,28 @@ npm run setup-data
 > **Note**
 > The `DATABASE_URL` environment variable for local development needs to be provided in a `.env.local` file.
 
-The website uses a `PostgreSQL` database via [prisma](https://prisma.io/).
+The website uses a `PostgreSQL` database via the ORM [prisma](https://prisma.io/).
 The schema names follow the [prisma naming conventions](https://www.prisma.io/docs/reference/api-reference/prisma-schema-reference#naming-conventions): mainly, _singular form_ and _PascalCase_ for models and _camelCase_ for fields.
 
-To run single queries (a module as .ts file) enter
+To run single queries (a module as .ts file) run:
 
 ```bash
 npx dotenv -e .env.local -- npx tsx <pathToQueryFile>
 ```
 
-To seed db manually
+To seed the database run:
 
 ```bash
 npx prisma db seed
 ```
 
-To push the state of the _Prisma_ schema file to the database without using migrations. Usually used during prototyping and local development.
+To push the state of the _Prisma_ schema file to the database without using migrations (usually used during prototyping and local development) run:
 
 ```bash
 npx dotenv -e .env.local -- npx prisma db push
 ```
 
-To open up _Prisma Studio_ to visually inspect and edit the data in the database run
+To open up _Prisma Studio_ to inspect and edit the data via _Prisma_'s user interface run:
 
 ```bash
 npx dotenv -e .env.local -- npx prisma studio
@@ -60,16 +60,14 @@ Finally, run the development server (to check out the current state or start dev
 npm run dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the atlas.
-
-Visit [nextjs.org/learn](https://nextjs.org/learn) for information on next.js.
+Then open [http://localhost:3000](http://localhost:3000) in your browser.
 
 ## UI & Map Components 🗺
 
-To start storybook for development run:
+To start storybook (the component library) for development run:
 
 ```bash
-npm run sb
+npm run storybook
 ```
 
 Visit [storybook.js.org/docs/](https://storybook.js.org/docs/react/get-started/introduction) for more Information on how to use storybook.js with react.
@@ -95,7 +93,7 @@ And eventually served in production mode with:
 npm run start
 ```
 
-## Testing
+## Testing 🧪
 
 Run jest tests with:
 

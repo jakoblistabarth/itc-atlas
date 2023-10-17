@@ -22,8 +22,7 @@ export default async function handler(
   const browser = await getBrowser();
   const page = await browser.newPage();
 
-  // TODO: use a env variable with the absolute url of the website here?
-  await page.goto("http://localhost:3000/print/indonesia");
+  await page.goto(`${process.env.SITE_URL}/print/indonesia`);
 
   const selector = "main svg";
   await page.waitForSelector(selector);
