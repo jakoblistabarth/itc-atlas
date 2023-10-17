@@ -44,7 +44,7 @@ const materials = Object.fromEntries(
   ["teal", "white", "grey", "blue"].map((d) => [
     d,
     new MeshStandardMaterial({ color: d, depthWrite: true, side: DoubleSide }),
-  ])
+  ]),
 );
 
 const SpaceTimeCube: FC<PropTypes> = ({
@@ -59,7 +59,7 @@ const SpaceTimeCube: FC<PropTypes> = ({
   height = 10,
 }) => {
   const [hoveredCountry, setHoveredCountry] = useState<string | undefined>(
-    undefined
+    undefined,
   );
 
   const { eventSide, fontSize, projection } = useMemo(() => {
@@ -72,7 +72,7 @@ const SpaceTimeCube: FC<PropTypes> = ({
       ],
       {
         type: "Sphere",
-      }
+      },
     );
     return { eventSide, fontSize, projection };
   }, [height, side, timeScale]);
@@ -83,7 +83,7 @@ const SpaceTimeCube: FC<PropTypes> = ({
         MultiPolygon | Polygon,
         GeoJsonProperties
       >,
-    [topology, topologyObject]
+    [topology, topologyObject],
   );
 
   const paths = useMemo(() => {
@@ -102,11 +102,11 @@ const SpaceTimeCube: FC<PropTypes> = ({
             shape,
             fillOpacity: p.userData?.style.fillOpacity,
             name: fc.features[idx].properties?.ADM0_A3 as string,
-          }))
+          })),
         ),
-        (d) => d.name
+        (d) => d.name,
       ),
-    [paths, fc.features]
+    [paths, fc.features],
   );
 
   const centroids = useMemo(
@@ -123,10 +123,10 @@ const SpaceTimeCube: FC<PropTypes> = ({
               ? new Vector3(...centroid, -1)
               : undefined;
             return [isoCode, position];
-          }
-        )
+          },
+        ),
       ),
-    [fc, projection]
+    [fc, projection],
   );
 
   const eventsWithPosition = useMemo(
@@ -137,10 +137,10 @@ const SpaceTimeCube: FC<PropTypes> = ({
           e.coordinates,
           e.dateStart,
           timeScale,
-          projection
+          projection,
         ),
       })),
-    [events, projection, timeScale]
+    [events, projection, timeScale],
   );
 
   const extrudeGeometryOptions = {
@@ -156,7 +156,7 @@ const SpaceTimeCube: FC<PropTypes> = ({
           (event) =>
             selectedFeatureIds.includes(event.name) ||
             (selectedYear &&
-              event.dateStart.getFullYear().toString() === selectedYear)
+              event.dateStart.getFullYear().toString() === selectedYear),
         )
       : eventsWithPosition;
 
@@ -166,9 +166,13 @@ const SpaceTimeCube: FC<PropTypes> = ({
         onPointerEnter={() => (document.body.style.cursor = "pointer")}
         onPointerLeave={() => (document.body.style.cursor = "auto")}
       >
-        {timeScale.ticks(30).map((t, idx) => {
+        {timeScale.ticks(10).map((t, idx) => {
           const isActiveYear =
             selectedYear && t.getFullYear().toString() === selectedYear;
+          console.log(
+            timeScale(new Date(selectedYear ?? 1985)) -
+              timeScale(new Date(1985)),
+          );
           return (
             <group
               key={`${t.getDate()}-${idx}`}
@@ -210,12 +214,26 @@ const SpaceTimeCube: FC<PropTypes> = ({
       ))}
 
       {selectedYear && (
-        <PlaneOutline
-          position-y={timeScale(new Date(selectedYear))}
-          side={side}
-          color="teal"
-          lineWidth={5}
-        />
+        <group position={[0, timeScale(new Date(selectedYear)), 0]}>
+          <PlaneOutline side={side} color="teal" lineWidth={2} />
+          <mesh>
+            <Text3D
+              receiveShadow
+              castShadow
+              font={"/fonts/Inter_Regular.json"}
+              position={[side / 2 + 0.5, 0, side * 0.5]}
+              size={fontSize}
+              height={fontSize / 50}
+              bevelEnabled
+              bevelThickness={0.005}
+              bevelSize={0.0001}
+              curveSegments={2}
+              material={materials.teal}
+            >
+              {selectedYear}
+            </Text3D>
+          </mesh>
+        </group>
       )}
 
       <group
@@ -228,6 +246,9 @@ const SpaceTimeCube: FC<PropTypes> = ({
           const position = centroids.get(country);
           return (
             <group
+              position-z={
+                ((parseInt(selectedYear ?? "1985") - 1985) * height) / 40
+              }
               key={country}
               onPointerDown={() => onPointerDownHandler(country)}
               onPointerEnter={() => setHoveredCountry(country)}
@@ -252,11 +273,15 @@ const SpaceTimeCube: FC<PropTypes> = ({
               ))}
 
               {hoveredCountry == country && position && (
-                <Html
-                  position={position}
-                >
-                  <div className={clsx("text-itc-green text-left bg-white px-5 py-2 rounded-md pointer-events-none shadow-md", selectedFeatureIds?.includes(country) && "font-bold" )}
-                  >{country}</div>
+                <Html position={position}>
+                  <div
+                    className={clsx(
+                      "pointer-events-none rounded-md bg-white px-5 py-2 text-left text-itc-green shadow-md",
+                      selectedFeatureIds?.includes(country) && "font-bold",
+                    )}
+                  >
+                    {country}
+                  </div>
                 </Html>
               )}
             </group>
