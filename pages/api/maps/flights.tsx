@@ -85,12 +85,14 @@ export default async function handler(
       projection={mapOptions.projection}
       theme={theme}
     >
-      <MapLayoutHeader
-        bounds={mapOptions.bounds}
-        title={"ITC's flight activities"}
-        subtitle={"by staff for projects and examinations"}
-        theme={theme}
-      />
+      <MapLayoutHeader>
+        <text dominantBaseline={"hanging"} fontSize={"2em"}>
+          ITC&apos;s flight activities
+        </text>
+        <text dominantBaseline={"hanging"} dy={"2em"}>
+          by staff for projects and examinations
+        </text>
+      </MapLayoutHeader>
       <MapLayoutAside xOffset={0} yOffset={mapOptions.bounds?.frame?.top}>
         <LegendFlow
           data={odMatrix.flows.features.map((flow) => flow.properties?.value)}

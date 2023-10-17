@@ -1,5 +1,3 @@
-/** @jsxImportSource theme-ui */
-
 import { FC, useMemo } from "react";
 import useMeasure from "react-use-measure";
 import { ScaleOrdinal, format, max, min, scaleLinear, union } from "d3";
@@ -45,7 +43,7 @@ const BtorsByYear: FC<Props> = ({
       bottom: 20,
       left: 20,
     }),
-    []
+    [],
   );
 
   const [cabinetStart, cabinetEnd] = [
@@ -71,7 +69,7 @@ const BtorsByYear: FC<Props> = ({
         (d) => d.year,
         (d) => d.count,
         minTime,
-        maxTime
+        maxTime,
       ),
     }));
 
@@ -87,14 +85,14 @@ const BtorsByYear: FC<Props> = ({
 
   const activeCountryName = useMemo(
     () => getCountryName(activeCountry ?? "", neCountries),
-    [activeCountry, neCountries]
+    [activeCountry, neCountries],
   );
 
   const hasNoTravelData = useMemo(
     () =>
       activeCountry &&
       !btorsByCountryFilled.map((d) => d.isoAlpha3).includes(activeCountry),
-    [activeCountry, btorsByCountryFilled]
+    [activeCountry, btorsByCountryFilled],
   );
 
   return (
@@ -104,7 +102,10 @@ const BtorsByYear: FC<Props> = ({
       height={"100%"}
       viewBox={`0 0 ${width} ${height}`}
     >
-      <g opacity={hasNoTravelData ? 0.5 : 1} sx={{ transition: "opacity .5s" }}>
+      <g
+        opacity={hasNoTravelData ? 0.5 : 1}
+        className="transition-opacity duration-500"
+      >
         <g>
           <MdArrowUpward size={"10"} />
           <text x={"1.5em"} fontSize={10} dominantBaseline={"hanging"}>
@@ -116,7 +117,7 @@ const BtorsByYear: FC<Props> = ({
             x={xScale(cabinetStart.getFullYear())}
             y={yScale(maxCount)}
             height={yScale(0) - yScale(maxCount)}
-            sx={{ fill: "muted" }}
+            className={"fill-itc-green-50"}
             width={
               xScale(cabinetEnd.getFullYear()) -
               xScale(cabinetStart.getFullYear())
@@ -135,7 +136,7 @@ const BtorsByYear: FC<Props> = ({
         const bhosCountry = bhosCountries.find(
           (bhos) =>
             bhos.cabinet === activeCabinet?.name &&
-            bhos.isoAlpha3 === d.isoAlpha3
+            bhos.isoAlpha3 === d.isoAlpha3,
         );
         const hasCategory = !!bhosCountry?.categories.length;
         return (

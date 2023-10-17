@@ -2,7 +2,9 @@ import { FC, PropsWithChildren, SVGProps } from "react";
 import { useMapLayoutContext } from "../MapLayout/MapLayoutContext";
 
 type Props = {
+  /** Longitude where the marker should be placed, in decimal degrees. */
   longitude: number;
+  /** Latitude where the marker should be placed, in decimal degrees. */
   latitude: number;
 } & SVGProps<SVGGElement>;
 

@@ -1,26 +1,17 @@
-/** @jsxImportSource theme-ui */
-
-import React, { FC } from "react";
+import { FC, PropsWithChildren } from "react";
 import { fDateMonthYear } from "../../lib/utilities/formaters";
 import BackToHome from "../BackToHome";
 
-type Props = React.PropsWithChildren;
+type Props = PropsWithChildren;
 
 const Footer: FC<Props> = ({ children }) => {
   return (
-    <footer
-      sx={{
-        display: "flex",
-        flexFlow: "column wrap",
-        justifyContent: "center",
-        alignItems: "center",
-        rowGap: 2,
-        py: 5,
-      }}
-    >
+    <footer className="flex flex-col flex-wrap items-center justify-center gap-y-2 py-5">
       {children}
-      <BackToHome />
-      <div>{fDateMonthYear(new Date())}</div>
+      <div>
+        <BackToHome />
+        <div>{fDateMonthYear(new Date())}</div>
+      </div>
     </footer>
   );
 };

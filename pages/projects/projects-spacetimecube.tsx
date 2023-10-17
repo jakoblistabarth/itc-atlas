@@ -1,9 +1,6 @@
-/** @jsxImportSource theme-ui */
-
 import { OrbitControls } from "@react-three/drei";
 import { Canvas } from "@react-three/fiber";
 import type { GetStaticProps, NextPage } from "next";
-import { Box, Card, Heading, Text } from "theme-ui";
 import getCountries from "../../lib/data/getCountries";
 import { SharedPageProps } from "../../types/Props";
 import { useMemo, useState } from "react";
@@ -21,6 +18,9 @@ import PageBase from "../../components/PageBase";
 import { HiCursorClick } from "react-icons/hi";
 import Button from "../../components/Button";
 import { HiXMark } from "react-icons/hi2";
+import Container from "../../components/Container";
+import CanvasStage from "../../components/CanvasStage";
+import Section from "../../components/Section";
 
 type Props = SharedPageProps & {
   projects: ProjectsWithCountries;
@@ -32,7 +32,7 @@ const ProjectSpaceTimeCube: NextPage<Props> = ({
 }) => {
   const [selectedCountries, setSelectedCountries] = useState<string[]>([]);
   const [selectedYear, setSelectedYear] = useState<string | undefined>(
-    undefined
+    undefined,
   );
 
   const projectsSplit = projects
@@ -48,17 +48,17 @@ const ProjectSpaceTimeCube: NextPage<Props> = ({
     .flat();
 
   const projectsByYear = group(projectsSplit, (d) =>
-    new Date(d.start ?? "").getFullYear().toString()
+    new Date(d.start ?? "").getFullYear().toString(),
   );
   const projectsByYearCountry = Array.from(projectsByYear.entries()).map(
     ([key, projectsPerYear]) => {
       const countries = rollup(
         projectsPerYear,
         (v) => v.length,
-        (d) => d.country
+        (d) => d.country,
       );
       return { year: key, countries };
-    }
+    },
   );
 
   const events: SpaceTimeCubeEvent[] = projectsByYearCountry.flatMap(
@@ -77,7 +77,7 @@ const ProjectSpaceTimeCube: NextPage<Props> = ({
             ]
           : [];
       });
-    }
+    },
   );
 
   const height = 10;
@@ -93,125 +93,114 @@ const ProjectSpaceTimeCube: NextPage<Props> = ({
 
   return (
     <PageBase title="Projects Space Time Cube">
-      <Box as="section" variant="layout.section">
-        <Callout Icon={HiCursorClick}>
-          Select individual countries to only see projects related to them.
-          Select certain year in the box to see all projects for this year.
-        </Callout>
-        <Box sx={{ display: "flex", gap: "3" }}>
-          <div>
-            <input
-              id="slider"
-              type="range"
-              list="tickmarks"
-              style={{ width: "500px" }}
-              name="year"
-              min="0"
-              max="40"
-              step="1"
-              defaultValue="0"
-              onChange={(e) => {
-                const yearIndex = parseInt(e.target.value, 10);
-                setSelectedYear(years[yearIndex] + "");
-              }}
-            ></input>
-            <datalist
-              id="tickmarks"
-              style={{
-                display: "flex",
-                flexDirection: "row",
-                justifyContent: "space-between",
-              }}
-            >
-              <option label="1985">0</option>
-              <option label="1990">5</option>
-              <option label="1995">10</option>
-              <option label="2000">15</option>
-              <option label="2005">20</option>
-              <option label="2010">25</option>
-              <option label="2015">30</option>
-              <option label="2020">35</option>
-              <option label="2025">40</option>
-            </datalist>
+      <Container>
+        <Section>
+          <Callout Icon={HiCursorClick}>
+            Select individual countries to only see projects related to them.
+            Select certain year in the box to see all projects for this year.
+          </Callout>
+          <div className="flex gap-3">
+            <div>
+              <input
+                id="slider"
+                type="range"
+                list="tickmarks"
+                style={{ width: "500px" }}
+                name="year"
+                min="0"
+                max="40"
+                step="1"
+                defaultValue="0"
+                onChange={(e) => {
+                  const yearIndex = parseInt(e.target.value, 10);
+                  setSelectedYear(years[yearIndex] + "");
+                }}
+              />
+              <datalist id="tickmarks" className="flex justify-between">
+                <option label="1985">0</option>
+                <option label="1990">5</option>
+                <option label="1995">10</option>
+                <option label="2000">15</option>
+                <option label="2005">20</option>
+                <option label="2010">25</option>
+                <option label="2015">30</option>
+                <option label="2020">35</option>
+                <option label="2025">40</option>
+              </datalist>
+            </div>
             <Button onClick={() => setSelectedYear(undefined)}>
               <HiXMark />
             </Button>
           </div>
-        </Box>
 
-        {selectedCountries.length > 0 && (
-          <Button sx={{ mt: 2 }} onClick={() => setSelectedCountries([])}>
-            <HiXMark />
-            Clear country selection
-          </Button>
-        )}
-        <Box sx={{ width: "100%", height: "600px", position: "relative" }}>
-          <Canvas
-            style={{ background: "white" }}
-            orthographic
-            camera={{ position: [0, 0, 100], zoom: 50 }}
-            shadows
-          >
-            <SpaceTimeCube
-              topology={neCountriesTopoJson}
-              topologyObject="ne_admin_0_countries"
-              timeScale={timeScale}
-              height={height}
-              events={events}
-              selectedFeatureIds={selectedCountries}
-              selectedYear={selectedYear}
-              onPointerDownHandler={(featureId: string) =>
-                setSelectedCountries((previousState) => {
-                  if (previousState.includes(featureId)) {
-                    return [...previousState.filter((d) => d !== featureId)];
-                  } else {
-                    return [...previousState, featureId];
+          {selectedCountries.length > 0 && (
+            <div className="mt-5">
+              <Button onClick={() => setSelectedCountries([])}>
+                <HiXMark className="mr-2 inline" />
+                Clear country selection
+              </Button>
+            </div>
+          )}
+          <div className="relative">
+            <CanvasStage>
+              <Canvas
+                className="bg-white"
+                orthographic
+                camera={{ position: [0, 0, 100], zoom: 50 }}
+                shadows
+              >
+                <SpaceTimeCube
+                  topology={neCountriesTopoJson}
+                  topologyObject="ne_admin_0_countries"
+                  timeScale={timeScale}
+                  height={height}
+                  events={events}
+                  selectedFeatureIds={selectedCountries}
+                  selectedYear={selectedYear}
+                  onPointerDownHandler={(featureId: string) =>
+                    setSelectedCountries((previousState) => {
+                      if (previousState.includes(featureId)) {
+                        return [
+                          ...previousState.filter((d) => d !== featureId),
+                        ];
+                      } else {
+                        return [...previousState, featureId];
+                      }
+                    })
                   }
-                })
-              }
-            />
-            <ambientLight args={["white", 1]} />
-            <directionalLight
-              position={[10, 12, 0]}
-              color="white"
-              intensity={2}
-            />
-            <OrbitControls enableZoom={false} enablePan={false} />
-          </Canvas>
-          <Card
-            sx={{
-              top: 5,
-              right: 5,
-              position: "absolute",
-            }}
-          >
-            <Text as="p" sx={{ fontStyle: "italic", fontSize: 0 }}>
-              Details
-            </Text>
-            {selectedCountries.length > 0 ? (
-              selectedCountries.map((isoCode) => (
-                <div key={isoCode}>
-                  <Heading as="h2">
-                    {getCountryName(isoCode, neCountriesTopoJson)}
-                  </Heading>
-                  <Text>
-                    {
-                      projects.filter((d) =>
-                        d.countries.map((d) => d.isoAlpha3).includes(isoCode)
-                      ).length
-                    }{" "}
-                    Projects
-                  </Text>
-                </div>
-              ))
-            ) : (
-              <Text as="p" sx={{ mt: 2 }}>
-                Select a country to see details.
-              </Text>
-            )}
-          </Card>
-        </Box>
-      </Box>
+                />
+                <ambientLight args={["white", 1]} />
+                <directionalLight
+                  position={[10, 12, 0]}
+                  color="white"
+                  intensity={2}
+                />
+                <OrbitControls enableZoom={false} enablePan={false} />
+              </Canvas>
+            </CanvasStage>
+            <div className="absolute right-5 top-5 rounded-sm bg-white p-3 shadow">
+              <p className="text-xs italic">Details</p>
+              {selectedCountries.length > 0 ? (
+                selectedCountries.map((isoCode) => (
+                  <div key={isoCode}>
+                    <h2>{getCountryName(isoCode, neCountriesTopoJson)}</h2>
+                    <p>
+                      {
+                        projects.filter((d) =>
+                          d.countries.map((d) => d.isoAlpha3).includes(isoCode),
+                        ).length
+                      }{" "}
+                      Projects
+                    </p>
+                  </div>
+                ))
+              ) : (
+                <p className="mt-2">Select a country to see details.</p>
+              )}
+            </div>
+          </div>
+        </Section>
+      </Container>
     </PageBase>
   );
 };

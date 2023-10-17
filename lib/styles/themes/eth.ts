@@ -7,7 +7,7 @@ const red = "#d51d09";
 const anthrazit = "#444";
 
 const eth: MapTheme = {
-  fontFamily: "Fraunces",
+  fontFamily: "Fraunces Variable",
   hasGraticuleLables: true,
   hasOutline: true,
   hasShadow: false,
@@ -19,12 +19,12 @@ const eth: MapTheme = {
     strokeWidth: 0.5,
   },
   graticuleLabel: {
-    fontFamily: "Fraunces",
+    fontFamily: "Fraunces Variable",
     fontWeight: "bold",
     fontStyle: "italic",
   },
   label: {
-    fontFamily: "Inter",
+    fontFamily: "Inter Variable",
     fontSize: 10,
   },
   base: {

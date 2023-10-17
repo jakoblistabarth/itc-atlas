@@ -1,45 +1,19 @@
-/** @jsxImportSource theme-ui */
-
-import { keyframes } from "@emotion/react";
 import { PropsWithChildren, forwardRef } from "react";
 
 type Props = PropsWithChildren;
 
 const TourBeacon = forwardRef<HTMLButtonElement, Props>(function TourBeacon(
   { ...props },
-  ref
+  ref,
 ) {
-  const pulse = keyframes`
-    0% {
-      transform: scale(1);
-    }
-    55% {
-      transform: scale(1.2);
-    }
-  `;
   return (
     <button
       {...props}
-      sx={{
-        cursor: "pointer",
-        animation: `${pulse} 2s ease-in-out infinite`,
-        width: 20,
-        height: 20,
-        background: "secondary",
-        aspectRatio: "1",
-        borderRadius: "100%",
-        boxShadow: 1,
-        border: "none",
-        fontSize: 1,
-        fontWeight: "bold",
-        color: "white",
-        fontFamily: "heading",
-        fontStyle: "italic",
-        padding: 0,
-      }}
+      className="relative aspect-square h-[20px] w-[20px] cursor-pointer rounded-full bg-itc-blue font-serif font-bold italic leading-[20px] text-white shadow-md dark:bg-itc-green"
       ref={ref ?? undefined}
     >
-      i
+      <span className="relative z-10">i</span>
+      <span className="absolute left-0 inline-block h-[20px] w-[20px] animate-ping rounded-full bg-itc-blue" />
     </button>
   );
 });

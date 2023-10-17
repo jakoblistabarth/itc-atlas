@@ -1,5 +1,3 @@
-/** @jsxImportSource theme-ui */
-
 import {
   ExtendedFeature,
   GeoGeometryObjects,
@@ -12,13 +10,14 @@ import TestMap from "../../components/visuals/maps/TestMap";
 import getCountries from "../../lib/data/getCountries";
 import getCountryCodes from "../../lib/data/queries/country/getCountryCodes";
 import { SharedPageProps } from "../../types/Props";
-import { Box } from "theme-ui";
 import Caption from "../../components/Caption";
 import { geoBertin1953 } from "d3-geo-projection";
 import BtorsByYearMap from "../../components/visuals/maps/BtorsByYear";
 import getBtorsGroupedByYear, {
   BtorsGroupedByYear,
 } from "../../lib/data/queries/btors/getBtorsGroupedByYear";
+import Section from "../../components/Section";
+import Container from "../../components/Container";
 
 type Props = { btorsByYear: BtorsGroupedByYear } & SharedPageProps;
 
@@ -48,45 +47,47 @@ const Page: NextPage<Props> = ({ neCountriesTopoJson, btorsByYear }) => {
   };
 
   return (
-    <PageBase title="MapLayoutFluid Test">
-      <Box variant="layout.inlineMap">
-        <MapLayoutFluid projection={geoEquirectangular()} extent={extentAut}>
-          <TestMap neCountriesTopoJson={neCountriesTopoJson} />
-        </MapLayoutFluid>
-        <Caption reference="Fig. 1">
-          This map uses an Equirectangular projection.
-        </Caption>
-      </Box>
-      <Box variant="layout.inlineMap">
-        <MapLayoutFluid projection={geoBertin1953()} extent={extent}>
-          <BtorsByYearMap
-            neCountries={neCountriesTopoJson}
-            btors={btorsByYear}
-          />
-        </MapLayoutFluid>
-        <Caption reference="Fig. 2">
-          This map uses the Bertin projection.
-        </Caption>
-      </Box>
-      <Box variant="layout.inlineMap">
-        <MapLayoutFluid projection={geoEquirectangular()} extent={extent}>
-          <BtorsByYearMap
-            neCountries={neCountriesTopoJson}
-            btors={btorsByYear}
-          />
-        </MapLayoutFluid>
-        <Caption reference="Fig. 3">
-          This map uses an Equirectangular projection.
-        </Caption>
-      </Box>
-      <Box variant="layout.inlineMap">
-        <MapLayoutFluid projection={geoEquirectangular()} extent={extent}>
-          <TestMap neCountriesTopoJson={neCountriesTopoJson} />
-        </MapLayoutFluid>
-        <Caption reference="Fig. 4">
-          This map uses an Equirectangular projection.
-        </Caption>
-      </Box>
+    <PageBase title="MapLayoutFluid test">
+      <Container>
+        <Section>
+          <MapLayoutFluid projection={geoEquirectangular()} extent={extentAut}>
+            <TestMap neCountriesTopoJson={neCountriesTopoJson} />
+          </MapLayoutFluid>
+          <Caption reference="Fig. 1">
+            This map uses an Equirectangular projection.
+          </Caption>
+        </Section>
+        <Section>
+          <MapLayoutFluid projection={geoBertin1953()} extent={extent}>
+            <BtorsByYearMap
+              neCountries={neCountriesTopoJson}
+              btors={btorsByYear}
+            />
+          </MapLayoutFluid>
+          <Caption reference="Fig. 2">
+            This map uses the Bertin projection.
+          </Caption>
+        </Section>
+        <Section>
+          <MapLayoutFluid projection={geoEquirectangular()} extent={extent}>
+            <BtorsByYearMap
+              neCountries={neCountriesTopoJson}
+              btors={btorsByYear}
+            />
+          </MapLayoutFluid>
+          <Caption reference="Fig. 3">
+            This map uses an Equirectangular projection.
+          </Caption>
+        </Section>
+        <Section>
+          <MapLayoutFluid projection={geoEquirectangular()} extent={extent}>
+            <TestMap neCountriesTopoJson={neCountriesTopoJson} />
+          </MapLayoutFluid>
+          <Caption reference="Fig. 4">
+            This map uses an Equirectangular projection.
+          </Caption>
+        </Section>
+      </Container>
     </PageBase>
   );
 };

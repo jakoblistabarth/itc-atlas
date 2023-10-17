@@ -1,5 +1,3 @@
-/** @jsxImportSource theme-ui */
-
 import { Html, Text3D } from "@react-three/drei";
 import { ScaleTime, group, union } from "d3";
 import { geoPath } from "d3-geo";
@@ -24,8 +22,9 @@ import getCentroidByIsoCode from "../../lib/data/getCentroidByIsoCode";
 import longitudeLatitudeTimeToXYZ from "../../lib/helpers/longitudeLatitudeTimeToXYZ";
 import { fDateYear } from "../../lib/utilities/formaters";
 import { SpaceTimeCubeEvent } from "../../types/SpaceTimeCubeEvent";
-import { featureCollectionToSVG } from "../ExtrudedGeometries/ExtrudedGeometries.helpers";
+import { featureCollectionToSVG } from "../PrismMap/PrismMap.helpers";
 import PlaneOutline from "../PlaneOutline";
+import clsx from "clsx";
 
 type PropTypes = React.PropsWithChildren<{
   events: SpaceTimeCubeEvent[];
@@ -275,21 +274,10 @@ const SpaceTimeCube: FC<PropTypes> = ({
 
               {hoveredCountry == country && position && (
                 <Html
-                  sx={{
-                    color: "primary",
-                    textAlign: "left",
-                    background: "background",
-                    boxShadow: 1,
-                    padding: "5px 10px",
-                    borderRadius: 1,
-                    pointerEvents: "none",
-                    fontWeight: selectedFeatureIds?.includes(country)
-                      ? "bold"
-                      : "regular",
-                  }}
                   position={position}
                 >
-                  <div>{country}</div>
+                  <div className={clsx("text-itc-green text-left bg-white px-5 py-2 rounded-md pointer-events-none shadow-md", selectedFeatureIds?.includes(country) && "font-bold" )}
+                  >{country}</div>
                 </Html>
               )}
             </group>

@@ -1,31 +1,30 @@
-/** @jsxImportSource theme-ui */
-
 import Footer from "../Footer";
-import { Container, Heading } from "theme-ui";
 import Seo from "../Seo";
 import Header from "../Header";
 import { FC, PropsWithChildren } from "react";
+import Container from "../Container";
 
 type Props = PropsWithChildren<{
   title: string;
+  renderTitle?: boolean;
 }>;
 
-const BasePage: FC<Props> = ({ title, children }) => {
+const PageBase: FC<Props> = ({ title, renderTitle = true, children }) => {
   return (
     <>
       <Seo title={title} />
       <Header />
 
-      <Container>
-        <main>
-          <Heading as="h1">{title}</Heading>
-          {children}
-        </main>
-      </Container>
+      <main>
+        <Container>
+          {renderTitle && <h1 className="mt-10">{title}</h1>}
+        </Container>
+        {children}
+      </main>
 
       <Footer />
     </>
   );
 };
 
-export default BasePage;
+export default PageBase;

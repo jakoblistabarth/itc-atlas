@@ -16,7 +16,11 @@ const IndonesiaAnnotationsPrint: FC = () => {
       {!isSSR && (
         <Group id="annotation-travels" top={400}>
           <Group fontSize={9} left={xScale(new Date("1985"))}>
-            <Text fontFamily="Fraunces" fontWeight={"bold"} textAnchor="end">
+            <Text
+              fontFamily="Fraunces Variable"
+              fontWeight={"bold"}
+              textAnchor="end"
+            >
               Travels over time
             </Text>
             <Text

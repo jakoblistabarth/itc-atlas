@@ -1,9 +1,6 @@
-/** @jsxImportSource theme-ui */
-
 import { FC } from "react";
 import * as d3 from "d3";
 import { colorMap, SummaryTableData } from "./SummaryTable.helpers";
-import { Heading } from "theme-ui";
 import { fInt } from "../../lib/utilities/formaters";
 
 type SummaryTableCardProps = {
@@ -33,9 +30,7 @@ const SummaryTableCard: FC<SummaryTableCardProps> = ({ data }) => {
 
   return (
     <div>
-      <Heading as="h3" sx={{ fontSize: 1 }}>
-        Dimensions
-      </Heading>
+      <h3 className="text-xs">Dimensions</h3>
       <svg>
         <g className="labels" fontSize={fontSize}>
           <text x={dimension.margin.left} y={fontSize}>

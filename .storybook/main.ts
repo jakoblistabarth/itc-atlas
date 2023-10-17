@@ -15,12 +15,6 @@ const config: StorybookConfig = {
     "@storybook/addon-interactions",
     "@storybook/addon-styling",
     {
-      name: "storybook-addon-swc",
-      options: {
-        enableSwcMinify: false,
-      },
-    },
-    {
       name: "@storybook/addon-docs",
       options: {
         mdxPluginOptions: {
@@ -30,6 +24,42 @@ const config: StorybookConfig = {
         },
       },
     },
+    {
+      name: "storybook-addon-swc",
+      options: {
+        enableSwcMinify: false,
+      },
+    },
+    "@etchteam/storybook-addon-status",
+    "@storybook/addon-styling-webpack",
+    {
+      name: "@storybook/addon-styling-webpack",
+
+      options: {
+        rules: [
+          {
+            test: /\.css$/,
+            sideEffects: true,
+            use: [
+              require.resolve("style-loader"),
+              {
+                loader: require.resolve("css-loader"),
+                options: {
+                  importLoaders: 1,
+                },
+              },
+              {
+                loader: require.resolve("postcss-loader"),
+                options: {
+                  implementation: require.resolve("postcss"),
+                },
+              },
+            ],
+          },
+        ],
+      },
+    },
+    "@storybook/addon-themes"
   ],
   staticDirs: ["../public", "../data/topographic"],
   framework: {
@@ -39,13 +69,28 @@ const config: StorybookConfig = {
   webpackFinal: async (config) => {
     // Default rule for images /\.(svg|ico|jpg|jpeg|png|gif|eot|otf|webp|ttf|woff|woff2|cur|ani|pdf)(\?.*)?$/
     const fileLoaderRule = config.module?.rules?.find(
-      (rule) => rule.test && rule.test.test(".svg")
+      (rule) => rule.test && rule.test.test(".svg"),
     );
     fileLoaderRule.exclude = /\.svg$/;
     config.module?.rules?.push({
-      test: /\.svg$/,
-      enforce: "pre",
-      loader: require.resolve("@svgr/webpack"),
+      test: /\.svg$/i,
+      use: {
+        loader: "@svgr/webpack",
+        options: {
+          svgoConfig: {
+            plugins: [
+              {
+                name: "preset-default",
+                params: {
+                  overrides: {
+                    removeViewBox: false,
+                  },
+                },
+              },
+            ],
+          },
+        },
+      },
     });
     return config;
   },

@@ -1,31 +1,21 @@
-import type { FC } from "react";
+import { type FC, type PropsWithChildren } from "react";
 import defaultTheme from "../../lib/styles/themes/defaultTheme";
-import { Bounds } from "../../types/MapOptions";
-import { MapTheme } from "../../types/MapTheme";
+import { useMapLayoutContext } from "./MapLayoutContext";
 
-type Props = {
-  bounds: Bounds;
-  title: string;
-  theme?: MapTheme;
-  subtitle?: string;
-};
+type Props = PropsWithChildren<{
+  centered?: boolean;
+}>;
 
-const MapLayoutHeader: FC<Props> = ({ bounds, theme, title, subtitle }) => {
+const MapLayoutHeader: FC<Props> = ({ centered, children }) => {
+  const { width } = useMapLayoutContext();
   return (
-    <g className="map-header" transform={`translate(${bounds.width / 2})`}>
-      <text
-        fontFamily={theme?.fontFamily ?? defaultTheme.fontFamily}
-        textAnchor="middle"
-      >
-        <tspan x={0} dy="1em" fontSize={"2em"}>
-          {title}
-        </tspan>
-        {subtitle && (
-          <tspan x={0} dy="1.4em">
-            {subtitle}
-          </tspan>
-        )}
-      </text>
+    <g
+      className="map-header"
+      transform={`translate(${centered && width / 2})`}
+      fontFamily={defaultTheme.fontFamily}
+      textAnchor={centered ? "middle" : "start"}
+    >
+      {children}
     </g>
   );
 };

@@ -1,15 +1,13 @@
-/** @jsxImportSource theme-ui */
-
 import type { NextPage } from "next";
 import { Canvas } from "@react-three/fiber";
 import { OrbitControls } from "@react-three/drei";
 import PageBase from "../../components/PageBase";
-import { Box } from "theme-ui";
+import CanvasStage from "../../components/CanvasStage";
 
 const ThreeTest: NextPage = () => {
   return (
-    <PageBase title="Three Line Rendering Test">
-      <Box variant="layout.canvasStage" sx={{ height: "500px" }}>
+    <PageBase title="Three line rendering test">
+      <CanvasStage>
         <Canvas orthographic camera={{ zoom: 100 }}>
           <axesHelper />
           <hemisphereLight
@@ -23,7 +21,7 @@ const ThreeTest: NextPage = () => {
           </mesh>
           <OrbitControls />
         </Canvas>
-      </Box>
+      </CanvasStage>
     </PageBase>
   );
 };

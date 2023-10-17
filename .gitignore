@@ -45,3 +45,7 @@ storybook-static/
 
 # cache directory for puppeteer's chrome installation
 .cache
+
+# passenger
+passenger.*.log
+passenger.*.lock

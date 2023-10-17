@@ -1,5 +1,4 @@
 import { FC, PropsWithChildren } from "react";
-import { Box } from "theme-ui";
 
 type Props = PropsWithChildren<{
   reference?: string;
@@ -7,14 +6,14 @@ type Props = PropsWithChildren<{
 
 const Caption: FC<Props> = ({ reference, children }) => {
   return (
-    <Box sx={{ fontSize: 1, my: 3 }}>
+    <div className="my-3 max-w-2xl text-xs">
       {reference && (
         <>
           <strong>{reference}</strong>{" "}
         </>
       )}
       <span>{children}</span>
-    </Box>
+    </div>
   );
 };
 

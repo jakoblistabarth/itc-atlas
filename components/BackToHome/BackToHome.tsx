@@ -1,13 +1,11 @@
-/** @jsxImportSource theme-ui */
-
 import Link from "next/link";
 import { FC } from "react";
-import { MdArrowBack } from "react-icons/md";
+import { HiOutlineHome } from "react-icons/hi";
 
 const BackToHome: FC = () => {
   return (
-    <Link href="/" sx={{ variant: "styles.a" }}>
-      <MdArrowBack /> Back to home
+    <Link href="/" className="flex gap-x-2 items-center">
+      <HiOutlineHome /> back home
     </Link>
   );
 };

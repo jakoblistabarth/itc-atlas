@@ -15,19 +15,25 @@ const BlockDiagramEnvironment = () => (
       position={[-2, 3, 2]}
       zoom={250}
     />
-    <pointLight
-      position={[1, 3, -2]}
+    <directionalLight
+      position={[1, 5, -2]}
       shadow-mapSize={64 * 2 ** 6}
       castShadow
-      intensity={2}
+      intensity={0.5}
     />
-    <hemisphereLight intensity={0.2} />
-    <AccumulativeShadows scale={4}>
+    <directionalLight
+      position={[-3, 5, 2]}
+      shadow-mapSize={64 * 2 ** 6}
+      castShadow
+      intensity={1}
+    />
+    <hemisphereLight intensity={1.5} />
+    <AccumulativeShadows scale={4} opacity={0.5}>
       <RandomizedLight
-        amount={10}
         mapSize={64 * 2 ** 6}
-        position={[2, 3, -6]}
-        radius={1}
+        position={[3, 3, -8]}
+        radius={10}
+        castShadow
       />
     </AccumulativeShadows>
     {[

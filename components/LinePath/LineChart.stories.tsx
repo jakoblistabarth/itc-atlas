@@ -1,5 +1,3 @@
-/** @jsxImportSource theme-ui */
-
 import { Meta, StoryObj } from "@storybook/react";
 
 import LinePath from ".";
@@ -39,7 +37,7 @@ const meta = {
   },
   decorators: [
     (Story) => (
-      <div sx={{ width, height }}>
+      <div style={{ width: width, height: height }}>
         <svg width={"100%"} height={"100%"} viewBox={`0 0 ${width} ${height}`}>
           <AxisX top={height - margin} xScale={meta.args.xScale} />
           <AxisY left={margin} yScale={meta.args.yScale} />

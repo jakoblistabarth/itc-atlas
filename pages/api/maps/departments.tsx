@@ -81,12 +81,14 @@ export default async function handler(
       projection={mapOptions.projection}
       theme={theme}
     >
-      <MapLayoutHeader
-        bounds={mapOptions.bounds}
-        title={"PhDs"}
-        subtitle={"by ITC department"}
-        theme={theme}
-      />
+      <MapLayoutHeader centered>
+        <text dominantBaseline={"hanging"} fontSize={"2em"}>
+          PhDs
+        </text>
+        <text dominantBaseline={"hanging"} dy={"2em"}>
+          by ITC department
+        </text>
+      </MapLayoutHeader>
       <MapLayoutBody bounds={mapOptions.bounds}>
         <MapLayerBase countries={neCountriesTopoJson} theme={theme} />
         <g id="symbols">
