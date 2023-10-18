@@ -10,9 +10,14 @@ import PageBase from "../components/PageBase";
 import Paragraph from "../components/Paragraph";
 import Section from "../components/Section";
 import Teaser from "../components/Teaser";
+import { useEffect, useState } from "react";
 
 const Home: NextPage = () => {
   const { theme } = useTheme();
+  const [isSSR, setIsSSR] = useState(true);
+  useEffect(() => {
+    setIsSSR(false);
+  }, []);
 
   const links = [
     {
@@ -70,36 +75,38 @@ const Home: NextPage = () => {
       <Container>
         <Section>
           <div className="h-[220px] w-full p-4">
-            <svg
-              ref={heroVizRef}
-              width="100%"
-              height="100%"
-              viewBox={`0 0 ${width} ${height}`}
-            >
-              <line
-                x2={"100%"}
-                y1={width / 5.4}
-                y2={width / 5.4}
-                stroke="teal"
-              />
-              {Array.from(ITClocations.entries()).map(([location], i) => {
-                const buildingWith = width / 4;
-                return (
-                  <Group
-                    key={location}
-                    top={buildingWith / 2}
-                    left={buildingWith + (i * buildingWith) / 2}
-                  >
-                    <Building
-                      width={buildingWith}
-                      location={location}
-                      foreground={theme === "light" ? "teal" : "turquoise"}
-                      background={theme === "light" ? "white" : "rgb(0,30,0)"}
-                    />
-                  </Group>
-                );
-              })}
-            </svg>
+            {!isSSR && (
+              <svg
+                ref={heroVizRef}
+                width="100%"
+                height="100%"
+                viewBox={`0 0 ${width} ${height}`}
+              >
+                <line
+                  x2={"100%"}
+                  y1={width / 5.4}
+                  y2={width / 5.4}
+                  stroke="teal"
+                />
+                {Array.from(ITClocations.entries()).map(([location], i) => {
+                  const buildingWith = width / 4;
+                  return (
+                    <Group
+                      key={location}
+                      top={buildingWith / 2}
+                      left={buildingWith + (i * buildingWith) / 2}
+                    >
+                      <Building
+                        width={buildingWith}
+                        location={location}
+                        foreground={theme === "light" ? "teal" : "turquoise"}
+                        background={theme === "light" ? "white" : "rgb(0,30,0)"}
+                      />
+                    </Group>
+                  );
+                })}
+              </svg>
+            )}
           </div>
           <h1>Atlas of the world of ITC</h1>
           <Teaser>The impact of capacity development</Teaser>
