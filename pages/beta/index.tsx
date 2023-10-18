@@ -13,11 +13,11 @@ const Page: NextPage = () => {
     <PageBase title="ITC Atlas – beta version">
       <Container>
         <main>
+          <Teaser>
+            We&apos;re working on an online atlas for ITC. The website
+            you&apos;re looking at right now is still in beta.
+          </Teaser>
           <Section>
-            <Teaser>
-              We&apos;re working on an online atlas for ITC. The website
-              you&apos;re looking at right now is still in beta.
-            </Teaser>
             <h2>What does the beta phase mean for you?</h2>
             <Callout Icon={BiBug}>Watch out for bugs!</Callout>
             <Paragraph>
@@ -28,7 +28,9 @@ const Page: NextPage = () => {
               disappear completely as we incrementally move forward to the final
               product.
             </Paragraph>
+          </Section>
 
+          <Section>
             <h2>What does the beta phase mean for us?</h2>
             <Paragraph>
               Well, obviously a lot of work on our table. We are busy improving
@@ -39,7 +41,9 @@ const Page: NextPage = () => {
               ) and compiling maps and visualizations. We&apos;re updating this
               publicly available instance frequently as we go.
             </Paragraph>
+          </Section>
 
+          <Section>
             <h2>Why this atlas?</h2>
             <Paragraph>
               ITC&apos;s mission is capacity development. We apply, share and

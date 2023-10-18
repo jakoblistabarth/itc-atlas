@@ -7,7 +7,7 @@ type Props = {
 };
 
 const ChapterHighlights: FC<Props> = ({ highlights }) => (
-  <div className="my-4 max-w-2xl rounded-sm bg-itc-green-50 p-3">
+  <div className="my-4 max-w-2xl rounded-sm bg-itc-green-50 p-3 dark:bg-itc-green-900">
     <h2>Highlights</h2>
     <ul className="list-none">
       {highlights.map(({ href, title }, i) => (

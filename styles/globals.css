@@ -2,6 +2,12 @@
 @tailwind components;
 @tailwind utilities;
 
+@layer base {
+  body {
+    @apply bg-white text-black dark:bg-itc-green-950 dark:text-gray-100;
+  }
+}
+
 h1,
 h2,
 h3,

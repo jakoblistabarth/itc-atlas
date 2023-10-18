@@ -1,16 +1,19 @@
 import { Group } from "@visx/group";
 import type { NextPage } from "next";
+import { useTheme } from "next-themes";
 import useMeasure from "react-use-measure";
 import Building, { ITClocations } from "../components/Building";
 import ChapterNavigation from "../components/ChapterNavigation";
 import Container from "../components/Container";
 import Link from "../components/Link";
 import PageBase from "../components/PageBase";
+import Paragraph from "../components/Paragraph";
 import Section from "../components/Section";
 import Teaser from "../components/Teaser";
-import Paragraph from "../components/Paragraph";
 
 const Home: NextPage = () => {
+  const { theme } = useTheme();
+
   const links = [
     {
       href: "/btors",
@@ -90,7 +93,8 @@ const Home: NextPage = () => {
                     <Building
                       width={buildingWith}
                       location={location}
-                      color={"teal"}
+                      foreground={theme === "light" ? "teal" : "turquoise"}
+                      background={theme === "light" ? "white" : "rgb(0,30,0)"}
                     />
                   </Group>
                 );

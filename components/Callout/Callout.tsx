@@ -7,7 +7,7 @@ type Props = PropsWithChildren<{
 }>;
 
 const Callout: FC<Props> = ({ Icon = MdOutlineLightbulb, title, children }) => (
-  <div className="my-2 max-w-2xl rounded-md bg-itc-green-50 p-3">
+  <div className="my-2 max-w-2xl rounded-md bg-itc-green-50 p-3 dark:bg-itc-green-900 dark:text-itc-green-500">
     <div className="grid grid-cols-[min-content_auto] gap-x-2">
       <Icon className="mt-1" />
       <div>

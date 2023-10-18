@@ -1,5 +1,6 @@
 import type { AppProps } from "next/app";
 import { SWRConfig } from "swr";
+import { ThemeProvider } from "next-themes";
 
 import "../styles/globals.css";
 import "@fontsource-variable/fraunces/full.css";
@@ -13,7 +14,9 @@ const MyApp = ({ Component, pageProps }: AppProps) => (
         fetch(resource).then((res) => res.json()),
     }}
   >
-    <Component {...pageProps} />
+    <ThemeProvider attribute="class">
+      <Component {...pageProps} />
+    </ThemeProvider>
   </SWRConfig>
 );
 

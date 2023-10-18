@@ -5,7 +5,7 @@ module.exports = {
     "./components/**/*.{js,ts,jsx,tsx,mdx}",
     "./stories/**/*.{js,ts,jsx,tsx,mdx}",
   ],
-  darkMode: ["class", '[data-mode="dark"]'],
+  darkMode: "class",
   theme: {
     fontFamily: {
       sans: '"Inter Variable", system-ui, sans-serif',

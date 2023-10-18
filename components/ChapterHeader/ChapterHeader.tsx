@@ -10,7 +10,7 @@ type Props = {
 
 const ChapterHeader: FC<Props> = ({ chapterName, icon = true }) => {
   return (
-    <div className="relative overflow-hidden bg-itc-green">
+    <div className="relative overflow-hidden bg-itc-green dark:bg-itc-green-900">
       {icon && (
         <div className="left-o pointer-events-none absolute top-0">
           <ChapterIcon

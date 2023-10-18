@@ -4,17 +4,18 @@ import NavLink from "../NavLink";
 import BetaBadge from "../BetaBadge";
 import Container from "../Container";
 import Link from "../Link";
+import ThemeSwitch from "../ThemeSwitch";
 
 const Navigation: FC = () => {
   return (
     <Container>
       <nav className="flex items-stretch">
-        <div className="mr-3 flex w-10 items-center justify-center rounded-md bg-white p-1">
+        <div className="flex w-10 items-center justify-center rounded-md bg-white p-1">
           <Link href="/">
             <HiOutlineHome />
           </Link>
         </div>
-        <div className="inline-flex gap-x-2 rounded-md bg-white p-1">
+        <div className="mx-3 inline-flex gap-x-2 rounded-md bg-white p-1">
           <NavLink href="/introduction">Introduction</NavLink>
           <NavLink disabled href="/education">
             Education
@@ -27,7 +28,10 @@ const Navigation: FC = () => {
             Appendix
           </NavLink>
         </div>
-        <div className="ml-5 flex items-center">
+        <div className="flex items-center">
+          <ThemeSwitch />
+        </div>
+        <div className="ml-10 flex items-center">
           <BetaBadge />
         </div>
       </nav>

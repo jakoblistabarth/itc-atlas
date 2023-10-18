@@ -1,26 +1,35 @@
 import "@fontsource-variable/fraunces/full-italic.css";
 import "@fontsource-variable/fraunces/full.css";
 import "@fontsource-variable/inter/slnt.css";
-import { withThemeByDataAttribute } from "@storybook/addon-styling";
+import { withThemeByClassName } from "@storybook/addon-themes";
 import "../styles/globals.css";
 import ITCAtlasTheme from "./ITCAtlasTheme";
+import { ThemeProvider } from "next-themes";
+import React from "react";
 
-export const decorators = [
-  withThemeByDataAttribute({
+const withThemeProvider = (Story) => (
+  //TODO: make useTheme hook work in stories
+  <ThemeProvider attribute="class">
+    <Story />
+  </ThemeProvider>
+);
+
+const decorators = [
+  withThemeProvider,
+  withThemeByClassName({
     themes: {
       light: "light",
       dark: "dark",
     },
     defaultTheme: "light",
-    attributeName: "data-mode",
   }),
 ];
 
-export const parameters = {
+const parameters = {
   actions: { argTypesRegex: "^on[A-Z].*" },
   controls: {
     matchers: {
-      color: /(background|color|fill|stroke)$/i,
+      color: /((back|fore)ground|color|fill|stroke)$/i,
       date: /Date$/,
     },
   },
@@ -72,7 +81,7 @@ const ifExists = (controlName: string) => ({
 
 const opacityRange = { type: "range", min: 0, max: 1, step: 0.1 };
 
-export const argTypes = {
+const argTypes = {
   strokeWidth: {
     control: { type: "range", min: 0.2, max: 10, step: 0.1 },
     ...ifExists("strokeWidth"),
@@ -89,3 +98,11 @@ export const argTypes = {
     return acc;
   }, {}),
 };
+
+const preview = {
+  decorators,
+  parameters,
+  argTypes,
+};
+
+export default preview;

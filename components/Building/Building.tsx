@@ -51,14 +51,16 @@ export const ITClocations = new Map([
 type Props = {
   location: ITCLocationName;
   width: number;
-  color?: string;
+  foreground?: string;
+  background?: string;
   shadow?: boolean;
 } & Omit<SVGProps<SVGGElement>, "fill" | "stroke">;
 
 const Building: FC<Props> = ({
   location,
   width,
-  color = "black",
+  background = "white",
+  foreground = "black",
   shadow = true,
   ...rest
 }) => {
@@ -69,14 +71,17 @@ const Building: FC<Props> = ({
         <svg className="building" width={width} height={height}>
           <style>
             {`
-          svg.building g,
-          svg.building *[stroke="#000"]  {
-                stroke: ${color};
+            svg.building g,
+            svg.building *[stroke="#000"]  {
+              stroke: ${foreground};
+            }
+            svg.building *[fill="#fff"] {
+              fill: ${background};
             }
             svg.building svg *[opacity="0.1"],
             svg.building g[opacity="0.1"] {
-                fill: ${color};
-                display: ${shadow ? "block" : "none"}
+              fill: ${foreground};
+              display: ${shadow ? "block" : "none"}
             }
             `}
           </style>
