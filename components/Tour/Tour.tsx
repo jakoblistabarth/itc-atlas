@@ -16,7 +16,6 @@ const Tour: FC<Props> = ({ steps }) => {
       continuous
       showProgress
       showSkipButton
-      //@ts-expect-error: only works with explicit as React.ElementType<BeaconRenderProps>
       beaconComponent={Beacon}
     />
   ) : (

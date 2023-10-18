@@ -47,8 +47,6 @@ const BlockDiagramEnvironment = () => (
         scale={0.075}
         opacity={0.25}
         speed={0.2} // Rotation speed
-        width={2.5} // Width of the full cloud
-        depth={0.25} // Z-dir depth
         segments={10} // Number of particles
       />
     ))}
