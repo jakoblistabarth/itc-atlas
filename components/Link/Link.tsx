@@ -10,7 +10,7 @@ const Link: FC<Props> = ({ href, children }) => {
   return (
     <NextLink
       href={href}
-      className="text-itc-green no-underline transition-colors hover:text-itc-blue dark:hover:text-itc-green-200"
+      className="text-itc-green no-underline transition-colors duration-500 hover:text-itc-green-900 dark:text-itc-green-400 dark:hover:text-itc-green-100"
     >
       {children}
     </NextLink>

@@ -11,9 +11,10 @@ const ChapterHighlights: FC<Props> = ({ highlights }) => (
     <h2>Highlights</h2>
     <ul className="list-none">
       {highlights.map(({ href, title }, i) => (
-        <li className="mt-1 flex items-center" key={i}>
-          <MdArrowForward className="mr-2" />
-          <Link href={href}>{title}</Link>
+        <li className="mt-1" key={i}>
+          <Link href={href}>
+            <MdArrowForward className="mr-1 inline" /> {title}
+          </Link>
         </li>
       ))}
     </ul>
