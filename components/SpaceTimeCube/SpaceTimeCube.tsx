@@ -247,7 +247,7 @@ const SpaceTimeCube: FC<PropTypes> = ({
           return (
             <group
               position-z={
-                ((parseInt(selectedYear ?? "1985") - 1985) * height) / 40
+                ((parseInt(selectedYear ?? "1985") - 1985) * height) / 40 - 0.1
               }
               key={country}
               onPointerDown={() => onPointerDownHandler(country)}

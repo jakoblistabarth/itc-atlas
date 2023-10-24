@@ -1,4 +1,9 @@
-import { OrbitControls } from "@react-three/drei";
+import {
+  AccumulativeShadows,
+  Environment,
+  OrbitControls,
+  RandomizedLight,
+} from "@react-three/drei";
 import { Canvas } from "@react-three/fiber";
 import type { GetStaticProps, NextPage } from "next";
 import getCountries from "../../lib/data/getCountries";
@@ -46,7 +51,6 @@ const ProjectSpaceTimeCube: NextPage<Props> = ({
       ]);
     })
     .flat();
-
   const projectsByYear = group(projectsSplit, (d) =>
     new Date(d.start ?? "").getFullYear().toString(),
   );
@@ -117,15 +121,15 @@ const ProjectSpaceTimeCube: NextPage<Props> = ({
                 }}
               />
               <datalist id="tickmarks" className="flex justify-between">
-                <option label="1985">0</option>
-                <option label="1990">5</option>
-                <option label="1995">10</option>
-                <option label="2000">15</option>
-                <option label="2005">20</option>
-                <option label="2010">25</option>
-                <option label="2015">30</option>
-                <option label="2020">35</option>
-                <option label="2025">40</option>
+                <option value="0" label="1985" />
+                <option value="5" label="1990" />
+                <option value="10" label="1995" />
+                <option value="15" label="2000" />
+                <option value="20" label="2005" />
+                <option value="25" label="2010" />
+                <option value="30" label="2015" />
+                <option value="35" label="2020" />
+                <option value="40" label="2025" />
               </datalist>
             </div>
             <Button onClick={() => setSelectedYear(undefined)}>
@@ -142,11 +146,11 @@ const ProjectSpaceTimeCube: NextPage<Props> = ({
             </div>
           )}
           <div className="relative">
-            <CanvasStage>
+            <CanvasStage height={700}>
               <Canvas
                 className="bg-white"
                 orthographic
-                camera={{ position: [0, 0, 100], zoom: 50 }}
+                camera={{ position: [0, 50, 100], zoom: 50 }}
                 shadows
               >
                 <SpaceTimeCube
@@ -169,13 +173,23 @@ const ProjectSpaceTimeCube: NextPage<Props> = ({
                     })
                   }
                 />
-                <ambientLight args={["white", 1]} />
+                <Environment preset="city" />
+                <directionalLight
+                  position={[10, 10, 5]}
+                  intensity={5}
+                  castShadow
+                  shadow-bias={-0.0001}
+                />
+                <AccumulativeShadows opacity={0.25}>
+                  <RandomizedLight position={[10, 10, 5]} />
+                </AccumulativeShadows>
+                {/*<ambientLight args={["white", 1]} />
                 <directionalLight
                   position={[10, 12, 0]}
                   color="white"
                   intensity={2}
-                />
-                <OrbitControls enableZoom={false} enablePan={false} />
+                />*/}
+                <OrbitControls enableZoom={true} enablePan={true} />
               </Canvas>
             </CanvasStage>
             <div className="absolute right-5 top-5 rounded-sm bg-white p-3 shadow">
