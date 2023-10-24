@@ -9,12 +9,7 @@ import {
   Polygon,
 } from "geojson";
 import React, { FC, useMemo, useState } from "react";
-import {
-  DoubleSide,
-  MeshPhongMaterial,
-  MeshStandardMaterial,
-  Vector3,
-} from "three";
+import { MeshStandardMaterial, Vector3 } from "three";
 import { SVGLoader } from "three-stdlib";
 import { feature } from "topojson-client";
 import type { Topology } from "topojson-specification";
@@ -38,12 +33,10 @@ type PropTypes = React.PropsWithChildren<{
   selectedYear?: string;
 }>;
 
-const teal = new MeshPhongMaterial({ color: "teal" });
-
 const materials = Object.fromEntries(
   ["teal", "white", "grey", "blue"].map((d) => [
     d,
-    new MeshStandardMaterial({ color: d, depthWrite: true, side: DoubleSide }),
+    new MeshStandardMaterial({ color: d }),
   ]),
 );
 
@@ -169,10 +162,6 @@ const SpaceTimeCube: FC<PropTypes> = ({
         {timeScale.ticks(10).map((t, idx) => {
           const isActiveYear =
             selectedYear && t.getFullYear().toString() === selectedYear;
-          console.log(
-            timeScale(new Date(selectedYear ?? 1985)) -
-              timeScale(new Date(1985)),
-          );
           return (
             <group
               key={`${t.getDate()}-${idx}`}
@@ -180,7 +169,7 @@ const SpaceTimeCube: FC<PropTypes> = ({
             >
               <PlaneOutline
                 side={side}
-                color="teal"
+                color="grey"
                 lineWidth={isActiveYear ? 2 : 0.5}
               />
               <mesh>
@@ -188,14 +177,14 @@ const SpaceTimeCube: FC<PropTypes> = ({
                   receiveShadow
                   castShadow
                   font={"/fonts/Inter_Regular.json"}
-                  position={[side / 2 + 0.5, 0, side * 0.5]}
+                  position={[side / 2 + 0.25, 0, side * 0.5]}
                   size={fontSize}
                   height={fontSize / 50}
                   bevelEnabled
-                  bevelThickness={0.005}
-                  bevelSize={0.0001}
-                  curveSegments={2}
-                  material={isActiveYear ? materials.teal : materials.white}
+                  bevelThickness={0.02}
+                  bevelSize={0.005}
+                  curveSegments={4}
+                  material={isActiveYear ? materials.teal : materials.grey}
                 >
                   {fDateYear(t)}
                 </Text3D>
@@ -206,9 +195,21 @@ const SpaceTimeCube: FC<PropTypes> = ({
       </group>
 
       {selectedEvents.map((e, idx) => (
-        <mesh key={`${e.name}-${idx}`} position={e.pos} material={teal}>
+        <mesh
+          castShadow
+          receiveShadow
+          key={`${e.name}-${idx}`}
+          position={e.pos}
+          // material={teal}
+        >
           <boxGeometry
-            args={[(e.size ?? 1) / 200, eventSide / 5, (e.size ?? 1) / 200]}
+            args={[(e.size ?? 1) / 200, eventSide / 10, (e.size ?? 1) / 200]}
+          />
+          <meshPhysicalMaterial
+            color="teal"
+            opacity={0.75}
+            transparent
+            roughness={0}
           />
         </mesh>
       ))}
@@ -221,13 +222,13 @@ const SpaceTimeCube: FC<PropTypes> = ({
               receiveShadow
               castShadow
               font={"/fonts/Inter_Regular.json"}
-              position={[side / 2 + 0.5, 0, side * 0.5]}
+              position={[side / 2 + 0.25, 0, side * 0.5]}
               size={fontSize}
               height={fontSize / 50}
               bevelEnabled
-              bevelThickness={0.005}
-              bevelSize={0.0001}
-              curveSegments={2}
+              bevelThickness={0.02}
+              bevelSize={0.005}
+              curveSegments={4}
               material={materials.teal}
             >
               {selectedYear}
@@ -237,8 +238,7 @@ const SpaceTimeCube: FC<PropTypes> = ({
       )}
 
       <group
-        position-y={height / -2}
-        rotation={[Math.PI / -2, 0, 0]}
+        rotation-x={Math.PI / -2}
         onPointerEnter={() => (document.body.style.cursor = "pointer")}
         onPointerLeave={() => (document.body.style.cursor = "auto")}
       >
@@ -247,16 +247,18 @@ const SpaceTimeCube: FC<PropTypes> = ({
           return (
             <group
               position-z={
-                ((parseInt(selectedYear ?? "1985") - 1985) * height) / 40 - 0.1
+                ((parseInt(selectedYear ?? "1985") - 1985) * height) / 40 - 0.05
               }
               key={country}
               onPointerDown={() => onPointerDownHandler(country)}
               onPointerEnter={() => setHoveredCountry(country)}
               onPointerLeave={() => setHoveredCountry(undefined)}
-              rotation={[Math.PI, 0, 0]} // taking into account the origin of svg coordinates in the top left rather than in the center
+              rotation-x={Math.PI} // taking into account the origin of svg coordinates in the top left rather than in the center
             >
               {shapes.map((shape) => (
                 <mesh
+                  castShadow
+                  receiveShadow
                   key={shape.shape.uuid}
                   material={
                     selectedFeatureIds?.includes(country)

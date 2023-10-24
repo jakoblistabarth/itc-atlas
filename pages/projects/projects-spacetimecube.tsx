@@ -90,7 +90,7 @@ const ProjectSpaceTimeCube: NextPage<Props> = ({
     const maxDate = max(events.map((d) => d.dateEnd ?? new Date()));
     return scaleTime<number, number>()
       .domain([minDate ?? new Date("1952"), maxDate ?? new Date()])
-      .range([height / -2, height / 2])
+      .range([0, height])
       .nice();
   }, [events, height]);
   const years = Array.from(new Array(2026).keys()).slice(1985);
@@ -150,9 +150,17 @@ const ProjectSpaceTimeCube: NextPage<Props> = ({
               <Canvas
                 className="bg-white"
                 orthographic
-                camera={{ position: [0, 50, 100], zoom: 50 }}
+                camera={{ position: [-2.5, 7.5, 5], zoom: 50 }}
                 shadows
               >
+                <OrbitControls
+                  enableZoom={true}
+                  enablePan={true}
+                  target-y={height / 2}
+                  maxPolarAngle={Math.PI / 2}
+                  minZoom={30}
+                  maxZoom={200}
+                />
                 <SpaceTimeCube
                   topology={neCountriesTopoJson}
                   topologyObject="ne_admin_0_countries"
@@ -173,23 +181,21 @@ const ProjectSpaceTimeCube: NextPage<Props> = ({
                     })
                   }
                 />
-                <Environment preset="city" />
+                <Environment preset="apartment" />
                 <directionalLight
                   position={[10, 10, 5]}
                   intensity={5}
                   castShadow
                   shadow-bias={-0.0001}
                 />
-                <AccumulativeShadows opacity={0.25}>
+                <AccumulativeShadows
+                  resolution={2 ** 12}
+                  scale={30}
+                  position-y={-0.1}
+                  opacity={0.25}
+                >
                   <RandomizedLight position={[10, 10, 5]} />
                 </AccumulativeShadows>
-                {/*<ambientLight args={["white", 1]} />
-                <directionalLight
-                  position={[10, 12, 0]}
-                  color="white"
-                  intensity={2}
-                />*/}
-                <OrbitControls enableZoom={true} enablePan={true} />
               </Canvas>
             </CanvasStage>
             <div className="absolute right-5 top-5 rounded-sm bg-white p-3 shadow">
