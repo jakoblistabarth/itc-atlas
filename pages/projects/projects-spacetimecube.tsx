@@ -40,7 +40,17 @@ const ProjectSpaceTimeCube: NextPage<Props> = ({
     undefined,
   );
 
+  type ProjectWithDate = Omit<ProjectsWithCountries[number], "start"> & {
+    start: string;
+  };
+
+  const hasDate = (
+    project: ProjectsWithCountries[number] | ProjectWithDate,
+  ): project is ProjectWithDate =>
+    project.start !== undefined && project.start !== null;
+
   const projectsSplit = projects
+    .filter((d) => hasDate(d))
     .map((p) => {
       const countries = p.countries.map((d) => d.isoAlpha3);
       return countries.flatMap((c) => [
@@ -51,8 +61,10 @@ const ProjectSpaceTimeCube: NextPage<Props> = ({
       ]);
     })
     .flat();
+
   const projectsByYear = group(projectsSplit, (d) =>
-    new Date(d.start ?? "").getFullYear().toString(),
+    //@ts-expect-error needs to be fixed with mapped typing? (too complex for simple predicate)
+    new Date(d.start).getFullYear().toString(),
   );
   const projectsByYearCountry = Array.from(projectsByYear.entries()).map(
     ([key, projectsPerYear]) => {
@@ -150,7 +162,7 @@ const ProjectSpaceTimeCube: NextPage<Props> = ({
               <Canvas
                 className="bg-white"
                 orthographic
-                camera={{ position: [-2.5, 7.5, 5], zoom: 50 }}
+                camera={{ position: [10, 10, 10], zoom: 50, near: 0 }}
                 shadows
               >
                 <OrbitControls
