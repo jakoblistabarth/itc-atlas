@@ -9,6 +9,8 @@ const meta = {
   component: Book,
   args: {
     color: "red",
+    title: "Lorem ipsum",
+    active: false,
   },
   parameters: {
     controls: {
@@ -31,3 +33,8 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {};
+export const ActiveBook: Story = {
+  args: {
+    active: true,
+  },
+};

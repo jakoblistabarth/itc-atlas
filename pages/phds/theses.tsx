@@ -8,6 +8,7 @@ import getPhdTheses, {
 import { Department } from "@prisma/client";
 import getDepartments from "../../lib/data/load/loadDepartments";
 import LegendNominal from "../../components/LegendNominal";
+import Container from "../../components/Container";
 
 type Props = {
   phdTheses: PhdTheses;
@@ -21,7 +22,7 @@ const isNumber = (item: number | undefined | null): item is number => {
 const Page: NextPage<Props> = ({ phdTheses, departments }) => {
   const thesesByYear = group(
     phdTheses.filter((d) => isNumber(d.promotionYear)),
-    (d) => d.promotionYear as number
+    (d) => d.promotionYear as number,
   );
 
   const colorScale = scaleOrdinal<string, string, string>()
@@ -40,16 +41,21 @@ const Page: NextPage<Props> = ({ phdTheses, departments }) => {
 
   return (
     <PageBase title="Phd theses">
-      <PhdThesesBookChart colorScale={colorScale} thesesByYear={thesesByYear} />
-      <svg height={400}>
-        <LegendNominal
-          transform="translate(0, 0) scale(2)"
-          title="Departments"
-          entries={colorScale
-            .domain()
-            .map((d) => ({ label: d, color: colorScale(d) }))}
+      <Container>
+        <PhdThesesBookChart
+          colorScale={colorScale}
+          thesesByYear={thesesByYear}
         />
-      </svg>
+        <svg height={400}>
+          <LegendNominal
+            transform="translate(0, 0) scale(2)"
+            title="Departments"
+            entries={colorScale
+              .domain()
+              .map((d) => ({ label: d, color: colorScale(d) }))}
+          />
+        </svg>
+      </Container>
     </PageBase>
   );
 };

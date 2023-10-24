@@ -1,8 +1,7 @@
-import { FC } from "react";
+import { FC, useState } from "react";
 import { PhdTheses } from "../../lib/data/queries/phd/getPhdTheses";
 import { Canvas } from "@react-three/fiber";
-import Book from "../Book";
-import { ScaleOrdinal, extent, randomUniform, range } from "d3";
+import { ScaleOrdinal, extent, range } from "d3";
 import {
   AccumulativeShadows,
   Environment,
@@ -12,6 +11,8 @@ import {
 import { getSpiralPoints } from "./PhdThesesBookChart.helpers";
 import { Euler, Vector3 } from "three";
 import CanvasStage from "../CanvasStage";
+import { MemoizedBookStack } from "./BookStack";
+import Empty from "./Empty";
 
 type Props = {
   thesesByYear: Map<number, PhdTheses>;
@@ -22,6 +23,10 @@ const PhdThesesBookChart: FC<Props> = ({ thesesByYear, colorScale }) => {
   const [min, max] = extent(Array.from(thesesByYear.keys()));
   const [start, end] = [min ?? 0, max ? max + 1 : 1];
   const spiralPoints = getSpiralPoints(end + 1 - start, 3, Math.PI * 2 * 2);
+  const [activeThesis, setActiveThesis] = useState<string | undefined>(
+    undefined,
+  );
+  console.log(activeThesis);
   return (
     <CanvasStage>
       <Canvas
@@ -42,15 +47,17 @@ const PhdThesesBookChart: FC<Props> = ({ thesesByYear, colorScale }) => {
               0,
             );
             return thesesByYear.get(year) ? (
-              <BookStack
-                key={year}
+              <MemoizedBookStack
+                key={idx}
                 position={position}
                 rotation={roatation}
                 theses={thesesByYear.get(year) ?? []}
                 colorScale={colorScale}
+                activeThesis={activeThesis}
+                setActiveThesis={setActiveThesis}
               />
             ) : (
-              <Empty position={position} rotation={roatation} />
+              <Empty key={idx} position={position} rotation={roatation} />
             );
           })}
         </group>
@@ -68,36 +75,5 @@ const PhdThesesBookChart: FC<Props> = ({ thesesByYear, colorScale }) => {
     </CanvasStage>
   );
 };
-
-type BookStackProps = {
-  theses: PhdTheses;
-  colorScale: ScaleOrdinal<string, string, string>;
-} & JSX.IntrinsicElements["group"];
-
-const BookStack: FC<BookStackProps> = ({ theses, colorScale, ...rest }) => {
-  return (
-    <group {...rest}>
-      {theses.map((d, idx) => (
-        <Book
-          key={idx}
-          color={colorScale(d.departmentMainId ?? "na")}
-          rotation-y={Math.PI / 2 + randomUniform(-0.1, 0.1)()}
-          position-x={randomUniform(-0.05, 0.05)()}
-          position-y={-0.01 + 0.02 * (idx + 1)}
-          position-z={randomUniform(-0.05, 0.05)()}
-        />
-      ))}
-    </group>
-  );
-};
-
-const Empty: FC<JSX.IntrinsicElements["group"]> = ({ ...rest }) => (
-  <group {...rest}>
-    <mesh rotation-x={Math.PI / -2}>
-      <planeGeometry args={[0.21, 0.297]} />
-      <meshStandardMaterial color={"lightgrey"} opacity={0.2} transparent />
-    </mesh>
-  </group>
-);
 
 export default PhdThesesBookChart;
