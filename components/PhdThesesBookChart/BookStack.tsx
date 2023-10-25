@@ -3,11 +3,13 @@ import { PhdTheses } from "../../lib/data/queries/phd/getPhdTheses";
 import { ScaleOrdinal } from "d3";
 import { MemoizedBook } from "../Book";
 import { Euler, Vector3 } from "three";
+import { Center, Text3D } from "@react-three/drei";
 
 type Props = {
   theses: PhdTheses;
   colorScale: ScaleOrdinal<string, string, string>;
   activeThesis?: string;
+  label?: string;
   setActiveThesis: (id?: string) => void;
   position: Vector3;
   rotation: Euler;
@@ -18,6 +20,7 @@ const BookStack: FC<Props> = ({
   colorScale,
   activeThesis,
   setActiveThesis,
+  label,
   ...rest
 }) => {
   return (
@@ -33,6 +36,23 @@ const BookStack: FC<Props> = ({
           setActiveThesis={setActiveThesis}
         />
       ))}
+
+      {label && (
+        <Text3D
+          castShadow
+          receiveShadow
+          size={0.05}
+          font={"/fonts/Inter_Regular.json"}
+          height={0.01}
+          rotation-x={-Math.PI / 2}
+          rotation-z={Math.PI / 2}
+          position-x={0.25}
+          position-z={0.05}
+        >
+          {label}
+          <meshStandardMaterial color="white" />
+        </Text3D>
+      )}
     </group>
   );
 };

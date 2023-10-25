@@ -65,6 +65,7 @@ const PhdThesesBookChart: FC<Props> = ({ thesesByYear, colorScale }) => {
                   position={position}
                   rotation={roatation}
                   theses={theses}
+                  label={year.toString()}
                   colorScale={colorScale}
                   activeThesis={hasActiveTheses ? activeThesis : undefined}
                   setActiveThesis={setActiveThesis}
