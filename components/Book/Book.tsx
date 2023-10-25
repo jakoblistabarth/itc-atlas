@@ -8,9 +8,9 @@ import { randomUniform } from "d3";
 type Props = {
   color?: string;
   wiggle?: boolean;
-  title: string;
-  active: boolean;
-  setActiveThesis?: (id: string) => void;
+  thesisId?: string;
+  active?: boolean;
+  setActiveThesis?: (id?: string) => void;
 } & JSX.IntrinsicElements["group"];
 
 type GLTFResult = GLTF & {
@@ -26,7 +26,7 @@ const paperMaterial = new MeshStandardMaterial({
 
 const Book: FC<Props> = ({
   color,
-  title,
+  thesisId,
   active = false,
   wiggle = false,
   setActiveThesis,
@@ -35,7 +35,7 @@ const Book: FC<Props> = ({
   const [hovered, setHovered] = useState(false);
   useCursor(hovered);
   const { scale } = useSpring({
-    scale: active ? 1.1 : hovered ? 1.05 : 1,
+    scale: active ? 1.2 : hovered ? 1.05 : 1,
     config: config.wobbly,
   });
   const { nodes } = useGLTF("/models/book-transformed.glb") as GLTFResult;
@@ -59,7 +59,7 @@ const Book: FC<Props> = ({
       onPointerOver={(e) => (e.stopPropagation(), setHovered(true))}
       onPointerOut={() => setHovered(false)}
       onClick={(e) => (
-        e.stopPropagation(), setActiveThesis && setActiveThesis(title)
+        e.stopPropagation(), setActiveThesis && setActiveThesis(thesisId)
       )}
     >
       <mesh

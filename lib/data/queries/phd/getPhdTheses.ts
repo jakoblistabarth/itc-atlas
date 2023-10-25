@@ -4,6 +4,7 @@ import prisma from "../../../../prisma/client";
 const getPhdTheses = async () => {
   return prisma.phd.findMany({
     select: {
+      id: true,
       thesisTitle: true,
       startYear: true,
       graduationYear: true,

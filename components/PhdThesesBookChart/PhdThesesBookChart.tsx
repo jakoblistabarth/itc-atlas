@@ -6,13 +6,13 @@ import {
   AccumulativeShadows,
   Environment,
   OrbitControls,
-  RandomizedLight,
 } from "@react-three/drei";
 import { getSpiralPoints } from "./PhdThesesBookChart.helpers";
 import { Euler, Vector3 } from "three";
 import CanvasStage from "../CanvasStage";
 import { MemoizedBookStack } from "./BookStack";
 import Empty from "./Empty";
+import ThesisInfo from "./ThesisInfo";
 
 type Props = {
   thesesByYear: Map<number, PhdTheses>;
@@ -26,52 +26,68 @@ const PhdThesesBookChart: FC<Props> = ({ thesesByYear, colorScale }) => {
   const [activeThesis, setActiveThesis] = useState<string | undefined>(
     undefined,
   );
-  console.log(activeThesis);
+  const thesisInfo = new Map(
+    Array.from(thesesByYear.values())
+      .flat()
+      .map((d) => [d.id, d]),
+  ).get(activeThesis ?? "");
   return (
     <CanvasStage>
-      <Canvas
-        shadows
-        orthographic
-        camera={{ zoom: 100, position: [10, 5, -10], near: 0 }}
-      >
-        <group>
-          {range(start, end + 1).map((year, idx) => {
-            const position = new Vector3(
-              spiralPoints[idx].x,
-              0,
-              spiralPoints[idx].y,
-            );
-            const roatation = new Euler(
-              0,
-              -spiralPoints[idx].theta + Math.PI,
-              0,
-            );
-            return thesesByYear.get(year) ? (
-              <MemoizedBookStack
-                key={idx}
-                position={position}
-                rotation={roatation}
-                theses={thesesByYear.get(year) ?? []}
-                colorScale={colorScale}
-                activeThesis={activeThesis}
-                setActiveThesis={setActiveThesis}
-              />
-            ) : (
-              <Empty key={idx} position={position} rotation={roatation} />
-            );
-          })}
-        </group>
-        <Environment preset="apartment" />
-        <AccumulativeShadows opacity={0.3} scale={30} resolution={1024 * 2 * 2}>
-          <RandomizedLight
-            ambient={0.65}
-            size={10}
-            position={[10, 10, 15]}
-            mapSize={1024 * 2}
-          />
-        </AccumulativeShadows>
-        <OrbitControls minZoom={40} maxPolarAngle={Math.PI / 2} makeDefault />
-      </Canvas>
+      <div className="relative h-full">
+        <ThesisInfo
+          activeThesis={activeThesis}
+          info={thesisInfo}
+          colorScale={colorScale}
+        />
+        <Canvas
+          shadows
+          orthographic
+          camera={{ zoom: 100, position: [10, 5, -10], near: 0 }}
+        >
+          <group onPointerMissed={() => setActiveThesis(undefined)}>
+            {range(start, end + 1).map((year, idx) => {
+              const position = new Vector3(
+                spiralPoints[idx].x,
+                0,
+                spiralPoints[idx].y,
+              );
+              const roatation = new Euler(
+                0,
+                -spiralPoints[idx].theta + Math.PI,
+                0,
+              );
+              const theses = thesesByYear.get(year) ?? [];
+              const hasActiveTheses =
+                activeThesis && theses.map((d) => d.id).includes(activeThesis);
+              return theses.length > 0 ? (
+                <MemoizedBookStack
+                  key={idx}
+                  position={position}
+                  rotation={roatation}
+                  theses={theses}
+                  colorScale={colorScale}
+                  activeThesis={hasActiveTheses ? activeThesis : undefined}
+                  setActiveThesis={setActiveThesis}
+                />
+              ) : (
+                <Empty key={idx} position={position} rotation={roatation} />
+              );
+            })}
+          </group>
+          <Environment preset="apartment" />
+          <AccumulativeShadows
+            opacity={0.3}
+            scale={30}
+            limit={10}
+            resolution={2 ** 12}
+          >
+            <directionalLight castShadow position={[9, 11, 14]} />
+            <directionalLight castShadow position={[10, 9, 16]} />
+            <directionalLight castShadow position={[11, 10, 15]} />
+          </AccumulativeShadows>
+          <OrbitControls minZoom={40} maxPolarAngle={Math.PI / 2} makeDefault />
+        </Canvas>
+      </div>
     </CanvasStage>
   );
 };

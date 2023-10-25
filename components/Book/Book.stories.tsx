@@ -9,8 +9,6 @@ const meta = {
   component: Book,
   args: {
     color: "red",
-    title: "Lorem ipsum",
-    active: false,
   },
   parameters: {
     controls: {
