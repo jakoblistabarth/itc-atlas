@@ -2,6 +2,7 @@ import clsx from "clsx";
 import Link from "next/link";
 import React, { FC } from "react";
 import { MdArrowForward } from "react-icons/md";
+import { Card } from "../Card/";
 
 type Props = React.PropsWithChildren<{
   href: string;
@@ -23,16 +24,19 @@ const CardLink: FC<Props> = ({
     >
       <div
         className={clsx(
-          "rounded-sm p-3 shadow",
           !disabled &&
             "group transition-transform duration-500 hover:scale-105",
         )}
       >
-        {children}
-        <div className="mt-2 flex items-center gap-1">
-          {buttonText}
-          <MdArrowForward className="icon opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
-        </div>
+        <Card>
+          <Card.Body>{children}</Card.Body>
+          <Card.Footer>
+            <div className="flex items-center gap-1">
+              {buttonText}
+              <MdArrowForward className="icon opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
+            </div>
+          </Card.Footer>
+        </Card>
       </div>
     </Link>
   );
