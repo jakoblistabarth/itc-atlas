@@ -12,7 +12,7 @@ const events: SpaceTimeCubeEvent[] = [
     dateStart: new Date("1959"),
     name: "Event A in Enschede",
     coordinates: new Vector2(6.895556, 52.223611), //Enschede
-    size: 10,
+    size: 1,
   },
   {
     dateStart: new Date("1970"),
@@ -48,7 +48,7 @@ const events: SpaceTimeCubeEvent[] = [
     dateStart: new Date("2022"),
     name: "Event X at the center of the cube",
     coordinates: new Vector2(0, 0),
-    size: 35,
+    size: 50,
   },
 ];
 const countries = getCountries();

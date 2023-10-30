@@ -1,5 +1,5 @@
 import { Html, Text3D } from "@react-three/drei";
-import { ScaleTime, group, union } from "d3";
+import { ScaleTime, group, max, scaleSqrt, union } from "d3";
 import { geoPath } from "d3-geo";
 import { geoBertin1953 } from "d3-geo-projection";
 import {
@@ -9,12 +9,7 @@ import {
   Polygon,
 } from "geojson";
 import React, { FC, useMemo, useState } from "react";
-import {
-  DoubleSide,
-  MeshPhongMaterial,
-  MeshStandardMaterial,
-  Vector3,
-} from "three";
+import { MeshStandardMaterial, Vector3 } from "three";
 import { SVGLoader } from "three-stdlib";
 import { feature } from "topojson-client";
 import type { Topology } from "topojson-specification";
@@ -38,12 +33,10 @@ type PropTypes = React.PropsWithChildren<{
   selectedYear?: string;
 }>;
 
-const teal = new MeshPhongMaterial({ color: "teal" });
-
 const materials = Object.fromEntries(
-  ["teal", "white", "grey", "blue"].map((d) => [
+  ["teal", "white", "grey"].map((d) => [
     d,
-    new MeshStandardMaterial({ color: d, depthWrite: true, side: DoubleSide }),
+    new MeshStandardMaterial({ color: d }),
   ]),
 );
 
@@ -63,8 +56,8 @@ const SpaceTimeCube: FC<PropTypes> = ({
   );
 
   const { eventSide, fontSize, projection } = useMemo(() => {
-    const eventSide = height / timeScale.ticks().length;
-    const fontSize = eventSide / 5;
+    const eventSide = height / timeScale.ticks().length - 0.5;
+    const fontSize = eventSide / 2;
     const projection = geoBertin1953().fitExtent(
       [
         [-side / 2, -side / 2],
@@ -160,85 +153,90 @@ const SpaceTimeCube: FC<PropTypes> = ({
         )
       : eventsWithPosition;
 
+  const sizeScale = scaleSqrt()
+    .domain([0, max(selectedEvents, (d) => d.size) ?? 1])
+    .range([0, eventSide]);
+
   return (
     <>
-      <group
-        onPointerEnter={() => (document.body.style.cursor = "pointer")}
-        onPointerLeave={() => (document.body.style.cursor = "auto")}
-      >
-        {timeScale.ticks(10).map((t, idx) => {
-          const isActiveYear =
-            selectedYear && t.getFullYear().toString() === selectedYear;
-          console.log(
-            timeScale(new Date(selectedYear ?? 1985)) -
-              timeScale(new Date(1985)),
-          );
-          return (
-            <group
-              key={`${t.getDate()}-${idx}`}
-              position={[0, timeScale(t), 0]}
-            >
-              <PlaneOutline
-                side={side}
-                color="teal"
-                lineWidth={isActiveYear ? 2 : 0.5}
-              />
-              <mesh>
-                <Text3D
-                  receiveShadow
-                  castShadow
-                  font={"/fonts/Inter_Regular.json"}
-                  position={[side / 2 + 0.5, 0, side * 0.5]}
-                  size={fontSize}
-                  height={fontSize / 50}
-                  bevelEnabled
-                  bevelThickness={0.005}
-                  bevelSize={0.0001}
-                  curveSegments={2}
-                  material={isActiveYear ? materials.teal : materials.white}
-                >
-                  {fDateYear(t)}
-                </Text3D>
-              </mesh>
-            </group>
-          );
-        })}
+      <group position-y={eventSide / 2}>
+        <group
+          onPointerEnter={() => (document.body.style.cursor = "pointer")}
+          onPointerLeave={() => (document.body.style.cursor = "auto")}
+        >
+          {timeScale.ticks(10).map((t, idx) => {
+            const isActiveYear =
+              selectedYear && t.getFullYear().toString() === selectedYear;
+            return (
+              <group
+                key={`${t.getDate()}-${idx}`}
+                position={[0, timeScale(t), 0]}
+              >
+                <PlaneOutline
+                  side={side}
+                  color="grey"
+                  lineWidth={isActiveYear ? 2 : 0.5}
+                />
+                <mesh>
+                  <Text3D
+                    receiveShadow
+                    castShadow
+                    font={"/fonts/Inter_Regular.json"}
+                    position={[side / 2 + 0.25, 0, side * 0.5]}
+                    size={fontSize}
+                    height={fontSize / 50}
+                    bevelEnabled
+                    bevelThickness={0.02}
+                    bevelSize={0.005}
+                    curveSegments={4}
+                    material={isActiveYear ? materials.teal : materials.grey}
+                  >
+                    {fDateYear(t)}
+                  </Text3D>
+                </mesh>
+              </group>
+            );
+          })}
+        </group>
+
+        {selectedEvents.map((e, idx) => (
+          <mesh
+            castShadow
+            receiveShadow
+            key={`${e.name}-${idx}`}
+            position={e.pos}
+          >
+            <sphereGeometry args={[e.size ? sizeScale(e.size) / 2 : 0]} />
+            <meshPhysicalMaterial color="teal" roughness={0.2} />
+          </mesh>
+        ))}
+
+        {selectedYear && (
+          <group position={[0, timeScale(new Date(selectedYear)), 0]}>
+            <PlaneOutline side={side} color="teal" lineWidth={2} />
+            <mesh>
+              <Text3D
+                receiveShadow
+                castShadow
+                font={"/fonts/Inter_Regular.json"}
+                position={[side / 2 + 0.25, 0, side * 0.5]}
+                size={fontSize}
+                height={fontSize / 50}
+                bevelEnabled
+                bevelThickness={0.02}
+                bevelSize={0.005}
+                curveSegments={4}
+                material={materials.teal}
+              >
+                {selectedYear}
+              </Text3D>
+            </mesh>
+          </group>
+        )}
       </group>
 
-      {selectedEvents.map((e, idx) => (
-        <mesh key={`${e.name}-${idx}`} position={e.pos} material={teal}>
-          <boxGeometry
-            args={[(e.size ?? 1) / 200, eventSide / 5, (e.size ?? 1) / 200]}
-          />
-        </mesh>
-      ))}
-
-      {selectedYear && (
-        <group position={[0, timeScale(new Date(selectedYear)), 0]}>
-          <PlaneOutline side={side} color="teal" lineWidth={2} />
-          <mesh>
-            <Text3D
-              receiveShadow
-              castShadow
-              font={"/fonts/Inter_Regular.json"}
-              position={[side / 2 + 0.5, 0, side * 0.5]}
-              size={fontSize}
-              height={fontSize / 50}
-              bevelEnabled
-              bevelThickness={0.005}
-              bevelSize={0.0001}
-              curveSegments={2}
-              material={materials.teal}
-            >
-              {selectedYear}
-            </Text3D>
-          </mesh>
-        </group>
-      )}
-
       <group
-        position-y={height / -2}
-        rotation={[Math.PI / -2, 0, 0]}
+        rotation-x={Math.PI / -2}
         onPointerEnter={() => (document.body.style.cursor = "pointer")}
         onPointerLeave={() => (document.body.style.cursor = "auto")}
       >
@@ -247,20 +245,22 @@ const SpaceTimeCube: FC<PropTypes> = ({
           return (
             <group
               position-z={
-                ((parseInt(selectedYear ?? "1985") - 1985) * height) / 40
+                ((parseInt(selectedYear ?? "1985") - 1985) * height) / 40 - 0.05
               }
               key={country}
               onPointerDown={() => onPointerDownHandler(country)}
               onPointerEnter={() => setHoveredCountry(country)}
               onPointerLeave={() => setHoveredCountry(undefined)}
-              rotation={[Math.PI, 0, 0]} // taking into account the origin of svg coordinates in the top left rather than in the center
+              rotation-x={Math.PI} // taking into account the origin of svg coordinates in the top left rather than in the center
             >
               {shapes.map((shape) => (
                 <mesh
+                  castShadow
+                  receiveShadow
                   key={shape.shape.uuid}
                   material={
                     selectedFeatureIds?.includes(country)
-                      ? materials.blue
+                      ? materials.teal
                       : hoveredCountry == country
                       ? materials.grey
                       : materials.white

@@ -1,7 +1,16 @@
+import clsx from "clsx";
 import { FC, PropsWithChildren } from "react";
 
-const canvasStage: FC<PropsWithChildren> = ({ children }) => (
-  <div className="my-5 h-[500px] rounded-md bg-white shadow-md dark:bg-itc-green-950">
+type Props = PropsWithChildren<{ height?: number }>;
+
+const canvasStage: FC<Props> = ({ children, height }) => (
+  <div
+    style={{ height: height }}
+    className={clsx(
+      "my-5 rounded-md bg-white shadow-md",
+      !height && "h-[500px]",
+    )}
+  >
     {children}
   </div>
 );
