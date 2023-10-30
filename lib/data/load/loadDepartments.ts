@@ -6,7 +6,7 @@ type DepartmentRaw = {
   number: number;
 };
 
-export default function getDepartments(): DepartmentRaw[] {
+export default function loadDepartments(): DepartmentRaw[] {
   const filePath = "./data/static/departments.json";
   const rawdata = fs.readFileSync(filePath);
   const data = JSON.parse(rawdata.toString());

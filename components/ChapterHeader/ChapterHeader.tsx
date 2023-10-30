@@ -12,11 +12,11 @@ const ChapterHeader: FC<Props> = ({ chapterName, icon = true }) => {
   return (
     <div className="relative overflow-hidden bg-itc-green dark:bg-itc-green-900">
       {icon && (
-        <div className="left-o pointer-events-none absolute top-0">
+        <div className="pointer-events-none absolute left-0 top-0">
           <ChapterIcon
             width={"40vw"}
-            height={"40vw"}
-            className="mix-blend-screen invert"
+            height={"30vw"}
+            className="max-w-[400px] mix-blend-screen invert"
             opacity={0.1}
             chapter={isChapter(chapterName) ? chapterName : undefined}
           />

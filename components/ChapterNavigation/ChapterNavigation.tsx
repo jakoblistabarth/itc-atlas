@@ -19,11 +19,11 @@ const ChapterNavigation: FC<Props> = ({ title = "Chapters" }) => (
         <IconIntroduction width={"2em"} height={"2em"} opacity={0.2} />
         <h3>Introduction</h3>
       </CardLink>
-      <CardLink disabled={true} href="/research">
+      <CardLink href="/research">
         <IconResearch width={"2em"} height={"2em"} opacity={0.2} />
         <h3>Chapter Research</h3>
       </CardLink>
-      <CardLink disabled={true} href="/education">
+      <CardLink disabled href="/education">
         <IconEducation width={"2em"} height={"2em"} opacity={0.2} />
         <h3>Chapter Education</h3>
       </CardLink>
@@ -31,7 +31,7 @@ const ChapterNavigation: FC<Props> = ({ title = "Chapters" }) => (
         <IconProjects width={"2em"} height={"2em"} opacity={0.2} />
         <h3>Chapter Projects</h3>
       </CardLink>
-      <CardLink disabled={true} href="/appendix">
+      <CardLink disabled href="/appendix">
         <IconAppendix width={"2em"} height={"2em"} opacity={0.2} />
         <h3>Appendix</h3>
       </CardLink>

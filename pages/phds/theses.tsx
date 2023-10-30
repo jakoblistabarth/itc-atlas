@@ -6,7 +6,7 @@ import getPhdTheses, {
   PhdTheses,
 } from "../../lib/data/queries/phd/getPhdTheses";
 import { Department } from "@prisma/client";
-import getDepartments from "../../lib/data/load/loadDepartments";
+import loadDepartments from "../../lib/data/load/loadDepartments";
 import Container from "../../components/Container";
 import Paragraph from "../../components/Paragraph";
 import Teaser from "../../components/Teaser";
@@ -85,7 +85,7 @@ const Page: NextPage<Props> = ({ phdTheses, departments }) => {
 export const getStaticProps: GetStaticProps<Props> = async () => {
   const [phdTheses, departments] = await Promise.all([
     getPhdTheses(),
-    getDepartments(),
+    loadDepartments(),
   ]);
 
   return {

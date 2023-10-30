@@ -20,9 +20,7 @@ const Navigation: FC = () => {
           <NavLink disabled href="/education">
             Education
           </NavLink>
-          <NavLink disabled href="/research">
-            Research
-          </NavLink>
+          <NavLink href="/research">Research</NavLink>
           <NavLink href="/projects">Projects</NavLink>
           <NavLink disabled href="/appendix">
             Appendix
