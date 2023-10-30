@@ -14,6 +14,7 @@ const config: StorybookConfig = {
     "@storybook/addon-essentials",
     "@storybook/addon-interactions",
     "@storybook/addon-styling",
+    "storybook-addon-mock",
     {
       name: "@storybook/addon-docs",
       options: {
@@ -59,7 +60,7 @@ const config: StorybookConfig = {
         ],
       },
     },
-    "@storybook/addon-themes"
+    "@storybook/addon-themes",
   ],
   staticDirs: ["../public", "../data/topographic"],
   framework: {

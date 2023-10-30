@@ -1,6 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import getRivers from "../../../../lib/data/getRivers";
 import { NeRivers } from "../../../../types/NeTopoJson";
+import { RequestError } from "../../../../types/RequestError";
 
 /**
  * @swagger
@@ -17,7 +18,7 @@ import { NeRivers } from "../../../../types/NeTopoJson";
  */
 export default async function handler(
   req: NextApiRequest,
-  res: NextApiResponse<NeRivers | { error: string }>
+  res: NextApiResponse<NeRivers | RequestError>,
 ) {
   const scale = req.query.scale?.toString();
   //TODO: use type guard with enum

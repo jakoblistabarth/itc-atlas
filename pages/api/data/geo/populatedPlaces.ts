@@ -1,6 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import getPopulatedPlaces from "../../../../lib/data/getPopulatedPlaces";
 import { NePopulatedPlaces } from "../../../../types/NeTopoJson";
+import { RequestError } from "../../../../types/RequestError";
 
 /**
  * @swagger
@@ -17,7 +18,7 @@ import { NePopulatedPlaces } from "../../../../types/NeTopoJson";
  */
 export default async function handler(
   req: NextApiRequest,
-  res: NextApiResponse<NePopulatedPlaces | { error: string }>
+  res: NextApiResponse<NePopulatedPlaces | RequestError>,
 ) {
   const scale = req.query.scale?.toString();
   //TODO: use type guard with enum

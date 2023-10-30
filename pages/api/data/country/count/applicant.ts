@@ -2,6 +2,7 @@ import type { NextApiRequest, NextApiResponse } from "next";
 import getCountryWithApplicantCount, {
   CountryWithApplicantCount,
 } from "../../../../../lib/data/queries/country/getCountryWithApplicantCount";
+import { RequestError } from "../../../../../types/RequestError";
 
 /**
  * @swagger
@@ -18,7 +19,7 @@ import getCountryWithApplicantCount, {
  */
 export default async function handler(
   req: NextApiRequest,
-  res: NextApiResponse<CountryWithApplicantCount | { error: string }>
+  res: NextApiResponse<CountryWithApplicantCount | RequestError>,
 ) {
   const { level } = req.query;
   if (Array.isArray(level))
