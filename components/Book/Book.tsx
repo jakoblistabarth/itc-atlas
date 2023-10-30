@@ -41,11 +41,10 @@ const Book: FC<Props> = ({
   const { nodes } = useGLTF("/models/book-transformed.glb") as GLTFResult;
   const coverMaterial = new MeshStandardMaterial({ color });
   const { rotationY, positionX, positionZ } = useMemo(() => {
-    const random = randomUniform(-0.05, 0.05)();
     return {
-      positionX: random / 2,
-      positionZ: -random / 2,
-      rotationY: (Math.PI / 2) * random,
+      positionX: randomUniform(-0.025, 0.025)(),
+      positionZ: randomUniform(-0.025, 0.025)(),
+      rotationY: (Math.PI / 2) * randomUniform(-0.05, 0.05)(),
     };
   }, []);
   return (
@@ -53,9 +52,9 @@ const Book: FC<Props> = ({
       {...rest}
       scale={scale}
       dispose={null}
-      rotation-y={wiggle && rotationY}
       position-x={wiggle && positionX}
       position-z={wiggle && positionZ}
+      rotation-y={wiggle && rotationY}
       onPointerOver={(e) => (e.stopPropagation(), setHovered(true))}
       onPointerOut={() => setHovered(false)}
       onClick={(e) => (

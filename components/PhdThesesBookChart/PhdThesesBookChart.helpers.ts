@@ -3,7 +3,7 @@ import { range } from "d3";
 export const getSpiralPoints = (
   n: number,
   radius: number,
-  thetaMax: number = Math.PI * 2
+  thetaMax: number = Math.PI * 2,
 ) => {
   const deltaTheta = thetaMax / (n - 1);
   return range(n).map((i) => {

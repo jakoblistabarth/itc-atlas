@@ -44,7 +44,7 @@ const PhdThesesBookChart: FC<Props> = ({ thesesByYear, colorScale }) => {
           orthographic
           camera={{ zoom: 100, position: [10, 5, -10], near: 0 }}
         >
-          <group onPointerMissed={() => setActiveThesis(undefined)}>
+          <group>
             {range(start, end + 1).map((year, idx) => {
               const position = new Vector3(
                 spiralPoints[idx].x,
@@ -69,6 +69,7 @@ const PhdThesesBookChart: FC<Props> = ({ thesesByYear, colorScale }) => {
                   colorScale={colorScale}
                   activeThesis={hasActiveTheses ? activeThesis : undefined}
                   setActiveThesis={setActiveThesis}
+                  onPointerMissed={() => setActiveThesis(undefined)}
                 />
               ) : (
                 <Empty key={idx} position={position} rotation={roatation} />

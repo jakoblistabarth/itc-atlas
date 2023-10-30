@@ -3,7 +3,7 @@ import { PhdTheses } from "../../lib/data/queries/phd/getPhdTheses";
 import { ScaleOrdinal } from "d3";
 import { MemoizedBook } from "../Book";
 import { Euler, Vector3 } from "three";
-import { Center, Text3D } from "@react-three/drei";
+import { Text3D } from "@react-three/drei";
 
 type Props = {
   theses: PhdTheses;
@@ -43,14 +43,14 @@ const BookStack: FC<Props> = ({
           receiveShadow
           size={0.05}
           font={"/fonts/Inter_Regular.json"}
-          height={0.01}
+          height={0.005}
           rotation-x={-Math.PI / 2}
           rotation-z={Math.PI / 2}
           position-x={0.25}
-          position-z={0.05}
+          position-z={0.075}
         >
           {label}
-          <meshStandardMaterial color="white" />
+          <meshStandardMaterial color="grey" />
         </Text3D>
       )}
     </group>
