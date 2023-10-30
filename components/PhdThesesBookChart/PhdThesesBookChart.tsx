@@ -35,9 +35,9 @@ const PhdThesesBookChart: FC<Props> = ({ thesesByYear, colorScale }) => {
     <CanvasStage>
       <div className="relative h-full">
         <ThesisInfo
-          activeThesis={activeThesis}
           info={thesisInfo}
           colorScale={colorScale}
+          onCloseHandler={() => setActiveThesis(undefined)}
         />
         <Canvas
           shadows

@@ -30,6 +30,7 @@
     "@prisma/client": "^5.2.0",
     "@radix-ui/react-tooltip": "^1.0.7",
     "@react-spring/three": "^9.7.3",
+    "@react-spring/web": "^9.7.3",
     "@react-three/drei": "^9.83.9",
     "@react-three/fiber": "^8.14.1",
     "@storybook/addon-docs": "^7.4.6",
