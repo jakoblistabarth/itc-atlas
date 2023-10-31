@@ -16,7 +16,6 @@ import MapLayoutFluid from "../MapLayout/MapLayoutFluid";
 import Tooltip from "../Tooltip/";
 import { TooltipTrigger } from "../Tooltip/TooltipTrigger";
 import TooltipContent from "../Tooltip/TooltipContent";
-import getCountryName from "../../lib/getCountryName";
 import BhosGradientDefs from "./BhosGradientsDefs";
 import useBhosCategories from "./useBhosCategories";
 import { union } from "d3";
@@ -86,6 +85,7 @@ const BtorsAndCabinets: FC<Props> = ({
           properties: {
             id: idx,
             isoAlpha3: d.properties.ADM0_A3_NL,
+            countryNameEN: d.properties.NAME_EN,
             categories: match?.categories,
           },
         };
@@ -176,7 +176,7 @@ const BtorsAndCabinets: FC<Props> = ({
                 </g>
               </TooltipTrigger>
               <TooltipContent>
-                <h4>{getCountryName(d.properties?.isoAlpha3, neCountries)}</h4>
+                <h4>{d.properties?.countryNameEN}</h4>
                 {d.properties?.categories &&
                   d.properties?.categories.map(
                     (category: string, i: number) => (
