@@ -26,6 +26,8 @@ import { HiXMark } from "react-icons/hi2";
 import Container from "../../components/Container";
 import CanvasStage from "../../components/CanvasStage";
 import Section from "../../components/Section";
+import STCLineChart from "../../components/SpaceTimeCube/charts/STCLineChart";
+import { scaleLinear } from "d3";
 
 type Props = SharedPageProps & {
   projects: ProjectsWithCountries;
@@ -95,7 +97,14 @@ const ProjectSpaceTimeCube: NextPage<Props> = ({
       });
     },
   );
-
+  const margin = {
+    top: 30,
+    right: 20,
+    bottom: 20,
+    left: 20,
+  };
+  const chartHeight = 200;
+  const chartWidth = 300;
   const height = 10;
   const timeScale = useMemo(() => {
     const minDate = min(events.map((d) => d.dateStart));
@@ -105,8 +114,29 @@ const ProjectSpaceTimeCube: NextPage<Props> = ({
       .range([0, height])
       .nice();
   }, [events, height]);
+
   const years = Array.from(new Array(2026).keys()).slice(1985);
 
+  const xScale = scaleLinear<number, number>()
+    .domain([1985, 2025])
+    .range([margin.left, chartWidth - margin.right]);
+  const yScale = scaleLinear<number, number>()
+    .domain([0, 40])
+    .range([chartHeight - margin.bottom, margin.top]);
+  console.log(yScale.domain(), yScale.range());
+  const linePathData = selectedCountries.map((d) => {
+    return projectsByYearCountry
+      .filter((d1) => d1.countries.has(d))
+      .map((d2) => {
+        return {
+          country: d,
+          x: parseInt(d2.year),
+          y: d2.countries.get(d) ?? 0,
+        };
+      })
+      .sort((a, b) => b.x - a.x);
+  });
+  console.log(linePathData);
   return (
     <PageBase title="Projects Space Time Cube">
       <Container>
@@ -210,6 +240,22 @@ const ProjectSpaceTimeCube: NextPage<Props> = ({
                 </AccumulativeShadows>
               </Canvas>
             </CanvasStage>
+            {linePathData.length > 0 && (
+              <div className="absolute left-5 top-5 rounded-sm bg-white p-3 shadow">
+                <p className="text-xs italic">
+                  No. of projects of selected countries
+                </p>
+                <STCLineChart
+                  margin={margin}
+                  data={linePathData}
+                  width={chartWidth}
+                  height={chartHeight}
+                  xScale={xScale}
+                  yScale={yScale}
+                  yLabel={"projects"}
+                />
+              </div>
+            )}
             <div className="absolute right-5 top-5 rounded-sm bg-white p-3 shadow">
               <p className="text-xs italic">Details</p>
               {selectedCountries.length > 0 ? (
