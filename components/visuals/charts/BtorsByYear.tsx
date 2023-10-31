@@ -8,7 +8,7 @@ import RuleY from "../../RuleY";
 import { MdArrowUpward, MdInfoOutline } from "react-icons/md";
 import { DutchCabinet } from "../../../types/DutchCabinet";
 import { BhosCountryWithCategories } from "../BtorsAndCabinets";
-import LinePath from "../../LinePath";
+import LinePath from "../../LinePath/LinePath";
 import { Group } from "@visx/group";
 import { NeCountriesTopoJson } from "../../../types/NeTopoJson";
 import getCountryName from "../../../lib/getCountryName";

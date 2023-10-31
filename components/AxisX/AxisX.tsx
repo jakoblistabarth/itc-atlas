@@ -14,7 +14,7 @@ const AxisX: FC<Props> = ({
   top = 0,
   left = 0,
   tickLength = 5,
-  tickFormat = format("~s"),
+  tickFormat = format("~r"),
   ...rest
 }) => {
   return (

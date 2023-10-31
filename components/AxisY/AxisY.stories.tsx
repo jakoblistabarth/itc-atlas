@@ -1,18 +1,18 @@
 import { Meta, StoryObj } from "@storybook/react";
 
-import AxisX from ".";
+import AxisY from ".";
 import { format, scaleLinear } from "d3";
 
-const width = 400;
-const height = 100;
-const margin = 10;
-const innerWidth = width - 2 * margin;
+const width = 200;
+const height = 300;
+const margin = 30;
+const innerWidth = height - 2 * margin;
 
 const meta = {
-  title: "Charts/AxisX",
-  component: AxisX,
+  title: "Charts/AxisY",
+  component: AxisY,
   args: {
-    xScale: scaleLinear().domain([0, 100]).range([0, innerWidth]),
+    yScale: scaleLinear().domain([0, 100]).range([innerWidth, 0]),
   },
   decorators: [
     (Story) => (
@@ -23,15 +23,15 @@ const meta = {
       </svg>
     ),
   ],
-} satisfies Meta<typeof AxisX>;
+} satisfies Meta<typeof AxisY>;
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const DefaultAxisX: Story = {};
+export const DefaultAxisY: Story = {};
 
-export const AxisXWithHighValues: Story = {
+export const AxisYWithHighValues: Story = {
   args: {
-    xScale: scaleLinear().domain([0, 1e6]).range([0, innerWidth]),
+    yScale: scaleLinear().domain([0, 1e6]).range([innerWidth, 0]),
     tickFormat: format("~s"),
   },
 };

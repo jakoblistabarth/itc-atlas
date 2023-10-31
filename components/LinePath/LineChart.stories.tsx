@@ -14,7 +14,7 @@ const minTime = 2000;
 const maxTime = 2020;
 
 const meta = {
-  title: "Charts/LineChart",
+  title: "Charts/LinePath",
   component: LinePath,
   args: {
     data: range(minTime, maxTime + 1).map((d) => ({
