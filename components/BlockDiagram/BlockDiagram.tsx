@@ -1,11 +1,12 @@
-import { FC, useEffect, useRef } from "react";
-import { BackSide, BufferAttribute, PlaneGeometry, TextureLoader } from "three";
-import ShaderLayer from "../ShaderLayer";
-import { LayerMaterial, Texture } from "lamina";
+import { FC } from "react";
+import { BufferAttribute, PlaneGeometry } from "three";
+import sliceIntoChunks from "../../lib/utilities/sliceIntoChunks";
 import BlockDiagramSide from "./BlockDiagramSide";
+import HyposmetricTintMaterial from "./HypsometricTintMaterial";
+import TextureMaterial from "./TextureMaterial";
 
 type Props = {
-  textureFileName: string;
+  textureFileName?: string;
   sideColor?: string;
   side: number;
   ratio: number;
@@ -13,6 +14,7 @@ type Props = {
   data: Float32Array;
   zOffset?: number;
 };
+
 const BlockDiagram: FC<Props> = ({
   textureFileName,
   sideColor = "white",
@@ -22,20 +24,32 @@ const BlockDiagram: FC<Props> = ({
   yScale,
   zOffset,
 }) => {
-  const geomRef = useRef<PlaneGeometry>(null);
-  useEffect(() => {
-    geomRef.current?.setAttribute("displacement", new BufferAttribute(data, 1));
-  });
-
   const vertices = Math.sqrt(data.length);
   const segments = vertices - 1;
 
-  const texture = new TextureLoader().load(`/images/${textureFileName}`);
-
   const width = side;
-  const height = side * (1 / ratio);
+  const depth = side * (1 / ratio);
 
   const heightValues = Array.from(data);
+
+  const topGeometry = new PlaneGeometry(width, depth, segments, segments);
+  const position = topGeometry.getAttribute("position");
+  const positions = sliceIntoChunks(
+    Array.from(position.array),
+    position.itemSize,
+  );
+  const displacedPositions = positions.map(([x, y], i) => [
+    x,
+    y,
+    (zOffset ?? 0) + heightValues[i] * yScale,
+  ]);
+  topGeometry.setAttribute(
+    "position",
+    new BufferAttribute(Float32Array.from(displacedPositions.flat()), 3),
+  );
+  topGeometry.setAttribute("displacement", new BufferAttribute(data, 1));
+  topGeometry.computeVertexNormals();
+
   const sides = {
     back: heightValues.slice(0, vertices).reverse(),
     right: heightValues
@@ -43,36 +57,34 @@ const BlockDiagram: FC<Props> = ({
       .reverse(),
     front: heightValues.slice(data.length - vertices, data.length),
     left: heightValues.filter(
-      (_, i) => i % vertices === 0 && i + 1 !== data.length
+      (_, i) => i % vertices === 0 && i + 1 !== data.length,
     ),
   };
 
   return (
     <>
-      <mesh castShadow position={[0, 0.005, 0]}>
-        <boxGeometry args={[width * 0.999, 0.01, height * 0.999, 1, 1]} />
+      <mesh
+        rotation-x={-Math.PI / 2}
+        geometry={topGeometry}
+        receiveShadow
+        castShadow
+      >
+        {textureFileName ? (
+          <TextureMaterial textureFileName={textureFileName} />
+        ) : (
+          <HyposmetricTintMaterial />
+        )}
       </mesh>
-      <mesh rotation={[-Math.PI / 2, 0, 0]} receiveShadow castShadow>
-        <planeGeometry
-          ref={geomRef}
-          args={[width, height, segments, segments]}
-        />
-        <LayerMaterial lighting="lambert">
-          <ShaderLayer
-            width={+width.toFixed(6)}
-            height={+height.toFixed(6)}
-            zOffset={zOffset}
-            yScale={yScale}
-          />
-          <Texture map={texture} />
-        </LayerMaterial>
+      <mesh castShadow position-y={0.005}>
+        <boxGeometry args={[width * 0.999, 0.01, depth * 0.999, 1, 1]} />
+        <meshStandardMaterial color={sideColor} />
       </mesh>
       <BlockDiagramSide
         heightValues={sides.back}
         yScale={yScale}
         zOffset={zOffset}
         length={width}
-        position-z={-height / 2}
+        position-z={-depth / 2}
         rotation-y={Math.PI}
         color={sideColor}
       />
@@ -80,7 +92,7 @@ const BlockDiagram: FC<Props> = ({
         heightValues={sides.right}
         yScale={yScale}
         zOffset={zOffset}
-        length={height}
+        length={depth}
         position-x={width / 2}
         rotation-y={Math.PI / 2}
         color={sideColor}
@@ -89,7 +101,7 @@ const BlockDiagram: FC<Props> = ({
         heightValues={sides.left}
         yScale={yScale}
         zOffset={zOffset}
-        length={height}
+        length={depth}
         position-x={width / -2}
         rotation-y={Math.PI / -2}
         color={sideColor}
@@ -99,14 +111,10 @@ const BlockDiagram: FC<Props> = ({
         yScale={yScale}
         zOffset={zOffset}
         length={width}
-        position-z={height / 2}
+        position-z={depth / 2}
         rotation-y={2 * Math.PI}
         color={sideColor}
       />
-      <mesh rotation={[-Math.PI / 2, 0, 0]}>
-        <planeGeometry args={[width, height, segments, segments]} />
-        <meshStandardMaterial side={BackSide} />
-      </mesh>
     </>
   );
 };

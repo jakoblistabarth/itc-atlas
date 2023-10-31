@@ -144,7 +144,7 @@ const Home: NextPage = () => {
               "blockdiagram-test",
               "three-test",
               "maplayoutfluid-test",
-              "book-test",
+              "displacement-test",
             ].map((d) => (
               <Link key={d} href={`playground/${d}`}>
                 {d}

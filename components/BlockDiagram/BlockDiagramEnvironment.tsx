@@ -19,19 +19,19 @@ const BlockDiagramEnvironment = () => (
       position={[1, 5, -2]}
       shadow-mapSize={64 * 2 ** 6}
       castShadow
-      intensity={0.5}
+      intensity={0.75}
     />
     <directionalLight
-      position={[-3, 5, 2]}
+      position={[-2, 4, 8]}
       shadow-mapSize={64 * 2 ** 6}
       castShadow
-      intensity={1}
+      intensity={2}
     />
-    <hemisphereLight intensity={1.5} />
+    <hemisphereLight intensity={0.5} />
     <AccumulativeShadows scale={4} opacity={0.5}>
       <RandomizedLight
         mapSize={64 * 2 ** 6}
-        position={[3, 3, -8]}
+        position={[3, 3, 8]}
         radius={10}
         castShadow
       />

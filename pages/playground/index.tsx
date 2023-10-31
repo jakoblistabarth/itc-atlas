@@ -17,7 +17,7 @@ const Home: NextPage = () => {
               "blockdiagram-test",
               "three-test",
               "maplayoutfluid-test",
-              "book-test",
+              "displacement-test",
             ].map((d) => (
               <CardLink key={d} href={`${route}/${d}`}>
                 <h2>{d}</h2>
