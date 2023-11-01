@@ -39,6 +39,7 @@ const nextConfig = {
                 params: {
                   overrides: {
                     removeViewBox: false,
+                    collapseGroups: false,
                   },
                 },
               },

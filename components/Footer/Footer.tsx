@@ -1,17 +1,21 @@
 import { FC, PropsWithChildren } from "react";
 import { fDateMonthYear } from "../../lib/utilities/formaters";
 import BackToHome from "../BackToHome";
+import ItcLogo from "/public/images/itc-logo.svg";
 
 type Props = PropsWithChildren;
 
 const Footer: FC<Props> = ({ children }) => {
   return (
-    <footer className="flex flex-col flex-wrap items-center justify-center gap-y-2 py-5">
+    <footer className="my-10 mb-20 mt-36 flex flex-col flex-wrap items-center justify-center gap-y-2 text-center">
       {children}
-      <div>
-        <BackToHome />
-        <div>{fDateMonthYear(new Date())}</div>
+      <BackToHome />
+      <ItcLogo className="mt-5 w-40 data-[color=primary]:[&_g]:fill-itc-green data-[color=secondary]:[&_g]:fill-itc-blue dark:[&_g]:fill-current" />
+      <div className="max-w-xs text-xs">
+        University of Twente&apos;s Faculty of Geo-Information Science and Earth
+        Observation
       </div>
+      <div className="mt-10">{fDateMonthYear(new Date())}</div>
     </footer>
   );
 };
