@@ -31,11 +31,18 @@ type Props = SharedPageProps & {
   projects: ProjectsWithCountries;
 };
 
+type selectedCountry = {
+  id: string;
+  label: string;
+};
+
 const ProjectSpaceTimeCube: NextPage<Props> = ({
   neCountriesTopoJson,
   projects,
 }) => {
-  const [selectedCountries, setSelectedCountries] = useState<string[]>([]);
+  const [selectedCountries, setSelectedCountries] = useState<selectedCountry[]>(
+    [],
+  );
   const [selectedYear, setSelectedYear] = useState<string | undefined>(
     undefined,
   );
@@ -173,16 +180,18 @@ const ProjectSpaceTimeCube: NextPage<Props> = ({
                     timeScale={timeScale}
                     height={height}
                     events={events}
-                    selectedFeatureIds={selectedCountries}
+                    selectedFeatures={selectedCountries}
                     selectedYear={selectedYear}
-                    onPointerDownHandler={(featureId: string) =>
+                    onPointerDownHandler={(feature: selectedCountry) =>
                       setSelectedCountries((previousState) => {
-                        if (previousState.includes(featureId)) {
+                        if (
+                          previousState.map((d) => d.id).includes(feature.id)
+                        ) {
                           return [
-                            ...previousState.filter((d) => d !== featureId),
+                            ...previousState.filter((d) => d.id !== feature.id),
                           ];
                         } else {
-                          return [...previousState, featureId];
+                          return [...previousState, feature];
                         }
                       })
                     }
@@ -209,7 +218,6 @@ const ProjectSpaceTimeCube: NextPage<Props> = ({
               <SelectedProjectsDetails
                 selectedCountries={selectedCountries}
                 projectsByYearCountry={projectsByYearCountry}
-                neCountriesTopoJson={neCountriesTopoJson}
                 projects={projects}
                 setSelectedCountries={setSelectedCountries}
               />

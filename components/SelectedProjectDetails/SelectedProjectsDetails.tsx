@@ -1,34 +1,30 @@
 import { FC } from "react";
-import getCountryName from "../../lib/getCountryName";
 import { Card } from "../Card";
 import { InternMap, scaleOrdinal, schemeBlues } from "d3";
-import { NeCountriesTopoJson } from "../../types/NeTopoJson";
 import LineChart, { LineChartData } from "../LineChart";
 import { HiXMark } from "react-icons/hi2";
 import { ProjectsWithCountries } from "../../lib/data/queries/project/getProjectsWithCountries";
 import { LinePathDatum } from "../LinePath/LinePathBase";
 
 type Props = {
-  selectedCountries: string[];
+  selectedCountries: { id: string; label: string }[];
   projectsByYearCountry: {
     year: string;
     countries: InternMap<string, number>;
   }[];
-  neCountriesTopoJson: NeCountriesTopoJson;
   projects: ProjectsWithCountries;
-  setSelectedCountries: (ids: string[]) => void;
+  setSelectedCountries: (features: { id: string; label: string }[]) => void;
 };
 
 const SelectedProjectDetails: FC<Props> = ({
   selectedCountries,
   projectsByYearCountry,
-  neCountriesTopoJson,
   projects,
   setSelectedCountries,
 }) => {
-  const linePathData: LineChartData = selectedCountries.map((isoCode) => {
+  const linePathData: LineChartData = selectedCountries.map(({ id, label }) => {
     return projectsByYearCountry
-      .filter((year) => year.countries.has(isoCode))
+      .filter((year) => year.countries.has(id))
       .reduce(
         (
           acc: { id: string; label: string; data: LinePathDatum[] },
@@ -39,11 +35,11 @@ const SelectedProjectDetails: FC<Props> = ({
             ...acc.data,
             {
               x: parseInt(year),
-              y: countries.get(isoCode) ?? 0,
+              y: countries.get(id) ?? 0,
             },
           ].sort((a, b) => a.x - b.x),
         }),
-        { id: isoCode, label: "countryname", data: [] },
+        { id, label, data: [] },
       );
   });
 
@@ -58,17 +54,17 @@ const SelectedProjectDetails: FC<Props> = ({
             <>
               <h2>Selected Countries</h2>
               <div className="flex flex-wrap gap-1 text-xs">
-                {selectedCountries.map((isoCode) => (
+                {selectedCountries.map(({ id, label }) => (
                   <div
-                    key={isoCode}
+                    key={id}
                     className="rounded-full bg-itc-green-100 px-2 py-1"
                   >
-                    {getCountryName(isoCode, neCountriesTopoJson)}
+                    {label}
                     <span className="ml-1">
                       (
                       {
                         projects.filter((d) =>
-                          d.countries.map((d) => d.isoAlpha3).includes(isoCode),
+                          d.countries.map((d) => d.isoAlpha3).includes(id),
                         ).length
                       }
                       )

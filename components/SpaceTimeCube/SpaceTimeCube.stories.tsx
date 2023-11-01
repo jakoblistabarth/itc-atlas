@@ -61,7 +61,7 @@ const meta = {
     topology: countries,
     topologyObject: "ne_admin_0_countries",
     timeScale: scaleTime([new Date("1950"), new Date()], [-5, 5]),
-    selectedFeatureIds: [],
+    selectedFeatures: [],
   },
   parameters: {
     status: {

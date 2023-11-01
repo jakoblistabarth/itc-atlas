@@ -28,8 +28,8 @@ type PropTypes = React.PropsWithChildren<{
   side?: number;
   height?: number;
   timeScale: ScaleTime<number, number>;
-  onPointerDownHandler: (featureId: string) => void;
-  selectedFeatureIds: string[];
+  onPointerDownHandler: (featureId: { id: string; label: string }) => void;
+  selectedFeatures: { id: string; label: string }[];
   selectedYear?: string;
 }>;
 
@@ -46,7 +46,7 @@ const SpaceTimeCube: FC<PropTypes> = ({
   topologyObject,
   timeScale,
   selectedYear,
-  selectedFeatureIds,
+  selectedFeatures,
   onPointerDownHandler,
   side = 10,
   height = 10,
@@ -95,6 +95,7 @@ const SpaceTimeCube: FC<PropTypes> = ({
             shape,
             fillOpacity: p.userData?.style.fillOpacity,
             name: fc.features[idx].properties?.ADM0_A3 as string,
+            label: fc.features[idx].properties?.NAME_EN,
           })),
         ),
         (d) => d.name,
@@ -144,10 +145,10 @@ const SpaceTimeCube: FC<PropTypes> = ({
   };
 
   const selectedEvents =
-    selectedFeatureIds.length != 0 || selectedYear
+    selectedFeatures.length != 0 || selectedYear
       ? eventsWithPosition.filter(
           (event) =>
-            selectedFeatureIds.includes(event.name) ||
+            selectedFeatures.map((d) => d.id).includes(event.name) ||
             (selectedYear &&
               event.dateStart.getFullYear().toString() === selectedYear),
         )
@@ -248,7 +249,9 @@ const SpaceTimeCube: FC<PropTypes> = ({
                 ((parseInt(selectedYear ?? "1985") - 1985) * height) / 40 - 0.05
               }
               key={country}
-              onPointerDown={() => onPointerDownHandler(country)}
+              onPointerDown={() =>
+                onPointerDownHandler({ id: country, label: shapes[0].label })
+              }
               onPointerEnter={() => setHoveredCountry(country)}
               onPointerLeave={() => setHoveredCountry(undefined)}
               rotation-x={Math.PI} // taking into account the origin of svg coordinates in the top left rather than in the center
@@ -259,7 +262,7 @@ const SpaceTimeCube: FC<PropTypes> = ({
                   receiveShadow
                   key={shape.shape.uuid}
                   material={
-                    selectedFeatureIds?.includes(country)
+                    selectedFeatures.map((d) => d.id).includes(country)
                       ? materials.teal
                       : hoveredCountry == country
                       ? materials.grey
@@ -277,7 +280,8 @@ const SpaceTimeCube: FC<PropTypes> = ({
                   <div
                     className={clsx(
                       "pointer-events-none rounded-md bg-white px-5 py-2 text-left text-itc-green shadow-md",
-                      selectedFeatureIds?.includes(country) && "font-bold",
+                      selectedFeatures?.map((d) => d.id).includes(country) &&
+                        "font-bold",
                     )}
                   >
                     {country}
