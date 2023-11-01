@@ -12,13 +12,15 @@ import { LinePathDatum } from "../LinePath/LinePathBase";
 import { Card } from "../Card";
 import clsx from "clsx";
 
+export type LineChartData = {
+  id: string;
+  label: string;
+  colorKey?: string;
+  data: LinePathDatum[];
+}[];
+
 type Props = {
-  data: {
-    id: string;
-    label: string;
-    colorKey?: string;
-    data: LinePathDatum[];
-  }[];
+  data: LineChartData;
   xLabel?: string;
   yLabel?: string;
   yDomain?: [number, number];
@@ -38,13 +40,13 @@ const LineChart: FC<Props> = ({
   activeRecordId,
   mouseEnterLeaveHandler,
 }) => {
-  const [chartRef, { width, height }] = useMeasure();
+  const [chartRef, { width, height, x: svgX }] = useMeasure();
 
   const [cursorX, setCursorX] = useState<number | undefined>(undefined);
   const [left, setLeft] = useState<number | undefined>(undefined);
   const [top, setTop] = useState<number | undefined>(undefined);
 
-  const x = cursorX && Math.round(cursorX - 4);
+  const x = cursorX && Math.round(cursorX - svgX);
 
   const onMouseMove = useCallback(
     (event: MouseEvent<SVGSVGElement>) => {
@@ -55,10 +57,10 @@ const LineChart: FC<Props> = ({
     [setLeft, setTop, setCursorX],
   );
 
-  const onMouseLeave = useCallback(
-    () => mouseEnterLeaveHandler(undefined),
-    [mouseEnterLeaveHandler],
-  );
+  const onMouseLeave = useCallback(() => {
+    mouseEnterLeaveHandler(undefined);
+    setCursorX(undefined);
+  }, [mouseEnterLeaveHandler]);
   const onMouseEnter = useCallback(
     () => mouseEnterLeaveHandler(activeRecordId),
     [mouseEnterLeaveHandler, activeRecordId],
@@ -163,7 +165,7 @@ const LineChart: FC<Props> = ({
             </text>
           </Group>
         )}
-        {true && (
+        {cursorX && (
           <g>
             <line
               stroke="grey"
@@ -197,12 +199,12 @@ const LineChart: FC<Props> = ({
         <div className="pointer-events-none absolute" style={{ top, left }}>
           <div
             className={clsx(
-              left && left > width / 2 && "-left-full -translate-x-full",
+              x && x > width / 2 && "-left-full -translate-x-full",
             )}
           >
             <Card>
               <Card.Header>
-                {xLabel && <>{xLabel} </>}
+                {yLabel && <span>{yLabel} in</span>} {xLabel && <>{xLabel} </>}
                 <span className="font-bold">{xScaleReverse(x ?? 0)}</span>
               </Card.Header>
               <Card.Body>
@@ -217,7 +219,6 @@ const LineChart: FC<Props> = ({
                       ></div>
                       <div>{label}</div>
                       <div className="font-bold">{value}</div>{" "}
-                      {yLabel && <div>{yLabel}</div>}
                     </div>
                   );
                 })}

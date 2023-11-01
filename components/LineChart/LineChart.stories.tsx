@@ -46,3 +46,27 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const DefaultLineChart: Story = {};
+
+export const LineChartWithXOffset: Story = {
+  decorators: [
+    (Story) => (
+      <div className="flex w-[600px] place-content-end">
+        <div className="w-[200px]">
+          <Story />
+        </div>
+      </div>
+    ),
+  ],
+};
+
+export const LineChartWithXYOffset: Story = {
+  decorators: [
+    (Story) => (
+      <div className="flex h-[500px] w-[600px] flex-col place-content-end">
+        <div className="h-[200px] w-[200px]">
+          <Story />
+        </div>
+      </div>
+    ),
+  ],
+};
