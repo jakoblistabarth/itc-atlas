@@ -22,15 +22,20 @@ import getBtorsGroupedByRegionByDepartment, {
 import getBtorsGroupedByYear, {
   BtorsGroupedByYear,
 } from "../../lib/data/queries/btors/getBtorsGroupedByYear";
+import getBtorsGroupedByCountryByDepartment, {
+  BtorsGroupedByCountryByDepartment,
+} from "../../lib/data/queries/btors/getBtorsGroupedByCountryByDepartment";
 import getCountryCodes from "../../lib/data/queries/country/getCountryCodes";
 import { BhosCountry } from "../../types/BhosCountry";
 import { DutchCabinet } from "../../types/DutchCabinet";
 import { NeCountriesTopoJson } from "../../types/NeTopoJson";
 import { SharedPageProps } from "../../types/Props";
 import Section from "../../components/Section";
+import TravelsByDepartmentPrismMap from "../../components/visuals/TravelsByDepartmentPrismMap";
 
 type Props = SharedPageProps & {
   btorsByCountry: BtorsGroupedByCountry;
+  btorsByCountryByDepartment: BtorsGroupedByCountryByDepartment;
   btorsByYear: BtorsGroupedByYear;
   bhosCountries: BhosCountry[];
   btorsByDepartment: BtorsGroupedByRegionByDepartment;
@@ -40,6 +45,7 @@ type Props = SharedPageProps & {
 
 const Page: NextPage<Props> = ({
   btorsByCountry,
+  btorsByCountryByDepartment,
   btorsByYear,
   bhosCountries,
   dutchCabinets,
@@ -52,7 +58,6 @@ const Page: NextPage<Props> = ({
       <BtorsByYearMap neCountries={neCountriesTopoJson} btors={btorsByYear} />
     </MapLayoutFluid>
   );
-
   const extent: ExtendedFeature = {
     type: "Feature",
     geometry: {
@@ -159,6 +164,31 @@ const Page: NextPage<Props> = ({
           </Caption>
         </div>
       </Section>
+      <Section>
+        <Paragraph>
+          Lorem ipsum, dolor sit amet consectetur adipisicing elit. Amet
+          molestiae, sequi animi est dolor nihil qui id, aperiam assumenda
+          suscipit officia, veniam tenetur veritatis saepe! Recusandae animi
+          incidunt fuga perferendis!
+        </Paragraph>
+        <TravelsByDepartmentPrismMap
+          topology={getCountries()}
+          topologyObject={"ne_admin_0_countries"}
+          projection={geoBertin1953()}
+          width={10}
+          length={10}
+          extrudeGeometryOptions={{
+            depth: 0.01,
+            bevelSize: 0.005,
+            bevelThickness: 0.005,
+            bevelSegments: 12,
+          }}
+          btorsByCountryByDepartment={btorsByCountryByDepartment}
+        />
+        <Caption reference="Fig. 5">
+          This map shows travels per department for per country.
+        </Caption>
+      </Section>
     </PageHeroVisual>
   );
 };
@@ -168,6 +198,7 @@ export default Page;
 export const getStaticProps: GetStaticProps<Props> = async () => {
   const [
     btorsByCountry,
+    btorsByCountryByDepartment,
     btorsByYear,
     btorsByDepartment,
     bhosCountries,
@@ -176,6 +207,7 @@ export const getStaticProps: GetStaticProps<Props> = async () => {
     countries,
   ] = await Promise.all([
     getBtorsGroupedByCountry(),
+    getBtorsGroupedByCountryByDepartment(),
     getBtorsGroupedByYear(),
     getBtorsGroupedByRegionByDepartment(),
     getBhosCountries(),
@@ -187,6 +219,7 @@ export const getStaticProps: GetStaticProps<Props> = async () => {
   return {
     props: {
       btorsByCountry,
+      btorsByCountryByDepartment,
       btorsByYear,
       btorsByDepartment,
       bhosCountries,
