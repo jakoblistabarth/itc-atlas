@@ -6,11 +6,10 @@ const getPhdTheses = async () => {
     select: {
       id: true,
       thesisTitle: true,
-      startYear: true,
-      graduationYear: true,
       promotionYear: true,
       departmentMainId: true,
       departmentSecondaryId: true,
+      graduationYear: true,
       country: {
         select: {
           isoAlpha3: true,

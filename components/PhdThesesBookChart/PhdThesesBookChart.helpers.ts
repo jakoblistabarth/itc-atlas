@@ -1,4 +1,6 @@
-import { range } from "d3";
+import { group, range } from "d3";
+import isNumber from "../../lib/utilities/isNumber";
+import { PhdTheses } from "../../lib/data/queries/phd/getPhdTheses";
 
 export const getSpiralPoints = (
   n: number,
@@ -14,3 +16,9 @@ export const getSpiralPoints = (
     return { x, y, theta };
   });
 };
+
+export const groupThesesByYear = (phdTheses: PhdTheses) =>
+  group(
+    phdTheses.filter((d) => isNumber(d.promotionYear)),
+    (d) => d.promotionYear as number,
+  );

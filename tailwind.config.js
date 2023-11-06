@@ -1,3 +1,6 @@
+// eslint-disable-next-line
+const { blackA } = require("@radix-ui/colors");
+
 /** @type {import('tailwindcss').Config} */
 module.exports = {
   content: [
@@ -20,6 +23,7 @@ module.exports = {
     },
     extend: {
       colors: {
+        ...blackA,
         "itc-green": {
           DEFAULT: "#00877d", // 700, rgb(0, 135, 125)
           50: "#eefffb",
