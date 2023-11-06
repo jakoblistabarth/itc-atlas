@@ -11,13 +11,13 @@ const Mark3dGeometry: FC<{
 
   useEffect(
     () => void (document.body.style.cursor = hover ? `pointer` : `auto`),
-    [hover]
+    [hover],
   );
 
   return (
     <mesh
-      onPointerEnter={() => setHover(true)}
-      onPointerLeave={() => setHover(false)}
+      onPointerOver={(e) => (e.stopPropagation(), setHover(true))}
+      onPointerOut={() => setHover(false)}
       castShadow
       receiveShadow
       scale-y={-1} // taking into account the origin of svg coordinates in the top left rather than in the center

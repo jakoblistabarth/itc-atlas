@@ -1,4 +1,4 @@
-import { ScaleLinear, ScaleOrdinal, ScaleQuantile, group } from "d3";
+import { ScaleLinear, ScaleOrdinal, ScaleQuantile } from "d3";
 import { GeoProjection, geoPath } from "d3-geo";
 import {
   FeatureCollection,
@@ -107,34 +107,29 @@ const PrismMap: FC<Props> = ({
   const { paths } = svgData;
   const shapes = useMemo(
     () =>
-      group(
-        paths.flatMap((p, idx) =>
-          p.toShapes(true).map((shape) => {
-            const feature = fcWithProps.features[idx];
-            const color =
-              colorScale && colorPropertyAccessor
-                ? //@ts-expect-error scaleQuantize expects number, scaleOrdinal a string
-                  colorScale(colorPropertyAccessor(feature.properties))
-                : defaultColor;
-            return {
-              shape,
-              color,
-              extrudeGeometryOptions: {
-                ...extrudeGeometryOptions,
-                depth:
-                  extrusionScale && extrusionPropertyAccessor
-                    ? extrusionScale(
-                        extrusionPropertyAccessor(feature.properties),
-                      )
-                    : defaultExtrusion,
-              },
-              fillOpacity: p.userData?.style.fillOpacity,
-              properties: feature.properties,
-            };
-          }),
-        ),
-        (d) => d.properties?.ADM0_A3,
-      ),
+      paths.map((p, idx) => {
+        const feature = fcWithProps.features[idx];
+        const color =
+          colorScale && colorPropertyAccessor
+            ? //@ts-expect-error scaleQuantize expects number, scaleOrdinal a string
+              colorScale(colorPropertyAccessor(feature.properties))
+            : defaultColor;
+        const shapes = p.toShapes(true);
+        return {
+          id: feature.properties.ADM0_A3,
+          shape: shapes,
+          color,
+          fillOpacity: p.userData?.style.fillOpacity,
+          properties: feature.properties,
+          extrudeGeometryOptions: {
+            ...extrudeGeometryOptions,
+            depth:
+              extrusionScale && extrusionPropertyAccessor
+                ? extrusionScale(extrusionPropertyAccessor(feature.properties))
+                : defaultExtrusion,
+          },
+        };
+      }),
     [
       fcWithProps.features,
       paths,
@@ -150,11 +145,9 @@ const PrismMap: FC<Props> = ({
 
   return (
     <group rotation={[Math.PI / -2, 0, 0]}>
-      {Array.from(shapes).map(([country, shapes]) => (
-        <group key={country}>
-          {shapes.map((d) => (
-            <Mark3dGeometry key={d.shape.uuid} {...d} />
-          ))}
+      {shapes.map((d) => (
+        <group key={d.id}>
+          <Mark3dGeometry {...d} />
         </group>
       ))}
     </group>
