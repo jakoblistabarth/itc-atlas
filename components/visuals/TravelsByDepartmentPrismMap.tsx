@@ -1,6 +1,5 @@
-import { scaleOrdinal, scaleLinear } from "d3";
+import { scaleLinear, scaleQuantile, schemeBlues } from "d3";
 import { GeoProjection } from "d3-geo";
-import { GeoJsonProperties } from "geojson";
 import { FC, useState } from "react";
 import { ExtrudeGeometryOptions } from "three";
 import type { Topology } from "topojson-specification";
@@ -37,32 +36,14 @@ const TravelsByDepartmentPrismMap: FC<Props> = ({
   extrudeGeometryOptions = {},
   departments,
 }) => {
-  const [activeDepartment, setActiveDepartment] = useState<string | undefined>(
-    undefined,
+  const [activeDepartment, setActiveDepartment] = useState<string>(
+    departments[0].id,
   );
-  const map = new Map<string, GeoJsonProperties>();
-  Array.from(btorsByCountryByDepartment)
-    .filter((Map) => Map[0] == activeDepartment)
-    .map((Map) => {
-      Map[1].map((Row) =>
-        Row
-          ? map.set(Row.country, {
-              value: Row.count,
-              category:
-                Row.count < 10
-                  ? "class1"
-                  : Row.count < 20
-                  ? "class2"
-                  : Row.count < 30
-                  ? "class3"
-                  : Row.count < 40
-                  ? "class4"
-                  : "class5",
-            })
-          : [],
-      );
-      return map;
-    });
+  const featureProperties = new Map(
+    btorsByCountryByDepartment
+      .get(activeDepartment)
+      ?.map(({ country, count }) => [country, { count }]),
+  );
 
   return (
     <div style={{ width: "100%", height: "600px" }}>
@@ -99,18 +80,18 @@ const TravelsByDepartmentPrismMap: FC<Props> = ({
           projection={projection}
           width={width}
           length={length}
-          colorScale={scaleOrdinal<string, string, string>()
-            .domain(["class1", "class2", "class3", "class4", "class5"])
-            .range(["teal", "orange", "blue", "green", "red"])
+          colorScale={scaleQuantile<string, string>()
+            .domain(Array.from(featureProperties.values()).map((d) => d.count))
+            .range(schemeBlues[5])
             .unknown("ligthgrey")}
-          colorPropertyAccessor={(properties) => properties?.category}
-          extrusionPropertyAccessor={(properties) => properties?.value}
+          colorPropertyAccessor={(properties) => properties?.count}
+          extrusionPropertyAccessor={(properties) => properties?.count}
           extrusionScale={scaleLinear()
             .domain([0, 100])
             .range([0.01, 2])
             .unknown(0.01)}
           extrudeGeometryOptions={extrudeGeometryOptions}
-          featureProperties={map}
+          featureProperties={featureProperties}
         />
         <OrbitControls />
       </Canvas>
