@@ -16,6 +16,10 @@ import getDutchCabinets from "../../lib/data/getDutchCabinets";
 import getBtorsGroupedByCountry, {
   BtorsGroupedByCountry,
 } from "../../lib/data/queries/btors/getBtorsGroupedByCountry";
+import getBtorsGroupedByCountryByDepartment, {
+  BtorsGroupedByCountryByDepartment,
+} from "../../lib/data/queries/btors/getBtorsGroupedByCountryByDepartment";
+import TravelsByDepartmentPrismMap from "../../components/visuals/TravelsByDepartmentPrismMap";
 import getBtorsGroupedByRegionByDepartment, {
   BtorsGroupedByRegionByDepartment,
 } from "../../lib/data/queries/btors/getBtorsGroupedByRegionByDepartment";
@@ -28,24 +32,30 @@ import { DutchCabinet } from "../../types/DutchCabinet";
 import { NeCountriesTopoJson } from "../../types/NeTopoJson";
 import { SharedPageProps } from "../../types/Props";
 import Section from "../../components/Section";
+import getDepartments from "../../lib/data/queries/departments/getDepartments";
+import { Department } from "@prisma/client";
 
 type Props = SharedPageProps & {
   btorsByCountry: BtorsGroupedByCountry;
+  btorsByCountryByDepartment: BtorsGroupedByCountryByDepartment;
   btorsByYear: BtorsGroupedByYear;
   bhosCountries: BhosCountry[];
   btorsByDepartment: BtorsGroupedByRegionByDepartment;
   dutchCabinets: DutchCabinet[];
   neCountriesTopoJson: NeCountriesTopoJson;
+  departments: Department[];
 };
 
 const Page: NextPage<Props> = ({
   btorsByCountry,
+  btorsByCountryByDepartment,
   btorsByYear,
   bhosCountries,
   dutchCabinets,
   btorsByDepartment,
   neCountriesTopoJson,
   countries,
+  departments,
 }) => {
   const heroVisual = (
     <MapLayoutFluid projection={geoBertin1953()}>
@@ -159,6 +169,32 @@ const Page: NextPage<Props> = ({
           </Caption>
         </div>
       </Section>
+      <Section>
+        <Paragraph>
+          Lorem ipsum, dolor sit amet consectetur adipisicing elit. Amet
+          molestiae, sequi animi est dolor nihil qui id, aperiam assumenda
+          suscipit officia, veniam tenetur veritatis saepe! Recusandae animi
+          incidunt fuga perferendis!
+        </Paragraph>
+        <TravelsByDepartmentPrismMap
+          topology={getCountries()}
+          topologyObject={"ne_admin_0_countries"}
+          projection={geoBertin1953()}
+          width={10}
+          length={10}
+          extrudeGeometryOptions={{
+            depth: 0.01,
+            bevelSize: 0.005,
+            bevelThickness: 0.005,
+            bevelSegments: 12,
+          }}
+          btorsByCountryByDepartment={btorsByCountryByDepartment}
+          departments={departments}
+        />
+        <Caption reference="Fig. 5">
+          This map shows travels per department for per country.
+        </Caption>
+      </Section>
     </PageHeroVisual>
   );
 };
@@ -168,31 +204,37 @@ export default Page;
 export const getStaticProps: GetStaticProps<Props> = async () => {
   const [
     btorsByCountry,
+    btorsByCountryByDepartment,
     btorsByYear,
     btorsByDepartment,
     bhosCountries,
     dutchCabinets,
     neCountriesTopoJson,
     countries,
+    departments,
   ] = await Promise.all([
     getBtorsGroupedByCountry(),
+    getBtorsGroupedByCountryByDepartment(),
     getBtorsGroupedByYear(),
     getBtorsGroupedByRegionByDepartment(),
     getBhosCountries(),
     getDutchCabinets(),
     getCountries(),
     getCountryCodes(),
+    getDepartments(),
   ]);
 
   return {
     props: {
       btorsByCountry,
+      btorsByCountryByDepartment,
       btorsByYear,
       btorsByDepartment,
       bhosCountries,
       dutchCabinets,
       neCountriesTopoJson,
       countries,
+      departments,
     },
   };
 };
