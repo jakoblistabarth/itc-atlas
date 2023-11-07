@@ -52,10 +52,8 @@ const TravelsByDepartmentPrismMap: FC<Props> = ({
           <button
             key={department.id}
             className={clsx(
-              "border-1 min-w-[80px] border-solid",
-              activeDepartment === department.id
-                ? "border-itc-green"
-                : "border-transparent",
+              "min-w-[80px] rounded-sm border border-solid",
+              activeDepartment === department.id && "border-itc-green",
             )}
             onClick={() => setActiveDepartment(department.id)}
           >
