@@ -32,6 +32,8 @@ import { DutchCabinet } from "../../types/DutchCabinet";
 import { NeCountriesTopoJson } from "../../types/NeTopoJson";
 import { SharedPageProps } from "../../types/Props";
 import Section from "../../components/Section";
+import getDepartments from "../../lib/data/queries/departments/getDepartments";
+import { Department } from "@prisma/client";
 
 type Props = SharedPageProps & {
   btorsByCountry: BtorsGroupedByCountry;
@@ -41,6 +43,7 @@ type Props = SharedPageProps & {
   btorsByDepartment: BtorsGroupedByRegionByDepartment;
   dutchCabinets: DutchCabinet[];
   neCountriesTopoJson: NeCountriesTopoJson;
+  departments: Department[];
 };
 
 const Page: NextPage<Props> = ({
@@ -52,6 +55,7 @@ const Page: NextPage<Props> = ({
   btorsByDepartment,
   neCountriesTopoJson,
   countries,
+  departments,
 }) => {
   const heroVisual = (
     <MapLayoutFluid projection={geoBertin1953()}>
@@ -185,6 +189,7 @@ const Page: NextPage<Props> = ({
             bevelSegments: 12,
           }}
           btorsByCountryByDepartment={btorsByCountryByDepartment}
+          departments={departments}
         />
         <Caption reference="Fig. 5">
           This map shows travels per department for per country.
@@ -206,6 +211,7 @@ export const getStaticProps: GetStaticProps<Props> = async () => {
     dutchCabinets,
     neCountriesTopoJson,
     countries,
+    departments,
   ] = await Promise.all([
     getBtorsGroupedByCountry(),
     getBtorsGroupedByCountryByDepartment(),
@@ -215,6 +221,7 @@ export const getStaticProps: GetStaticProps<Props> = async () => {
     getDutchCabinets(),
     getCountries(),
     getCountryCodes(),
+    getDepartments(),
   ]);
 
   return {
@@ -227,6 +234,7 @@ export const getStaticProps: GetStaticProps<Props> = async () => {
       dutchCabinets,
       neCountriesTopoJson,
       countries,
+      departments,
     },
   };
 };

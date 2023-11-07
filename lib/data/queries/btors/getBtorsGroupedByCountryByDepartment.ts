@@ -20,7 +20,7 @@ export default async function getBtorsGroupedByCountryByDepartment() {
   ORDER BY "Country"."isoAlpha3"
   `;
 
-  const rowMap = group(rows, (d) => d.country);
+  const rowMap = group(rows, (d) => d.departmentId);
   return rowMap;
 }
 

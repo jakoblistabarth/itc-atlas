@@ -14,6 +14,7 @@ import {
 } from "@react-three/drei";
 import { Canvas } from "@react-three/fiber";
 import { BtorsGroupedByCountryByDepartment } from "../../lib/data/queries/btors/getBtorsGroupedByCountryByDepartment";
+import { Department } from "@prisma/client";
 
 type Props = {
   btorsByCountryByDepartment: BtorsGroupedByCountryByDepartment;
@@ -23,6 +24,7 @@ type Props = {
   width: number;
   length: number;
   extrudeGeometryOptions?: ExtrudeGeometryOptions;
+  departments: Department[];
 };
 
 const TravelsByDepartmentPrismMap: FC<Props> = ({
@@ -33,43 +35,50 @@ const TravelsByDepartmentPrismMap: FC<Props> = ({
   width,
   length,
   extrudeGeometryOptions = {},
+  departments,
 }) => {
-  const ITC = ["EOS", "AES", "GIP", "NRS", "PGM", "WRS", "VAR"];
   const [activeDepartment, setActiveDepartment] = useState<string | undefined>(
     undefined,
   );
   const map = new Map<string, GeoJsonProperties>();
   Array.from(btorsByCountryByDepartment)
-    .map((d) => {
-      d[1]
-        .filter((d1) => d1.departmentId == activeDepartment)
-        .map((d2) =>
-          d2
-            ? map.set(d2.country, {
-                value: d2.count,
-                category: "important",
-              })
-            : [],
-        );
+    .filter((Map) => Map[0] == activeDepartment)
+    .map((Map) => {
+      Map[1].map((Row) =>
+        Row
+          ? map.set(Row.country, {
+              value: Row.count,
+              category:
+                Row.count < 10
+                  ? "class1"
+                  : Row.count < 20
+                  ? "class2"
+                  : Row.count < 30
+                  ? "class3"
+                  : Row.count < 40
+                  ? "class4"
+                  : "class5",
+            })
+          : [],
+      );
       return map;
-    })
-    .filter((d) => d.size > 0);
+    });
 
   return (
     <div style={{ width: "100%", height: "600px" }}>
       <div className="pn-2 scroll mb-2 mt-2 flex flex-nowrap gap-2 overflow-x-auto whitespace-nowrap">
-        {ITC.map((d) => (
+        {departments.map((department) => (
           <button
-            key={d}
+            key={department.id}
             className={clsx(
               "border-1 min-w-[80px] border-solid",
-              activeDepartment === d
+              activeDepartment === department.id
                 ? "border-itc-green"
                 : "border-transparent",
             )}
-            onClick={() => setActiveDepartment(d)}
+            onClick={() => setActiveDepartment(department.id)}
           >
-            {d}
+            {department.id}
           </button>
         ))}
       </div>
@@ -91,8 +100,8 @@ const TravelsByDepartmentPrismMap: FC<Props> = ({
           width={width}
           length={length}
           colorScale={scaleOrdinal<string, string, string>()
-            .domain(["important", "very important"])
-            .range(["teal", "orange"])
+            .domain(["class1", "class2", "class3", "class4", "class5"])
+            .range(["teal", "orange", "blue", "green", "red"])
             .unknown("ligthgrey")}
           colorPropertyAccessor={(properties) => properties?.category}
           extrusionPropertyAccessor={(properties) => properties?.value}
