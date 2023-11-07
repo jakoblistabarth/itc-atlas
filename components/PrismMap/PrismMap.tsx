@@ -1,4 +1,4 @@
-import { ScaleLinear, ScaleOrdinal, group } from "d3";
+import { ScaleLinear, ScaleOrdinal, ScaleQuantile, group } from "d3";
 import { GeoProjection, geoPath } from "d3-geo";
 import {
   FeatureCollection,
@@ -36,9 +36,11 @@ type Props = {
    */
   defaultColor?: string;
   /** What OrdinalScale (D3) should be used to color each feature? */
-  colorScale?: ScaleOrdinal<string, string, string>;
+  colorScale?:
+    | ScaleOrdinal<string, string, string>
+    | ScaleQuantile<string, string>;
   /** Which GeoJson Property should be accessed to get each feature's color? */
-  colorPropertyAccessor?: (properties: GeoJsonProperties) => string;
+  colorPropertyAccessor?: (properties: GeoJsonProperties) => string | number;
   /** What is the fall extrusion, used either when no extrusionScale is defined
    * or the scale returns undefined.
    */ defaultExtrusion?: number;
@@ -77,15 +79,16 @@ const PrismMap: FC<Props> = ({
       [-width / 2, -length / 2],
       [width / 2, length / 2],
     ],
-    { type: "Sphere" }
+    { type: "Sphere" },
   );
 
+  //@ts-expect-error scaleQuantize does not have unknown()
   if (colorScale) colorScale.unknown(defaultColor);
   if (extrusionScale) extrusionScale.unknown(defaultExtrusion);
 
   const fc = feature(
     topology,
-    topology.objects[topologyObject]
+    topology.objects[topologyObject],
   ) as FeatureCollection<MultiPolygon | Polygon, GeoJsonProperties>;
   const fcWithProps = {
     ...fc,
@@ -110,7 +113,8 @@ const PrismMap: FC<Props> = ({
             const feature = fcWithProps.features[idx];
             const color =
               colorScale && colorPropertyAccessor
-                ? colorScale(colorPropertyAccessor(feature.properties))
+                ? //@ts-expect-error scaleQuantize expects number, scaleOrdinal a string
+                  colorScale(colorPropertyAccessor(feature.properties))
                 : defaultColor;
             return {
               shape,
@@ -120,16 +124,16 @@ const PrismMap: FC<Props> = ({
                 depth:
                   extrusionScale && extrusionPropertyAccessor
                     ? extrusionScale(
-                        extrusionPropertyAccessor(feature.properties)
+                        extrusionPropertyAccessor(feature.properties),
                       )
                     : defaultExtrusion,
               },
               fillOpacity: p.userData?.style.fillOpacity,
               properties: feature.properties,
             };
-          })
+          }),
         ),
-        (d) => d.properties?.ADM0_A3
+        (d) => d.properties?.ADM0_A3,
       ),
     [
       fcWithProps.features,
@@ -141,7 +145,7 @@ const PrismMap: FC<Props> = ({
       extrusionScale,
       extrusionPropertyAccessor,
       extrudeGeometryOptions,
-    ]
+    ],
   );
 
   return (
