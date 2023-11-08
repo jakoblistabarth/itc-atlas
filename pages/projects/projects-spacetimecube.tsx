@@ -208,7 +208,7 @@ const ProjectSpaceTimeCube: NextPage<Props> = ({
                 </Canvas>
               </CanvasStage>
             </div>
-            <div className="z-50 mr-4 mt-4 justify-self-end [grid-area:1/1]">
+            <div className="pointer-events-none z-50 mr-4 mt-4 justify-self-end [grid-area:1/1]">
               <SelectedProjectsDetails
                 selectedCountries={selectedCountries}
                 projectsByYearCountry={projectsByYearCountry}

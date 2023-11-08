@@ -44,7 +44,7 @@ const SelectedProjectDetails: FC<Props> = ({
   });
 
   return (
-    <div className="w-[400px]">
+    <div className="pointer-events-auto w-[400px]">
       <Card>
         <Card.Header>
           <p className="text-xs italic">Details</p>
