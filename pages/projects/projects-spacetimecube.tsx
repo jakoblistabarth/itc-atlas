@@ -26,6 +26,7 @@ import getProjectsWithCountries, {
 } from "../../lib/data/queries/project/getProjectsWithCountries";
 import { SharedPageProps } from "../../types/Props";
 import { SpaceTimeCubeEvent } from "../../types/SpaceTimeCubeEvent";
+import { hasDate } from "../../lib/helpers/hasDate";
 
 type Props = SharedPageProps & {
   projects: ProjectsWithCountries;
@@ -47,61 +48,55 @@ const ProjectSpaceTimeCube: NextPage<Props> = ({
     undefined,
   );
 
-  type ProjectWithDate = Omit<ProjectsWithCountries[number], "start"> & {
-    start: string;
-  };
+  const { events, projectsByYearCountry } = useMemo(() => {
+    const projectsSplit = projects
+      .filter((d) => hasDate(d))
+      .map((p) => {
+        const countries = p.countries.map((d) => d.isoAlpha3);
+        return countries.flatMap((c) => [
+          {
+            ...p,
+            country: c,
+          },
+        ]);
+      })
+      .flat();
 
-  const hasDate = (
-    project: ProjectsWithCountries[number] | ProjectWithDate,
-  ): project is ProjectWithDate =>
-    project.start !== undefined && project.start !== null;
+    const projectsByYear = group(projectsSplit, (d) =>
+      //@ts-expect-error needs to be fixed with mapped typing? (too complex for simple predicate)
+      new Date(d.start).getFullYear().toString(),
+    );
+    const projectsByYearCountry = Array.from(projectsByYear.entries()).map(
+      ([key, projectsPerYear]) => {
+        const countries = rollup(
+          projectsPerYear,
+          (v) => v.length,
+          (d) => d.country,
+        );
+        return { year: key, countries };
+      },
+    );
 
-  const projectsSplit = projects
-    .filter((d) => hasDate(d))
-    .map((p) => {
-      const countries = p.countries.map((d) => d.isoAlpha3);
-      return countries.flatMap((c) => [
-        {
-          ...p,
-          country: c,
-        },
-      ]);
-    })
-    .flat();
-
-  const projectsByYear = group(projectsSplit, (d) =>
-    //@ts-expect-error needs to be fixed with mapped typing? (too complex for simple predicate)
-    new Date(d.start).getFullYear().toString(),
-  );
-  const projectsByYearCountry = Array.from(projectsByYear.entries()).map(
-    ([key, projectsPerYear]) => {
-      const countries = rollup(
-        projectsPerYear,
-        (v) => v.length,
-        (d) => d.country,
-      );
-      return { year: key, countries };
-    },
-  );
-
-  const events: SpaceTimeCubeEvent[] = projectsByYearCountry.flatMap(
-    ({ year, countries }) => {
-      const countryList = Array.from(countries.entries());
-      return countryList.flatMap(([name, size]) => {
-        const coordinates = getCentroidByIsoCode(name);
-        return coordinates
-          ? [
-              {
-                name,
-                dateStart: new Date(year.toString()),
-                coordinates,
-                size,
-              },
-            ]
-          : [];
-      });
-    },
-  );
+    const events: SpaceTimeCubeEvent[] = projectsByYearCountry.flatMap(
+      ({ year, countries }) => {
+        const countryList = Array.from(countries.entries());
+        return countryList.flatMap(([name, size]) => {
+          const coordinates = getCentroidByIsoCode(name);
+          return coordinates
+            ? [
+                {
+                  name,
+                  dateStart: new Date(year.toString()),
+                  coordinates,
+                  size,
+                },
+              ]
+            : [];
+        });
+      },
+    );
+    return { events, projectsByYearCountry };
+  }, [projects]);
 
   const height = 10;
   const timeScale = useMemo(() => {
@@ -197,19 +192,18 @@ const ProjectSpaceTimeCube: NextPage<Props> = ({
                     }
                   />
                   <Environment preset="apartment" />
+                  <directionalLight position={[10, 15, 0]} intensity={4} />
                   <directionalLight
-                    position={[10, 10, 5]}
-                    intensity={5}
+                    position={[10, 15, 0]}
                     castShadow
                     shadow-bias={-0.0001}
                   />
                   <AccumulativeShadows
                     resolution={2 ** 12}
                     scale={30}
-                    position-y={-0.1}
-                    opacity={0.25}
+                    opacity={0.1}
                   >
-                    <RandomizedLight position={[10, 10, 5]} />
+                    <RandomizedLight position={[10, 15, 0]} />
                   </AccumulativeShadows>
                 </Canvas>
               </CanvasStage>

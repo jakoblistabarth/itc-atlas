@@ -1,25 +1,14 @@
-import { Html, Text3D } from "@react-three/drei";
-import { ScaleTime, group, max, scaleSqrt, union } from "d3";
-import { geoPath } from "d3-geo";
+import { Text3D } from "@react-three/drei";
+import { ScaleTime, max, scaleSqrt } from "d3";
 import { geoBertin1953 } from "d3-geo-projection";
-import {
-  FeatureCollection,
-  GeoJsonProperties,
-  MultiPolygon,
-  Polygon,
-} from "geojson";
-import React, { FC, useMemo, useState } from "react";
-import { MeshStandardMaterial, Vector3 } from "three";
-import { SVGLoader } from "three-stdlib";
-import { feature } from "topojson-client";
+import React, { FC, useMemo } from "react";
+import { MeshStandardMaterial } from "three";
 import type { Topology } from "topojson-specification";
-import getCentroidByIsoCode from "../../lib/data/getCentroidByIsoCode";
 import longitudeLatitudeTimeToXYZ from "../../lib/helpers/longitudeLatitudeTimeToXYZ";
 import { fDateYear } from "../../lib/utilities/formaters";
 import { SpaceTimeCubeEvent } from "../../types/SpaceTimeCubeEvent";
-import { featureCollectionToSVG } from "../PrismMap/PrismMap.helpers";
 import PlaneOutline from "../PlaneOutline";
-import clsx from "clsx";
+import PrismMap from "../PrismMap";
 
 type PropTypes = React.PropsWithChildren<{
   events: SpaceTimeCubeEvent[];
@@ -51,10 +40,6 @@ const SpaceTimeCube: FC<PropTypes> = ({
   side = 10,
   height = 10,
 }) => {
-  const [hoveredCountry, setHoveredCountry] = useState<string | undefined>(
-    undefined,
-  );
-
   const { eventSide, fontSize, projection } = useMemo(() => {
     const eventSide = height / timeScale.ticks().length - 0.5;
     const fontSize = eventSide / 2;
@@ -70,59 +55,6 @@ const SpaceTimeCube: FC<PropTypes> = ({
     return { eventSide, fontSize, projection };
   }, [height, side, timeScale]);
 
-  const fc = useMemo(
-    () =>
-      feature(topology, topology.objects[topologyObject]) as FeatureCollection<
-        MultiPolygon | Polygon,
-        GeoJsonProperties
-      >,
-    [topology, topologyObject],
-  );
-
-  const paths = useMemo(() => {
-    const svg = featureCollectionToSVG(fc, geoPath(projection));
-    const loader = new SVGLoader();
-    const svgData = loader.parse(svg);
-    const { paths } = svgData;
-    return paths;
-  }, [fc, projection]);
-
-  const countriesWithShapes = useMemo(
-    () =>
-      group(
-        paths.flatMap((p, idx) =>
-          p.toShapes(true).map((shape) => ({
-            shape,
-            fillOpacity: p.userData?.style.fillOpacity,
-            name: fc.features[idx].properties?.ADM0_A3 as string,
-            label: fc.features[idx].properties?.NAME_EN,
-          })),
-        ),
-        (d) => d.name,
-      ),
-    [paths, fc.features],
-  );
-
-  const centroids = useMemo(
-    () =>
-      new Map(
-        Array.from(union(fc.features.map((d) => d.properties?.ADM0_A3))).map(
-          (isoCode) => {
-            const centroidLatLon = getCentroidByIsoCode(isoCode);
-            const centroid = projection([
-              centroidLatLon?.x ?? 0,
-              centroidLatLon?.y ?? 0,
-            ]);
-            const position = centroid
-              ? new Vector3(...centroid, -1)
-              : undefined;
-            return [isoCode, position];
-          },
-        ),
-      ),
-    [fc, projection],
-  );
-
   const eventsWithPosition = useMemo(
     () =>
       events.map((e) => ({
@@ -136,13 +68,6 @@ const SpaceTimeCube: FC<PropTypes> = ({
       })),
     [events, projection, timeScale],
   );
-
-  const extrudeGeometryOptions = {
-    depth: 0.05,
-    bevelSize: 0.005,
-    bevelThickness: 0.005,
-    bevelSegments: 12,
-  };
 
   const selectedEvents =
     selectedFeatures.length != 0 || selectedYear
@@ -190,7 +115,7 @@ const SpaceTimeCube: FC<PropTypes> = ({
                     bevelThickness={0.02}
                     bevelSize={0.005}
                     curveSegments={4}
-                    material={isActiveYear ? materials.teal : materials.grey}
+                    material={materials.grey}
                   >
                     {fDateYear(t)}
                   </Text3D>
@@ -237,60 +162,29 @@ const SpaceTimeCube: FC<PropTypes> = ({
       </group>
 
       <group
-        rotation-x={Math.PI / -2}
-        onPointerEnter={() => (document.body.style.cursor = "pointer")}
-        onPointerLeave={() => (document.body.style.cursor = "auto")}
+        position-y={((parseInt(selectedYear ?? "1985") - 1985) * height) / 40}
       >
-        {Array.from(countriesWithShapes).map(([country, shapes]) => {
-          const position = centroids.get(country);
-          return (
-            <group
-              position-z={
-                ((parseInt(selectedYear ?? "1985") - 1985) * height) / 40 - 0.05
-              }
-              key={country}
-              onPointerDown={() =>
-                onPointerDownHandler({ id: country, label: shapes[0].label })
-              }
-              onPointerEnter={() => setHoveredCountry(country)}
-              onPointerLeave={() => setHoveredCountry(undefined)}
-              rotation-x={Math.PI} // taking into account the origin of svg coordinates in the top left rather than in the center
-            >
-              {shapes.map((shape) => (
-                <mesh
-                  castShadow
-                  receiveShadow
-                  key={shape.shape.uuid}
-                  material={
-                    selectedFeatures.map((d) => d.id).includes(country)
-                      ? materials.teal
-                      : hoveredCountry == country
-                      ? materials.grey
-                      : materials.white
-                  }
-                >
-                  <extrudeGeometry
-                    args={[shape.shape, { ...extrudeGeometryOptions }]}
-                  />
-                </mesh>
-              ))}
-
-              {hoveredCountry == country && position && (
-                <Html position={position}>
-                  <div
-                    className={clsx(
-                      "pointer-events-none rounded-md bg-white px-5 py-2 text-left text-itc-green shadow-md",
-                      selectedFeatures?.map((d) => d.id).includes(country) &&
-                        "font-bold",
-                    )}
-                  >
-                    {country}
-                  </div>
-                </Html>
-              )}
-            </group>
-          );
-        })}
+        <PrismMap
+          topology={topology}
+          topologyObject={topologyObject}
+          projection={geoBertin1953()}
+          width={side}
+          length={side}
+          defaultColor="white"
+          defaultExtrusion={0.05}
+          extrudeGeometryOptions={{
+            bevelSize: 0.005,
+            bevelThickness: 0.005,
+          }}
+          selectedFeatures={selectedFeatures}
+          onFeaturePointerDownHandler={({
+            id,
+            label,
+          }: {
+            id: string;
+            label: string;
+          }) => onPointerDownHandler({ id, label })}
+        />
       </group>
     </>
   );

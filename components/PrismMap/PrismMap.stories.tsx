@@ -73,6 +73,7 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const DefaultPrismMap: Story = {};
+
 export const PrismMapWithExtrusionAndColor: Story = {
   args: {
     projection: geoBaker(),
@@ -90,5 +91,21 @@ export const PrismMapWithExtrusionAndColor: Story = {
       ["NLD", { category: "important", value: 50 }],
       ["IDN", { category: "very important", value: 100 }],
     ]),
+  },
+};
+
+export const DefaultPrismMapWithInteraction: Story = {
+  args: {
+    selectedFeatures: [
+      { id: "USA", label: "United States" },
+      { id: "RUS", label: "Russia" },
+    ],
+    onFeaturePointerDownHandler: ({
+      id,
+      label,
+    }: {
+      id: string;
+      label: string;
+    }) => console.log({ id, label }),
   },
 };

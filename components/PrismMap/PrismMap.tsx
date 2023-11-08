@@ -11,7 +11,7 @@ import { ExtrudeGeometryOptions } from "three";
 import { SVGLoader } from "three-stdlib";
 import { feature } from "topojson-client";
 import type { Topology } from "topojson-specification";
-import Mark3dGeometry from "../Mark3dGeometry";
+import { MemoizedMark3dGeometry } from "../Mark3dGeometry";
 import { featureCollectionToSVG } from "./PrismMap.helpers";
 
 type Props = {
@@ -51,6 +51,18 @@ type Props = {
    * The map keys need to be ISO3 codes.
    */
   featureProperties?: Map<string, GeoJsonProperties>;
+  /** What action should be triggered if the user clicks on one of the PrismMap's festures? */
+  onFeaturePointerDownHandler?: ({
+    id,
+    label,
+  }: {
+    id: string;
+    label: string;
+  }) => void;
+  /** Which features should be selected?
+   * An array of feature ids.
+   */
+  selectedFeatures?: { id: string; label: string }[];
   /** Which options should be used for the extrusion? */
   extrudeGeometryOptions?: ExtrudeGeometryOptions;
 };
@@ -72,6 +84,8 @@ const PrismMap: FC<Props> = ({
   extrusionScale,
   extrusionPropertyAccessor,
   featureProperties,
+  selectedFeatures,
+  onFeaturePointerDownHandler,
   extrudeGeometryOptions = {},
 }) => {
   projection.fitExtent(
@@ -116,7 +130,7 @@ const PrismMap: FC<Props> = ({
             : defaultColor;
         const shapes = p.toShapes(true);
         return {
-          id: feature.properties.ADM0_A3,
+          id: feature.properties.ADM0_A3 as string,
           shape: shapes,
           color,
           fillOpacity: p.userData?.style.fillOpacity,
@@ -147,7 +161,17 @@ const PrismMap: FC<Props> = ({
     <group rotation={[Math.PI / -2, 0, 0]}>
       {shapes.map((d) => (
         <group key={d.id}>
-          <Mark3dGeometry {...d} />
+          <MemoizedMark3dGeometry
+            {...d}
+            onPointerDownHandler={() =>
+              onFeaturePointerDownHandler &&
+              onFeaturePointerDownHandler({
+                id: d.id,
+                label: d.properties.NAME_EN,
+              })
+            }
+            isActive={selectedFeatures?.map(({ id }) => id).includes(d.id)}
+          />
         </group>
       ))}
     </group>

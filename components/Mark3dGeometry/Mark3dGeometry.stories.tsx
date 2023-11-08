@@ -20,17 +20,17 @@ const svgToShapes = (svg: string): Shape[][] => {
 const countries = getCountries("10m");
 const featureCollection = topojson.feature(
   countries,
-  countries.objects.ne_admin_0_countries
+  countries.objects.ne_admin_0_countries,
 );
 const feature = featureCollection.features.find(
-  (d) => d.properties.ADM0_A3 === "GRC"
+  (d) => d.properties.ADM0_A3 === "GRC",
 );
 const projection = geoRobinson().fitExtent(
   [
     [-5, -5],
     [5, 5],
   ],
-  feature
+  feature,
 );
 const gPath = geoPath(projection);
 const featurePath = gPath(feature ?? featureCollection.features[0]);
@@ -93,7 +93,7 @@ export const Triangle: Story = {
 export const LetterF: Story = {
   args: {
     shape: svgToShapes(
-      `<path d="M -5 5 L -5 -5 L 5 -5 L 5 -2 L -1 -2 L -1 0 L 1 0 L 1 3 L -1 3 L -1 5 Z" />`
+      `<path d="M -5 5 L -5 -5 L 5 -5 L 5 -2 L -1 -2 L -1 0 L 1 0 L 1 3 L -1 3 L -1 5 Z" />`,
     )[0],
     color: "pink",
   },
@@ -109,5 +109,13 @@ export const Country: Story = {
       bevelSize: 0.0075,
       bevelSegments: 6,
     },
+  },
+};
+
+export const CountryWithClickHandler: Story = {
+  ...Country,
+  args: {
+    ...Country.args,
+    onPointerDownHandler: () => console.log("I was clicked"),
   },
 };
