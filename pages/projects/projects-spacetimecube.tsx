@@ -7,7 +7,7 @@ import {
 import { Canvas } from "@react-three/fiber";
 import { group, max, min, rollup, scaleTime } from "d3";
 import type { GetStaticProps, NextPage } from "next";
-import { useMemo, useState } from "react";
+import { Suspense, useMemo, useState } from "react";
 import { HiCursorClick } from "react-icons/hi";
 import { HiXMark } from "react-icons/hi2";
 import Button from "../../components/Button";
@@ -27,6 +27,7 @@ import getProjectsWithCountries, {
 import { SharedPageProps } from "../../types/Props";
 import { SpaceTimeCubeEvent } from "../../types/SpaceTimeCubeEvent";
 import { hasDate } from "../../lib/helpers/hasDate";
+import Skeleton from "../../components/Skeleton";
 
 type Props = SharedPageProps & {
   projects: ProjectsWithCountries;
@@ -155,57 +156,62 @@ const ProjectSpaceTimeCube: NextPage<Props> = ({
           <div className="mt-5 grid">
             <div className="[grid-area:1/1]">
               <CanvasStage height={700}>
-                <Canvas
-                  className="bg-white"
-                  orthographic
-                  camera={{ position: [10, 10, 10], zoom: 50, near: 0 }}
-                  shadows
-                >
-                  <OrbitControls
-                    enableZoom={true}
-                    enablePan={true}
-                    target-y={height / 2}
-                    maxPolarAngle={Math.PI / 2}
-                    minZoom={30}
-                    maxZoom={200}
-                  />
-                  <SpaceTimeCube
-                    topology={neCountriesTopoJson}
-                    topologyObject="ne_admin_0_countries"
-                    timeScale={timeScale}
-                    height={height}
-                    events={events}
-                    selectedFeatures={selectedCountries}
-                    selectedYear={selectedYear}
-                    onPointerDownHandler={(feature: selectedCountry) =>
-                      setSelectedCountries((previousState) => {
-                        if (
-                          previousState.map((d) => d.id).includes(feature.id)
-                        ) {
-                          return [
-                            ...previousState.filter((d) => d.id !== feature.id),
-                          ];
-                        } else {
-                          return [...previousState, feature];
-                        }
-                      })
-                    }
-                  />
-                  <Environment preset="apartment" />
-                  <directionalLight position={[10, 15, 0]} intensity={4} />
-                  <directionalLight
-                    position={[10, 15, 0]}
-                    castShadow
-                    shadow-bias={-0.0001}
-                  />
-                  <AccumulativeShadows
-                    resolution={2 ** 12}
-                    scale={30}
-                    opacity={0.1}
+                <Suspense fallback={<Skeleton />}>
+                  <Canvas
+                    className="bg-white"
+                    orthographic
+                    camera={{ position: [10, 10, 10], zoom: 50, near: 0 }}
+                    shadows
                   >
-                    <RandomizedLight position={[10, 15, 0]} />
-                  </AccumulativeShadows>
-                </Canvas>
+                    <OrbitControls
+                      enableZoom={true}
+                      enablePan={true}
+                      target-y={height / 2}
+                      maxPolarAngle={Math.PI / 2}
+                      minZoom={30}
+                      maxZoom={200}
+                    />
+                    <SpaceTimeCube
+                      topology={neCountriesTopoJson}
+                      topologyObject="ne_admin_0_countries"
+                      timeScale={timeScale}
+                      height={height}
+                      events={events}
+                      selectedFeatures={selectedCountries}
+                      selectedYear={selectedYear}
+                      onPointerDownHandler={(feature: selectedCountry) =>
+                        setSelectedCountries((previousState) => {
+                          if (
+                            previousState.map((d) => d.id).includes(feature.id)
+                          ) {
+                            return [
+                              ...previousState.filter(
+                                (d) => d.id !== feature.id,
+                              ),
+                            ];
+                          } else {
+                            return [...previousState, feature];
+                          }
+                        })
+                      }
+                    />
+                    <Environment preset="apartment" />
+                    <directionalLight position={[10, 10, 5]} intensity={4} />
+                    <directionalLight
+                      position={[10, 10, 5]}
+                      intensity={5}
+                      castShadow
+                      shadow-bias={-0.0001}
+                    />
+                    <AccumulativeShadows
+                      resolution={2 ** 12}
+                      scale={30}
+                      opacity={0.1}
+                    >
+                      <RandomizedLight position={[10, 15, 0]} />
+                    </AccumulativeShadows>
+                  </Canvas>
+                </Suspense>
               </CanvasStage>
             </div>
             <div className="pointer-events-none z-50 mr-4 mt-4 justify-self-end [grid-area:1/1]">
