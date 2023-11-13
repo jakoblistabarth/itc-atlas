@@ -26,6 +26,25 @@ import getProjectsWithCountries, {
 } from "../../lib/data/queries/project/getProjectsWithCountries";
 import { SharedPageProps } from "../../types/Props";
 import { SpaceTimeCubeEvent } from "../../types/SpaceTimeCubeEvent";
+import {
+  Chart as ChartJS,
+  CategoryScale,
+  LinearScale,
+  BarElement,
+  Title,
+  Tooltip,
+  Legend,
+} from "chart.js";
+import { Bar } from "react-chartjs-2";
+
+ChartJS.register(
+  CategoryScale,
+  LinearScale,
+  BarElement,
+  Title,
+  Tooltip,
+  Legend,
+);
 
 type Props = SharedPageProps & {
   projects: ProjectsWithCountries;
@@ -102,6 +121,46 @@ const ProjectSpaceTimeCube: NextPage<Props> = ({
       });
     },
   );
+  const options = {
+    responsive: true,
+    plugins: {
+      legend: {
+        position: "top" as const,
+      },
+      title: {
+        display: true,
+        text: "projects in selected year",
+      },
+    },
+  };
+
+  const labels = Array.from(
+    selectedYear &&
+      projectsByYearCountry.filter((d) => d.year == selectedYear)[0]?.countries
+      ? projectsByYearCountry
+          .filter((d) => d.year == selectedYear)[0]
+          .countries.keys()
+      : [],
+  );
+
+  const data = {
+    labels,
+    datasets: [
+      {
+        label: selectedYear,
+        data: Array.from(
+          selectedYear &&
+            projectsByYearCountry.filter((d) => d.year == selectedYear)[0]
+              ?.countries
+            ? projectsByYearCountry
+                .filter((d) => d.year == selectedYear)[0]
+                .countries.values()
+            : [],
+        ),
+        backgroundColor: "rgba(53, 162, 235, 0.5)",
+      },
+    ],
+  };
 
   const height = 10;
   const timeScale = useMemo(() => {
@@ -213,6 +272,11 @@ const ProjectSpaceTimeCube: NextPage<Props> = ({
                   </AccumulativeShadows>
                 </Canvas>
               </CanvasStage>
+            </div>
+            <div className="z-50 mr-4 mt-4 justify-self-start [grid-area:1/1]">
+              {selectedYear && (
+                <Bar height={250} options={options} data={data} />
+              )}
             </div>
             <div className="z-50 mr-4 mt-4 justify-self-end [grid-area:1/1]">
               <SelectedProjectsDetails
