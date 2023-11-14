@@ -170,6 +170,7 @@ const PrismMap: FC<Props> = ({
                 label: d.properties.NAME_EN,
               })
             }
+            label={d.properties.NAME_EN}
             isActive={selectedFeatures?.map(({ id }) => id).includes(d.id)}
           />
         </group>

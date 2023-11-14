@@ -1,7 +1,16 @@
-import { FC, memo, useEffect, useState } from "react";
-import { Color, DoubleSide, ExtrudeGeometryOptions, Shape } from "three";
+import { Html, useCursor } from "@react-three/drei";
+import { FC, memo, useRef, useState } from "react";
+import {
+  Color,
+  DoubleSide,
+  ExtrudeGeometry,
+  ExtrudeGeometryOptions,
+  Shape,
+  Vector3,
+} from "three";
 
 const Mark3dGeometry: FC<{
+  label?: string;
   shape: Shape | Shape[];
   color: string;
   fillOpacity: number;
@@ -14,34 +23,41 @@ const Mark3dGeometry: FC<{
   fillOpacity,
   extrudeGeometryOptions = {},
   isActive = false,
+  label,
   onPointerDownHandler,
 }) => {
-  const [hover, setHover] = useState(false);
+  const [hovered, setHovered] = useState(false);
+  useCursor(hovered);
+  const extrudeGeometryRef = useRef<ExtrudeGeometry>(null);
 
-  useEffect(
-    () => void (document.body.style.cursor = hover ? `pointer` : `auto`),
-    [hover],
-  );
+  extrudeGeometryRef.current?.computeBoundingBox();
+  const tooltipPosition = extrudeGeometryRef.current?.boundingBox
+    ?.getCenter(new Vector3())
+    .add(new Vector3(0, 0, 0.5));
 
   return (
     <mesh
-      onPointerOver={(e) => (e.stopPropagation(), setHover(true))}
-      onPointerOut={() => setHover(false)}
+      onPointerEnter={(e) => (e.stopPropagation(), setHovered(true))}
+      onPointerLeave={() => setHovered(false)}
       onPointerDown={(e) => (
         e.stopPropagation(), onPointerDownHandler && onPointerDownHandler()
       )}
       castShadow
       receiveShadow
+      position-z={isActive && 0.025}
       scale-y={-1} // taking into account the origin of svg coordinates in the top left rather than in the center
     >
-      <extrudeGeometry args={[shape, { ...extrudeGeometryOptions }]} />
+      <extrudeGeometry
+        ref={extrudeGeometryRef}
+        args={[shape, { ...extrudeGeometryOptions }]}
+      />
       <meshStandardMaterial
         color={
-          isActive && hover
+          isActive && hovered
             ? new Color("darkblue")
             : isActive
             ? new Color("blue")
-            : hover
+            : hovered
             ? new Color("grey")
             : new Color(color)
         }
@@ -49,6 +65,11 @@ const Mark3dGeometry: FC<{
         side={DoubleSide}
         transparent
       />
+      {label && hovered && (
+        <Html className="pointer-events-none" center position={tooltipPosition}>
+          <div className="rounded-md bg-white p-2 text-xs shadow">{label}</div>
+        </Html>
+      )}
     </mesh>
   );
 };
