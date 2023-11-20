@@ -9,4 +9,6 @@ export type PhdClean = {
   dateGraduation: Date | null;
   yearPromotion: number | null;
   thesisTitle: string | null;
+  doi: string | null;
+  name: string | null;
 };

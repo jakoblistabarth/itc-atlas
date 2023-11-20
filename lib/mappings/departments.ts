@@ -35,7 +35,7 @@ export const mapToDepartment = (str?: string) => {
   if (!!str.match(/NULL|EN|IR|MPS/)) return undefined;
   if (!!str.match(/ENG|ESA|EA/)) return "AES";
   if (!!str.match(/EREG/)) return "NRS";
-  if (!!str.match(/ITC|Various|RES/)) return "VAR";
+  if (!!str.match(/ITC|Various|RES|TUD\/|UT \//)) return "VAR";
   if (!!str.match(/CRIB|FB|IT|BPS|MPS|CTW|BMS|PERS|S&A|FM|COM|Library/))
     return "SUP";
   return str;
