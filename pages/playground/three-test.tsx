@@ -1,18 +1,14 @@
-import type { NextPage } from "next";
-import { Canvas } from "@react-three/fiber";
 import { Box, Environment, OrbitControls } from "@react-three/drei";
-import PageBase from "../../components/PageBase";
+import { Canvas } from "@react-three/fiber";
+import { range } from "d3";
+import type { NextPage } from "next";
+import { useState } from "react";
 import CanvasStage from "../../components/CanvasStage";
 import Container from "../../components/Container";
-import { useState } from "react";
-import {
-  flip,
-  offset,
-  useClientPoint,
-  useFloating,
-  useInteractions,
-} from "@floating-ui/react";
-import { range } from "d3";
+import PageBase from "../../components/PageBase";
+import Tooltip from "../../components/Tooltip";
+import TooltipContent from "../../components/Tooltip/TooltipContent";
+import { TooltipTrigger } from "../../components/Tooltip/TooltipTrigger";
 
 const ThreeTest: NextPage = () => {
   return (
@@ -29,61 +25,44 @@ export default ThreeTest;
 const CanvasWithTooltip = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [hoverInfo, setHoverInfo] = useState<undefined | string>(undefined);
-
-  const { refs, floatingStyles, context } = useFloating({
-    open: isOpen,
-    onOpenChange: setIsOpen,
-    placement: "bottom-start",
-    middleware: [offset(10), flip()],
-  });
-
-  const clientPoint = useClientPoint(context);
-
-  const { getReferenceProps, getFloatingProps } = useInteractions([
-    clientPoint,
-  ]);
   return (
     <>
-      <div ref={refs.setReference} {...getReferenceProps()}>
-        <CanvasStage>
-          <Canvas
-            orthographic
-            camera={{ position: [100, 100, 100], zoom: 100, near: 0 }}
-          >
-            <axesHelper />
-            <Environment preset="apartment" />
-            {range(1000).map((d) => (
-              <Box
-                key={d}
-                onPointerEnter={(e) => {
-                  e.stopPropagation();
-                  setIsOpen(true);
-                  setHoverInfo(`id: ${d}`);
-                }}
-                onPointerOut={() => {
-                  setIsOpen(false);
-                  setHoverInfo(undefined);
-                }}
-                args={[1, 3, 1]}
-                position={[(d % 50) * 2, 1.5, (d / 50) * 2]}
-              >
-                <meshStandardMaterial color={"red"} />
-              </Box>
-            ))}
-            <OrbitControls target={[0, 5, 0]} />
-          </Canvas>
-        </CanvasStage>
-      </div>
-      {isOpen && hoverInfo && (
-        <div
-          ref={refs.setFloating}
-          style={floatingStyles}
-          className="pointer-events-none rounded-md bg-white p-3 shadow-lg"
-          {...getFloatingProps()}
-        >
-          Element: {hoverInfo}
-        </div>
-      )}
+      <Tooltip open={isOpen} followCursor placement="bottom-start">
+        <TooltipTrigger asChild>
+          <CanvasStage>
+            <Canvas
+              orthographic
+              camera={{ position: [100, 100, 100], zoom: 100, near: 0 }}
+            >
+              <axesHelper />
+              <Environment preset="apartment" />
+              {range(1000).map((d) => (
+                <Box
+                  key={d}
+                  onPointerEnter={(e) => {
+                    e.stopPropagation();
+                    setIsOpen(true);
+                    setHoverInfo(`id: ${d}`);
+                  }}
+                  onPointerOut={() => {
+                    setIsOpen(false);
+                    setHoverInfo(undefined);
+                  }}
+                  args={[1, 3, 1]}
+                  position={[(d % 50) * 2, 1.5, (d / 50) * 2]}
+                >
+                  <meshStandardMaterial color={"red"} />
+                </Box>
+              ))}
+              <OrbitControls target={[0, 5, 0]} />
+              <Environment preset="apartment" />
+            </Canvas>
+          </CanvasStage>
+        </TooltipTrigger>
+        {isOpen && hoverInfo && (
+          <TooltipContent>Element: {hoverInfo}</TooltipContent>
+        )}
+      </Tooltip>
     </>
   );
 };
