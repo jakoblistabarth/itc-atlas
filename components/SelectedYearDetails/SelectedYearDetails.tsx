@@ -14,6 +14,7 @@ import { NeCountriesTopoJson } from "../../types/NeTopoJson";
 import getCountryName from "../../lib/getCountryName";
 import resolveConfig from "tailwindcss/resolveConfig";
 import tailwindConfig from "../../tailwind.config";
+import { Card } from "../Card";
 
 ChartJS.register(
   CategoryScale,
@@ -76,7 +77,15 @@ const SelectedYearDetails: FC<Props> = ({
 
   return (
     <div>
-      <Bar height={250} options={options} data={data} />
+      <Card>
+        <Card.Header>
+          <p className="text-xs italic">Details</p>
+        </Card.Header>
+        <Card.Body>
+          <h2>Selected Year : {selectedYear}</h2>
+          <Bar height={250} options={options} data={data} />
+        </Card.Body>
+      </Card>
     </div>
   );
 };
