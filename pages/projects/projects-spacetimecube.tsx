@@ -17,6 +17,7 @@ import Container from "../../components/Container";
 import PageBase from "../../components/PageBase";
 import Section from "../../components/Section";
 import SelectedProjectsDetails from "../../components/SelectedProjectDetails/SelectedProjectsDetails";
+import SelectedYearDetails from "../../components/SelectedYearDetails/SelectedYearDetails";
 import SpaceTimeCube from "../../components/SpaceTimeCube/SpaceTimeCube";
 import getCentroidByIsoCode from "../../lib/data/getCentroidByIsoCode";
 import getCountries from "../../lib/data/getCountries";
@@ -26,25 +27,6 @@ import getProjectsWithCountries, {
 } from "../../lib/data/queries/project/getProjectsWithCountries";
 import { SharedPageProps } from "../../types/Props";
 import { SpaceTimeCubeEvent } from "../../types/SpaceTimeCubeEvent";
-import {
-  Chart as ChartJS,
-  CategoryScale,
-  LinearScale,
-  BarElement,
-  Title,
-  Tooltip,
-  Legend,
-} from "chart.js";
-import { Bar } from "react-chartjs-2";
-
-ChartJS.register(
-  CategoryScale,
-  LinearScale,
-  BarElement,
-  Title,
-  Tooltip,
-  Legend,
-);
 
 type Props = SharedPageProps & {
   projects: ProjectsWithCountries;
@@ -121,47 +103,6 @@ const ProjectSpaceTimeCube: NextPage<Props> = ({
       });
     },
   );
-  const options = {
-    responsive: true,
-    plugins: {
-      legend: {
-        position: "top" as const,
-      },
-      title: {
-        display: true,
-        text: "projects in selected year",
-      },
-    },
-  };
-
-  const labels = Array.from(
-    selectedYear &&
-      projectsByYearCountry.filter((d) => d.year == selectedYear)[0]?.countries
-      ? projectsByYearCountry
-          .filter((d) => d.year == selectedYear)[0]
-          .countries.keys()
-      : [],
-  );
-
-  const data = {
-    labels,
-    datasets: [
-      {
-        label: selectedYear,
-        data: Array.from(
-          selectedYear &&
-            projectsByYearCountry.filter((d) => d.year == selectedYear)[0]
-              ?.countries
-            ? projectsByYearCountry
-                .filter((d) => d.year == selectedYear)[0]
-                .countries.values()
-            : [],
-        ),
-        backgroundColor: "rgba(53, 162, 235, 0.5)",
-      },
-    ],
-  };
-
   const height = 10;
   const timeScale = useMemo(() => {
     const minDate = min(events.map((d) => d.dateStart));
@@ -273,12 +214,14 @@ const ProjectSpaceTimeCube: NextPage<Props> = ({
                 </Canvas>
               </CanvasStage>
             </div>
-            <div className="z-50 mr-4 mt-4 justify-self-start [grid-area:1/1]">
-              {selectedYear && (
-                <Bar height={250} options={options} data={data} />
-              )}
-            </div>
             <div className="z-50 mr-4 mt-4 justify-self-end [grid-area:1/1]">
+              {selectedYear && (
+                <SelectedYearDetails
+                  selectedYear={selectedYear}
+                  projectsByYearCountry={projectsByYearCountry}
+                  neCountriesTopoJson={neCountriesTopoJson}
+                />
+              )}
               <SelectedProjectsDetails
                 selectedCountries={selectedCountries}
                 projectsByYearCountry={projectsByYearCountry}
