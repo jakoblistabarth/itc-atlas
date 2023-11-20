@@ -15,6 +15,8 @@ const getPhdTheses = async () => {
           isoAlpha3: true,
         },
       },
+      doi: true,
+      name: true,
     },
     where: {
       status: {

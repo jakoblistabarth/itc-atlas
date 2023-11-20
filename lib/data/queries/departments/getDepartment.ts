@@ -23,6 +23,8 @@ export default async function getDepartment(id: string) {
           departmentMainId: true,
           departmentSecondaryId: true,
           graduationYear: true,
+          doi: true,
+          name: true,
           country: {
             select: {
               isoAlpha3: true,
