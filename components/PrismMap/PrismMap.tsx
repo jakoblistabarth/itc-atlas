@@ -51,6 +51,16 @@ type Props = {
    * The map keys need to be ISO3 codes.
    */
   featureProperties?: Map<string, GeoJsonProperties>;
+  /** What action should be triggered if the user moves the pointer onto one of the PrismMap's festures? */
+  onFeaturePointerEnterHandler?: ({
+    id,
+    label,
+  }: {
+    id: string;
+    label: string;
+  }) => void;
+  /** What action should be triggered if the user moves the pointer out of one of the PrismMap's festures? */
+  onFeaturePointerLeaveHandler?: () => void;
   /** What action should be triggered if the user clicks on one of the PrismMap's festures? */
   onFeaturePointerDownHandler?: ({
     id,
@@ -85,6 +95,8 @@ const PrismMap: FC<Props> = ({
   extrusionPropertyAccessor,
   featureProperties,
   selectedFeatures,
+  onFeaturePointerEnterHandler,
+  onFeaturePointerLeaveHandler,
   onFeaturePointerDownHandler,
   extrudeGeometryOptions = {},
 }) => {
@@ -170,7 +182,16 @@ const PrismMap: FC<Props> = ({
                 label: d.properties.NAME_EN,
               })
             }
-            label={d.properties.NAME_EN}
+            onPointerEnterHandler={() =>
+              onFeaturePointerEnterHandler &&
+              onFeaturePointerEnterHandler({
+                id: d.id,
+                label: d.properties.NAME_EN,
+              })
+            }
+            onPointerLeaveHandler={() =>
+              onFeaturePointerLeaveHandler && onFeaturePointerLeaveHandler()
+            }
             isActive={selectedFeatures?.map(({ id }) => id).includes(d.id)}
           />
         </group>

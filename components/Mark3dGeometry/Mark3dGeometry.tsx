@@ -1,21 +1,15 @@
-import { Html, useCursor } from "@react-three/drei";
-import { FC, memo, useRef, useState } from "react";
-import {
-  Color,
-  DoubleSide,
-  ExtrudeGeometry,
-  ExtrudeGeometryOptions,
-  Shape,
-  Vector3,
-} from "three";
+import { useCursor } from "@react-three/drei";
+import { FC, memo, useState } from "react";
+import { Color, DoubleSide, ExtrudeGeometryOptions, Shape } from "three";
 
 const Mark3dGeometry: FC<{
-  label?: string;
   shape: Shape | Shape[];
   color: string;
   fillOpacity: number;
   extrudeGeometryOptions: ExtrudeGeometryOptions;
   isActive?: boolean;
+  onPointerEnterHandler?: () => void;
+  onPointerLeaveHandler?: () => void;
   onPointerDownHandler?: () => void;
 }> = ({
   shape,
@@ -23,22 +17,23 @@ const Mark3dGeometry: FC<{
   fillOpacity,
   extrudeGeometryOptions = {},
   isActive = false,
-  label,
+  onPointerEnterHandler,
+  onPointerLeaveHandler,
   onPointerDownHandler,
 }) => {
   const [hovered, setHovered] = useState(false);
   useCursor(hovered);
-  const extrudeGeometryRef = useRef<ExtrudeGeometry>(null);
-
-  extrudeGeometryRef.current?.computeBoundingBox();
-  const tooltipPosition = extrudeGeometryRef.current?.boundingBox
-    ?.getCenter(new Vector3())
-    .add(new Vector3(0, 0, 0.5));
 
   return (
     <mesh
-      onPointerEnter={(e) => (e.stopPropagation(), setHovered(true))}
-      onPointerLeave={() => setHovered(false)}
+      onPointerEnter={(e) => (
+        e.stopPropagation(),
+        setHovered(true),
+        onPointerEnterHandler && onPointerEnterHandler()
+      )}
+      onPointerLeave={() => (
+        setHovered(false), onPointerLeaveHandler && onPointerLeaveHandler()
+      )}
       onPointerDown={(e) => (
         e.stopPropagation(), onPointerDownHandler && onPointerDownHandler()
       )}
@@ -47,10 +42,7 @@ const Mark3dGeometry: FC<{
       position-z={isActive && 0.025}
       scale-y={-1} // taking into account the origin of svg coordinates in the top left rather than in the center
     >
-      <extrudeGeometry
-        ref={extrudeGeometryRef}
-        args={[shape, { ...extrudeGeometryOptions }]}
-      />
+      <extrudeGeometry args={[shape, { ...extrudeGeometryOptions }]} />
       <meshStandardMaterial
         color={
           isActive && hovered
@@ -65,11 +57,6 @@ const Mark3dGeometry: FC<{
         side={DoubleSide}
         transparent
       />
-      {label && hovered && (
-        <Html className="pointer-events-none" center position={tooltipPosition}>
-          <div className="rounded-md bg-white p-2 text-xs shadow">{label}</div>
-        </Html>
-      )}
     </mesh>
   );
 };

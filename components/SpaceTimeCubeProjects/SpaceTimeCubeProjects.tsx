@@ -2,22 +2,24 @@ import {
   AccumulativeShadows,
   Environment,
   OrbitControls,
-  RandomizedLight,
 } from "@react-three/drei";
 import { Canvas } from "@react-three/fiber";
 import { max, min, scaleTime } from "d3";
-import { FC, Suspense, useMemo, useState } from "react";
+import { FC, Suspense, memo, useCallback, useMemo, useState } from "react";
 import { HiCursorClick } from "react-icons/hi";
 import { HiXMark } from "react-icons/hi2";
 import Button from "../../components/Button";
 import Callout from "../../components/Callout/Callout";
 import CanvasStage from "../../components/CanvasStage";
 import Skeleton from "../../components/Skeleton";
-import SpaceTimeCube from "../../components/SpaceTimeCube/SpaceTimeCube";
 import { ProjectsWithCountries } from "../../lib/data/queries/project/getProjectsWithCountries";
 import { NeCountriesTopoJson } from "../../types/NeTopoJson";
 import SelectedProjectsDetails from "./SelectedProjectsDetails";
 import useProjectEvents from "./useProjectEvents.hooks";
+import Tooltip from "../Tooltip";
+import { TooltipTrigger } from "../Tooltip/TooltipTrigger";
+import TooltipContent from "../Tooltip/TooltipContent";
+import SpaceTimeCube from "../../components/SpaceTimeCube/SpaceTimeCube";
 
 type selectedCountry = {
   id: string;
@@ -39,8 +41,25 @@ const SpaceTimeCubeProjects: FC<Props> = ({
   const [selectedYear, setSelectedYear] = useState<string | undefined>(
     undefined,
   );
+  const [hoverInfo, setHoverInfo] = useState<selectedCountry | undefined>(
+    undefined,
+  );
 
   const { events, projectsByYearCountry } = useProjectEvents(projects);
+
+  const onPointerEnterHandler = useCallback((feature: selectedCountry) => {
+    setHoverInfo(feature);
+  }, []);
+  const onPointerLeaveHandler = useCallback(() => setHoverInfo(undefined), []);
+  const onPointerDownHandler = useCallback((feature: selectedCountry) => {
+    setSelectedCountries((previousState) => {
+      if (previousState.map((d) => d.id).includes(feature.id)) {
+        return [...previousState.filter((d) => d.id !== feature.id)];
+      } else {
+        return [...previousState, feature];
+      }
+    });
+  }, []);
 
   const height = 10;
   const timeScale = useMemo(() => {
@@ -64,6 +83,7 @@ const SpaceTimeCubeProjects: FC<Props> = ({
         Select individual countries to only see projects related to them. Select
         certain year in the box to see all projects for this year.
       </Callout>
+
       <div className="flex gap-3">
         <div>
           <input
@@ -100,60 +120,56 @@ const SpaceTimeCubeProjects: FC<Props> = ({
 
       <div className="mt-5 grid">
         <div className="[grid-area:1/1]">
-          <CanvasStage height={700}>
-            <Suspense fallback={<Skeleton />}>
-              <Canvas
-                className="bg-white"
-                orthographic
-                camera={{ position: [10, 10, 10], zoom: 50, near: 0 }}
-                shadows
-              >
-                <OrbitControls
-                  enableZoom={true}
-                  enablePan={true}
-                  target-y={height / 2}
-                  maxPolarAngle={Math.PI / 2}
-                  minZoom={30}
-                  maxZoom={200}
-                />
-                <SpaceTimeCube
-                  topology={neCountriesTopoJson}
-                  topologyObject="ne_admin_0_countries"
-                  timeScale={timeScale}
-                  height={height}
-                  events={events}
-                  selectedFeatures={selectedCountries}
-                  selectedYear={selectedYear}
-                  onPointerDownHandler={(feature: selectedCountry) =>
-                    setSelectedCountries((previousState) => {
-                      if (previousState.map((d) => d.id).includes(feature.id)) {
-                        return [
-                          ...previousState.filter((d) => d.id !== feature.id),
-                        ];
-                      } else {
-                        return [...previousState, feature];
-                      }
-                    })
-                  }
-                />
-                <Environment preset="apartment" />
-                <directionalLight position={[10, 10, 5]} intensity={4} />
-                <directionalLight
-                  position={[10, 10, 5]}
-                  intensity={5}
-                  castShadow
-                  shadow-bias={-0.0001}
-                />
-                <AccumulativeShadows
-                  resolution={2 ** 12}
-                  scale={30}
-                  opacity={0.1}
-                >
-                  <RandomizedLight position={[10, 15, 0]} />
-                </AccumulativeShadows>
-              </Canvas>
-            </Suspense>
-          </CanvasStage>
+          <Suspense
+            fallback={
+              <div className="h-[700px]">
+                <Skeleton />
+              </div>
+            }
+          >
+            <Tooltip open={!!hoverInfo} followCursor placement="top-start">
+              <TooltipTrigger asChild>
+                <CanvasStage height={700}>
+                  <Canvas
+                    className="bg-white"
+                    orthographic
+                    camera={{ position: [10, 10, 10], zoom: 50, near: 0 }}
+                    shadows
+                  >
+                    <OrbitControls
+                      enableZoom={true}
+                      enablePan={true}
+                      target-y={height / 2}
+                      maxPolarAngle={Math.PI / 2}
+                      minZoom={30}
+                      maxZoom={200}
+                    />
+                    <MemoizedSpaceTimeCube
+                      topology={neCountriesTopoJson}
+                      topologyObject="ne_admin_0_countries"
+                      timeScale={timeScale}
+                      height={height}
+                      events={events}
+                      selectedFeatures={selectedCountries}
+                      selectedYear={selectedYear}
+                      onPointerEnterHandler={onPointerEnterHandler}
+                      onPointerLeaveHandler={onPointerLeaveHandler}
+                      onPointerDownHandler={onPointerDownHandler}
+                    />
+                    <Environment preset="apartment" />
+                    <directionalLight
+                      position={[10, 10, 5]}
+                      intensity={5}
+                      castShadow
+                      shadow-bias={-0.0001}
+                    />
+                    <MemoizedShadows />
+                  </Canvas>
+                </CanvasStage>
+              </TooltipTrigger>
+              <TooltipContent>{hoverInfo?.label}</TooltipContent>
+            </Tooltip>
+          </Suspense>
         </div>
         <div className="pointer-events-none z-50 mr-4 mt-4 justify-self-end [grid-area:1/1]">
           <SelectedProjectsDetails
@@ -169,3 +185,12 @@ const SpaceTimeCubeProjects: FC<Props> = ({
 };
 
 export default SpaceTimeCubeProjects;
+
+const MemoizedSpaceTimeCube = memo(SpaceTimeCube);
+
+const Shadows: FC = () => (
+  <AccumulativeShadows opacity={0.5} resolution={2 ** 12} scale={30}>
+    <directionalLight intensity={5} position={[10, 10, 0]} castShadow />
+  </AccumulativeShadows>
+);
+const MemoizedShadows = memo(Shadows);

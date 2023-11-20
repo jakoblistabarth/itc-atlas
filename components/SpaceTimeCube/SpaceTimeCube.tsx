@@ -1,7 +1,7 @@
 import { Text3D } from "@react-three/drei";
 import { ScaleTime, max, scaleSqrt } from "d3";
 import { geoBertin1953 } from "d3-geo-projection";
-import React, { FC, useMemo } from "react";
+import React, { FC, memo, useMemo } from "react";
 import { MeshStandardMaterial } from "three";
 import type { Topology } from "topojson-specification";
 import longitudeLatitudeTimeToXYZ from "../../lib/helpers/longitudeLatitudeTimeToXYZ";
@@ -9,15 +9,18 @@ import { fDateYear } from "../../lib/utilities/formaters";
 import { SpaceTimeCubeEvent } from "../../types/SpaceTimeCubeEvent";
 import PlaneOutline from "../PlaneOutline";
 import PrismMap from "../PrismMap";
+import { MemoizedSpaceTimeCubeEvents } from "./SpaceTimeCubeEvents";
 
-type PropTypes = React.PropsWithChildren<{
+type Props = React.PropsWithChildren<{
   events: SpaceTimeCubeEvent[];
   topology: Topology;
   topologyObject: string;
   side?: number;
   height?: number;
   timeScale: ScaleTime<number, number>;
-  onPointerDownHandler: (featureId: { id: string; label: string }) => void;
+  onPointerDownHandler?: (featureId: { id: string; label: string }) => void;
+  onPointerEnterHandler?: (featureId: { id: string; label: string }) => void;
+  onPointerLeaveHandler?: () => void;
   selectedFeatures: { id: string; label: string }[];
   selectedYear?: string;
 }>;
@@ -29,13 +32,15 @@ const materials = Object.fromEntries(
   ]),
 );
 
-const SpaceTimeCube: FC<PropTypes> = ({
+const SpaceTimeCube: FC<Props> = ({
   events,
   topology,
   topologyObject,
   timeScale,
   selectedYear,
   selectedFeatures,
+  onPointerEnterHandler,
+  onPointerLeaveHandler,
   onPointerDownHandler,
   side = 10,
   height = 10,
@@ -69,19 +74,26 @@ const SpaceTimeCube: FC<PropTypes> = ({
     [events, projection, timeScale],
   );
 
-  const selectedEvents =
-    selectedFeatures.length != 0 || selectedYear
-      ? eventsWithPosition.filter(
-          (event) =>
-            selectedFeatures.map((d) => d.id).includes(event.name) ||
-            (selectedYear &&
-              event.dateStart.getFullYear().toString() === selectedYear),
-        )
-      : eventsWithPosition;
+  const selectedEvents = useMemo(
+    () =>
+      selectedFeatures.length != 0 || selectedYear
+        ? eventsWithPosition.filter(
+            (event) =>
+              selectedFeatures.map((d) => d.id).includes(event.name) ||
+              (selectedYear &&
+                event.dateStart.getFullYear().toString() === selectedYear),
+          )
+        : eventsWithPosition,
+    [eventsWithPosition, selectedFeatures, selectedYear],
+  );
 
-  const sizeScale = scaleSqrt()
-    .domain([0, max(selectedEvents, (d) => d.size) ?? 1])
-    .range([0, eventSide]);
+  const sizeScale = useMemo(
+    () =>
+      scaleSqrt()
+        .domain([0, max(selectedEvents, (d) => d.size) ?? 1])
+        .range([0, eventSide]),
+    [selectedEvents, eventSide],
+  );
 
   return (
     <>
@@ -105,8 +117,6 @@ const SpaceTimeCube: FC<PropTypes> = ({
                 />
                 <mesh>
                   <Text3D
-                    receiveShadow
-                    castShadow
                     font={"/fonts/Inter_Regular.json"}
                     position={[side / 2 + 0.25, 0, side * 0.5]}
                     size={fontSize}
@@ -125,25 +135,16 @@ const SpaceTimeCube: FC<PropTypes> = ({
           })}
         </group>
 
-        {selectedEvents.map((e, idx) => (
-          <mesh
-            castShadow
-            receiveShadow
-            key={`${e.name}-${idx}`}
-            position={e.pos}
-          >
-            <sphereGeometry args={[e.size ? sizeScale(e.size) / 2 : 0]} />
-            <meshPhysicalMaterial color="teal" roughness={0.2} />
-          </mesh>
-        ))}
+        <MemoizedSpaceTimeCubeEvents
+          events={selectedEvents}
+          scale={sizeScale}
+        />
 
         {selectedYear && (
           <group position={[0, timeScale(new Date(selectedYear)), 0]}>
             <PlaneOutline side={side} color="teal" lineWidth={2} />
             <mesh>
               <Text3D
-                receiveShadow
-                castShadow
                 font={"/fonts/Inter_Regular.json"}
                 position={[side / 2 + 0.25, 0, side * 0.5]}
                 size={fontSize}
@@ -164,7 +165,7 @@ const SpaceTimeCube: FC<PropTypes> = ({
       <group
         position-y={((parseInt(selectedYear ?? "1985") - 1985) * height) / 40}
       >
-        <PrismMap
+        <MemoizedPrismMap
           topology={topology}
           topologyObject={topologyObject}
           projection={geoBertin1953()}
@@ -177,13 +178,15 @@ const SpaceTimeCube: FC<PropTypes> = ({
             bevelThickness: 0.005,
           }}
           selectedFeatures={selectedFeatures}
-          onFeaturePointerDownHandler={({
-            id,
-            label,
-          }: {
-            id: string;
-            label: string;
-          }) => onPointerDownHandler({ id, label })}
+          onFeaturePointerEnterHandler={({ id, label }) =>
+            onPointerEnterHandler && onPointerEnterHandler({ id, label })
+          }
+          onFeaturePointerLeaveHandler={() =>
+            onPointerLeaveHandler && onPointerLeaveHandler()
+          }
+          onFeaturePointerDownHandler={({ id, label }) =>
+            onPointerDownHandler && onPointerDownHandler({ id, label })
+          }
         />
       </group>
     </>
@@ -191,3 +194,5 @@ const SpaceTimeCube: FC<PropTypes> = ({
 };
 
 export default SpaceTimeCube;
+
+const MemoizedPrismMap = memo(PrismMap);
