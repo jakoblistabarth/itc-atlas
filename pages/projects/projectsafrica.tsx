@@ -111,7 +111,21 @@ const ProjectCountries: NextPage<Props> = ({
       <Container>
         <main>
           {/* TODO: implement projection transform (not only defining the extent with MapLayout) */}
-          <MapLayoutFluid projection={mapOptions.projection}>
+          <MapLayoutFluid
+            projection={mapOptions.projection}
+            extent={{
+              type: "Feature",
+              geometry: {
+                type: "MultiPoint",
+                coordinates: [
+                  [-21, 10],
+                  [24, -44],
+                  [55, 14],
+                ],
+              },
+              properties: {},
+            }}
+          >
             <defs>
               <PatternDot
                 style={mapOptions.theme.choropleth?.pattern}
