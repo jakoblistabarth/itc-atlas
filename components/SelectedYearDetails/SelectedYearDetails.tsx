@@ -53,7 +53,7 @@ const SelectedYearDetails: FC<Props> = ({
     },
   };
 
-  const itc_color = resolveConfig(tailwindConfig).theme?.colors;
+  const itcColor = resolveConfig(tailwindConfig).theme?.colors;
 
   const selectedYearCountries = projectsByYearCountry.find(
     (d) => d.year == selectedYear,
@@ -70,7 +70,8 @@ const SelectedYearDetails: FC<Props> = ({
         data: Array.from(
           selectedYearCountries ? selectedYearCountries.values() : [],
         ),
-        backgroundColor: itc_color ? itc_color["itc-green"].DEFAULT : "black",
+        //@ts-expect-error tailwind types do not yet work well with extending themes
+        backgroundColor: itcColor ? itcColor["itc-green"].DEFAULT : "black",
       },
     ],
   };
