@@ -20,6 +20,7 @@ import Tooltip from "../Tooltip";
 import { TooltipTrigger } from "../Tooltip/TooltipTrigger";
 import TooltipContent from "../Tooltip/TooltipContent";
 import SpaceTimeCube from "../../components/SpaceTimeCube/SpaceTimeCube";
+import SelectedYearDetails from "../SelectedYearDetails/SelectedYearDetails";
 
 type selectedCountry = {
   id: string;
@@ -178,6 +179,13 @@ const SpaceTimeCubeProjects: FC<Props> = ({
             projects={projects}
             setSelectedCountries={setSelectedCountries}
           />
+          {selectedYear && (
+            <SelectedYearDetails
+              selectedYear={selectedYear}
+              projectsByYearCountry={projectsByYearCountry}
+              neCountriesTopoJson={neCountriesTopoJson}
+            />
+          )}
         </div>
       </div>
     </>
