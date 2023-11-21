@@ -72,9 +72,13 @@ const SelectedYearDetails: FC<Props> = ({
   };
 
   return (
-    <div>
+    <div className="mt-5">
       <h3>Projects in {selectedYear}</h3>
-      <Bar height={200} options={options} data={data} />
+      {data.datasets[0].data.length > 0 ? (
+        <Bar height={200} options={options} data={data} />
+      ) : (
+        <p className="text-xs">No projects in {selectedYear}</p>
+      )}
     </div>
   );
 };
