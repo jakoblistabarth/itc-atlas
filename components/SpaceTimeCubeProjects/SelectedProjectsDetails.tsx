@@ -1,5 +1,5 @@
 import { FC } from "react";
-import { InternMap, scaleOrdinal, schemeBlues } from "d3";
+import { InternMap, extent, scaleOrdinal, schemeBlues } from "d3";
 import LineChart, { LineChartData } from "../LineChart";
 import { HiXMark } from "react-icons/hi2";
 import { ProjectsWithCountries } from "../../lib/data/queries/project/getProjectsWithCountries";
@@ -42,6 +42,10 @@ const SelectedProjectDetails: FC<Props> = ({
       );
   });
 
+  const xDomain = extent(
+    projectsByYearCountry.map((d) => new Date(d.year)),
+  ).map((d, i) => d?.getFullYear() ?? i);
+
   return (
     <>
       <h3>Selected Countries</h3>
@@ -73,6 +77,7 @@ const SelectedProjectDetails: FC<Props> = ({
         <LineChart
           data={linePathData}
           yLabel={"projects"}
+          xDomain={xDomain as [number, number]}
           colorScale={scaleOrdinal<string, string>().range(schemeBlues[5])}
           mouseEnterLeaveHandler={() => undefined}
         />
