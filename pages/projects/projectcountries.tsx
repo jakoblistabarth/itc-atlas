@@ -2,7 +2,6 @@ import { scaleSqrt } from "d3";
 import { geoBertin1953 } from "d3-geo-projection";
 import { FeatureCollection, Point } from "geojson";
 import type { GetStaticProps, NextPage } from "next";
-import Footer from "../../components/Footer";
 import LegendProportionalCircle from "../../components/LegendProportionalCircle";
 import MapLayerBase from "../../components/MapLayerBase";
 import MapLayoutFluid from "../../components/MapLayout/MapLayoutFluid";
@@ -87,7 +86,6 @@ const ProjectCountries: NextPage<Props> = ({
           </MapLayoutFluid>
         </main>
       </Container>
-      <Footer />
     </PageBase>
   );
 };
