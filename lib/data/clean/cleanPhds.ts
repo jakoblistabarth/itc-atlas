@@ -20,14 +20,14 @@ export async function cleanPhds(data: PhdRaw[]) {
     .from(data)
     .derive({
       itcStudentId: aq.escape((d: PhdRaw) =>
-        d.ITCStudentNo ? d.ITCStudentNo + "" : undefined
+        d.ITCStudentNo ? d.ITCStudentNo + "" : undefined,
       ),
       dateStart: aq.escape((d: PhdRaw) => (d?.PhDStart ? d.PhDStart : null)),
       dateGraduation: aq.escape((d: PhdRaw) =>
-        d?.SISGraduated ? d.SISGraduated : null
+        d?.SISGraduated ? d.SISGraduated : null,
       ),
       yearPromotion: aq.escape((d: PhdRaw) =>
-        d?.Promotion && d?.Promotion > 1950 ? d.Promotion : null
+        d?.Promotion && d?.Promotion > 1950 ? d.Promotion : null,
       ),
       country: aq.escape((d: PhdRaw) => {
         const clean = d?.Country ? mapCountries(d.Country) : null;
@@ -42,6 +42,7 @@ export async function cleanPhds(data: PhdRaw[]) {
       department2: aq.escape((d: PhdRaw) => {
         return mapToDepartment(d.DepartmentSecond);
       }),
+      doi: (d: PhdRaw) => aq.op.replace(d.DOI, /\\$/, ""),
       status: (d: PhdRaw) =>
         aq.op.padstart(d.LastStatus ? d.LastStatus + "" : "00", 2, "0"),
     })
@@ -51,6 +52,7 @@ export async function cleanPhds(data: PhdRaw[]) {
       DepartmentSecond: "department2",
       Thesis_Title: "thesisTitle",
       Sponsor: "sponsor",
+      NamePure: "name",
     })
     .select(
       "itcStudentId",
@@ -62,7 +64,9 @@ export async function cleanPhds(data: PhdRaw[]) {
       "dateStart",
       "dateGraduation",
       "yearPromotion",
-      "thesisTitle"
+      "thesisTitle",
+      "doi",
+      "name",
     );
 
   return tb.objects() as PhdClean[];

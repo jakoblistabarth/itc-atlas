@@ -75,6 +75,8 @@ model Phd {
   departmentSecondaryId String?
   departmentSecondary   Department? @relation("DepartmentPhdSecondary", fields: [departmentSecondaryId], references: [id])
   thesisTitle           String?
+  doi                   String?
+  name                  String?
   startYear             Int?
   graduationYear        Int?
   promotionYear         Int?

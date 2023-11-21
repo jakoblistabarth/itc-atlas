@@ -1,6 +1,7 @@
 import { useMergeRefs, FloatingPortal } from "@floating-ui/react";
 import { forwardRef } from "react";
 import { useTooltipContext } from "./Tooltip";
+import clsx from "clsx";
 
 type Props = {
   raised?: boolean;
@@ -14,26 +15,23 @@ const TooltipContent = forwardRef<
 >(function TooltipContent({ raised = true, left, top, ...props }, propRef) {
   const context = useTooltipContext();
   const ref = useMergeRefs([context.refs.setFloating, propRef]);
-  return (
+  return !context.open ? null : (
     <FloatingPortal>
-      {context.open && (
-        <div
-          ref={ref}
-          style={{
-            position: context.strategy,
-            top: top ?? context.y ?? 0,
-            left: left ?? context.x ?? 0,
-            visibility: context.x == null ? "hidden" : "visible",
-            backgroundColor: "white",
-            padding: 5,
-            borderRadius: 2,
-            fontSize: "x-small",
-            boxShadow: raised ? "0 0 10px rgb(200, 200, 200)" : "",
-            ...props.style,
-          }}
-          {...context.getFloatingProps(props)}
-        />
-      )}
+      <div
+        className={clsx(
+          "pointer-events-none rounded-sm bg-white p-3 text-xs shadow-lg",
+          raised && "shadow-md",
+        )}
+        ref={ref}
+        style={{
+          position: context.strategy,
+          top: top ?? context.y ?? 0,
+          left: left ?? context.x ?? 0,
+          visibility: context.x == null ? "hidden" : "visible",
+          ...props.style,
+        }}
+        {...context.getFloatingProps(props)}
+      />
     </FloatingPortal>
   );
 });

@@ -53,7 +53,7 @@ async function main() {
         },
       };
       return await prisma.department.create(createArgs);
-    })
+    }),
   );
   console.log("Populated model Department. 🌱");
 
@@ -66,7 +66,7 @@ async function main() {
         },
       };
       return await prisma.status.create(createArgs);
-    })
+    }),
   );
   console.log("Populated model Status. 🌱");
 
@@ -90,7 +90,7 @@ async function main() {
         },
       };
       return await prisma.country.create(createArgs);
-    })
+    }),
   );
   console.log("Populated model Country. 🌱");
 
@@ -121,7 +121,7 @@ async function main() {
         },
       };
       return await prisma.flight2019.create(createArgs);
-    })
+    }),
   );
   console.log("Populated model Flight2019. 🌱");
 
@@ -145,7 +145,7 @@ async function main() {
         },
       };
       return await prisma.btor.create(createArgs);
-    })
+    }),
   );
   console.log("Populated model Btor. 🌱");
 
@@ -178,14 +178,14 @@ async function main() {
         },
       };
       return await prisma.project.create(createArgs);
-    })
+    }),
   );
   console.log("Populated model Project. 🌱");
 
   await Promise.all(
     applicants.map(async (d) => {
       const country = countriesDB.find(
-        (c) => c.isoAlpha3 === d.countryIsoAlpha3
+        (c) => c.isoAlpha3 === d.countryIsoAlpha3,
       );
 
       const createArgs: Prisma.ApplicantCreateArgs = {
@@ -198,7 +198,7 @@ async function main() {
         },
       };
       return await prisma.applicant.create(createArgs);
-    })
+    }),
   );
   console.log("Populated model Applicant. 🌱");
 
@@ -222,7 +222,7 @@ async function main() {
         },
       };
       return await prisma.application.create(createArgs);
-    })
+    }),
   );
   console.log("Populated model Application. 🌱");
 
@@ -237,7 +237,7 @@ async function main() {
         : null;
 
       const applicantMatch = applicants.find(
-        (d) => itcStudentId && d.itcStudentId_actual === itcStudentId
+        (d) => itcStudentId && d.itcStudentId_actual === itcStudentId,
       );
 
       const country = countriesDB.find((c) => c.isoAlpha3 === phd.country);
@@ -249,6 +249,8 @@ async function main() {
           departmentMainId: phd.department1,
           departmentSecondaryId: phd.department2,
           thesisTitle: phd.thesisTitle,
+          doi: phd.doi,
+          name: phd.name,
           statusId: phd.status,
           startYear: phd.dateStart?.getFullYear(),
           graduationYear: phd.dateGraduation?.getFullYear(),
@@ -257,7 +259,7 @@ async function main() {
         },
       };
       return await prisma.phd.create(createArgs);
-    })
+    }),
   );
   console.log("Populated model Phd. 🌱");
 
@@ -271,7 +273,7 @@ async function main() {
               (applicant) =>
                 applicant.dateOfBirth?.getTime() === d.dateOfBirth?.getTime() &&
                 applicant.gender === d.gender &&
-                applicant.countryIsoAlpha3 === country.isoAlpha3
+                applicant.countryIsoAlpha3 === country.isoAlpha3,
             )
           : null;
 
@@ -285,7 +287,7 @@ async function main() {
         },
       };
       return await prisma.employee.create(createArgs);
-    })
+    }),
   );
   console.log("Populated model Employee. 🌱");
 
@@ -314,7 +316,7 @@ async function main() {
         },
       };
       return await prisma.employment.create(createArgs);
-    })
+    }),
   );
   console.log("Populated model Employment. 🌱");
 }

@@ -14,6 +14,7 @@ import projections, {
 } from "../../stories/lib/getProjections";
 import { scaleLinear, scaleOrdinal } from "d3";
 import { GeoJsonProperties } from "geojson";
+import { FC, memo } from "react";
 
 const meta = {
   title: "Map Types/PrismMap",
@@ -51,16 +52,7 @@ const meta = {
             shadows
           >
             <axesHelper args={[7.5]} />
-            <Environment preset="apartment" />
-            <directionalLight
-              position={[10, 10, 5]}
-              intensity={5}
-              castShadow
-              shadow-bias={-0.0001}
-            />
-            <AccumulativeShadows opacity={0.25}>
-              <RandomizedLight position={[10, 10, 5]} />
-            </AccumulativeShadows>
+            <MemoizedLighting />
             <Story />
             <OrbitControls />
           </Canvas>
@@ -72,7 +64,24 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
+const Lighting: FC = () => (
+  <>
+    <Environment preset="apartment" />
+    <directionalLight
+      position={[10, 10, 5]}
+      intensity={5}
+      castShadow
+      shadow-bias={-0.0001}
+    />
+    <AccumulativeShadows opacity={0.25}>
+      <RandomizedLight position={[10, 10, 5]} />
+    </AccumulativeShadows>
+  </>
+);
+const MemoizedLighting = memo(Lighting);
+
 export const DefaultPrismMap: Story = {};
+
 export const PrismMapWithExtrusionAndColor: Story = {
   args: {
     projection: geoBaker(),
@@ -90,5 +99,21 @@ export const PrismMapWithExtrusionAndColor: Story = {
       ["NLD", { category: "important", value: 50 }],
       ["IDN", { category: "very important", value: 100 }],
     ]),
+  },
+};
+
+export const DefaultPrismMapWithInteraction: Story = {
+  args: {
+    selectedFeatures: [
+      { id: "USA", label: "United States" },
+      { id: "RUS", label: "Russia" },
+    ],
+    onFeaturePointerDownHandler: ({
+      id,
+      label,
+    }: {
+      id: string;
+      label: string;
+    }) => console.log({ id, label }),
   },
 };

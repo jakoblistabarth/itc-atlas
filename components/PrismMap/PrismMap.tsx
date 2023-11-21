@@ -1,4 +1,4 @@
-import { ScaleLinear, ScaleOrdinal, ScaleQuantile, group } from "d3";
+import { ScaleLinear, ScaleOrdinal, ScaleQuantile } from "d3";
 import { GeoProjection, geoPath } from "d3-geo";
 import {
   FeatureCollection,
@@ -11,7 +11,7 @@ import { ExtrudeGeometryOptions } from "three";
 import { SVGLoader } from "three-stdlib";
 import { feature } from "topojson-client";
 import type { Topology } from "topojson-specification";
-import Mark3dGeometry from "../Mark3dGeometry";
+import { MemoizedMark3dGeometry } from "../Mark3dGeometry";
 import { featureCollectionToSVG } from "./PrismMap.helpers";
 
 type Props = {
@@ -51,6 +51,28 @@ type Props = {
    * The map keys need to be ISO3 codes.
    */
   featureProperties?: Map<string, GeoJsonProperties>;
+  /** What action should be triggered if the user moves the pointer onto one of the PrismMap's festures? */
+  onFeaturePointerEnterHandler?: ({
+    id,
+    label,
+  }: {
+    id: string;
+    label: string;
+  }) => void;
+  /** What action should be triggered if the user moves the pointer out of one of the PrismMap's festures? */
+  onFeaturePointerLeaveHandler?: () => void;
+  /** What action should be triggered if the user clicks on one of the PrismMap's festures? */
+  onFeaturePointerDownHandler?: ({
+    id,
+    label,
+  }: {
+    id: string;
+    label: string;
+  }) => void;
+  /** Which features should be selected?
+   * An array of feature ids.
+   */
+  selectedFeatures?: { id: string; label: string }[];
   /** Which options should be used for the extrusion? */
   extrudeGeometryOptions?: ExtrudeGeometryOptions;
 };
@@ -72,6 +94,10 @@ const PrismMap: FC<Props> = ({
   extrusionScale,
   extrusionPropertyAccessor,
   featureProperties,
+  selectedFeatures,
+  onFeaturePointerEnterHandler,
+  onFeaturePointerLeaveHandler,
+  onFeaturePointerDownHandler,
   extrudeGeometryOptions = {},
 }) => {
   projection.fitExtent(
@@ -107,34 +133,29 @@ const PrismMap: FC<Props> = ({
   const { paths } = svgData;
   const shapes = useMemo(
     () =>
-      group(
-        paths.flatMap((p, idx) =>
-          p.toShapes(true).map((shape) => {
-            const feature = fcWithProps.features[idx];
-            const color =
-              colorScale && colorPropertyAccessor
-                ? //@ts-expect-error scaleQuantize expects number, scaleOrdinal a string
-                  colorScale(colorPropertyAccessor(feature.properties))
-                : defaultColor;
-            return {
-              shape,
-              color,
-              extrudeGeometryOptions: {
-                ...extrudeGeometryOptions,
-                depth:
-                  extrusionScale && extrusionPropertyAccessor
-                    ? extrusionScale(
-                        extrusionPropertyAccessor(feature.properties),
-                      )
-                    : defaultExtrusion,
-              },
-              fillOpacity: p.userData?.style.fillOpacity,
-              properties: feature.properties,
-            };
-          }),
-        ),
-        (d) => d.properties?.ADM0_A3,
-      ),
+      paths.map((p, idx) => {
+        const feature = fcWithProps.features[idx];
+        const color =
+          colorScale && colorPropertyAccessor
+            ? //@ts-expect-error scaleQuantize expects number, scaleOrdinal a string
+              colorScale(colorPropertyAccessor(feature.properties))
+            : defaultColor;
+        const shapes = p.toShapes(true);
+        return {
+          id: feature.properties.ADM0_A3 as string,
+          shape: shapes,
+          color,
+          fillOpacity: p.userData?.style.fillOpacity,
+          properties: feature.properties,
+          extrudeGeometryOptions: {
+            ...extrudeGeometryOptions,
+            depth:
+              extrusionScale && extrusionPropertyAccessor
+                ? extrusionScale(extrusionPropertyAccessor(feature.properties))
+                : defaultExtrusion,
+          },
+        };
+      }),
     [
       fcWithProps.features,
       paths,
@@ -150,11 +171,29 @@ const PrismMap: FC<Props> = ({
 
   return (
     <group rotation={[Math.PI / -2, 0, 0]}>
-      {Array.from(shapes).map(([country, shapes]) => (
-        <group key={country}>
-          {shapes.map((d) => (
-            <Mark3dGeometry key={d.shape.uuid} {...d} />
-          ))}
+      {shapes.map((d) => (
+        <group key={d.id}>
+          <MemoizedMark3dGeometry
+            {...d}
+            onPointerDownHandler={() =>
+              onFeaturePointerDownHandler &&
+              onFeaturePointerDownHandler({
+                id: d.id,
+                label: d.properties.NAME_EN,
+              })
+            }
+            onPointerEnterHandler={() =>
+              onFeaturePointerEnterHandler &&
+              onFeaturePointerEnterHandler({
+                id: d.id,
+                label: d.properties.NAME_EN,
+              })
+            }
+            onPointerLeaveHandler={() =>
+              onFeaturePointerLeaveHandler && onFeaturePointerLeaveHandler()
+            }
+            isActive={selectedFeatures?.map(({ id }) => id).includes(d.id)}
+          />
         </group>
       ))}
     </group>

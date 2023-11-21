@@ -9,6 +9,8 @@ import CountryCodeBadge from "../CountryCodeBadge";
 import { MdClose } from "react-icons/md";
 import clsx from "clsx";
 import { Card } from "../Card";
+import { HiOutlinePaperClip } from "react-icons/hi2";
+import Button from "../Button";
 
 type Props = {
   info?: Awaited<ReturnType<typeof getPhdTheses>>[number];
@@ -75,10 +77,21 @@ const ThesisInfo: FC<Props> = ({ info, colorScale, onCloseHandler }) => {
             </div>
             <div className="mb-2">
               <h2 className="max-w-[15em]">{info?.thesisTitle}</h2>
-              <p className="">Name of phd Candidate</p>
+              {info?.name && <p className="">{info.name}</p>}
+              {info?.country && (
+                <CountryCodeBadge isoAlpha3Code={info.country.isoAlpha3} />
+              )}
             </div>
-            {info?.country && (
-              <CountryCodeBadge isoAlpha3Code={info.country.isoAlpha3} />
+            {info?.doi && (
+              <Button>
+                <a
+                  href={info.doi}
+                  target="blank"
+                  className="flex items-center gap-2"
+                >
+                  <HiOutlinePaperClip /> Read thesis
+                </a>
+              </Button>
             )}
             <table className="mt-3 text-xs">
               <tbody>

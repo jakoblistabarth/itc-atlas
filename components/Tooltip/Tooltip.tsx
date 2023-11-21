@@ -9,6 +9,7 @@ export interface TooltipOptions {
   placement?: Placement;
   open?: boolean;
   onOpenChange?: (open: boolean) => void;
+  followCursor?: boolean;
 }
 
 type ContextType = ReturnType<typeof useTooltip> | null;

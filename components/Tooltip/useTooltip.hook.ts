@@ -10,6 +10,7 @@ import {
   useDismiss,
   useRole,
   useInteractions,
+  useClientPoint,
 } from "@floating-ui/react";
 import { TooltipOptions } from "./Tooltip";
 
@@ -18,6 +19,7 @@ export function useTooltip({
   placement = "top",
   open: controlledOpen,
   onOpenChange: setControlledOpen,
+  followCursor = false,
 }: TooltipOptions = {}) {
   const [uncontrolledOpen, setUncontrolledOpen] = useState(initialOpen);
 
@@ -50,7 +52,10 @@ export function useTooltip({
   const dismiss = useDismiss(context);
   const role = useRole(context, { role: "tooltip" });
 
-  const interactions = useInteractions([hover, focus, dismiss, role]);
+  const clientPoint = useClientPoint(context);
+  const option = followCursor ? clientPoint : undefined;
+
+  const interactions = useInteractions([hover, focus, dismiss, role, option]);
 
   return useMemo(
     () => ({
@@ -59,6 +64,6 @@ export function useTooltip({
       ...interactions,
       ...data,
     }),
-    [open, setOpen, interactions, data]
+    [open, setOpen, interactions, data],
   );
 }

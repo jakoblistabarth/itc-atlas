@@ -36,6 +36,8 @@ export type PhdRaw = {
   DepartmentSecond?: string;
   Sponsor?: string;
   SpecialMention?: string;
+  DOI?: string;
+  NamePure?: string;
 };
 
 export default async function loadPhds() {
