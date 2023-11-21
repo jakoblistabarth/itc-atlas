@@ -9,7 +9,7 @@ import Teaser from "../../components/Teaser";
 import BtorsAndCabinets from "../../components/visuals/BtorsAndCabinets";
 import BtorsByDepartment from "../../components/visuals/maps/BtorsByDepartment";
 import BtorsByYearMap from "../../components/visuals/maps/BtorsByYear";
-import TravelsByDepartment from "../../components/visuals/maps/MultiStopBtors";
+import MultiStopBtors from "../../components/MultiStopBtors";
 import getBhosCountries from "../../lib/data/getBhosCountries";
 import getCountries from "../../lib/data/getCountries";
 import getDutchCabinets from "../../lib/data/getDutchCabinets";
@@ -94,7 +94,7 @@ const Page: NextPage<Props> = ({
           Consectetur vel aliquam id minus!
         </Paragraph>
         <div className="mt-5">
-          <TravelsByDepartment
+          <MultiStopBtors
             neCountries={neCountriesTopoJson}
             btors={btorsByCountry}
           />

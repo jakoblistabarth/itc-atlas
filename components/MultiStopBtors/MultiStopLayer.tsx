@@ -1,21 +1,17 @@
-import { FC } from "react";
-import { NeCountriesTopoJson } from "../../../types/NeTopoJson";
-import MapLayerBase from "../../MapLayerBase";
-import { geoBertin1953 } from "d3-geo-projection";
-import getCentroidByIsoCode from "../../../lib/data/getCentroidByIsoCode";
 import { max, scaleLinear, scalePow } from "d3";
-import { BtorsGroupedByCountry } from "../../../lib/data/queries/btors/getBtorsGroupedByCountry";
+import { FC } from "react";
 import { Vector2 } from "three";
-import MapLayoutFluid from "../../MapLayout/MapLayoutFluid";
-import MarkCircle from "../../MarkCircle/MarkCircle";
+import getCentroidByIsoCode from "../../lib/data/getCentroidByIsoCode";
+import { BtorsGroupedByCountry } from "../../lib/data/queries/btors/getBtorsGroupedByCountry";
+import { useMapLayoutContext } from "../MapLayout/MapLayoutContext";
+import MarkCircle from "../MarkCircle";
 
-type Props = {
-  neCountries: NeCountriesTopoJson;
+type MultiStopLayerProps = {
   btors: BtorsGroupedByCountry;
 };
 
-const MultiStopBtors: FC<Props> = ({ btors, neCountries }) => {
-  const proj = geoBertin1953();
+const MultiStopsLayer: FC<MultiStopLayerProps> = ({ btors }) => {
+  const { projection } = useMapLayoutContext();
 
   type BtorWithCentroids = (typeof btors)[number] & {
     centroids: (Vector2 | undefined)[];
@@ -25,7 +21,7 @@ const MultiStopBtors: FC<Props> = ({ btors, neCountries }) => {
   };
 
   const hasCentroids = (
-    btor: BtorWithValidCentroids | BtorWithCentroids
+    btor: BtorWithValidCentroids | BtorWithCentroids,
   ): btor is BtorWithValidCentroids => {
     return btor.centroids.every((d) => d);
   };
@@ -43,8 +39,7 @@ const MultiStopBtors: FC<Props> = ({ btors, neCountries }) => {
   const scaleWidth = scaleLinear().domain([1, maxCount]).range([1, 20]);
 
   return (
-    <MapLayoutFluid projection={proj}>
-      <MapLayerBase countries={neCountries} />
+    <>
       {multipleStops.map((d) => {
         const centroids = d.centroids;
         return (
@@ -58,10 +53,10 @@ const MultiStopBtors: FC<Props> = ({ btors, neCountries }) => {
               />
             ))}
             {d.centroids.slice(0, -1).map((c, i) => {
-              const start = proj([c.x, c.y]);
-              const end = proj([centroids[i + 1].x, centroids[i + 1].y]);
+              const start = projection([c.x, c.y]);
+              const end = projection([centroids[i + 1].x, centroids[i + 1].y]);
               // TODO: create MarkLine component or add noTip to MarkFlow
-              return (
+              return start && end ? (
                 <line
                   key={i}
                   x1={start[0]}
@@ -71,13 +66,15 @@ const MultiStopBtors: FC<Props> = ({ btors, neCountries }) => {
                   strokeWidth={scaleWidth(d.count)}
                   stroke="black"
                 />
+              ) : (
+                <></>
               );
             })}
           </g>
         );
       })}
-    </MapLayoutFluid>
+    </>
   );
 };
 
-export default MultiStopBtors;
+export default MultiStopsLayer;
