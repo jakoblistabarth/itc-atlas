@@ -104,57 +104,55 @@ const Page = ({
               )}
               startYear={1990}
             />
-            <div className="max-w-xs">
-              <Card>
-                <Card.Header>PhD theses by alumni origin</Card.Header>
-                <ScrollArea.Root className="h-[300px] w-full">
-                  <ScrollArea.Viewport className="h-full w-full">
-                    <Card.Body>
-                      <table className="w-full border-collapse text-xs [&_tbody_tr]:border-t dark:[&_tbody_tr]:border-itc-green-800 [&_td]:py-2">
-                        <thead className="font-serif">
-                          <tr>
-                            <th className="text-left">Country</th>
-                            <th className="text-right">No. of PhDs</th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          {rollups(
-                            department.phdsMain,
-                            (v) => v.length,
-                            (d) => d.country?.isoAlpha3,
-                          )
-                            // .filter(([isoAlpha3Code]) => isoAlpha3Code)
-                            .sort((a, b) => b[1] - a[1])
-                            .map(([isoAlpha3Code, count]) => {
-                              return (
-                                <tr key={isoAlpha3Code}>
-                                  <td>
-                                    {isoAlpha3Code ? (
-                                      <CountryCodeBadge
-                                        isoAlpha3Code={isoAlpha3Code}
-                                      />
-                                    ) : (
-                                      "No Data"
-                                    )}
-                                  </td>
-                                  <td className="text-right">{count}</td>
-                                </tr>
-                              );
-                            })}
-                        </tbody>
-                      </table>
-                    </Card.Body>
-                  </ScrollArea.Viewport>
-                  <ScrollArea.Scrollbar
-                    className="bg-blackA1 hover:bg-blackA3 flex touch-none select-none p-0.5 transition-colors duration-[160ms] ease-out data-[orientation=horizontal]:h-2.5 data-[orientation=vertical]:w-2.5 data-[orientation=horizontal]:flex-col"
-                    orientation="vertical"
-                  >
-                    <ScrollArea.Thumb className="relative flex-1 rounded-[10px] bg-itc-green before:absolute before:left-1/2 before:top-1/2 before:h-full before:min-h-[44px] before:w-full before:min-w-[44px] before:-translate-x-1/2 before:-translate-y-1/2 before:content-['']" />
-                  </ScrollArea.Scrollbar>
-                  <ScrollArea.Corner />
-                </ScrollArea.Root>
-              </Card>
-            </div>
+            <Card className="max-w-xs self-start">
+              <Card.Header>PhD theses by alumni origin</Card.Header>
+              <ScrollArea.Root className="h-[300px] w-full">
+                <ScrollArea.Viewport className="h-full w-full">
+                  <Card.Body>
+                    <table className="w-full border-collapse text-xs [&_tbody_tr]:border-t dark:[&_tbody_tr]:border-itc-green-800 [&_td]:py-2">
+                      <thead className="font-serif">
+                        <tr>
+                          <th className="text-left">Country</th>
+                          <th className="text-right">No. of PhDs</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {rollups(
+                          department.phdsMain,
+                          (v) => v.length,
+                          (d) => d.country?.isoAlpha3,
+                        )
+                          // .filter(([isoAlpha3Code]) => isoAlpha3Code)
+                          .sort((a, b) => b[1] - a[1])
+                          .map(([isoAlpha3Code, count]) => {
+                            return (
+                              <tr key={isoAlpha3Code}>
+                                <td>
+                                  {isoAlpha3Code ? (
+                                    <CountryCodeBadge
+                                      isoAlpha3Code={isoAlpha3Code}
+                                    />
+                                  ) : (
+                                    "No Data"
+                                  )}
+                                </td>
+                                <td className="text-right">{count}</td>
+                              </tr>
+                            );
+                          })}
+                      </tbody>
+                    </table>
+                  </Card.Body>
+                </ScrollArea.Viewport>
+                <ScrollArea.Scrollbar
+                  className="flex touch-none select-none bg-blackA1 p-0.5 transition-colors duration-[160ms] ease-out hover:bg-blackA3 data-[orientation=horizontal]:h-2.5 data-[orientation=vertical]:w-2.5 data-[orientation=horizontal]:flex-col"
+                  orientation="vertical"
+                >
+                  <ScrollArea.Thumb className="relative flex-1 rounded-[10px] bg-itc-green before:absolute before:left-1/2 before:top-1/2 before:h-full before:min-h-[44px] before:w-full before:min-w-[44px] before:-translate-x-1/2 before:-translate-y-1/2 before:content-['']" />
+                </ScrollArea.Scrollbar>
+                <ScrollArea.Corner />
+              </ScrollArea.Root>
+            </Card>
           </div>
         </Section>
         <Section>

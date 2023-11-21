@@ -1,7 +1,7 @@
-import { FC } from "react";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import clsx from "clsx";
+import { FC } from "react";
+import { twMerge } from "tailwind-merge";
 
 type Props = React.PropsWithChildren<{
   href: string;
@@ -15,7 +15,7 @@ const NavLink: FC<Props> = ({ href, children, disabled = false }) => {
     <Link
       href={href}
       onClick={disabled ? (e) => e.preventDefault() : undefined}
-      className={clsx(
+      className={twMerge(
         "rounded-md bg-white p-2 text-itc-green transition-colors duration-500",
         !disabled && "pointer opacity-100 hover:bg-itc-green-100",
         disabled && "cursor-not-allowed opacity-50",

@@ -1,16 +1,16 @@
+import { animated, config, useTransition } from "@react-spring/web";
+import { Bounds, Environment, Float, Shadow } from "@react-three/drei";
+import { Canvas } from "@react-three/fiber";
+import { ScaleOrdinal } from "d3";
 import { FC, useState } from "react";
+import { HiOutlinePaperClip } from "react-icons/hi2";
+import { MdClose } from "react-icons/md";
+import { twMerge } from "tailwind-merge";
 import getPhdTheses from "../../lib/data/queries/phd/getPhdTheses";
 import Book from "../Book";
-import { Canvas } from "@react-three/fiber";
-import { Bounds, Environment, Float, Shadow } from "@react-three/drei";
-import { ScaleOrdinal } from "d3";
-import { useTransition, animated, config } from "@react-spring/web";
-import CountryCodeBadge from "../CountryCodeBadge";
-import { MdClose } from "react-icons/md";
-import clsx from "clsx";
-import { Card } from "../Card";
-import { HiOutlinePaperClip } from "react-icons/hi2";
 import Button from "../Button";
+import { Card } from "../Card";
+import CountryCodeBadge from "../CountryCodeBadge";
 
 type Props = {
   info?: Awaited<ReturnType<typeof getPhdTheses>>[number];
@@ -102,7 +102,7 @@ const ThesisInfo: FC<Props> = ({ info, colorScale, onCloseHandler }) => {
                 ].map(([k, v], idx) => (
                   <tr
                     key={idx}
-                    className={clsx("align-baseline", !v && "text-gray-400")}
+                    className={twMerge("align-baseline", !v && "text-gray-400")}
                   >
                     <td>{k}</td>
                     <td className={"ps-3 font-serif font-bold"}>

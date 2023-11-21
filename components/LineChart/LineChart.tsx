@@ -1,16 +1,16 @@
-import { FC, useCallback, useMemo, useState, MouseEvent } from "react";
-import useMeasure from "react-use-measure";
+import { Group } from "@visx/group";
 import { ScaleOrdinal, extent, format, max, scaleLinear } from "d3";
+import { FC, MouseEvent, useCallback, useMemo, useState } from "react";
+import { MdArrowUpward, MdInfoOutline } from "react-icons/md";
+import useMeasure from "react-use-measure";
+import { twMerge } from "tailwind-merge";
 import AxisX from "../AxisX";
 import AxisY from "../AxisY";
-import RuleY from "../RuleY";
-import { MdArrowUpward, MdInfoOutline } from "react-icons/md";
-import LinePath from "../LinePath/LinePathSimple";
-import { Group } from "@visx/group";
+import { Card } from "../Card";
 import { getFilledSeries } from "../LinePath/LinePath.helpers";
 import { LinePathDatum } from "../LinePath/LinePathBase";
-import { Card } from "../Card";
-import clsx from "clsx";
+import LinePath from "../LinePath/LinePathSimple";
+import RuleY from "../RuleY";
 
 export type LineChartData = {
   id: string;
@@ -197,34 +197,32 @@ const LineChart: FC<Props> = ({
       </svg>
       {cursorX && (
         <div className="pointer-events-none absolute" style={{ top, left }}>
-          <div
-            className={clsx(
+          <Card
+            className={twMerge(
               x && x > width / 2 && "-left-full -translate-x-full",
             )}
           >
-            <Card>
-              <Card.Header>
-                {yLabel && <span>{yLabel} in</span>} {xLabel && <>{xLabel} </>}
-                <span className="font-bold">{xScaleReverse(x ?? 0)}</span>
-              </Card.Header>
-              <Card.Body>
-                {data.map(({ label, colorKey, id, data }) => {
-                  const value =
-                    data.find((d) => d.x === xScaleReverse(x ?? 0))?.y ?? 0;
-                  return (
-                    <div className="flex items-center gap-2 text-xs" key={id}>
-                      <div
-                        className="h-3 w-3 rounded-full"
-                        style={{ backgroundColor: colorScale(colorKey ?? id) }}
-                      ></div>
-                      <div>{label}</div>
-                      <div className="font-bold">{value}</div>{" "}
-                    </div>
-                  );
-                })}
-              </Card.Body>
-            </Card>
-          </div>
+            <Card.Header>
+              {yLabel && <span>{yLabel} in</span>} {xLabel && <>{xLabel} </>}
+              <span className="font-bold">{xScaleReverse(x ?? 0)}</span>
+            </Card.Header>
+            <Card.Body>
+              {data.map(({ label, colorKey, id, data }) => {
+                const value =
+                  data.find((d) => d.x === xScaleReverse(x ?? 0))?.y ?? 0;
+                return (
+                  <div className="flex items-center gap-2 text-xs" key={id}>
+                    <div
+                      className="h-3 w-3 rounded-full"
+                      style={{ backgroundColor: colorScale(colorKey ?? id) }}
+                    ></div>
+                    <div>{label}</div>
+                    <div className="font-bold">{value}</div>{" "}
+                  </div>
+                );
+              })}
+            </Card.Body>
+          </Card>
         </div>
       )}
     </>

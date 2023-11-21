@@ -40,7 +40,7 @@ const PhdThesesBookChart: FC<Props> = ({
   ).get(activeThesis ?? "");
   return (
     <div>
-      <CanvasStage>
+      <CanvasStage className="h-[500px]">
         <div className="relative h-full">
           <ThesisInfo
             info={thesisInfo}
@@ -98,13 +98,14 @@ const PhdThesesBookChart: FC<Props> = ({
             </AccumulativeShadows>
             <OrbitControls
               minZoom={40}
+              maxZoom={800}
               maxPolarAngle={Math.PI / 2}
               makeDefault
             />
           </Canvas>
         </div>
       </CanvasStage>
-      <Callout Icon={HiCursorClick}>
+      <Callout title="About the visual" className="mt-5" Icon={HiCursorClick}>
         Click on a thesis to get further information!
         <details className="mt-2 text-sm">
           <summary className="font-bold">Interaction details</summary>

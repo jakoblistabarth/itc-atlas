@@ -1,8 +1,17 @@
-import { FC } from "react";
+import { FC, HTMLAttributes } from "react";
+import { twMerge } from "tailwind-merge";
 
-const Skeleton: FC = () => {
+type Props = HTMLAttributes<HTMLDivElement>;
+
+const Skeleton: FC<Props> = ({ className, ...props }) => {
   return (
-    <div className="h-full w-full animate-pulse bg-itc-green-50 dark:bg-itc-green-900" />
+    <div
+      className={twMerge(
+        "h-full w-full animate-pulse bg-itc-green-50 dark:bg-itc-green-900",
+        className,
+      )}
+      {...props}
+    />
   );
 };
 

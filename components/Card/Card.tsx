@@ -1,9 +1,10 @@
-import { Component, PropsWithChildren } from "react";
+import { Component, HTMLAttributes, PropsWithChildren } from "react";
+import { twMerge } from "tailwind-merge";
 import Body from "./Body";
-import Header from "./Header";
 import Footer from "./Footer";
+import Header from "./Header";
 
-type Props = PropsWithChildren;
+type Props = HTMLAttributes<HTMLDivElement> & PropsWithChildren;
 
 export class Card extends Component<Props> {
   static Body = Body;
@@ -12,7 +13,12 @@ export class Card extends Component<Props> {
 
   render() {
     return (
-      <div className="rounded border bg-white shadow dark:border-itc-green-800 dark:bg-itc-green-900">
+      <div
+        className={twMerge(
+          "rounded border bg-white shadow dark:border-itc-green-800 dark:bg-itc-green-900",
+          this.props.className,
+        )}
+      >
         {this.props.children}
       </div>
     );

@@ -1,14 +1,14 @@
-import { FC, useCallback } from "react";
 import * as Toolbar from "@radix-ui/react-toolbar";
+import { FC, useCallback } from "react";
+import {} from "react-icons/hi";
 import {
-  HiArrowLongLeft,
-  HiArrowRight,
   HiArrowLeft,
+  HiArrowLongLeft,
   HiArrowLongRight,
+  HiArrowRight,
   HiXMark,
 } from "react-icons/hi2";
-import {} from "react-icons/hi";
-import clsx from "clsx";
+import { twMerge } from "tailwind-merge";
 import { Card } from "../Card";
 
 type Props = {
@@ -39,7 +39,7 @@ const TimelineControl: FC<Props> = ({
     [currentDate, minDate, maxDate, setDate],
   );
   return (
-    <Card>
+    <Card className="mb-2">
       <Card.Body>
         <Toolbar.Root className="pointer-events-auto flex gap-1">
           <Toolbar.Button
@@ -55,7 +55,7 @@ const TimelineControl: FC<Props> = ({
             <HiArrowLeft />
           </Toolbar.Button>
           <div
-            className={clsx(
+            className={twMerge(
               "flex-grow rounded-sm bg-gray-100 p-2 px-4 text-center",
               !currentDate && "text-gray-300",
             )}

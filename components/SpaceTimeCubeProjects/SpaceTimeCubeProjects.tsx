@@ -80,16 +80,10 @@ const SpaceTimeCubeProjects: FC<Props> = ({
 
       <div className="mt-5 grid">
         <div className="[grid-area:1/1]">
-          <Suspense
-            fallback={
-              <div className="h-[700px]">
-                <Skeleton />
-              </div>
-            }
-          >
+          <Suspense fallback={<Skeleton className="h-[700px]" />}>
             <Tooltip open={!!hoverInfo} followCursor placement="top-start">
               <TooltipTrigger asChild>
-                <CanvasStage height={700}>
+                <CanvasStage className="h-[700px]">
                   <Canvas
                     className="bg-white"
                     orthographic

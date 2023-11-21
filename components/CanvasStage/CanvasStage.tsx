@@ -1,17 +1,17 @@
-import clsx from "clsx";
-import { forwardRef, HTMLProps, PropsWithChildren } from "react";
+import { forwardRef, HTMLAttributes, PropsWithChildren } from "react";
+import { twMerge } from "tailwind-merge";
 
-type Props = PropsWithChildren<{ height?: number }>;
+type Props = PropsWithChildren;
 
 const CanvasStage = forwardRef<
   HTMLDivElement,
-  HTMLProps<HTMLDivElement> & Props
->(function CanvasStage({ children, height }, propRef) {
+  HTMLAttributes<HTMLDivElement> & Props
+>(function CanvasStage({ children, className, ...props }, propRef) {
   return (
     <div
       ref={propRef}
-      style={{ height: height }}
-      className={clsx("rounded-md bg-white shadow-md", !height && "h-[500px]")}
+      className={twMerge("rounded-md bg-white shadow-md", className)}
+      {...props}
     >
       {children}
     </div>

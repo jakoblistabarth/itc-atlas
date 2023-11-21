@@ -1,3 +1,4 @@
+import ColumnTable from "arquero/dist/types/table/column-table";
 import { FC } from "react";
 import { BiBracket } from "react-icons/bi";
 import {
@@ -6,16 +7,15 @@ import {
   MdFormatListBulleted,
   MdOutlineCalculate,
 } from "react-icons/md";
+import { twMerge } from "tailwind-merge";
 import { fFloat, fPercentage } from "../../lib/utilities/formaters";
+import Snapshot from "../Snapshot";
 import {
-  colorMap,
   ColumnDataType,
+  colorMap,
   getSummaryTableData,
 } from "./SummaryTable.helpers";
 import SummaryTableCard from "./SummaryTableCard";
-import Snapshot from "../Snapshot";
-import ColumnTable from "arquero/dist/types/table/column-table";
-import clsx from "clsx";
 
 const getColumnIcon = (type: ColumnDataType) => {
   switch (type) {
@@ -87,7 +87,7 @@ const SummaryTable: FC<SummaryTableProps> = ({ data, title }) => {
                       <Snapshot column={column} />
                     </td>
                     <td
-                      className={clsx(
+                      className={twMerge(
                         column.stats?.missing > 0.25 &&
                           "font-bold text-red-500",
                       )}

@@ -1,7 +1,7 @@
-import { useMergeRefs, FloatingPortal } from "@floating-ui/react";
+import { FloatingPortal, useMergeRefs } from "@floating-ui/react";
 import { forwardRef } from "react";
+import { twMerge } from "tailwind-merge";
 import { useTooltipContext } from "./Tooltip";
-import clsx from "clsx";
 
 type Props = {
   raised?: boolean;
@@ -18,7 +18,7 @@ const TooltipContent = forwardRef<
   return !context.open ? null : (
     <FloatingPortal>
       <div
-        className={clsx(
+        className={twMerge(
           "pointer-events-none rounded-sm bg-white p-3 text-xs shadow-lg",
           raised && "shadow-md",
         )}

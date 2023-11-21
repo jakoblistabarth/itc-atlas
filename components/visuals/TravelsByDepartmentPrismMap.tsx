@@ -1,24 +1,24 @@
-import { scaleLinear, scaleQuantile, schemeBlues } from "d3";
-import { GeoProjection } from "d3-geo";
-import { FC, memo, useCallback, useMemo, useState } from "react";
-import { ExtrudeGeometryOptions } from "three";
-import type { Topology } from "topojson-specification";
-import PrismMap from "../PrismMap";
-import clsx from "clsx";
+import { Department } from "@prisma/client";
 import {
   AccumulativeShadows,
   Environment,
   OrbitControls,
 } from "@react-three/drei";
 import { Canvas } from "@react-three/fiber";
-import { BtorsGroupedByCountryByDepartment } from "../../lib/data/queries/btors/getBtorsGroupedByCountryByDepartment";
-import { Department } from "@prisma/client";
-import Tooltip from "../Tooltip";
-import { TooltipTrigger } from "../Tooltip/TooltipTrigger";
-import TooltipContent from "../Tooltip/TooltipContent";
+import { scaleLinear, scaleQuantile, schemeBlues } from "d3";
+import { GeoProjection } from "d3-geo";
 import { GeoJsonProperties } from "geojson";
+import { FC, memo, useCallback, useMemo, useState } from "react";
+import { twMerge } from "tailwind-merge";
+import { ExtrudeGeometryOptions } from "three";
+import type { Topology } from "topojson-specification";
+import { BtorsGroupedByCountryByDepartment } from "../../lib/data/queries/btors/getBtorsGroupedByCountryByDepartment";
 import KPI from "../KPI";
+import PrismMap from "../PrismMap";
 import SoftLight from "../SoftLight";
+import Tooltip from "../Tooltip";
+import TooltipContent from "../Tooltip/TooltipContent";
+import { TooltipTrigger } from "../Tooltip/TooltipTrigger";
 
 type Props = {
   btorsByCountryByDepartment: BtorsGroupedByCountryByDepartment;
@@ -89,7 +89,7 @@ const TravelsByDepartmentPrismMap: FC<Props> = ({
         {departments.map((department) => (
           <button
             key={department.id}
-            className={clsx(
+            className={twMerge(
               "min-w-[80px] rounded-sm border border-solid",
               activeDepartment === department.id && "border-itc-green",
             )}

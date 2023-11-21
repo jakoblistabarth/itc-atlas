@@ -1,26 +1,26 @@
+import { union } from "d3";
+import { geoBertin1953 } from "d3-geo-projection";
+import { Feature } from "geojson";
 import { FC, useMemo, useState } from "react";
-import { NeCountriesTopoJson } from "../../types/NeTopoJson";
-import BtorsByYear from "./charts/BtorsByYear";
+import { HiCursorClick } from "react-icons/hi";
+import { twMerge } from "tailwind-merge";
+import { feature } from "topojson-client";
 import { BtorsGroupedByYear } from "../../lib/data/queries/btors/getBtorsGroupedByYear";
 import { BhosCountry } from "../../types/BhosCountry";
 import { DutchCabinet } from "../../types/DutchCabinet";
-import MapLayerBase from "../MapLayerBase";
-import { geoBertin1953 } from "d3-geo-projection";
-import { feature } from "topojson-client";
-import MarkGeometry from "../MarkGeometry/MarkGeometry";
-import { Feature } from "geojson";
-import { HiCursorClick } from "react-icons/hi";
-import LegendNominal from "../LegendNominal";
+import { NeCountriesTopoJson } from "../../types/NeTopoJson";
 import Callout from "../Callout/Callout";
+import LegendNominal from "../LegendNominal";
+import MapLayerBase from "../MapLayerBase";
 import MapLayoutFluid from "../MapLayout/MapLayoutFluid";
-import Tooltip from "../Tooltip/";
-import { TooltipTrigger } from "../Tooltip/TooltipTrigger";
-import TooltipContent from "../Tooltip/TooltipContent";
-import BhosGradientDefs from "./BhosGradientsDefs";
-import useBhosCategories from "./useBhosCategories";
-import { union } from "d3";
-import clsx from "clsx";
+import MarkGeometry from "../MarkGeometry/MarkGeometry";
 import Paragraph from "../Paragraph";
+import Tooltip from "../Tooltip/";
+import TooltipContent from "../Tooltip/TooltipContent";
+import { TooltipTrigger } from "../Tooltip/TooltipTrigger";
+import BhosGradientDefs from "./BhosGradientsDefs";
+import BtorsByYear from "./charts/BtorsByYear";
+import useBhosCategories from "./useBhosCategories";
 
 type Props = {
   neCountries: NeCountriesTopoJson;
@@ -106,7 +106,7 @@ const BtorsAndCabinets: FC<Props> = ({
         {filteredCabinets.map((d) => (
           <button
             key={d.name}
-            className={clsx(
+            className={twMerge(
               "border-1 min-w-[100px] border-solid",
               activeCabinet === d.name
                 ? "border-itc-green"
