@@ -21,6 +21,7 @@ import { TooltipTrigger } from "../Tooltip/TooltipTrigger";
 import TooltipContent from "../Tooltip/TooltipContent";
 import SpaceTimeCube from "../../components/SpaceTimeCube/SpaceTimeCube";
 import SelectedYearDetails from "../SelectedYearDetails/SelectedYearDetails";
+import { Card } from "../Card";
 
 type selectedCountry = {
   id: string;
@@ -173,19 +174,36 @@ const SpaceTimeCubeProjects: FC<Props> = ({
           </Suspense>
         </div>
         <div className="pointer-events-none z-50 mr-4 mt-4 justify-self-end [grid-area:1/1]">
-          <SelectedProjectsDetails
-            selectedCountries={selectedCountries}
-            projectsByYearCountry={projectsByYearCountry}
-            projects={projects}
-            setSelectedCountries={setSelectedCountries}
-          />
-          {selectedYear && (
-            <SelectedYearDetails
-              selectedYear={selectedYear}
-              projectsByYearCountry={projectsByYearCountry}
-              neCountriesTopoJson={neCountriesTopoJson}
-            />
-          )}
+          <div className="pointer-events-auto w-[400px]">
+            <Card>
+              <Card.Header>
+                <p className="text-xs italic">Details</p>
+              </Card.Header>
+              <Card.Body>
+                {!selectedYear && !selectedCountries.length ? (
+                  <p>Select a country or a year for more details.</p>
+                ) : (
+                  <>
+                    {selectedCountries.length > 0 && (
+                      <SelectedProjectsDetails
+                        selectedCountries={selectedCountries}
+                        projectsByYearCountry={projectsByYearCountry}
+                        projects={projects}
+                        setSelectedCountries={setSelectedCountries}
+                      />
+                    )}
+                    {selectedYear && (
+                      <SelectedYearDetails
+                        selectedYear={selectedYear}
+                        projectsByYearCountry={projectsByYearCountry}
+                        neCountriesTopoJson={neCountriesTopoJson}
+                      />
+                    )}
+                  </>
+                )}
+              </Card.Body>
+            </Card>
+          </div>
         </div>
       </div>
     </>

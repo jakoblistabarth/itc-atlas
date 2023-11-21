@@ -1,5 +1,4 @@
 import { FC } from "react";
-import { Card } from "../Card";
 import { InternMap, scaleOrdinal, schemeBlues } from "d3";
 import LineChart, { LineChartData } from "../LineChart";
 import { HiXMark } from "react-icons/hi2";
@@ -44,60 +43,41 @@ const SelectedProjectDetails: FC<Props> = ({
   });
 
   return (
-    <div className="pointer-events-auto w-[400px]">
-      <Card>
-        <Card.Header>
-          <p className="text-xs italic">Details</p>
-        </Card.Header>
-        <Card.Body>
-          {selectedCountries.length > 0 ? (
-            <>
-              <h2>Selected Countries</h2>
-              <div className="flex flex-wrap gap-1 text-xs">
-                {selectedCountries.map(({ id, label }) => (
-                  <div
-                    key={id}
-                    className="rounded-full bg-itc-green-100 px-2 py-1"
-                  >
-                    {label}
-                    <span className="ml-1">
-                      (
-                      {
-                        projects.filter((d) =>
-                          d.countries.map((d) => d.isoAlpha3).includes(id),
-                        ).length
-                      }
-                      )
-                    </span>
-                  </div>
-                ))}
-                <div
-                  className="cursor-pointer rounded-full bg-itc-green px-2 py-1 text-white hover:bg-itc-green-800"
-                  onClick={() => setSelectedCountries([])}
-                >
-                  <HiXMark className="mr-2 inline" />
-                  Clear country selection
-                </div>
-              </div>
-            </>
-          ) : (
-            <p>Select a country to see details.</p>
-          )}
-          {linePathData.length > 0 && (
-            <div className="mt-10 h-[200px]">
-              <LineChart
-                data={linePathData}
-                yLabel={"projects"}
-                colorScale={scaleOrdinal<string, string>().range(
-                  schemeBlues[5],
-                )}
-                mouseEnterLeaveHandler={() => undefined}
-              />
-            </div>
-          )}
-        </Card.Body>
-      </Card>
-    </div>
+    <>
+      <h3>Selected Countries</h3>
+      <div className="flex flex-wrap gap-1 text-xs">
+        {selectedCountries.map(({ id, label }) => (
+          <div key={id} className="rounded-full bg-itc-green-100 px-2 py-1">
+            {label}
+            <span className="ml-1">
+              (
+              {
+                projects.filter((d) =>
+                  d.countries.map((d) => d.isoAlpha3).includes(id),
+                ).length
+              }
+              )
+            </span>
+          </div>
+        ))}
+        <div
+          className="cursor-pointer rounded-full bg-itc-green px-2 py-1 text-white hover:bg-itc-green-800"
+          onClick={() => setSelectedCountries([])}
+        >
+          <HiXMark className="mr-2 inline" />
+          Clear country selection
+        </div>
+      </div>
+
+      <div className="mt-10 h-[200px]">
+        <LineChart
+          data={linePathData}
+          yLabel={"projects"}
+          colorScale={scaleOrdinal<string, string>().range(schemeBlues[5])}
+          mouseEnterLeaveHandler={() => undefined}
+        />
+      </div>
+    </>
   );
 };
 
