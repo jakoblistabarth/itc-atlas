@@ -1,6 +1,6 @@
 import { scaleLinear, scaleQuantile, schemeBlues } from "d3";
 import { GeoProjection } from "d3-geo";
-import { FC, useState } from "react";
+import { FC, memo, useCallback, useMemo, useState } from "react";
 import { ExtrudeGeometryOptions } from "three";
 import type { Topology } from "topojson-specification";
 import PrismMap from "../PrismMap";
@@ -9,11 +9,16 @@ import {
   AccumulativeShadows,
   Environment,
   OrbitControls,
-  RandomizedLight,
 } from "@react-three/drei";
 import { Canvas } from "@react-three/fiber";
 import { BtorsGroupedByCountryByDepartment } from "../../lib/data/queries/btors/getBtorsGroupedByCountryByDepartment";
 import { Department } from "@prisma/client";
+import Tooltip from "../Tooltip";
+import { TooltipTrigger } from "../Tooltip/TooltipTrigger";
+import TooltipContent from "../Tooltip/TooltipContent";
+import { GeoJsonProperties } from "geojson";
+import KPI from "../KPI";
+import SoftLight from "../SoftLight";
 
 type Props = {
   btorsByCountryByDepartment: BtorsGroupedByCountryByDepartment;
@@ -24,6 +29,11 @@ type Props = {
   length: number;
   extrudeGeometryOptions?: ExtrudeGeometryOptions;
   departments: Department[];
+};
+
+type HoveredFeature = {
+  id: string;
+  label: string;
 };
 
 const TravelsByDepartmentPrismMap: FC<Props> = ({
@@ -39,14 +49,42 @@ const TravelsByDepartmentPrismMap: FC<Props> = ({
   const [activeDepartment, setActiveDepartment] = useState<string>(
     departments[0].id,
   );
-  const featureProperties = new Map(
-    btorsByCountryByDepartment
-      .get(activeDepartment)
-      ?.map(({ country, count }) => [country, { count }]),
+  const [hoverInfo, setHoverInfo] = useState<HoveredFeature | undefined>(
+    undefined,
+  );
+  const featureProperties = useMemo(
+    () =>
+      new Map(
+        btorsByCountryByDepartment
+          .get(activeDepartment)
+          ?.map(({ country, count }) => [country, { count }]),
+      ),
+    [activeDepartment, btorsByCountryByDepartment],
+  );
+  const colorScale = useMemo(
+    () =>
+      scaleQuantile<string, string>()
+        .domain(Array.from(featureProperties.values()).map((d) => d.count))
+        .range(schemeBlues[5])
+        .unknown("ligthgrey"),
+    [featureProperties],
   );
 
+  const propertyAccessor = useCallback(
+    (properties: GeoJsonProperties) => properties?.count,
+    [],
+  );
+  const onPointerEnterHandler = useCallback(
+    (d: HoveredFeature) => setHoverInfo(d),
+    [],
+  );
+  const onPointerLeaveHandler = useCallback(() => setHoverInfo(undefined), []);
+  const extrusionScale = useMemo(
+    () => scaleLinear().domain([0, 100]).range([0.01, 2]).unknown(0.01),
+    [],
+  );
   return (
-    <div style={{ width: "100%", height: "600px" }}>
+    <div>
       <div className="pn-2 scroll mb-2 mt-2 flex flex-nowrap gap-2 overflow-x-auto whitespace-nowrap">
         {departments.map((department) => (
           <button
@@ -61,40 +99,64 @@ const TravelsByDepartmentPrismMap: FC<Props> = ({
           </button>
         ))}
       </div>
-      <Canvas orthographic camera={{ position: [0, 5, 5], zoom: 75 }} shadows>
-        <Environment preset="apartment" />
-        <directionalLight
-          position={[10, 10, 5]}
-          intensity={5}
-          castShadow
-          shadow-bias={-0.0001}
-        />
-        <AccumulativeShadows opacity={0.25}>
-          <RandomizedLight position={[10, 10, 5]} />
-        </AccumulativeShadows>
-        <PrismMap
-          topology={topology}
-          topologyObject={topologyObject}
-          projection={projection}
-          width={width}
-          length={length}
-          colorScale={scaleQuantile<string, string>()
-            .domain(Array.from(featureProperties.values()).map((d) => d.count))
-            .range(schemeBlues[5])
-            .unknown("ligthgrey")}
-          colorPropertyAccessor={(properties) => properties?.count}
-          extrusionPropertyAccessor={(properties) => properties?.count}
-          extrusionScale={scaleLinear()
-            .domain([0, 100])
-            .range([0.01, 2])
-            .unknown(0.01)}
-          extrudeGeometryOptions={extrudeGeometryOptions}
-          featureProperties={featureProperties}
-        />
-        <OrbitControls />
-      </Canvas>
+      <Tooltip open={!!hoverInfo} followCursor placement="top-start">
+        <TooltipTrigger asChild>
+          <div className="h-[600px] w-full">
+            <Canvas
+              orthographic
+              camera={{ position: [0, 5, 5], zoom: 75 }}
+              shadows
+            >
+              <Environment preset="apartment" />
+              <directionalLight
+                position={[10, 10, 5]}
+                intensity={5}
+                castShadow
+                shadow-bias={-0.0001}
+              />
+              <AccumulativeShadows frames={0} opacity={0.2}>
+                <SoftLight position={[10, 10, 5]} />
+              </AccumulativeShadows>
+              <MemoizedPrismMap
+                topology={topology}
+                topologyObject={topologyObject}
+                projection={projection}
+                width={width}
+                length={length}
+                colorScale={colorScale}
+                colorPropertyAccessor={propertyAccessor}
+                extrusionPropertyAccessor={propertyAccessor}
+                extrusionScale={extrusionScale}
+                onFeaturePointerEnterHandler={onPointerEnterHandler}
+                onFeaturePointerLeaveHandler={onPointerLeaveHandler}
+                extrudeGeometryOptions={extrudeGeometryOptions}
+                featureProperties={featureProperties}
+              />
+              <OrbitControls
+                maxZoom={200}
+                minZoom={50}
+                makeDefault
+                maxPolarAngle={Math.PI / 2}
+              />
+            </Canvas>
+          </div>
+        </TooltipTrigger>
+        <TooltipContent>
+          <KPI
+            unit="travels"
+            number={
+              btorsByCountryByDepartment
+                ?.get(activeDepartment)
+                ?.find((d) => d.country === hoverInfo?.id)?.count ?? 0
+            }
+          />
+          {hoverInfo?.label}
+        </TooltipContent>
+      </Tooltip>
     </div>
   );
 };
 
 export default TravelsByDepartmentPrismMap;
+
+const MemoizedPrismMap = memo(PrismMap);

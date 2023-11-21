@@ -21,6 +21,7 @@ import TooltipContent from "../Tooltip/TooltipContent";
 import { TooltipTrigger } from "../Tooltip/TooltipTrigger";
 import SelectedProjectsDetails from "./SelectedProjectsDetails";
 import useProjectEvents from "./useProjectEvents.hooks";
+import SoftLight from "../SoftLight";
 
 type selectedCountry = {
   id: string;
@@ -122,7 +123,14 @@ const SpaceTimeCubeProjects: FC<Props> = ({
                       castShadow
                       shadow-bias={-0.0001}
                     />
-                    <MemoizedShadows />
+                    <AccumulativeShadows
+                      frames={0}
+                      opacity={0.1}
+                      resolution={2 ** 12}
+                      scale={30}
+                    >
+                      <SoftLight position={[10, 10, 0]} radius={2} />
+                    </AccumulativeShadows>
                   </Canvas>
                 </CanvasStage>
               </TooltipTrigger>
@@ -176,10 +184,3 @@ const SpaceTimeCubeProjects: FC<Props> = ({
 export default SpaceTimeCubeProjects;
 
 const MemoizedSpaceTimeCube = memo(SpaceTimeCube);
-
-const Shadows: FC = () => (
-  <AccumulativeShadows opacity={0.5} resolution={2 ** 12} scale={30}>
-    <directionalLight intensity={5} position={[10, 10, 0]} castShadow />
-  </AccumulativeShadows>
-);
-const MemoizedShadows = memo(Shadows);
