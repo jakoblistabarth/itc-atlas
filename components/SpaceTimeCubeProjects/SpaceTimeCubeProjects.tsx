@@ -39,9 +39,7 @@ const SpaceTimeCubeProjects: FC<Props> = ({
   const [selectedCountries, setSelectedCountries] = useState<selectedCountry[]>(
     [],
   );
-  const [selectedYear, setSelectedYear] = useState<string | undefined>(
-    undefined,
-  );
+  const [selectedYear, setSelectedYear] = useState<Date | undefined>(undefined);
   const [hoverInfo, setHoverInfo] = useState<selectedCountry | undefined>(
     undefined,
   );
@@ -137,7 +135,7 @@ const SpaceTimeCubeProjects: FC<Props> = ({
             minDate={timeScale.domain()[0]}
             maxDate={timeScale.domain()[1]}
             currentDate={selectedYear}
-            setDate={(year: string | undefined) => setSelectedYear(year)}
+            setDate={(year: Date | undefined) => setSelectedYear(year)}
           />
           <div className="pointer-events-auto w-[400px]">
             <Card>

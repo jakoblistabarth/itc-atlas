@@ -22,7 +22,7 @@ type Props = React.PropsWithChildren<{
   onPointerEnterHandler?: (featureId: { id: string; label: string }) => void;
   onPointerLeaveHandler?: () => void;
   selectedFeatures: { id: string; label: string }[];
-  selectedYear?: string;
+  selectedYear?: Date;
 }>;
 
 const materials = Object.fromEntries(
@@ -81,7 +81,7 @@ const SpaceTimeCube: FC<Props> = ({
             (event) =>
               selectedFeatures.map((d) => d.id).includes(event.name) ||
               (selectedYear &&
-                event.dateStart.getFullYear().toString() === selectedYear),
+                event.dateStart.getFullYear() === selectedYear.getFullYear()),
           )
         : eventsWithPosition,
     [eventsWithPosition, selectedFeatures, selectedYear],
@@ -103,8 +103,7 @@ const SpaceTimeCube: FC<Props> = ({
           onPointerLeave={() => (document.body.style.cursor = "auto")}
         >
           {timeScale.ticks(10).map((t, idx) => {
-            const isActiveYear =
-              selectedYear && t.getFullYear().toString() === selectedYear;
+            const isActiveYear = selectedYear && t === selectedYear;
             return (
               <group
                 key={`${t.getDate()}-${idx}`}
@@ -141,7 +140,7 @@ const SpaceTimeCube: FC<Props> = ({
         />
 
         {selectedYear && (
-          <group position={[0, timeScale(new Date(selectedYear)), 0]}>
+          <group position={[0, timeScale(selectedYear), 0]}>
             <PlaneOutline side={side} color="teal" lineWidth={2} />
             <mesh>
               <Text3D
@@ -155,16 +154,14 @@ const SpaceTimeCube: FC<Props> = ({
                 curveSegments={4}
                 material={materials.teal}
               >
-                {selectedYear}
+                {selectedYear.getFullYear()}
               </Text3D>
             </mesh>
           </group>
         )}
       </group>
 
-      <group
-        position-y={((parseInt(selectedYear ?? "1985") - 1985) * height) / 40}
-      >
+      <group position-y={selectedYear ? timeScale(selectedYear) : 0}>
         <MemoizedPrismMap
           topology={topology}
           topologyObject={topologyObject}

@@ -14,8 +14,8 @@ import { Card } from "../Card";
 type Props = {
   minDate: Date;
   maxDate: Date;
-  currentDate?: string;
-  setDate: (Date: string | undefined) => void;
+  currentDate?: Date;
+  setDate: (Date: Date | undefined) => void;
 };
 
 const TimelineControl: FC<Props> = ({
@@ -26,14 +26,14 @@ const TimelineControl: FC<Props> = ({
 }) => {
   const setNewDate = useCallback(
     (step: number) => {
-      const date = currentDate ?? minDate.getFullYear().toString();
-      const newDate = parseInt(date) + step;
+      const date = currentDate ?? minDate;
+      const newDate = date.getFullYear() + step;
       return setDate(
         newDate < minDate.getFullYear()
-          ? minDate.getFullYear().toString()
+          ? new Date(minDate.toString())
           : newDate > maxDate.getFullYear()
-          ? maxDate.getFullYear().toString()
-          : newDate.toString(),
+          ? new Date(maxDate.toString())
+          : new Date(newDate.toString()),
       );
     },
     [currentDate, minDate, maxDate, setDate],
@@ -60,7 +60,7 @@ const TimelineControl: FC<Props> = ({
               !currentDate && "text-gray-300",
             )}
           >
-            {currentDate ?? "-"}
+            {currentDate?.getFullYear() ?? "-"}
           </div>
           <Toolbar.Button
             className="rounded-sm bg-itc-green-50 p-3 hover:bg-itc-green-200"

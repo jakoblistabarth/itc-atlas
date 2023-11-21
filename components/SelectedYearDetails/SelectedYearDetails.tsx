@@ -25,7 +25,7 @@ ChartJS.register(
 );
 
 type Props = {
-  selectedYear: string;
+  selectedYear: Date;
   projectsByYearCountry: {
     year: string;
     countries: InternMap<string, number>;
@@ -51,7 +51,7 @@ const SelectedYearDetails: FC<Props> = ({
   const itcColor = resolveConfig(tailwindConfig).theme?.colors;
 
   const selectedYearCountries = projectsByYearCountry.find(
-    (d) => d.year == selectedYear,
+    (d) => d.year == selectedYear.getFullYear().toString(),
   )?.countries;
 
   const labels = Array.from(
@@ -73,11 +73,11 @@ const SelectedYearDetails: FC<Props> = ({
 
   return (
     <div className="mt-5">
-      <h3>Projects in {selectedYear}</h3>
+      <h3>Projects in {selectedYear.getFullYear()}</h3>
       {data.datasets[0].data.length > 0 ? (
         <Bar height={200} options={options} data={data} />
       ) : (
-        <p className="text-xs">No projects in {selectedYear}</p>
+        <p className="text-xs">No projects in {selectedYear.getFullYear()}</p>
       )}
     </div>
   );
