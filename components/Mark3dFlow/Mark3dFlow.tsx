@@ -6,19 +6,39 @@ import { getFlowCurve3D } from "./Mark3dFlow.helpers";
 import { scaleLinear } from "d3";
 import type { GeoJsonProperties } from "geojson";
 
+type Point = {
+  position: Position;
+  airport: string;
+};
+
 const Mark3dFlow: FC<{
-  origin: Position;
-  destination: Position;
+  origin: Point;
+  destination: Point;
   data: GeoJsonProperties;
   value: number;
   arcHeight?: number;
-}> = ({ origin, destination, data, value, arcHeight = 0.4 }) => {
+  onPointerEnterHandler: (properties: GeoJsonProperties) => void;
+  onPointerLeaveHandler: () => void;
+}> = ({
+  origin,
+  destination,
+  data,
+  value,
+  arcHeight = 0.4,
+  onPointerEnterHandler,
+  onPointerLeaveHandler,
+}) => {
   const [hover, setHover] = useState(false);
 
-  const od = [origin, destination].map((pos) =>
-    longitudeLatitudeToXYZ(pos[0], pos[1], 1)
+  const od = [origin.position, destination.position].map((pos) =>
+    longitudeLatitudeToXYZ(pos[0], pos[1], 1),
   );
-  const curve = getFlowCurve3D(origin, destination, 1, arcHeight);
+  const curve = getFlowCurve3D(
+    origin.position,
+    destination.position,
+    1,
+    arcHeight,
+  );
   const flowScale = scaleLinear().domain([0, 100]).range([0.001, 0.03]);
   const radius = flowScale(value);
 
@@ -29,13 +49,23 @@ const Mark3dFlow: FC<{
           key={idx}
           pos={pos}
           radius={0.005}
-          data={{ name: "od" }}
+          data={
+            //TODO: add country or other props to airport
+            idx == 0 ? { name: origin.airport } : { name: destination.airport }
+          }
+          onPointerEnterHandler={onPointerEnterHandler}
+          onPointerLeaveHandler={onPointerLeaveHandler}
         />
       ))}
       <mesh
-        onPointerEnter={() => setHover(true)}
-        onPointerLeave={() => setHover(false)}
-        onClick={() => console.log(data)}
+        onPointerEnter={() => {
+          setHover(true);
+          onPointerEnterHandler(data);
+        }}
+        onPointerLeave={() => {
+          setHover(false);
+          onPointerLeaveHandler();
+        }}
         castShadow
         receiveShadow
       >

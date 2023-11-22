@@ -7,7 +7,9 @@ const Mark3dSphere: FC<{
   pos: Vector3;
   radius: number;
   data: GeoJsonProperties;
-}> = ({ pos, radius, data }) => {
+  onPointerEnterHandler: (airport: GeoJsonProperties) => void;
+  onPointerLeaveHandler?: () => void;
+}> = ({ pos, radius, data, onPointerEnterHandler, onPointerLeaveHandler }) => {
   const [hover, setHover] = useState(false);
 
   const { scale } = useSpring({
@@ -18,9 +20,14 @@ const Mark3dSphere: FC<{
   return (
     <animated.mesh
       scale={scale}
-      onPointerEnter={() => setHover(true)}
-      onPointerLeave={() => setHover(false)}
-      onClick={() => console.log(data)}
+      onPointerEnter={() => {
+        setHover(true);
+        onPointerEnterHandler(data);
+      }}
+      onPointerLeave={() => {
+        setHover(false);
+        onPointerLeaveHandler && onPointerLeaveHandler();
+      }}
       position={pos}
       castShadow
     >
