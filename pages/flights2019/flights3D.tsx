@@ -2,7 +2,7 @@ import { OrbitControls } from "@react-three/drei";
 import { Canvas } from "@react-three/fiber";
 import * as d3 from "d3";
 import type { NextPage } from "next";
-import { Suspense, useState } from "react";
+import { Suspense, useState, useCallback, FC, memo } from "react";
 import Globe, { FallBackGlobe } from "../../components/Globe/";
 import GlobeEnvironment from "../../components/Globe/GlobeEnvironment";
 import Mark3dFlow from "../../components/Mark3dFlow";
@@ -10,6 +10,12 @@ import PageBase from "../../components/PageBase";
 import getOdMatrix from "../../lib/data/getOdMatrix";
 import type { OdMatrix } from "../../types/OdMatrix";
 import Container from "../../components/Container";
+import type { GeoJsonProperties } from "geojson";
+import Tooltip from "../../components/Tooltip";
+import { TooltipTrigger } from "../../components/Tooltip/TooltipTrigger";
+import TooltipContent from "../../components/Tooltip/TooltipContent";
+import { HiArrowRight } from "react-icons/hi2";
+import KPI from "../../components/KPI";
 
 type Props = {
   odMatrix: OdMatrix;
@@ -18,15 +24,14 @@ type Props = {
 const earthRadius = 1;
 
 const Flights: NextPage<Props> = ({ odMatrix }) => {
-  const flightsPerRoute = odMatrix.flows.features.map(
-    (flow) => flow.properties?.value,
+  const [hoverInfo, setHoverInfo] = useState<GeoJsonProperties | undefined>(
+    undefined,
   );
-  const min = d3.min(flightsPerRoute);
-  const max = d3.max(flightsPerRoute);
-  const scaleWidth = d3
-    .scaleLinear()
-    .domain([min ?? 0, max ?? 100])
-    .range([0, 100]);
+  console.log({ hoverInfo });
+  const onPointerEnterHandler = useCallback((properties: GeoJsonProperties) => {
+    setHoverInfo(properties);
+  }, []);
+  const onPointerLeaveHandler = useCallback(() => setHoverInfo(undefined), []);
 
   const [ready, setReady] = useState(false);
 
@@ -35,31 +40,50 @@ const Flights: NextPage<Props> = ({ odMatrix }) => {
       <Container>
         <main>
           <div style={{ width: "100%", height: "700px" }}>
-            <Canvas
-              camera={{ position: [0, 0, 5], fov: 30 }}
-              shadows
-              onCreated={() => setReady(true)}
-              data-ready={ready}
-            >
-              <Suspense fallback={<FallBackGlobe radius={earthRadius} />}>
-                <Globe radius={earthRadius} texture={"explorer"} />
-              </Suspense>
-              <GlobeEnvironment />
-              {odMatrix.flows.features.map((flow) => {
-                const origin = flow.geometry.coordinates[0];
-                const destination = flow.geometry.coordinates[1];
-                return (
-                  <Mark3dFlow
-                    key={flow.properties.od}
-                    origin={origin}
-                    destination={destination}
-                    value={scaleWidth(flow.properties?.value)}
-                    data={flow.properties}
+            <Tooltip open={!!hoverInfo} followCursor placement="top-start">
+              <TooltipTrigger asChild>
+                <Canvas
+                  camera={{ position: [0, 0, 5], fov: 30 }}
+                  shadows
+                  onCreated={() => setReady(true)}
+                  data-ready={ready}
+                >
+                  <Suspense fallback={<FallBackGlobe radius={earthRadius} />}>
+                    <Globe radius={earthRadius} texture={"explorer"} />
+                  </Suspense>
+                  <GlobeEnvironment />
+
+                  <MemoizedFlows
+                    odMatrix={odMatrix}
+                    onPointerEnterHandler={onPointerEnterHandler}
+                    onPointerLeaveHandler={onPointerLeaveHandler}
                   />
-                );
-              })}
-              <OrbitControls enableZoom={false} enablePan={false} />
-            </Canvas>
+                  <OrbitControls enableZoom={false} enablePan={false} />
+                </Canvas>
+              </TooltipTrigger>
+              <TooltipContent>
+                {hoverInfo &&
+                  (hoverInfo.name ? (
+                    <p>
+                      Airport:{" "}
+                      <span className="font-bold">{hoverInfo.name}</span>
+                    </p>
+                  ) : (
+                    <div>
+                      <div className="flex items-center gap-1">
+                        <span className="font-bold">{hoverInfo?.o}</span>{" "}
+                        <HiArrowRight />{" "}
+                        <span className="font-bold">{hoverInfo?.d}</span>
+                      </div>
+                      <br />
+                      <KPI
+                        number={hoverInfo.value}
+                        unit={"travels on this route in 2019"}
+                      />
+                    </div>
+                  ))}
+              </TooltipContent>
+            </Tooltip>
           </div>
         </main>
       </Container>
@@ -77,3 +101,52 @@ export async function getStaticProps() {
 }
 
 export default Flights;
+
+const Flows: FC<{
+  odMatrix: OdMatrix;
+  onPointerEnterHandler?: (properties: GeoJsonProperties) => void;
+  onPointerLeaveHandler?: () => void;
+}> = ({ odMatrix, onPointerEnterHandler, onPointerLeaveHandler }) => {
+  const flightsPerRoute = odMatrix.flows.features.map(
+    (flow) => flow.properties?.value,
+  );
+  const min = d3.min(flightsPerRoute);
+  const max = d3.max(flightsPerRoute);
+  const scaleWidth = d3
+    .scaleLinear()
+    .domain([min ?? 0, max ?? 100])
+    .range([0, 100]);
+  return (
+    <>
+      {odMatrix.flows.features.map((flow) => {
+        const originPosition = flow.geometry.coordinates[0];
+        const originAirport = flow.properties.o;
+        const destinationPosition = flow.geometry.coordinates[1];
+        const destinationAirport = flow.properties.d;
+        return (
+          <Mark3dFlow
+            key={flow.properties.od}
+            origin={{
+              position: originPosition,
+              airport: originAirport,
+            }}
+            destination={{
+              position: destinationPosition,
+              airport: destinationAirport,
+            }}
+            value={scaleWidth(flow.properties?.value)}
+            data={flow.properties}
+            onPointerEnterHandler={(props) =>
+              onPointerEnterHandler && onPointerEnterHandler(props)
+            }
+            onPointerLeaveHandler={() =>
+              onPointerLeaveHandler && onPointerLeaveHandler()
+            }
+          />
+        );
+      })}
+    </>
+  );
+};
+
+const MemoizedFlows = memo(Flows);
