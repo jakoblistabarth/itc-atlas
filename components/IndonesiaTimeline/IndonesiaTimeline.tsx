@@ -23,6 +23,7 @@ import { Minister } from "../../types/Minister";
 import { ProjectIndonesia } from "../../types/Project";
 import { TimelineEvent } from "../../types/TimelineEvent";
 import Building, { ITClocations } from "../Building";
+import KPI from "../KPI";
 import LabelPoint from "../LabelPoint";
 import LegendNominal from "../LegendNominal";
 import NsidedPolygon from "../NsidedPolygon";
@@ -33,10 +34,7 @@ import TimelineGrid from "../Timeline/TimelineGrid";
 import TimelineHeader from "../Timeline/TimelineHeader";
 import TimelineSeparator from "../Timeline/TimelineSeparator";
 import Tooltip from "../Tooltip/";
-import TooltipContent from "../Tooltip/TooltipContent";
-import { TooltipTrigger } from "../Tooltip/TooltipTrigger";
 import TopicPatterns from "./TopicPatterns";
-import KPI from "../KPI";
 
 type Props = PropsWithChildren<{
   applications: ApplicationByYearWithCount;
@@ -435,20 +433,20 @@ const IndonesiaTimeline: FC<Props> = ({
                           {ce.name}
                         </LabelPoint>
                       </g>
-                      <Tooltip>
-                        <TooltipTrigger asChild>
+                      <Tooltip.Root>
+                        <Tooltip.Trigger asChild>
                           <g>
                             {ce.data?.party &&
                               renderPartySymbol(ce.data?.party as string)}
                           </g>
-                        </TooltipTrigger>
-                        <TooltipContent>
+                        </Tooltip.Trigger>
+                        <Tooltip.Content>
                           <h4>{ce.name}</h4>
                           {ce.data?.party} <br />
                           {ce.dateStart.getFullYear()}–
                           {ce.dateEnd?.getFullYear()}
-                        </TooltipContent>
-                      </Tooltip>
+                        </Tooltip.Content>
+                      </Tooltip.Root>
                     </EventPeriod>
                   );
                 })}
@@ -511,8 +509,8 @@ const IndonesiaTimeline: FC<Props> = ({
               </TimelineHeader>
               <Group top={rowHeaderHeight}>
                 {projectEvents.map((e, idx) => (
-                  <Tooltip key={`${e.name}-${idx}`}>
-                    <TooltipTrigger asChild>
+                  <Tooltip.Root key={`${e.name}-${idx}`}>
+                    <Tooltip.Trigger asChild>
                       <g>
                         <EventPeriod
                           dateStart={e.dateStart}
@@ -539,12 +537,12 @@ const IndonesiaTimeline: FC<Props> = ({
                           )}
                         </EventPeriod>
                       </g>
-                    </TooltipTrigger>
-                    <TooltipContent>
+                    </Tooltip.Trigger>
+                    <Tooltip.Content>
                       <h4>{e.name}</h4>
                       {e.dateStart.toDateString()}–{e.dateEnd?.toDateString()}
-                    </TooltipContent>
-                  </Tooltip>
+                    </Tooltip.Content>
+                  </Tooltip.Root>
                 ))}
               </Group>
             </g>
@@ -598,8 +596,8 @@ const IndonesiaTimeline: FC<Props> = ({
                   const barWidth = width / 100;
                   const height = (e.size ?? 0) / 3;
                   return (
-                    <Tooltip key={`${e.name}-${idx}`}>
-                      <TooltipTrigger asChild>
+                    <Tooltip.Root key={`${e.name}-${idx}`}>
+                      <Tooltip.Trigger asChild>
                         <rect
                           width={barWidth}
                           height={height}
@@ -609,13 +607,13 @@ const IndonesiaTimeline: FC<Props> = ({
                           fill={indonesiaColor}
                           cursor="pointer"
                         />
-                      </TooltipTrigger>
-                      <TooltipContent>
+                      </Tooltip.Trigger>
+                      <Tooltip.Content>
                         {e.size && <KPI number={e.size}></KPI>}
                         <div>alumni in</div>
                         <strong>{e.dateStart.getFullYear()}</strong>
-                      </TooltipContent>
-                    </Tooltip>
+                      </Tooltip.Content>
+                    </Tooltip.Root>
                   );
                 })}
                 {phdsByYear

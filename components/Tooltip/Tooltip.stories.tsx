@@ -1,10 +1,7 @@
 import { Meta, StoryObj } from "@storybook/react";
-import { range, randomInt } from "d3";
-import LineChart from "../Timeline/LineChart";
+import { randomInt, range } from "d3";
 import Tooltip from ".";
-
-import TooltipContent from "./TooltipContent";
-import { TooltipTrigger } from "./TooltipTrigger";
+import LineChart from "../Timeline/LineChart";
 
 const children = (
   <div>
@@ -14,21 +11,21 @@ const children = (
 
 const meta = {
   title: "UI/Tooltip",
-  component: TooltipContent,
+  component: Tooltip.Content,
   args: {
     children: children,
   },
   decorators: [
     (Story) => (
-      <Tooltip open>
+      <Tooltip.Root open>
         <Story />
-        <TooltipTrigger asChild>
+        <Tooltip.Trigger asChild>
           <button disabled style={{ display: "none" }} />
-        </TooltipTrigger>
-      </Tooltip>
+        </Tooltip.Trigger>
+      </Tooltip.Root>
     ),
   ],
-} satisfies Meta<typeof TooltipContent>;
+} satisfies Meta<typeof Tooltip.Content>;
 export default meta;
 type Story = StoryObj<typeof meta>;
 

@@ -18,20 +18,18 @@ import {
 import type { GetStaticProps, NextPage } from "next";
 import useMeasure from "react-use-measure";
 import { Vector2 } from "three";
-import Timeline from "../../components/Timeline";
-import TimelineGrid from "../../components/Timeline/TimelineGrid";
+import Container from "../../components/Container";
+import Cross from "../../components/Cross/Cross";
 import LabelPoint from "../../components/LabelPoint";
 import LegendProportionalRectangle from "../../components/LegendProportionalRectangle";
-import Cross from "../../components/Cross/Cross";
+import PageBase from "../../components/PageBase";
+import Timeline from "../../components/Timeline";
+import TimelineGrid from "../../components/Timeline/TimelineGrid";
 import Tooltip from "../../components/Tooltip/";
-import TooltipContent from "../../components/Tooltip/TooltipContent";
-import { TooltipTrigger } from "../../components/Tooltip/TooltipTrigger";
 import getCourseGenealogy from "../../lib/data/getCourseGenealogy";
 import toInt from "../../lib/utilities/toInt";
 import { CourseGenealogy } from "../../types/CourseGenealogy";
 import { LabelPlacement } from "../../types/LabelPlacement";
-import PageBase from "../../components/PageBase";
-import Container from "../../components/Container";
 
 type Props = {
   courseGenealogy: CourseGenealogy;
@@ -162,8 +160,8 @@ const CourseGenealogyPage: NextPage<Props> = ({ courseGenealogy }) => {
                           halos={[{ size: 4, color: "white" }]}
                         />
                       ) : (
-                        <Tooltip key={idx}>
-                          <TooltipTrigger asChild>
+                        <Tooltip.Root key={idx}>
+                          <Tooltip.Trigger asChild>
                             <g fill={colorScale(node.fill ?? "")}>
                               <rect
                                 x={pos.x - xScale2.bandwidth() / 2}
@@ -172,15 +170,15 @@ const CourseGenealogyPage: NextPage<Props> = ({ courseGenealogy }) => {
                                 height={height}
                               />
                             </g>
-                          </TooltipTrigger>
-                          <TooltipContent>
+                          </Tooltip.Trigger>
+                          <Tooltip.Content>
                             <strong>
                               {year}, {node.name}
                             </strong>
                             <br />
                             {node.size} MSc. alumni
-                          </TooltipContent>
-                        </Tooltip>
+                          </Tooltip.Content>
+                        </Tooltip.Root>
                       );
                     })}
                   </g>

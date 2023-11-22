@@ -7,8 +7,6 @@ import CanvasStage from "../../components/CanvasStage";
 import Container from "../../components/Container";
 import PageBase from "../../components/PageBase";
 import Tooltip from "../../components/Tooltip";
-import TooltipContent from "../../components/Tooltip/TooltipContent";
-import { TooltipTrigger } from "../../components/Tooltip/TooltipTrigger";
 
 const ThreeTest: NextPage = () => {
   return (
@@ -27,8 +25,8 @@ const CanvasWithTooltip = () => {
   const [hoverInfo, setHoverInfo] = useState<undefined | string>(undefined);
   return (
     <>
-      <Tooltip open={isOpen} followCursor placement="bottom-start">
-        <TooltipTrigger asChild>
+      <Tooltip.Root open={isOpen} followCursor placement="bottom-start">
+        <Tooltip.Trigger asChild>
           <CanvasStage>
             <Canvas
               orthographic
@@ -58,11 +56,11 @@ const CanvasWithTooltip = () => {
               <Environment preset="apartment" />
             </Canvas>
           </CanvasStage>
-        </TooltipTrigger>
+        </Tooltip.Trigger>
         {isOpen && hoverInfo && (
-          <TooltipContent>Element: {hoverInfo}</TooltipContent>
+          <Tooltip.Content>Element: {hoverInfo}</Tooltip.Content>
         )}
-      </Tooltip>
+      </Tooltip.Root>
     </>
   );
 };

@@ -1,8 +1,10 @@
 // from https://codesandbox.io/s/xenodochial-grass-js3bo9?file=/src/Tooltip.tsx
 
 import type { Placement } from "@floating-ui/react";
-import { createContext, useContext } from "react";
+import { Component, FC, createContext, useContext } from "react";
 import { useTooltip } from "./useTooltip.hook";
+import { TooltipTrigger } from "./TooltipTrigger";
+import TooltipContent from "./TooltipContent";
 
 export interface TooltipOptions {
   initialOpen?: boolean;
@@ -20,16 +22,15 @@ export const useTooltipContext = () => {
   const context = useContext(TooltipContext);
 
   if (context == null) {
-    throw new Error("Tooltip components must be wrapped in <Tooltip />");
+    throw new Error("Tooltip components must be wrapped in <Tooltip.Root />");
   }
 
   return context;
 };
 
-const Tooltip = ({
-  children,
-  ...options
-}: { children: React.ReactNode } & TooltipOptions) => {
+type Props = { children: React.ReactNode } & TooltipOptions;
+
+const Root: FC<Props> = ({ children, ...options }) => {
   // This can accept any props as options, e.g. `placement`,
   // or other positioning options.
   const tooltip = useTooltip(options);
@@ -40,4 +41,12 @@ const Tooltip = ({
   );
 };
 
-export default Tooltip;
+export class Tooltip extends Component<Props> {
+  static Root = Root;
+  static Trigger = TooltipTrigger;
+  static Content = TooltipContent;
+
+  render() {
+    return <Root>{this.props.children}</Root>;
+  }
+}

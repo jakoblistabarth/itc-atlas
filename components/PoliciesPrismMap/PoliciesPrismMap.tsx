@@ -15,8 +15,6 @@ import KPI from "../KPI";
 import { MemoizedPrismMap } from "../PrismMap";
 import SoftLight from "../SoftLight";
 import Tooltip from "../Tooltip";
-import TooltipContent from "../Tooltip/TooltipContent";
-import { TooltipTrigger } from "../Tooltip/TooltipTrigger";
 
 type Props = {
   topology: NeCountriesTopoJson;
@@ -72,8 +70,8 @@ const PoliciesPrismMap: FC<Props> = ({ topology, bhosCountries }) => {
 
   return (
     <>
-      <Tooltip open={!!hoveredFeature} placement="top-start">
-        <TooltipTrigger asChild>
+      <Tooltip.Root open={!!hoveredFeature} placement="top-start">
+        <Tooltip.Trigger asChild>
           <Canvas
             shadows
             orthographic
@@ -111,16 +109,16 @@ const PoliciesPrismMap: FC<Props> = ({ topology, bhosCountries }) => {
               minZoom={50}
             />
           </Canvas>
-        </TooltipTrigger>
-        <TooltipContent>
+        </Tooltip.Trigger>
+        <Tooltip.Content>
           {hoveredFeature && (
             <KPI
               number={featureProperties.get(hoveredFeature?.id)?.value ?? 0}
             />
           )}
           {hoveredFeature?.label}
-        </TooltipContent>
-      </Tooltip>
+        </Tooltip.Content>
+      </Tooltip.Root>
     </>
   );
 };

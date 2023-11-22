@@ -9,8 +9,6 @@ import {
 } from "react";
 import LinePathBase, { LinePathDatum } from "./LinePathBase";
 import Tooltip from "../Tooltip/";
-import { TooltipTrigger } from "../Tooltip/TooltipTrigger";
-import TooltipContent from "../Tooltip/TooltipContent";
 import { ScaleLinear, ascending, range } from "d3";
 import KPI from "../KPI";
 
@@ -81,8 +79,8 @@ const LinePath: FC<Props> = ({
   const x = cursorX && lineX && Math.round(cursorX - lineX - 4);
 
   return (
-    <Tooltip>
-      <TooltipTrigger asChild>
+    <Tooltip.Root>
+      <Tooltip.Trigger asChild>
         <g ref={pathRef}>
           {Array.isArray(color) ? (
             range(color.length).map((i) => (
@@ -142,8 +140,8 @@ const LinePath: FC<Props> = ({
             </>
           )}
         </g>
-      </TooltipTrigger>
-      <TooltipContent left={left} top={top}>
+      </Tooltip.Trigger>
+      <Tooltip.Content left={left} top={top}>
         <div>
           <strong>{label ?? identifier}</strong>
           <br />
@@ -155,8 +153,8 @@ const LinePath: FC<Props> = ({
           />
           {yLabel && <div>{yLabel}</div>}
         </div>
-      </TooltipContent>
-    </Tooltip>
+      </Tooltip.Content>
+    </Tooltip.Root>
   );
 };
 

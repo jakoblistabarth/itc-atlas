@@ -3,6 +3,7 @@ import { geoBertin1953 } from "d3-geo-projection";
 import { FeatureCollection, Point } from "geojson";
 import type { GetStaticProps, NextPage } from "next";
 import { Vector2 } from "three";
+import Container from "../../components/Container";
 import LabelPoint from "../../components/LabelPoint";
 import LegendProportionalCircle from "../../components/LegendProportionalCircle";
 import MapLayerBase from "../../components/MapLayerBase";
@@ -10,8 +11,6 @@ import MapLayoutFluid from "../../components/MapLayout/MapLayoutFluid";
 import MarkCircle from "../../components/MarkCircle";
 import PageBase from "../../components/PageBase";
 import Tooltip from "../../components/Tooltip/";
-import TooltipContent from "../../components/Tooltip/TooltipContent";
-import { TooltipTrigger } from "../../components/Tooltip/TooltipTrigger";
 import getCountries from "../../lib/data/getCountries";
 import getFlightsPerAirport, {
   AirportPropertiesWithCount,
@@ -20,7 +19,6 @@ import getCountryCodes from "../../lib/data/queries/country/getCountryCodes";
 import defaultTheme from "../../lib/styles/themes/defaultTheme";
 import { fInt } from "../../lib/utilities/formaters";
 import { SharedPageProps } from "../../types/Props";
-import Container from "../../components/Container";
 
 type Props = {
   airports: FeatureCollection<Point, AirportPropertiesWithCount>;
@@ -54,14 +52,14 @@ const Airports: NextPage<Props> = ({ airports, neCountriesTopoJson }) => {
             <MapLayerBase countries={neCountriesTopoJson} />
             {airportsGeo.features.map(({ geometry, properties }) => {
               return (
-                <Tooltip key={properties.iata_code}>
-                  <TooltipContent>
+                <Tooltip.Root key={properties.iata_code}>
+                  <Tooltip.Content>
                     <strong>{properties?.["iata_code"]}</strong>
                     &nbsp;{properties?.name}
                     <br />
                     {fInt(properties?.value)} flights (incoming/outgoing)
-                  </TooltipContent>
-                  <TooltipTrigger asChild>
+                  </Tooltip.Content>
+                  <Tooltip.Trigger asChild>
                     <g>
                       <MarkCircle
                         longitude={geometry.coordinates[0]}
@@ -70,8 +68,8 @@ const Airports: NextPage<Props> = ({ airports, neCountriesTopoJson }) => {
                         {...defaultTheme.symbol}
                       />
                     </g>
-                  </TooltipTrigger>
-                </Tooltip>
+                  </Tooltip.Trigger>
+                </Tooltip.Root>
               );
             })}
             {airportsGeo.features.slice(0, 5).map((airport) => {

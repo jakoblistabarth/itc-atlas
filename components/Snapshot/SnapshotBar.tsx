@@ -1,13 +1,13 @@
-import { FC } from "react";
 import * as d3 from "d3";
-import { colorMap } from "../SummaryTable/SummaryTable.helpers";
+import { FC } from "react";
 import { fInt, fPercentage } from "../../lib/utilities/formaters";
+import {
+  SummaryTableColumn,
+  colorMap,
+} from "../SummaryTable/SummaryTable.helpers";
+import Tooltip from "../Tooltip/";
 import { createStack } from "./Snapshot.helpers";
 import SnapshotCell from "./SnapshotCell";
-import Tooltip from "../Tooltip/";
-import { SummaryTableColumn } from "../SummaryTable/SummaryTable.helpers";
-import { TooltipTrigger } from "../Tooltip/TooltipTrigger";
-import TooltipContent from "../Tooltip/TooltipContent";
 
 type Props = {
   column: SummaryTableColumn;
@@ -54,13 +54,13 @@ const SnapshotBar: FC<Props> = ({ column }) => {
             const rowLabel = nRows === 1 ? "row" : "rows";
             const text = String(d.value);
             return (
-              <Tooltip key={`tooltip-${column.name}-${idx}`}>
-                <TooltipContent>
+              <Tooltip.Root key={`tooltip-${column.name}-${idx}`}>
+                <Tooltip.Content>
                   <strong>{text}</strong>
                   <br />
                   {fInt(nRows)} {rowLabel}, {fPercentage(d.count)}
-                </TooltipContent>
-                <TooltipTrigger asChild>
+                </Tooltip.Content>
+                <Tooltip.Trigger asChild>
                   <g>
                     <SnapshotCell
                       x={xScale(d.start)}
@@ -70,8 +70,8 @@ const SnapshotBar: FC<Props> = ({ column }) => {
                       fill={color(d.start).toString()}
                     />
                   </g>
-                </TooltipTrigger>
-              </Tooltip>
+                </Tooltip.Trigger>
+              </Tooltip.Root>
             );
           })}
         </g>

@@ -1,15 +1,13 @@
 import * as d3 from "d3";
 import { FC } from "react";
-import {
-  colorMap,
-  SummaryTableColumn,
-  ColumnDataType,
-} from "../SummaryTable/SummaryTable.helpers";
 import { fDateShort, fFloat, fPercentage } from "../../lib/utilities/formaters";
-import SnapshotCell from "./SnapshotCell";
+import {
+  ColumnDataType,
+  SummaryTableColumn,
+  colorMap,
+} from "../SummaryTable/SummaryTable.helpers";
 import Tooltip from "../Tooltip/";
-import TooltipContent from "../Tooltip/TooltipContent";
-import { TooltipTrigger } from "../Tooltip/TooltipTrigger";
+import SnapshotCell from "./SnapshotCell";
 
 type Props = {
   column: SummaryTableColumn;
@@ -30,7 +28,7 @@ const SnapshotHistogram: FC<Props> = ({ column }) => {
   const isDate = column.type === ColumnDataType.Date;
 
   const columnNoNA = column.data.filter(
-    (d: number | Date) => d !== undefined && d !== null
+    (d: number | Date) => d !== undefined && d !== null,
   );
   const cleanedColumn = isDate
     ? columnNoNA.map((d: string) => new Date(d))
@@ -77,19 +75,19 @@ const SnapshotHistogram: FC<Props> = ({ column }) => {
         return (
           bin.x0 &&
           bin.x1 && (
-            <Tooltip key={`tooltip-${column.name}-${idx}`}>
-              <TooltipContent>
+            <Tooltip.Root key={`tooltip-${column.name}-${idx}`}>
+              <Tooltip.Content>
                 <strong>
                   {isDate
                     ? `${fTick(new Date(bin.x0))}–${fDateShort(
-                        new Date(bin.x1)
+                        new Date(bin.x1),
                       )}`
                     : `${fTick(bin.x0)}–${fTick(bin.x1)}`}
                 </strong>
                 <br />
                 {nRows} {rowLabel}, {fPercentage(ratio)}
-              </TooltipContent>
-              <TooltipTrigger asChild>
+              </Tooltip.Content>
+              <Tooltip.Trigger asChild>
                 <g>
                   <SnapshotCell
                     key={`cell-${column.name}-${idx}`}
@@ -105,8 +103,8 @@ const SnapshotHistogram: FC<Props> = ({ column }) => {
                     strokeWidth={1}
                   />
                 </g>
-              </TooltipTrigger>
-            </Tooltip>
+              </Tooltip.Trigger>
+            </Tooltip.Root>
           )
         );
       })}

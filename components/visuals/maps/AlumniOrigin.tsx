@@ -23,8 +23,6 @@ import { useMapLayoutContext } from "../../MapLayout/MapLayoutContext";
 import MarkCircle from "../../MarkCircle";
 import LineChart from "../../Timeline/LineChart";
 import Tooltip from "../../Tooltip/";
-import TooltipContent from "../../Tooltip/TooltipContent";
-import { TooltipTrigger } from "../../Tooltip/TooltipTrigger";
 
 type Props = {
   neCountriesTopoJson: NeCountriesTopoJson;
@@ -121,8 +119,8 @@ const AlumniOrigin: FC<Props> = ({
       <g id="alumni-countries-symbols">
         {!filteredApplicantsIsLoading &&
           points.features.map(({ properties, geometry }, idx) => (
-            <Tooltip key={`tooltip-country-${idx}`}>
-              <TooltipTrigger asChild>
+            <Tooltip.Root key={`tooltip-country-${idx}`}>
+              <Tooltip.Trigger asChild>
                 <g>
                   <MarkCircle
                     longitude={geometry.coordinates[0]}
@@ -142,9 +140,9 @@ const AlumniOrigin: FC<Props> = ({
                     interactive
                   />
                 </g>
-              </TooltipTrigger>
+              </Tooltip.Trigger>
               {sparklineData && (
-                <TooltipContent>
+                <Tooltip.Content>
                   <div>
                     <strong>{properties?.NAME_EN}</strong>
                     <br />
@@ -163,9 +161,9 @@ const AlumniOrigin: FC<Props> = ({
                   <div className="flex items-baseline text-gray-500">
                     <div>All alumni over time</div> <MdArrowForward />
                   </div>
-                </TooltipContent>
+                </Tooltip.Content>
               )}
-            </Tooltip>
+            </Tooltip.Root>
           ))}
       </g>
       <g id="alumni-country-labels" pointerEvents={"none"}>

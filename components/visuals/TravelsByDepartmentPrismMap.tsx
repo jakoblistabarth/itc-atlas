@@ -18,8 +18,6 @@ import KPI from "../KPI";
 import { MemoizedPrismMap } from "../PrismMap";
 import SoftLight from "../SoftLight";
 import Tooltip from "../Tooltip";
-import TooltipContent from "../Tooltip/TooltipContent";
-import { TooltipTrigger } from "../Tooltip/TooltipTrigger";
 
 type Props = {
   btorsByCountryByDepartment: BtorsGroupedByCountryByDepartment;
@@ -95,8 +93,8 @@ const TravelsByDepartmentPrismMap: FC<Props> = ({
           </button>
         ))}
       </div>
-      <Tooltip open={!!hoverInfo} followCursor placement="top-start">
-        <TooltipTrigger asChild>
+      <Tooltip.Root open={!!hoverInfo} followCursor placement="top-start">
+        <Tooltip.Trigger asChild>
           <div className="h-[600px] w-full">
             <Canvas
               orthographic
@@ -136,8 +134,8 @@ const TravelsByDepartmentPrismMap: FC<Props> = ({
               />
             </Canvas>
           </div>
-        </TooltipTrigger>
-        <TooltipContent>
+        </Tooltip.Trigger>
+        <Tooltip.Content>
           <KPI
             unit="travels"
             number={
@@ -147,8 +145,8 @@ const TravelsByDepartmentPrismMap: FC<Props> = ({
             }
           />
           {hoverInfo?.label}
-        </TooltipContent>
-      </Tooltip>
+        </Tooltip.Content>
+      </Tooltip.Root>
     </div>
   );
 };

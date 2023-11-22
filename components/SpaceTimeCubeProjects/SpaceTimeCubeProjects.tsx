@@ -12,17 +12,15 @@ import CanvasStage from "../../components/CanvasStage";
 import Skeleton from "../../components/Skeleton";
 import SpaceTimeCube from "../../components/SpaceTimeCube/SpaceTimeCube";
 import { ProjectsWithCountries } from "../../lib/data/queries/project/getProjectsWithCountries";
+import { FeatureIdentifier } from "../../types/FeatureIdentifier";
 import { NeCountriesTopoJson } from "../../types/NeTopoJson";
 import { Card } from "../Card";
 import SelectedYearDetails from "../SelectedYearDetails/SelectedYearDetails";
+import SoftLight from "../SoftLight";
 import TimelineControl from "../TimelineControl";
 import Tooltip from "../Tooltip";
-import TooltipContent from "../Tooltip/TooltipContent";
-import { TooltipTrigger } from "../Tooltip/TooltipTrigger";
 import SelectedProjectsDetails from "./SelectedProjectsDetails";
 import useProjectEvents from "./useProjectEvents.hooks";
-import SoftLight from "../SoftLight";
-import { FeatureIdentifier } from "../../types/FeatureIdentifier";
 
 type Props = {
   projects: ProjectsWithCountries;
@@ -77,8 +75,8 @@ const SpaceTimeCubeProjects: FC<Props> = ({
       <div className="mt-5 grid">
         <div className="[grid-area:1/1]">
           <Suspense fallback={<Skeleton className="h-[700px]" />}>
-            <Tooltip open={!!hoverInfo} followCursor placement="top-start">
-              <TooltipTrigger asChild>
+            <Tooltip.Root open={!!hoverInfo} followCursor placement="top-start">
+              <Tooltip.Trigger asChild>
                 <CanvasStage className="h-[700px]">
                   <Canvas
                     className="bg-white"
@@ -123,9 +121,9 @@ const SpaceTimeCubeProjects: FC<Props> = ({
                     </AccumulativeShadows>
                   </Canvas>
                 </CanvasStage>
-              </TooltipTrigger>
-              <TooltipContent>{hoverInfo?.label}</TooltipContent>
-            </Tooltip>
+              </Tooltip.Trigger>
+              <Tooltip.Content>{hoverInfo?.label}</Tooltip.Content>
+            </Tooltip.Root>
           </Suspense>
         </div>
         <div className="pointer-events-none z-50 mr-4 mt-4 justify-self-end [grid-area:1/1]">

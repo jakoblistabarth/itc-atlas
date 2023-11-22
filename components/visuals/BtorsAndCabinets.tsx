@@ -16,8 +16,6 @@ import MapLayoutFluid from "../MapLayout/MapLayoutFluid";
 import MarkGeometry from "../MarkGeometry/MarkGeometry";
 import Paragraph from "../Paragraph";
 import Tooltip from "../Tooltip/";
-import TooltipContent from "../Tooltip/TooltipContent";
-import { TooltipTrigger } from "../Tooltip/TooltipTrigger";
 import BhosGradientDefs from "./BhosGradientsDefs";
 import BtorsByYear from "./charts/BtorsByYear";
 import useBhosCategories from "./useBhosCategories";
@@ -151,8 +149,8 @@ const BtorsAndCabinets: FC<Props> = ({
         {countriesWithCategories.map((d) => {
           const isActiveCountry = activeCountry === d.properties?.isoAlpha3;
           return (
-            <Tooltip key={d.properties?.id}>
-              <TooltipTrigger asChild>
+            <Tooltip.Root key={d.properties?.id}>
+              <Tooltip.Trigger asChild>
                 <g>
                   <MarkGeometry
                     feature={d}
@@ -174,8 +172,8 @@ const BtorsAndCabinets: FC<Props> = ({
                     }
                   />
                 </g>
-              </TooltipTrigger>
-              <TooltipContent>
+              </Tooltip.Trigger>
+              <Tooltip.Content>
                 <h4>{d.properties?.countryNameEN}</h4>
                 {d.properties?.categories &&
                   d.properties?.categories.map(
@@ -189,8 +187,8 @@ const BtorsAndCabinets: FC<Props> = ({
                       </svg>
                     ),
                   )}
-              </TooltipContent>
-            </Tooltip>
+              </Tooltip.Content>
+            </Tooltip.Root>
           );
         })}
       </MapLayoutFluid>
