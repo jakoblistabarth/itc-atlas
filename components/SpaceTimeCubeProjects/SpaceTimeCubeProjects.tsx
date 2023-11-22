@@ -22,11 +22,7 @@ import { TooltipTrigger } from "../Tooltip/TooltipTrigger";
 import SelectedProjectsDetails from "./SelectedProjectsDetails";
 import useProjectEvents from "./useProjectEvents.hooks";
 import SoftLight from "../SoftLight";
-
-type selectedCountry = {
-  id: string;
-  label: string;
-};
+import { FeatureIdentifier } from "../../types/FeatureIdentifier";
 
 type Props = {
   projects: ProjectsWithCountries;
@@ -37,21 +33,21 @@ const SpaceTimeCubeProjects: FC<Props> = ({
   projects,
   neCountriesTopoJson,
 }) => {
-  const [selectedCountries, setSelectedCountries] = useState<selectedCountry[]>(
-    [],
-  );
+  const [selectedCountries, setSelectedCountries] = useState<
+    FeatureIdentifier[]
+  >([]);
   const [selectedYear, setSelectedYear] = useState<Date | undefined>(undefined);
-  const [hoverInfo, setHoverInfo] = useState<selectedCountry | undefined>(
+  const [hoverInfo, setHoverInfo] = useState<FeatureIdentifier | undefined>(
     undefined,
   );
 
   const { events, projectsByYearCountry } = useProjectEvents(projects);
 
-  const onPointerEnterHandler = useCallback((feature: selectedCountry) => {
+  const onPointerEnterHandler = useCallback((feature: FeatureIdentifier) => {
     setHoverInfo(feature);
   }, []);
   const onPointerLeaveHandler = useCallback(() => setHoverInfo(undefined), []);
-  const onPointerDownHandler = useCallback((feature: selectedCountry) => {
+  const onPointerDownHandler = useCallback((feature: FeatureIdentifier) => {
     setSelectedCountries((previousState) => {
       if (previousState.map((d) => d.id).includes(feature.id)) {
         return [...previousState.filter((d) => d.id !== feature.id)];

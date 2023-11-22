@@ -24,3 +24,8 @@ h1 {
 h2 {
   @apply text-2xl;
 }
+
+details summary {
+  @apply font-bold;
+  @apply cursor-pointer;
+}

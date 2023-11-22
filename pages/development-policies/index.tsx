@@ -28,6 +28,8 @@ import Paragraph from "../../components/Paragraph";
 import Container from "../../components/Container";
 import Section from "../../components/Section";
 import CanvasStage from "../../components/CanvasStage";
+import Caption from "../../components/Caption";
+import Callout from "../../components/Callout";
 
 type Props = {
   nfps: NfpCountry[];
@@ -197,13 +199,47 @@ const NfpCountries: NextPage<Props> = ({
                   })}
               </g>
             </svg>
-
-            <CanvasStage>
+            <Caption reference="Fig.2">
+              Number of countries in Dutch development policies per year.
+            </Caption>
+            <Paragraph>
+              If all of this comes off as mixed-up to you, that&apos;s because
+              it is! Quick: do you have a infinitely reconfigurable scheme for
+              coping with emerging methodologies? Is it more important for
+              something to be dynamic or to be customer-directed? What does the
+              buzzword &quot;technologies&quot;
+            </Paragraph>
+          </Section>
+          <Section>
+            <h2> Occurences of countries in Dutch development policies</h2>
+            <CanvasStage className="my-5 h-[350px]">
               <PoliciesPrismMap
                 topology={neCountriesTopoJson}
                 bhosCountries={bhosCountries}
               />
             </CanvasStage>
+            <Caption reference="Fig.3">
+              Occurences of countries in Dutch development policies
+            </Caption>
+            <Callout title="Tipp">
+              Hover over a country to see in how many years it was considered to
+              be a focus country for development.
+            </Callout>
+            <Callout title="Methodology" className="bg-itc-blue-50">
+              Only certain categories of focus countries are considered
+              <details className="mt-3">
+                <summary>Dutch development policies</summary>
+                <Paragraph className="italic">
+                  Explain which policies are considered and why?
+                </Paragraph>
+              </details>
+              <details className="mt-3">
+                <summary>Inconcistencies in cateogries</summary>
+                <Paragraph className="italic">
+                  Explain inconsistencies
+                </Paragraph>
+              </details>
+            </Callout>
             <Paragraph>
               If all of this comes off as mixed-up to you, that&apos;s because
               it is! Quick: do you have a infinitely reconfigurable scheme for

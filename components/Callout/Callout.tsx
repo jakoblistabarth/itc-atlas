@@ -17,7 +17,7 @@ const Callout: FC<Props> = ({
 }) => (
   <div
     className={twMerge(
-      "my-2 max-w-2xl rounded-md bg-itc-green-50 p-3 dark:bg-itc-green-900 dark:text-itc-green-500",
+      "my-2 max-w-2xl rounded-md bg-itc-green-50 p-3 dark:bg-itc-green-900 dark:text-itc-green-500 [&_details]:text-xs",
       className,
     )}
     {...props}

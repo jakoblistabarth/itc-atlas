@@ -1,9 +1,12 @@
-import { FC, PropsWithChildren } from "react";
+import { FC, HTMLAttributes, PropsWithChildren } from "react";
+import { twMerge } from "tailwind-merge";
 
-type Props = PropsWithChildren;
+type Props = HTMLAttributes<HTMLParagraphElement> & PropsWithChildren;
 
-const Paragraph: FC<Props> = ({ children }) => (
-  <p className="mt-2 max-w-2xl text-justify">{children}</p>
+const Paragraph: FC<Props> = ({ children, className, ...props }) => (
+  <p className={twMerge("mt-2 max-w-2xl text-justify", className)} {...props}>
+    {children}
+  </p>
 );
 
 export default Paragraph;

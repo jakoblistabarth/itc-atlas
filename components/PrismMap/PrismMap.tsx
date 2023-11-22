@@ -6,11 +6,12 @@ import {
   MultiPolygon,
   Polygon,
 } from "geojson";
-import { FC, useMemo } from "react";
+import { FC, memo, useMemo } from "react";
 import { ExtrudeGeometryOptions } from "three";
 import { SVGLoader } from "three-stdlib";
 import { feature } from "topojson-client";
 import type { Topology } from "topojson-specification";
+import { FeatureIdentifier } from "../../types/FeatureIdentifier";
 import { MemoizedMark3dGeometry } from "../Mark3dGeometry";
 import { featureCollectionToSVG } from "./PrismMap.helpers";
 
@@ -52,27 +53,15 @@ type Props = {
    */
   featureProperties?: Map<string, GeoJsonProperties>;
   /** What action should be triggered if the user moves the pointer onto one of the PrismMap's festures? */
-  onFeaturePointerEnterHandler?: ({
-    id,
-    label,
-  }: {
-    id: string;
-    label: string;
-  }) => void;
+  onFeaturePointerEnterHandler?: (featureIdentifier: FeatureIdentifier) => void;
   /** What action should be triggered if the user moves the pointer out of one of the PrismMap's festures? */
   onFeaturePointerLeaveHandler?: () => void;
   /** What action should be triggered if the user clicks on one of the PrismMap's festures? */
-  onFeaturePointerDownHandler?: ({
-    id,
-    label,
-  }: {
-    id: string;
-    label: string;
-  }) => void;
+  onFeaturePointerDownHandler?: (featureIdentifier: FeatureIdentifier) => void;
   /** Which features should be selected?
    * An array of feature ids.
    */
-  selectedFeatures?: { id: string; label: string }[];
+  selectedFeatures?: FeatureIdentifier[];
   /** Which options should be used for the extrusion? */
   extrudeGeometryOptions?: ExtrudeGeometryOptions;
 };
@@ -201,3 +190,5 @@ const PrismMap: FC<Props> = ({
 };
 
 export default PrismMap;
+
+export const MemoizedPrismMap = memo(PrismMap);

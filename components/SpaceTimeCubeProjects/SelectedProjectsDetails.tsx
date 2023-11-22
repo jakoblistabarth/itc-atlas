@@ -4,15 +4,16 @@ import LineChart, { LineChartData } from "../LineChart";
 import { HiXMark } from "react-icons/hi2";
 import { ProjectsWithCountries } from "../../lib/data/queries/project/getProjectsWithCountries";
 import { LinePathDatum } from "../LinePath/LinePathBase";
+import { FeatureIdentifier } from "../../types/FeatureIdentifier";
 
 type Props = {
-  selectedCountries: { id: string; label: string }[];
+  selectedCountries: FeatureIdentifier[];
   projectsByYearCountry: {
     year: string;
     countries: InternMap<string, number>;
   }[];
   projects: ProjectsWithCountries;
-  setSelectedCountries: (features: { id: string; label: string }[]) => void;
+  setSelectedCountries: (features: FeatureIdentifier[]) => void;
 };
 
 const SelectedProjectDetails: FC<Props> = ({
@@ -26,7 +27,7 @@ const SelectedProjectDetails: FC<Props> = ({
       .filter((year) => year.countries.has(id))
       .reduce(
         (
-          acc: { id: string; label: string; data: LinePathDatum[] },
+          acc: FeatureIdentifier & { data: LinePathDatum[] },
           { year, countries },
         ) => ({
           ...acc,

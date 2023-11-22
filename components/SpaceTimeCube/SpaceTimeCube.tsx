@@ -1,14 +1,15 @@
 import { Text3D } from "@react-three/drei";
 import { ScaleTime, max, scaleSqrt } from "d3";
 import { geoBertin1953 } from "d3-geo-projection";
-import React, { FC, memo, useMemo } from "react";
+import React, { FC, useMemo } from "react";
 import { MeshStandardMaterial } from "three";
 import type { Topology } from "topojson-specification";
 import longitudeLatitudeTimeToXYZ from "../../lib/helpers/longitudeLatitudeTimeToXYZ";
 import { fDateYear } from "../../lib/utilities/formaters";
+import { FeatureIdentifier } from "../../types/FeatureIdentifier";
 import { SpaceTimeCubeEvent } from "../../types/SpaceTimeCubeEvent";
 import PlaneOutline from "../PlaneOutline";
-import PrismMap from "../PrismMap";
+import { MemoizedPrismMap } from "../PrismMap";
 import { MemoizedSpaceTimeCubeEvents } from "./SpaceTimeCubeEvents";
 
 type Props = React.PropsWithChildren<{
@@ -18,10 +19,10 @@ type Props = React.PropsWithChildren<{
   side?: number;
   height?: number;
   timeScale: ScaleTime<number, number>;
-  onPointerDownHandler?: (featureId: { id: string; label: string }) => void;
-  onPointerEnterHandler?: (featureId: { id: string; label: string }) => void;
+  onPointerDownHandler?: (featureIdentifier: FeatureIdentifier) => void;
+  onPointerEnterHandler?: (featureIdentifier: FeatureIdentifier) => void;
   onPointerLeaveHandler?: () => void;
-  selectedFeatures: { id: string; label: string }[];
+  selectedFeatures: FeatureIdentifier[];
   selectedYear?: Date;
 }>;
 
@@ -191,5 +192,3 @@ const SpaceTimeCube: FC<Props> = ({
 };
 
 export default SpaceTimeCube;
-
-const MemoizedPrismMap = memo(PrismMap);

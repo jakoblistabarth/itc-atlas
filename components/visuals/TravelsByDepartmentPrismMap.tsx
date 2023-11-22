@@ -8,13 +8,14 @@ import { Canvas } from "@react-three/fiber";
 import { scaleLinear, scaleQuantile, schemeBlues } from "d3";
 import { GeoProjection } from "d3-geo";
 import { GeoJsonProperties } from "geojson";
-import { FC, memo, useCallback, useMemo, useState } from "react";
+import { FC, useCallback, useMemo, useState } from "react";
 import { twMerge } from "tailwind-merge";
 import { ExtrudeGeometryOptions } from "three";
 import type { Topology } from "topojson-specification";
 import { BtorsGroupedByCountryByDepartment } from "../../lib/data/queries/btors/getBtorsGroupedByCountryByDepartment";
+import { FeatureIdentifier } from "../../types/FeatureIdentifier";
 import KPI from "../KPI";
-import PrismMap from "../PrismMap";
+import { MemoizedPrismMap } from "../PrismMap";
 import SoftLight from "../SoftLight";
 import Tooltip from "../Tooltip";
 import TooltipContent from "../Tooltip/TooltipContent";
@@ -31,11 +32,6 @@ type Props = {
   departments: Department[];
 };
 
-type HoveredFeature = {
-  id: string;
-  label: string;
-};
-
 const TravelsByDepartmentPrismMap: FC<Props> = ({
   btorsByCountryByDepartment,
   topology,
@@ -49,7 +45,7 @@ const TravelsByDepartmentPrismMap: FC<Props> = ({
   const [activeDepartment, setActiveDepartment] = useState<string>(
     departments[0].id,
   );
-  const [hoverInfo, setHoverInfo] = useState<HoveredFeature | undefined>(
+  const [hoverInfo, setHoverInfo] = useState<FeatureIdentifier | undefined>(
     undefined,
   );
   const featureProperties = useMemo(
@@ -75,7 +71,7 @@ const TravelsByDepartmentPrismMap: FC<Props> = ({
     [],
   );
   const onPointerEnterHandler = useCallback(
-    (d: HoveredFeature) => setHoverInfo(d),
+    (d: FeatureIdentifier) => setHoverInfo(d),
     [],
   );
   const onPointerLeaveHandler = useCallback(() => setHoverInfo(undefined), []);
@@ -158,5 +154,3 @@ const TravelsByDepartmentPrismMap: FC<Props> = ({
 };
 
 export default TravelsByDepartmentPrismMap;
-
-const MemoizedPrismMap = memo(PrismMap);
