@@ -8,7 +8,7 @@ const Mark3dSphere: FC<{
   pos: Vector3;
   radius: number;
   data: GeoJsonProperties;
-  onPointerEnterHandler: (airport: GeoJsonProperties) => void;
+  onPointerEnterHandler?: (airport: GeoJsonProperties) => void;
   onPointerLeaveHandler?: () => void;
 }> = ({ pos, radius, data, onPointerEnterHandler, onPointerLeaveHandler }) => {
   const [hover, setHover] = useState(false);
@@ -25,7 +25,7 @@ const Mark3dSphere: FC<{
       onPointerEnter={(e) => {
         e.stopPropagation();
         setHover(true);
-        onPointerEnterHandler(data);
+        onPointerEnterHandler && onPointerEnterHandler(data);
       }}
       onPointerLeave={() => {
         setHover(false);
