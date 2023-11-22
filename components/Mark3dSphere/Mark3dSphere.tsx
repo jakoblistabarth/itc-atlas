@@ -2,6 +2,7 @@ import { FC, useState } from "react";
 import { Vector3 } from "three";
 import { useSpring, animated, config } from "@react-spring/three";
 import { GeoJsonProperties } from "geojson";
+import { useCursor } from "@react-three/drei";
 
 const Mark3dSphere: FC<{
   pos: Vector3;
@@ -11,6 +12,7 @@ const Mark3dSphere: FC<{
   onPointerLeaveHandler?: () => void;
 }> = ({ pos, radius, data, onPointerEnterHandler, onPointerLeaveHandler }) => {
   const [hover, setHover] = useState(false);
+  useCursor(hover);
 
   const { scale } = useSpring({
     scale: hover ? 2 : 1,
@@ -20,7 +22,8 @@ const Mark3dSphere: FC<{
   return (
     <animated.mesh
       scale={scale}
-      onPointerEnter={() => {
+      onPointerEnter={(e) => {
+        e.stopPropagation();
         setHover(true);
         onPointerEnterHandler(data);
       }}

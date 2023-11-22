@@ -5,6 +5,7 @@ import Mark3dSphere from "../Mark3dSphere";
 import { getFlowCurve3D } from "./Mark3dFlow.helpers";
 import { scaleLinear } from "d3";
 import type { GeoJsonProperties } from "geojson";
+import { useCursor } from "@react-three/drei";
 
 type Point = {
   position: Position;
@@ -29,6 +30,7 @@ const Mark3dFlow: FC<{
   onPointerLeaveHandler,
 }) => {
   const [hover, setHover] = useState(false);
+  useCursor(hover);
 
   const od = [origin.position, destination.position].map((pos) =>
     longitudeLatitudeToXYZ(pos[0], pos[1], 1),
@@ -58,7 +60,8 @@ const Mark3dFlow: FC<{
         />
       ))}
       <mesh
-        onPointerEnter={() => {
+        onPointerEnter={(e) => {
+          e.stopPropagation();
           setHover(true);
           onPointerEnterHandler(data);
         }}
