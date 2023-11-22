@@ -42,8 +42,11 @@ type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
   args: {
-    origin: [-118.2437, 34.0522],
-    destination: [-70.6693, -33.4489],
+    origin: { position: [-118.2437, 34.0522], airport: "Los Angeles" },
+    destination: {
+      position: [-70.6693, -33.4489],
+      airport: "Santiago de Chile",
+    },
     data: {
       origin: "Los Angeles",
       destination: "Santiago de Chile",
@@ -53,8 +56,8 @@ export const Default: Story = {
 
 export const LongFlow: Story = {
   args: {
-    origin: [0, 90],
-    destination: [0, -90],
+    origin: { position: [0, 90], airport: "North Pole" },
+    destination: { position: [0, -90], airport: "South Pole" },
     arcHeight: 0.5,
     data: {
       origin: "North Pole",
