@@ -12,8 +12,6 @@ import type { OdMatrix } from "../../types/OdMatrix";
 import Container from "../../components/Container";
 import type { GeoJsonProperties } from "geojson";
 import Tooltip from "../../components/Tooltip";
-import { TooltipTrigger } from "../../components/Tooltip/TooltipTrigger";
-import TooltipContent from "../../components/Tooltip/TooltipContent";
 import { HiArrowRight } from "react-icons/hi2";
 import KPI from "../../components/KPI";
 
@@ -27,7 +25,6 @@ const Flights: NextPage<Props> = ({ odMatrix }) => {
   const [hoverInfo, setHoverInfo] = useState<GeoJsonProperties | undefined>(
     undefined,
   );
-  console.log({ hoverInfo });
   const onPointerEnterHandler = useCallback((properties: GeoJsonProperties) => {
     setHoverInfo(properties);
   }, []);
@@ -40,8 +37,8 @@ const Flights: NextPage<Props> = ({ odMatrix }) => {
       <Container>
         <main>
           <div style={{ width: "100%", height: "700px" }}>
-            <Tooltip open={!!hoverInfo} followCursor placement="top-start">
-              <TooltipTrigger asChild>
+            <Tooltip.Root open={!!hoverInfo} followCursor placement="top-start">
+              <Tooltip.Trigger asChild>
                 <Canvas
                   camera={{ position: [0, 0, 5], fov: 30 }}
                   shadows
@@ -60,8 +57,8 @@ const Flights: NextPage<Props> = ({ odMatrix }) => {
                   />
                   <OrbitControls enableZoom={false} enablePan={false} />
                 </Canvas>
-              </TooltipTrigger>
-              <TooltipContent>
+              </Tooltip.Trigger>
+              <Tooltip.Content>
                 {hoverInfo &&
                   (hoverInfo.name ? (
                     <p>
@@ -82,8 +79,8 @@ const Flights: NextPage<Props> = ({ odMatrix }) => {
                       />
                     </div>
                   ))}
-              </TooltipContent>
-            </Tooltip>
+              </Tooltip.Content>
+            </Tooltip.Root>
           </div>
         </main>
       </Container>
