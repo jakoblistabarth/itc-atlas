@@ -12,7 +12,7 @@ const loadNaturalEarthData = () => {
 
   const baseUrl =
     "https://www.naturalearthdata.com/http//www.naturalearthdata.com/download/";
-  const scales: NeScales[] = ["10m", "110m"]; // available 110m, 50m, 10m
+  const scales: NeScales[] = ["110m", "50m", "10m"];
   const features: { [K in fCategory]: string[] } = {
     physical: ["rivers_lake_centerlines", "lakes"],
     cultural: ["admin_0_countries", "populated_places"],
@@ -54,8 +54,8 @@ const loadNaturalEarthData = () => {
         (async () => {
           await getFile(url, () =>
             mapShaper.runCommands(
-              `-i ${shpPath} name=ne_${feature} -o format=topojson ${jsonPath}`
-            )
+              `-i ${shpPath} name=ne_${feature} -o format=topojson ${jsonPath}`,
+            ),
           );
         })();
       }

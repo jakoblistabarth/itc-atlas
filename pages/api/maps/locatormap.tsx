@@ -68,7 +68,7 @@ export default async function handler(
   const highlights = Array.isArray(highlightCountries)
     ? highlightCountries
     : highlightCountries.split(",");
-  const neCountriesTopoJson = getCountries();
+  const neCountriesTopoJson = getCountries("50m");
   const svg = ReactDOMServer.renderToStaticMarkup(
     <LocatorMap
       neCountriesTopoJson={neCountriesTopoJson}
