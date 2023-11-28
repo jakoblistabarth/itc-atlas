@@ -42,7 +42,7 @@ const LocatorMap: FC<Props> = ({
 
   const countries = topojson.feature(
     neCountriesTopoJson,
-    neCountriesTopoJson.objects.ne_admin_0_countries
+    neCountriesTopoJson.objects.ne_admin_0_countries,
   );
   const highlightCountries: FeatureCollection = {
     type: "FeatureCollection",
@@ -66,6 +66,24 @@ const LocatorMap: FC<Props> = ({
       bounds={{ width: dimension.width, height: dimension.height }}
       projection={projection}
     >
+      <defs>
+        <circle
+          id={outlineId}
+          cx={width / 2}
+          cy={(width + shadowRadius) / 2}
+          r={width / 2}
+        />
+        <mask id={shadowMaskId}>
+          <use xlinkHref={`#${outlineId}`} fill="white" />
+          <use
+            transform={`translate(${dimension.width * -0.35}, ${
+              dimension.height * -0.5
+            }) scale(1.4)`}
+            xlinkHref={`#${outlineId}`}
+            fill="black"
+          />
+        </mask>
+      </defs>
       <ellipse
         cx={dimension.width / 2}
         cy={dimension.height - shadowRadius}
@@ -83,19 +101,6 @@ const LocatorMap: FC<Props> = ({
           />
         ))}
       </g>
-      <defs>
-        <circle id={outlineId} cx={width / 2} cy={width / 2} r={width / 2} />
-        <mask id={shadowMaskId}>
-          <use xlinkHref={`#${outlineId}`} fill="white" />
-          <use
-            transform={`translate(${dimension.width * -0.35}, ${
-              dimension.height * -0.5
-            }) scale(1.4)`}
-            xlinkHref={`#${outlineId}`}
-            fill="black"
-          />
-        </mask>
-      </defs>
       <g mask={`url(#${shadowMaskId})`}>
         <use xlinkHref={`#${outlineId}`} fill={"black"} fillOpacity={0.05} />
       </g>
