@@ -69,7 +69,7 @@ const ProjectExplorer3D: NextPage<Props> = ({
                         number={hoverInfo._count.projects}
                         unit={"projects"}
                       />
-                      {hoverInfo.isoAlpha3}
+                      {hoverInfo.name}
                     </div>
                   ) : (
                     <div>
@@ -130,10 +130,13 @@ const Marker3Ds: FC<{
     <>
       {world.features.map((country, i) => {
         const centroid = geoCentroid(country);
-        const countryInfo = countryWithProjectCount.find(
-          (d) => d.isoAlpha3 == country.properties.ADM0_A3,
-        );
-        const radius = radiusScale(countryInfo?._count.projects ?? 0.01);
+        const countryInfo = {
+          ...countryWithProjectCount.find(
+            (d) => d.isoAlpha3 == country.properties.ADM0_A3,
+          ),
+          name: country.properties.NAME_EN,
+        };
+        const radius = radiusScale(countryInfo?._count?.projects ?? 0.01);
         const pos = longitudeLatitudeToXYZ(
           centroid[0],
           centroid[1],
