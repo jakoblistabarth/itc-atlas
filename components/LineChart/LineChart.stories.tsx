@@ -62,7 +62,7 @@ export const LineChartWithXOffset: Story = {
 export const LineChartWithXYOffset: Story = {
   decorators: [
     (Story) => (
-      <div className="flex h-[500px] w-[600px] flex-col place-content-end">
+      <div className="flex h-[500px] w-[600px] flex-col place-content-end items-end">
         <div className="h-[200px] w-[200px]">
           <Story />
         </div>

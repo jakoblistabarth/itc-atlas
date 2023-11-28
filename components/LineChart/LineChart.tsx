@@ -1,16 +1,14 @@
-import { Group } from "@visx/group";
 import { ScaleOrdinal, extent, format, max, scaleLinear } from "d3";
 import { FC, MouseEvent, useCallback, useMemo, useState } from "react";
-import { MdArrowUpward, MdInfoOutline } from "react-icons/md";
+import { MdArrowUpward } from "react-icons/md";
 import useMeasure from "react-use-measure";
-import { twMerge } from "tailwind-merge";
 import AxisX from "../AxisX";
 import AxisY from "../AxisY";
-import { Card } from "../Card";
 import { getFilledSeries } from "../LinePath/LinePath.helpers";
 import { LinePathDatum } from "../LinePath/LinePathBase";
 import LinePath from "../LinePath/LinePathSimple";
 import RuleY from "../RuleY";
+import Tooltip from "../Tooltip";
 
 export type LineChartData = {
   id: string;
@@ -43,18 +41,14 @@ const LineChart: FC<Props> = ({
   const [chartRef, { width, height, x: svgX }] = useMeasure();
 
   const [cursorX, setCursorX] = useState<number | undefined>(undefined);
-  const [left, setLeft] = useState<number | undefined>(undefined);
-  const [top, setTop] = useState<number | undefined>(undefined);
 
   const x = cursorX && Math.round(cursorX - svgX);
 
   const onMouseMove = useCallback(
     (event: MouseEvent<SVGSVGElement>) => {
       setCursorX(event.pageX);
-      setLeft(event.pageX + 15);
-      setTop(event.pageY - 15);
     },
-    [setLeft, setTop, setCursorX],
+    [setCursorX],
   );
 
   const onMouseLeave = useCallback(() => {
@@ -83,7 +77,8 @@ const LineChart: FC<Props> = ({
     const maxY = max(data.map(({ data }) => data.map((d) => d.y)).flat());
     const xScale = scaleLinear()
       .domain([xDomain?.[0] ?? minX ?? 0, xDomain?.[1] ?? maxX ?? 1])
-      .range([margin.left, width - margin.right]);
+      .range([margin.left, width - margin.right])
+      .clamp(true);
     const yScale = scaleLinear()
       .domain([yDomain?.[0] ?? 0, yDomain?.[1] ?? maxY ?? 1])
       .range([height - margin.bottom, margin.top]);
@@ -102,25 +97,17 @@ const LineChart: FC<Props> = ({
     return { dataFilled, xScale, yScale, xScaleReverse };
   }, [data, margin, height, width, xDomain, yDomain]);
 
-  const hasNoData = useMemo(
-    () => activeRecordId && !data.find((d) => d.id === activeRecordId),
-    [activeRecordId, data],
-  );
-
   return (
-    <>
-      <svg
-        ref={chartRef}
-        width={"100%"}
-        height={"100%"}
-        viewBox={`0 0 ${width} ${height}`}
-        onMouseMove={onMouseMove}
-        onMouseEnter={onMouseEnter}
-        onMouseLeave={onMouseLeave}
-      >
-        <g
-          opacity={hasNoData ? 0.5 : 1}
-          className="transition-opacity duration-500"
+    <Tooltip.Root followCursor placement="top-start" offset={10}>
+      <Tooltip.Trigger asChild>
+        <svg
+          ref={chartRef}
+          width={"100%"}
+          height={"100%"}
+          viewBox={`0 0 ${width} ${height}`}
+          onMouseMove={onMouseMove}
+          onMouseEnter={onMouseEnter}
+          onMouseLeave={onMouseLeave}
         >
           <g>
             <MdArrowUpward size={"10"} />
@@ -136,96 +123,76 @@ const LineChart: FC<Props> = ({
             xScale={xScale}
           />
           <AxisY left={margin.left} yScale={yScale} />
-        </g>
-        <g>
-          {dataFilled.map((d) => {
-            return (
-              <LinePath
-                key={d.id}
-                mouseEnterLeaveHandler={mouseEnterLeaveHandler}
-                xScale={xScale}
-                yScale={yScale}
-                yLabel={"travels"}
-                isSelection={!!activeRecordId}
-                isSelected={activeRecordId === d.id}
-                isFocus={true}
-                data={d.data}
-                color={colorScale(d.colorKey ?? d.id)}
-                identifier={d.id}
-                label={d.label}
-              />
-            );
-          })}
-        </g>
-        {hasNoData && (
-          <Group top={height / 2} left={width / 2}>
-            <MdInfoOutline y={-40} />
-            <text textAnchor="middle">
-              No Travel for <tspan fontWeight={"bold"}>{activeRecordId}</tspan>
-            </text>
-          </Group>
-        )}
-        {cursorX && (
           <g>
-            <line
-              stroke="grey"
-              strokeWidth={0.5}
-              x1={xScale(xScaleReverse(x ?? 0))}
-              x2={xScale(xScaleReverse(x ?? 0))}
-              y1={yScale.range()[0]}
-              y2={yScale.range()[1]}
-              pointerEvents={"none"}
-            />
-            {data.map((record) => {
-              const y =
-                record.data.find((d) => d.x === xScaleReverse(x ?? 0))?.y ?? 0;
+            {dataFilled.map((d) => {
               return (
-                <circle
-                  key={record.id}
-                  cx={xScale(xScaleReverse(x ?? 0))}
-                  cy={yScale(y)}
-                  fill={colorScale(record.colorKey ?? record.id)}
-                  strokeWidth={2}
-                  pointerEvents={"none"}
-                  className="stroke-white drop-shadow-md dark:stroke-itc-green-950"
-                  r={5}
+                <LinePath
+                  key={d.id}
+                  mouseEnterLeaveHandler={mouseEnterLeaveHandler}
+                  xScale={xScale}
+                  yScale={yScale}
+                  yLabel={"travels"}
+                  isSelection={!!activeRecordId}
+                  isSelected={activeRecordId === d.id}
+                  isFocus={true}
+                  data={d.data}
+                  color={colorScale(d.colorKey ?? d.id)}
+                  identifier={d.id}
+                  label={d.label}
                 />
               );
             })}
           </g>
-        )}
-      </svg>
-      {cursorX && (
-        <div className="pointer-events-none absolute" style={{ top, left }}>
-          <Card
-            className={twMerge(
-              x && x > width / 2 && "-left-full -translate-x-full",
-            )}
-          >
-            <Card.Header>
-              {yLabel && <span>{yLabel} in</span>} {xLabel && <>{xLabel} </>}
-              <span className="font-bold">{xScaleReverse(x ?? 0)}</span>
-            </Card.Header>
-            <Card.Body>
-              {data.map(({ label, colorKey, id, data }) => {
-                const value =
-                  data.find((d) => d.x === xScaleReverse(x ?? 0))?.y ?? 0;
+          {cursorX && (
+            <g>
+              <line
+                stroke="grey"
+                strokeWidth={0.5}
+                x1={xScale(xScaleReverse(x ?? 0))}
+                x2={xScale(xScaleReverse(x ?? 0))}
+                y1={yScale.range()[0]}
+                y2={yScale.range()[1]}
+                pointerEvents={"none"}
+              />
+              {data.map((record) => {
+                const y =
+                  record.data.find((d) => d.x === xScaleReverse(x ?? 0))?.y ??
+                  0;
                 return (
-                  <div className="flex items-center gap-2 text-xs" key={id}>
-                    <div
-                      className="h-3 w-3 rounded-full"
-                      style={{ backgroundColor: colorScale(colorKey ?? id) }}
-                    ></div>
-                    <div>{label}</div>
-                    <div className="font-bold">{value}</div>{" "}
-                  </div>
+                  <circle
+                    key={record.id}
+                    cx={xScale(xScaleReverse(x ?? 0))}
+                    cy={yScale(y)}
+                    fill={colorScale(record.colorKey ?? record.id)}
+                    strokeWidth={2}
+                    pointerEvents={"none"}
+                    className="stroke-white drop-shadow-md dark:stroke-itc-green-950"
+                    r={5}
+                  />
                 );
               })}
-            </Card.Body>
-          </Card>
-        </div>
-      )}
-    </>
+            </g>
+          )}
+        </svg>
+      </Tooltip.Trigger>
+      <Tooltip.Content>
+        {yLabel && <span>{yLabel} in</span>} {xLabel && <>{xLabel} </>}
+        <span className="font-bold">{xScaleReverse(x ?? 0)}</span>
+        {data.map(({ label, colorKey, id, data }) => {
+          const value = data.find((d) => d.x === xScaleReverse(x ?? 0))?.y ?? 0;
+          return (
+            <div className="flex items-center gap-2 text-xs" key={id}>
+              <div
+                className="h-3 w-3 rounded-full"
+                style={{ backgroundColor: colorScale(colorKey ?? id) }}
+              ></div>
+              <div>{label}</div>
+              <div className="font-bold">{value}</div>{" "}
+            </div>
+          );
+        })}
+      </Tooltip.Content>
+    </Tooltip.Root>
   );
 };
 

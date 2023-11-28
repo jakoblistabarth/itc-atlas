@@ -126,7 +126,7 @@ const SpaceTimeCubeProjects: FC<Props> = ({
             </Tooltip.Root>
           </Suspense>
         </div>
-        <div className="pointer-events-none z-50 mr-4 mt-4 justify-self-end [grid-area:1/1]">
+        <div className="pointer-events-none z-10 mr-4 mt-4 justify-self-end [grid-area:1/1]">
           <TimelineControl
             minDate={timeScale.domain()[0]}
             maxDate={timeScale.domain()[1]}

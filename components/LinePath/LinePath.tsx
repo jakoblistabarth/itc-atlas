@@ -95,7 +95,7 @@ const LinePath: FC<Props> = ({
                   cursor="pointer"
                   onMouseMove={onMouseMove}
                   onMouseEnter={onMouseEnter}
-                  onMouseLeave={onMouseEnter}
+                  onMouseLeave={onMouseLeave}
                 />
               ))
             ) : (

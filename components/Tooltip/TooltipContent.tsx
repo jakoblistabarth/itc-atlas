@@ -19,7 +19,7 @@ const TooltipContent = forwardRef<
     <FloatingPortal>
       <div
         className={twMerge(
-          "pointer-events-none rounded-sm bg-white p-3 text-xs shadow-lg",
+          "pointer-events-none z-50 rounded-sm bg-white p-3 text-xs shadow-lg",
           raised && "shadow-md",
         )}
         ref={ref}
