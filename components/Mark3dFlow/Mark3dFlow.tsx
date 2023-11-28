@@ -46,19 +46,20 @@ const Mark3dFlow: FC<{
 
   return (
     <>
-      {od.map((pos, idx) => (
-        <Mark3dSphere
-          key={idx}
-          pos={pos}
-          radius={0.005}
-          data={
-            //TODO: add country or other props to airport
-            idx == 0 ? { name: origin.airport } : { name: destination.airport }
-          }
-          onPointerEnterHandler={onPointerEnterHandler}
-          onPointerLeaveHandler={onPointerLeaveHandler}
-        />
-      ))}
+      {od.map((pos, idx) => {
+        //TODO: add country or other props to airport
+        const info =
+          idx == 0 ? { name: origin.airport } : { name: destination.airport };
+        return (
+          <Mark3dSphere
+            key={idx}
+            pos={pos}
+            radius={0.005}
+            onPointerEnterHandler={() => onPointerEnterHandler(info)}
+            onPointerLeaveHandler={onPointerLeaveHandler}
+          />
+        );
+      })}
       <mesh
         onPointerEnter={(e) => {
           e.stopPropagation();

@@ -143,8 +143,11 @@ const Marker3Ds: FC<{
             key={i}
             pos={pos}
             radius={radius}
-            data={countryInfo ?? {}}
-            onPointerEnterHandler={onPointerEnterHandler}
+            onPointerEnterHandler={() =>
+              countryInfo &&
+              onPointerEnterHandler &&
+              onPointerEnterHandler(countryInfo)
+            }
             onPointerLeaveHandler={onPointerLeaveHandler}
           />
         );
