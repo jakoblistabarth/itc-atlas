@@ -2,7 +2,7 @@ import { useState, useMemo } from "react";
 import {
   useFloating,
   autoUpdate,
-  offset,
+  offset as floatingUIoffset,
   flip,
   shift,
   useHover,
@@ -20,6 +20,7 @@ export function useTooltip({
   open: controlledOpen,
   onOpenChange: setControlledOpen,
   followCursor = false,
+  offset = 5,
 }: TooltipOptions = {}) {
   const [uncontrolledOpen, setUncontrolledOpen] = useState(initialOpen);
 
@@ -32,7 +33,7 @@ export function useTooltip({
     onOpenChange: setOpen,
     whileElementsMounted: autoUpdate,
     middleware: [
-      offset(5),
+      floatingUIoffset({ mainAxis: offset, crossAxis: offset }),
       flip({
         fallbackAxisSideDirection: "start",
       }),
@@ -52,10 +53,15 @@ export function useTooltip({
   const dismiss = useDismiss(context);
   const role = useRole(context, { role: "tooltip" });
 
-  const clientPoint = useClientPoint(context);
-  const option = followCursor ? clientPoint : undefined;
+  const clientPoint = useClientPoint(context, { enabled: followCursor });
 
-  const interactions = useInteractions([hover, focus, dismiss, role, option]);
+  const interactions = useInteractions([
+    hover,
+    focus,
+    dismiss,
+    role,
+    clientPoint,
+  ]);
 
   return useMemo(
     () => ({

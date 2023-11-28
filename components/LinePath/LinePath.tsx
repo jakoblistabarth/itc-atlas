@@ -43,8 +43,6 @@ const LinePath: FC<Props> = ({
 }) => {
   const [cursorX, setCursorX] = useState<number | undefined>(undefined);
   const [lineX, setLineX] = useState<number | undefined>(undefined);
-  const [left, setLeft] = useState<number | undefined>(undefined);
-  const [top, setTop] = useState<number | undefined>(undefined);
 
   const pathRef = useRef<SVGPathElement>(null);
 
@@ -56,15 +54,13 @@ const LinePath: FC<Props> = ({
   useEffect(() => {
     const bb = pathRef.current?.getBoundingClientRect();
     bb && setLineX(bb.x);
-  }, [xScale, pathRef]);
+  }, [pathRef]);
 
   const onMouseMove = useCallback(
     (event: MouseEvent<SVGPathElement>) => {
       setCursorX(event.pageX);
-      setLeft(event.pageX + 15);
-      setTop(event.pageY - 15);
     },
-    [setLeft, setTop, setCursorX],
+    [setCursorX],
   );
 
   const onMouseLeave = useCallback(
@@ -76,73 +72,49 @@ const LinePath: FC<Props> = ({
     [mouseEnterLeaveHandler, identifier],
   );
 
-  const x = cursorX && lineX && Math.round(cursorX - lineX - 4);
+  const x = cursorX && lineX && Math.round(cursorX - lineX);
 
   return (
-    <Tooltip.Root>
-      <Tooltip.Trigger asChild>
-        <g ref={pathRef}>
-          {Array.isArray(color) ? (
-            range(color.length).map((i) => (
+    <>
+      <Tooltip.Root followCursor placement="top-start" offset={20}>
+        <Tooltip.Trigger asChild>
+          <g ref={pathRef}>
+            {Array.isArray(color) ? (
+              range(color.length).map((i) => (
+                <LinePathBase
+                  key={i}
+                  data={data.sort((a, b) => ascending(a.x, b.x))}
+                  xScale={xScale}
+                  yScale={yScale}
+                  stroke={color[i]}
+                  strokeDasharray={`${5} ${5 * (color.length - 1)}`}
+                  strokeDashoffset={i * -5}
+                  isFocus={isFocus}
+                  isSelected={isSelected}
+                  isSelection={isSelection}
+                  cursor="pointer"
+                  onMouseMove={onMouseMove}
+                  onMouseEnter={onMouseEnter}
+                  onMouseLeave={onMouseEnter}
+                />
+              ))
+            ) : (
               <LinePathBase
-                key={i}
                 data={data.sort((a, b) => ascending(a.x, b.x))}
                 xScale={xScale}
                 yScale={yScale}
-                stroke={color[i]}
-                strokeDasharray={`${5} ${5 * (color.length - 1)}`}
-                strokeDashoffset={i * -5}
+                stroke={color}
                 isFocus={isFocus}
                 isSelected={isSelected}
                 isSelection={isSelection}
-                cursor="pointer"
                 onMouseMove={onMouseMove}
                 onMouseEnter={onMouseEnter}
-                onMouseLeave={onMouseEnter}
+                onMouseLeave={onMouseLeave}
               />
-            ))
-          ) : (
-            <LinePathBase
-              data={data.sort((a, b) => ascending(a.x, b.x))}
-              xScale={xScale}
-              yScale={yScale}
-              stroke={color}
-              isFocus={isFocus}
-              isSelected={isSelected}
-              isSelection={isSelection}
-              onMouseMove={onMouseMove}
-              onMouseEnter={onMouseEnter}
-              onMouseLeave={onMouseLeave}
-            />
-          )}
-          {isSelected && (
-            <>
-              <line
-                stroke="grey"
-                strokeWidth={0.5}
-                x1={x}
-                x2={x}
-                y1={yScale.range()[0]}
-                y2={yScale.range()[1]}
-                pointerEvents={"none"}
-              />
-              <circle
-                cx={xScale(xScaleReverse(x ?? 0))}
-                cy={yScale(
-                  data.find((d) => d.x === xScaleReverse(x ?? 0))?.y ?? 0,
-                )}
-                fill="transparent"
-                strokeWidth={1}
-                pointerEvents={"none"}
-                stroke={Array.isArray(color) ? color[0] : color}
-                r={4}
-              />
-            </>
-          )}
-        </g>
-      </Tooltip.Trigger>
-      <Tooltip.Content left={left} top={top}>
-        <div>
+            )}
+          </g>
+        </Tooltip.Trigger>
+        <Tooltip.Content>
           <strong>{label ?? identifier}</strong>
           <br />
           {xLabel && <>{xLabel}: </>}
@@ -152,9 +124,31 @@ const LinePath: FC<Props> = ({
             number={data.find((d) => d.x === xScaleReverse(x ?? 0))?.y ?? 0}
           />
           {yLabel && <div>{yLabel}</div>}
-        </div>
-      </Tooltip.Content>
-    </Tooltip.Root>
+        </Tooltip.Content>
+      </Tooltip.Root>
+      {isSelected && (
+        <>
+          <line
+            stroke="grey"
+            strokeWidth={0.5}
+            x1={x}
+            x2={x}
+            y1={yScale.range()[0]}
+            y2={yScale.range()[1]}
+            pointerEvents={"none"}
+          />
+          <circle
+            cx={xScale(xScaleReverse(x ?? 0))}
+            cy={yScale(data.find((d) => d.x === xScaleReverse(x ?? 0))?.y ?? 0)}
+            fill="transparent"
+            strokeWidth={1}
+            pointerEvents={"none"}
+            stroke={Array.isArray(color) ? color[0] : color}
+            r={4}
+          />
+        </>
+      )}
+    </>
   );
 };
 

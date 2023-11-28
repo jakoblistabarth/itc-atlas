@@ -137,51 +137,61 @@ const BtorsAndCabinets: FC<Props> = ({
           colorScale={colorScale}
         />
         <MapLayerBase countries={neCountries} />
-        {countriesWithCategories.map((d) => {
-          const isActiveCountry = activeCountry === d.properties?.isoAlpha3;
-          return (
-            <Tooltip.Root key={d.properties?.id}>
-              <Tooltip.Trigger asChild>
-                <g>
-                  <MarkGeometry
-                    feature={d}
-                    stroke={isActiveCountry ? "black" : "white"}
-                    strokeLinejoin="round"
-                    cursor="pointer"
-                    fill={
-                      d.properties?.categories
-                        ? `url(#${getCategoryKey(d.properties?.categories)})`
-                        : "transparent"
-                    }
-                    onMouseOver={() =>
-                      setActiveCountry(d.properties?.isoAlpha3)
-                    }
-                    onMouseLeave={() => setActiveCountry(undefined)}
-                    className="transition-opacity duration-500"
-                    opacity={
-                      !isActiveCountry && !d.properties?.categories ? 0.05 : 1
-                    }
-                  />
-                </g>
-              </Tooltip.Trigger>
-              <Tooltip.Content>
-                <h4>{d.properties?.countryNameEN}</h4>
-                {d.properties?.categories &&
-                  d.properties?.categories.map(
-                    (category: string, i: number) => (
-                      <svg key={i} width={10} height={10}>
-                        <circle
-                          transform="translate(5,5)"
-                          r={5}
-                          fill={colorScale(category)}
-                        />
-                      </svg>
-                    ),
-                  )}
-              </Tooltip.Content>
-            </Tooltip.Root>
-          );
-        })}
+        <Tooltip.Root followCursor placement="top-start">
+          <Tooltip.Trigger asChild>
+            <g>
+              {countriesWithCategories.map((d) => {
+                const isActiveCountry =
+                  activeCountry === d.properties?.isoAlpha3;
+                return (
+                  <g key={d.properties?.id}>
+                    <MarkGeometry
+                      feature={d}
+                      stroke={isActiveCountry ? "black" : "white"}
+                      strokeLinejoin="round"
+                      cursor="pointer"
+                      fill={
+                        d.properties?.categories
+                          ? `url(#${getCategoryKey(d.properties?.categories)})`
+                          : "transparent"
+                      }
+                      onMouseOver={() =>
+                        setActiveCountry(d.properties?.isoAlpha3)
+                      }
+                      onMouseLeave={() => setActiveCountry(undefined)}
+                      className="transition-opacity duration-500"
+                      opacity={
+                        !isActiveCountry && !d.properties?.categories ? 0.05 : 1
+                      }
+                    />
+                  </g>
+                );
+              })}
+            </g>
+          </Tooltip.Trigger>
+          <Tooltip.Content>
+            <h4>
+              {
+                countries.features?.find(
+                  (d) => d.properties.ADM0_A3 === activeCountry,
+                )?.properties.NAME_EN
+              }
+            </h4>
+            <div className="mt-2 flex gap-1">
+              {countriesWithCategories
+                ?.find((d) => d.properties?.isoAlpha3 === activeCountry)
+                ?.properties?.categories?.map((category: string, i: number) => (
+                  <svg key={i} width={10} height={10}>
+                    <circle
+                      transform="translate(5,5)"
+                      r={5}
+                      fill={colorScale(category)}
+                    />
+                  </svg>
+                ))}
+            </div>
+          </Tooltip.Content>
+        </Tooltip.Root>
       </MapLayoutFluid>
       <BtorsByYear
         activeCabinet={dutchCabinets.find((d) => d.name === activeCabinet)}

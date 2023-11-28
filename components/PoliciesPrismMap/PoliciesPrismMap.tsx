@@ -70,7 +70,7 @@ const PoliciesPrismMap: FC<Props> = ({ topology, bhosCountries }) => {
 
   return (
     <>
-      <Tooltip.Root open={!!hoveredFeature} placement="top-start">
+      <Tooltip.Root followCursor open={!!hoveredFeature} placement="top-start">
         <Tooltip.Trigger asChild>
           <Canvas
             shadows

@@ -11,6 +11,7 @@ export interface TooltipOptions {
   placement?: Placement;
   open?: boolean;
   onOpenChange?: (open: boolean) => void;
+  offset?: number;
   followCursor?: boolean;
 }
 
