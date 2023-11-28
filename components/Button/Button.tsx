@@ -1,14 +1,18 @@
 import React, { ComponentPropsWithoutRef, forwardRef } from "react";
+import { twMerge } from "tailwind-merge";
 
 type Props = React.PropsWithChildren & ComponentPropsWithoutRef<"button">;
 
 const Button = forwardRef<HTMLButtonElement, Props>(function Button(
-  { children, ...rest },
+  { children, className, ...rest },
   ref,
 ) {
   return (
     <button
-      className="rounded-sm bg-itc-green px-2 py-1 text-white"
+      className={twMerge(
+        "rounded-sm bg-itc-green px-2 py-1 text-white",
+        className,
+      )}
       ref={ref ?? undefined}
       {...rest}
     >

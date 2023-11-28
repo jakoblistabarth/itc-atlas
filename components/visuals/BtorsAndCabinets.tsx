@@ -19,6 +19,7 @@ import Tooltip from "../Tooltip/";
 import BhosGradientDefs from "./BhosGradientsDefs";
 import BtorsByYear from "./charts/BtorsByYear";
 import useBhosCategories from "./useBhosCategories";
+import Button from "../Button";
 
 type Props = {
   neCountries: NeCountriesTopoJson;
@@ -102,26 +103,16 @@ const BtorsAndCabinets: FC<Props> = ({
       </Callout>
       <div className="pn-2 scroll mb-2 mt-2 flex flex-nowrap gap-2 overflow-x-auto whitespace-nowrap">
         {filteredCabinets.map((d) => (
-          <button
+          <Button
             key={d.name}
             className={twMerge(
-              "border-1 min-w-[100px] border-solid",
-              activeCabinet === d.name
-                ? "border-itc-green"
-                : "border-transparent",
+              "min-w-[100px]",
+              activeCabinet === d.name ? "bg-itc-green" : "bg-itc-green-400",
             )}
-            // sx={{
-            //   "&:firstChild": { marginLeft: "auto" },
-            //   "&:lastChild": { marginRight: "auto" },
-            //   minWidth: 100,
-            //   borderWidth: 1,
-            //   borderColor: activeCabinet === d.name ? "primary" : "transparent",
-            //   borderStyle: "solid",
-            // }}
             onClick={() => setActiveCabinet(d.name)}
           >
             {d.name}
-          </button>
+          </Button>
         ))}
       </div>
       <svg width={"100%"} height={"50px"}>
