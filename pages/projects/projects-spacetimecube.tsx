@@ -36,7 +36,7 @@ export const getStaticProps: GetStaticProps<Props> = async () => {
   const [projects, countries, neCountriesTopoJson] = await Promise.all([
     getProjectsWithCountries(),
     getCountryCodes(),
-    getCountries(),
+    getCountries("50m"),
   ]);
 
   return {
