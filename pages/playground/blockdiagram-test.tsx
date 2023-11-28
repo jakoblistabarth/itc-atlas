@@ -23,15 +23,15 @@ const Page: NextPage = () => {
           <CanvasStage className="h-[500px]">
             <Canvas shadows>
               {aut.data && (
-                <>
-                  <BlockDiagram
-                    side={side}
-                    ratio={aut.data.dimensions.ratio}
-                    yScale={0.00005}
-                    zOffset={0.1}
-                    // textureFileName="grossglockner.png"
-                    data={Float32Array.from(aut.data.elevation)}
-                  />
+                <BlockDiagram
+                  side={side}
+                  ratio={aut.data.dimensions.ratio}
+                  yScale={0.00005}
+                  zOffset={0.1}
+                  // textureFileName="grossglockner.png"
+                  data={Float32Array.from(aut.data.elevation)}
+                  bBox={aut.data.bBox}
+                >
                   {[
                     [46.99, 13.01],
                     [47.09, 12.8],
@@ -42,14 +42,9 @@ const Page: NextPage = () => {
                       textureFileName="aus.jpg"
                       longitude={lng}
                       latitude={lat}
-                      yScale={0.00005}
-                      zOffset={0.1}
-                      side={side}
-                      ratio={aut.data.dimensions.ratio}
-                      bBox={aut.data.bBox}
                     />
                   ))}
-                </>
+                </BlockDiagram>
               )}
               <Sphere
                 args={[0.25]}

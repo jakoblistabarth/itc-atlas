@@ -1,11 +1,13 @@
-import { FC } from "react";
+import { BBox } from "geojson";
+import { FC, PropsWithChildren } from "react";
 import { BufferAttribute, PlaneGeometry } from "three";
 import sliceIntoChunks from "../../lib/utilities/sliceIntoChunks";
+import { BlockDiagramContext } from "./BlockDiagramContext";
 import BlockDiagramSide from "./BlockDiagramSide";
 import HyposmetricTintMaterial from "./HypsometricTintMaterial";
 import TextureMaterial from "./TextureMaterial";
 
-type Props = {
+type Props = PropsWithChildren<{
   textureFileName?: string;
   sideColor?: string;
   side: number;
@@ -13,7 +15,16 @@ type Props = {
   yScale: number;
   data: Float32Array;
   zOffset?: number;
-};
+  /**
+   * Bounding Box according to geojson Specification
+   * See: {@link https://datatracker.ietf.org/doc/html/rfc7946#section-5}
+   * The value of the bbox member MUST be an array of
+   * length 2*n where n is the number of dimensions represented in the
+   * contained geometries, with all axes of the most southwesterly point
+   * followed by all axes of the more northeasterly point.
+   */
+  bBox: BBox;
+}>;
 
 const BlockDiagram: FC<Props> = ({
   textureFileName,
@@ -22,7 +33,9 @@ const BlockDiagram: FC<Props> = ({
   ratio,
   data,
   yScale,
-  zOffset,
+  zOffset = 0.25,
+  bBox,
+  children,
 }) => {
   const vertices = Math.sqrt(data.length);
   const segments = vertices - 1;
@@ -62,7 +75,9 @@ const BlockDiagram: FC<Props> = ({
   };
 
   return (
-    <>
+    <BlockDiagramContext.Provider
+      value={{ yScale, zOffset, side, ratio, bBox }}
+    >
       <mesh
         rotation-x={-Math.PI / 2}
         geometry={topGeometry}
@@ -115,7 +130,8 @@ const BlockDiagram: FC<Props> = ({
         rotation-y={2 * Math.PI}
         color={sideColor}
       />
-    </>
+      {children}
+    </BlockDiagramContext.Provider>
   );
 };
 export default BlockDiagram;

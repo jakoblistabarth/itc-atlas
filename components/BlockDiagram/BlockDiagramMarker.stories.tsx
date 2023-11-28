@@ -21,11 +21,6 @@ const meta = {
     textureFileName: "sur.jpg",
     latitude: 5,
     longitude: -56,
-    yScale: 0.01,
-    zOffset: 0,
-    bBox: [0, 0, 0, 0],
-    ratio: 1,
-    side: 1,
   },
   decorators: [
     (Story) => (

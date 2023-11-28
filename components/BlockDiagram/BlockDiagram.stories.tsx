@@ -1,5 +1,6 @@
-import { Meta, StoryObj } from "@storybook/react";
 import { Canvas } from "@react-three/fiber";
+import { Meta, StoryObj } from "@storybook/react";
+import { BBox } from "geojson";
 
 import BlockDiagram from ".";
 import * as grossglockner from "../../data/topographic/elevation-Grossglockner.json";
@@ -14,7 +15,6 @@ const meta = {
     textureFileName: "uv-grid.png",
     side: 1,
     ratio: 1,
-    zOffset: 0.1,
   },
   argTypes: {
     data: {
@@ -44,6 +44,7 @@ export const Simple: Story = {
       1, 1, 1, 1, 1, 2, 2, 3, 2, 2, 3, 3, 3, 5, 3, 4, 4, 4, 4, 4, 5, 5, 5, 5, 5,
     ]).reverse(),
     yScale: 0.1,
+    bBox: [0, 0, 1, 1],
   },
 };
 
@@ -54,6 +55,7 @@ export const Grossglockner: Story = {
     yScale: 0.00005,
     textureFileName: "grossglockner.png",
     sideColor: "#cab091",
+    bBox: grossglockner.bBox as BBox,
   },
 };
 
@@ -63,6 +65,7 @@ export const Paramaribo: Story = {
     ratio: paramaribo.dimensions.ratio,
     yScale: 0.001,
     textureFileName: "paramaribo.png",
+    bBox: paramaribo.bBox as BBox,
   },
 };
 
@@ -73,5 +76,6 @@ export const Malta: Story = {
     yScale: 0.0001,
     textureFileName: "uv-grid.png",
     sideColor: "#3689a5",
+    bBox: malta.bBox as BBox,
   },
 };
