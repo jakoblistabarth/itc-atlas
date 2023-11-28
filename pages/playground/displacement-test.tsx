@@ -16,6 +16,7 @@ import {
   DoubleSide,
   MeshStandardMaterial,
   PlaneGeometry,
+  Vector3,
 } from "three";
 import CustomShaderMaterial from "three-custom-shader-material";
 import CanvasStage from "../../components/CanvasStage";
@@ -116,19 +117,21 @@ const BoxDisplacement = () => {
                 <Edges />
               </mesh>
             </Bounds>
-            {positions.map((p, i) => (
-              <group key={i} position={[...p]}>
-                {normals[i].join("") === "010" && (
-                  <Html position-y={0.03} center>
-                    {i}
-                  </Html>
-                )}
-                <Sphere
-                  args={[0.01]}
-                  material={new MeshStandardMaterial({ color: "grey" })}
-                />
-              </group>
-            ))}
+            {positions
+              .map(([x, y, z]) => new Vector3(x, y, z))
+              .map((p, i) => (
+                <group key={i} position={p}>
+                  {normals[i].join("") === "010" && (
+                    <Html position-y={0.03} center>
+                      {i}
+                    </Html>
+                  )}
+                  <Sphere
+                    args={[0.01]}
+                    material={new MeshStandardMaterial({ color: "grey" })}
+                  />
+                </group>
+              ))}
           </group>
           <Plane
             receiveShadow
