@@ -1,27 +1,27 @@
 import { OrbitControls } from "@react-three/drei";
 import { Canvas } from "@react-three/fiber";
-import type { GetStaticProps, NextPage } from "next";
-import Mark3dSphere from "../../components/Mark3dSphere";
-import getCountries from "../../lib/data/getCountries";
-import { SharedPageProps } from "../../types/Props";
-import * as topojson from "topojson-client";
+import { max, scaleSqrt } from "d3";
 import { geoCentroid } from "d3-geo";
-import React from "react";
-import { scaleLinear, min, max } from "d3";
-import { useState, useCallback, FC, useMemo, memo } from "react";
-import Globe from "../../components/Globe/";
-import longitudeLatitudeToXYZ from "../../lib/helpers/longitudeLatitudeToXYZ";
-import getCountryCodes from "../../lib/data/queries/country/getCountryCodes";
-import getCountryWithProjectCount from "../../lib/data/queries/country/getCountryWithProjectCount";
-import GlobeEnvironment from "../../components/Globe/GlobeEnvironment";
-import PageBase from "../../components/PageBase";
-import Container from "../../components/Container";
-import { CountryWithProjectCount } from "../../lib/data/queries/country/getCountryWithProjectCount";
 import type { GeoJsonProperties } from "geojson";
-import Tooltip from "../../components/Tooltip";
-import KPI from "../../components/KPI";
-import { NeCountriesTopoJson } from "../../types/NeTopoJson";
+import type { GetStaticProps, NextPage } from "next";
+import { FC, memo, useCallback, useMemo, useState } from "react";
+import * as topojson from "topojson-client";
 import CanvasStage from "../../components/CanvasStage";
+import Container from "../../components/Container";
+import Globe from "../../components/Globe/";
+import GlobeEnvironment from "../../components/Globe/GlobeEnvironment";
+import KPI from "../../components/KPI";
+import Mark3dSphere from "../../components/Mark3dSphere";
+import PageBase from "../../components/PageBase";
+import Tooltip from "../../components/Tooltip";
+import getCountries from "../../lib/data/getCountries";
+import getCountryCodes from "../../lib/data/queries/country/getCountryCodes";
+import getCountryWithProjectCount, {
+  CountryWithProjectCount,
+} from "../../lib/data/queries/country/getCountryWithProjectCount";
+import longitudeLatitudeToXYZ from "../../lib/helpers/longitudeLatitudeToXYZ";
+import { NeCountriesTopoJson } from "../../types/NeTopoJson";
+import { SharedPageProps } from "../../types/Props";
 
 type Props = SharedPageProps & {
   countryWithProjectCount: CountryWithProjectCount;
@@ -62,20 +62,12 @@ const ProjectExplorer3D: NextPage<Props> = ({
                 </Canvas>
               </Tooltip.Trigger>
               <Tooltip.Content>
-                {hoverInfo &&
-                  (hoverInfo._count?.projects ? (
-                    <div>
-                      <KPI
-                        number={hoverInfo._count.projects}
-                        unit={"projects"}
-                      />
-                      {hoverInfo.name}
-                    </div>
-                  ) : (
-                    <div>
-                      <KPI number={0} unit="No projects" />
-                    </div>
-                  ))}
+                {hoverInfo && (
+                  <div>
+                    <KPI number={hoverInfo.projectCount} unit={"projects"} />
+                    {hoverInfo.NAME_EN}
+                  </div>
+                )}
               </Tooltip.Content>
             </Tooltip.Root>
           </CanvasStage>
@@ -119,39 +111,35 @@ const Marker3Ds: FC<{
     neCountriesTopoJson.objects.ne_admin_0_countries,
   );
   const radiusScale = useMemo(() => {
-    const minCount = min(countryWithProjectCount.map((d) => d._count.projects));
     const maxCount = max(countryWithProjectCount.map((d) => d._count.projects));
-    return scaleLinear<number, number>()
-      .domain([minCount ?? 0, maxCount ?? 1])
-      .range([0.005, 0.03]);
+    return scaleSqrt<number, number>()
+      .domain([1, maxCount ?? 1])
+      .range([0.0075, 0.03]);
   }, [countryWithProjectCount]);
 
   return (
     <>
-      {world.features.map((country, i) => {
-        const centroid = geoCentroid(country);
-        const countryInfo = {
-          ...countryWithProjectCount.find(
-            (d) => d.isoAlpha3 == country.properties.ADM0_A3,
-          ),
-          name: country.properties.NAME_EN,
-        };
-        const radius = radiusScale(countryInfo?._count?.projects ?? 0.01);
-        const pos = longitudeLatitudeToXYZ(
-          centroid[0],
-          centroid[1],
-          earthRadius,
-          radius,
+      {countryWithProjectCount.map((countryWithProjects, i) => {
+        const feature = world.features.find(
+          (d) => d.properties.ADM0_A3 === countryWithProjects.isoAlpha3,
         );
+        if (!feature) return <></>;
+        const hoverInfo = {
+          ...feature?.properties,
+          projectCount: countryWithProjects._count.projects,
+        };
+        const centroid = geoCentroid(feature);
+        const radius = radiusScale(countryWithProjects._count?.projects);
+        const pos = longitudeLatitudeToXYZ(...centroid, earthRadius, radius);
         return (
           <Mark3dSphere
             key={i}
             pos={pos}
             radius={radius}
             onPointerEnterHandler={() =>
-              countryInfo &&
+              hoverInfo &&
               onPointerEnterHandler &&
-              onPointerEnterHandler(countryInfo)
+              onPointerEnterHandler(hoverInfo)
             }
             onPointerLeaveHandler={onPointerLeaveHandler}
           />
