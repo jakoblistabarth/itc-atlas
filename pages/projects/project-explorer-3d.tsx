@@ -21,6 +21,7 @@ import type { GeoJsonProperties } from "geojson";
 import Tooltip from "../../components/Tooltip";
 import KPI from "../../components/KPI";
 import { NeCountriesTopoJson } from "../../types/NeTopoJson";
+import CanvasStage from "../../components/CanvasStage";
 
 type Props = SharedPageProps & {
   countryWithProjectCount: CountryWithProjectCount;
@@ -43,7 +44,7 @@ const ProjectExplorer3D: NextPage<Props> = ({
     <PageBase title="Projects Explorer">
       <Container>
         <main>
-          <div style={{ width: "100%", height: "700px" }}>
+          <CanvasStage className="h-[700px]">
             <Tooltip.Root open={!!hoverInfo} followCursor placement="top-start">
               <Tooltip.Trigger asChild>
                 <Canvas camera={{ position: [0, 0, 5], fov: 30 }} shadows>
@@ -66,8 +67,9 @@ const ProjectExplorer3D: NextPage<Props> = ({
                     <div>
                       <KPI
                         number={hoverInfo._count.projects}
-                        unit={hoverInfo.isoAlpha3}
+                        unit={"projects"}
                       />
+                      {hoverInfo.isoAlpha3}
                     </div>
                   ) : (
                     <div>
@@ -76,7 +78,7 @@ const ProjectExplorer3D: NextPage<Props> = ({
                   ))}
               </Tooltip.Content>
             </Tooltip.Root>
-          </div>
+          </CanvasStage>
         </main>
       </Container>
     </PageBase>
