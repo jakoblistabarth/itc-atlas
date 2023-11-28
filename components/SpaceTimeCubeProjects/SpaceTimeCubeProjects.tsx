@@ -20,7 +20,7 @@ import SoftLight from "../SoftLight";
 import TimelineControl from "../TimelineControl";
 import Tooltip from "../Tooltip";
 import SelectedProjectsDetails from "./SelectedProjectsDetails";
-import useProjectEvents from "./useProjectEvents.hooks";
+import useProjectEvents from "./useProjectEvents.hook";
 
 type Props = {
   projects: ProjectsWithCountries;
