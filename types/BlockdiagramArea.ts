@@ -1,4 +1,6 @@
+import { BBox } from "geojson";
+
 export type BlockDiagramArea = {
   name: string;
-  locations: [number, number][];
+  locations: BBox;
 };
