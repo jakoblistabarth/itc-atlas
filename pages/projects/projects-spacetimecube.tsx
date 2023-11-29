@@ -17,6 +17,7 @@ type Props = SharedPageProps & {
 const ProjectSpaceTimeCube: NextPage<Props> = ({
   neCountriesTopoJson,
   projects,
+  countries,
 }) => {
   return (
     <PageBase title="Projects Space Time Cube">
@@ -25,6 +26,7 @@ const ProjectSpaceTimeCube: NextPage<Props> = ({
           <SpaceTimeCubeProjects
             projects={projects}
             neCountriesTopoJson={neCountriesTopoJson}
+            countries={countries}
           />
         </Section>
       </Container>
@@ -36,7 +38,7 @@ export const getStaticProps: GetStaticProps<Props> = async () => {
   const [projects, countries, neCountriesTopoJson] = await Promise.all([
     getProjectsWithCountries(),
     getCountryCodes(),
-    getCountries("50m"),
+    getCountries(),
   ]);
 
   return {

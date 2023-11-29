@@ -20,12 +20,14 @@ import BhosGradientDefs from "./BhosGradientsDefs";
 import BtorsByYear from "./charts/BtorsByYear";
 import useBhosCategories from "./useBhosCategories";
 import Button from "../Button";
+import { Country } from "@prisma/client";
 
 type Props = {
   neCountries: NeCountriesTopoJson;
   btorsByYear: BtorsGroupedByYear;
   bhosCountries: BhosCountry[];
   dutchCabinets: DutchCabinet[];
+  countries: Country[];
 };
 
 export type BhosCountryWithCategories = BhosCountry & { categories: string[] };
@@ -35,6 +37,7 @@ const BtorsAndCabinets: FC<Props> = ({
   bhosCountries,
   dutchCabinets,
   neCountries,
+  countries,
 }) => {
   const [activeCabinet, setActiveCabinet] = useState(
     dutchCabinets[dutchCabinets.length - 1].name,
@@ -64,7 +67,7 @@ const BtorsAndCabinets: FC<Props> = ({
   );
   const projection = geoBertin1953();
 
-  const countries = useMemo(
+  const fc = useMemo(
     () => feature(neCountries, neCountries.objects.ne_admin_0_countries),
     [neCountries],
   );
@@ -74,24 +77,22 @@ const BtorsAndCabinets: FC<Props> = ({
       (d) => d.cabinet === activeCabinet,
     );
 
-    const countriesWithCategories: Feature[] = countries.features.map(
-      (d, idx) => {
-        const match = selectedBhosCountries.find(
-          (country) => d.properties.ADM0_A3_NL === country.isoAlpha3,
-        );
-        return {
-          ...d,
-          properties: {
-            id: idx,
-            isoAlpha3: d.properties.ADM0_A3_NL,
-            countryNameEN: d.properties.NAME_EN,
-            categories: match?.categories,
-          },
-        };
-      },
-    );
+    const countriesWithCategories: Feature[] = fc.features.map((d, idx) => {
+      const match = selectedBhosCountries.find(
+        (country) => d.properties.ADM0_A3_NL === country.isoAlpha3,
+      );
+      return {
+        ...d,
+        properties: {
+          id: idx,
+          isoAlpha3: d.properties.ADM0_A3_NL,
+          countryNameEN: d.properties.NAME_EN,
+          categories: match?.categories,
+        },
+      };
+    });
     return countriesWithCategories;
-  }, [countries, activeCabinet, bhosCountriesWithCategories]);
+  }, [fc, activeCabinet, bhosCountriesWithCategories]);
 
   return (
     <div>
@@ -172,9 +173,8 @@ const BtorsAndCabinets: FC<Props> = ({
           <Tooltip.Content>
             <h4>
               {
-                countries.features?.find(
-                  (d) => d.properties.ADM0_A3 === activeCountry,
-                )?.properties.NAME_EN
+                fc.features?.find((d) => d.properties.ADM0_A3 === activeCountry)
+                  ?.properties.NAME_EN
               }
             </h4>
             <div className="mt-2 flex gap-1">
@@ -202,7 +202,7 @@ const BtorsAndCabinets: FC<Props> = ({
         mouseEnterLeaveHandler={(isoAlpha3?: string) =>
           setActiveCountry(isoAlpha3)
         }
-        neCountries={neCountries}
+        countries={countries}
       />
     </div>
   );

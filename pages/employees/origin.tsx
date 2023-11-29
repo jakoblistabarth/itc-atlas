@@ -14,13 +14,11 @@ import getCountryWithEmployeeCount, {
   CountryWithEmployeeCount,
 } from "../../lib/data/queries/country/getCountryWithEmployeeCount";
 import prisma from "../../prisma/client";
-import { NeCountriesTopoJson } from "../../types/NeTopoJson";
 import { SharedPageProps } from "../../types/Props";
 import Container from "../../components/Container";
 
 type Props = {
   countryWithEmployeeCount: CountryWithEmployeeCount;
-  neCountriesTopoJson: NeCountriesTopoJson;
   countries: Country[];
 } & SharedPageProps;
 

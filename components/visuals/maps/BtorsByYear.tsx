@@ -1,3 +1,4 @@
+import { Country } from "@prisma/client";
 import { Group } from "@visx/group";
 import { groups, max, min, scaleLinear } from "d3";
 import { FC, useState } from "react";
@@ -5,20 +6,21 @@ import { Vector2 } from "three";
 import getCentroidByIsoCode from "../../../lib/data/getCentroidByIsoCode";
 import { BtorsGroupedByYear } from "../../../lib/data/queries/btors/getBtorsGroupedByYear";
 import getCountryName from "../../../lib/getCountryName";
-import { NeCountriesTopoJson } from "../../../types/NeTopoJson";
 import LinePath from "../../LinePath/";
 import { getFilledSeries } from "../../LinePath/LinePath.helpers";
 import MapLayerBase from "../../MapLayerBase";
 import { useMapLayoutContext } from "../../MapLayout/MapLayoutContext";
+import { NeCountriesTopoJson } from "../../../types/NeTopoJson";
 
 type Props = {
+  countries: Country[];
   neCountries: NeCountriesTopoJson;
   btors: BtorsGroupedByYear;
 };
 
-const BtorsByYear: FC<Props> = ({ btors, neCountries }) => {
+const BtorsByYear: FC<Props> = ({ btors, countries, neCountries }) => {
   const [selectedCountry, setSelectedCountry] = useState<string | undefined>(
-    undefined
+    undefined,
   );
 
   const chartWidth = 40;
@@ -42,7 +44,7 @@ const BtorsByYear: FC<Props> = ({ btors, neCountries }) => {
   };
 
   const hasCentroid = (
-    btor: BtorCountryWithValidCentroid | BtorCountry
+    btor: BtorCountryWithValidCentroid | BtorCountry,
   ): btor is BtorCountryWithValidCentroid => {
     return btor.centroid?.x !== undefined && btor.centroid?.y !== undefined;
   };
@@ -70,7 +72,7 @@ const BtorsByYear: FC<Props> = ({ btors, neCountries }) => {
           (d) => d.year,
           (d) => d.count,
           minTime,
-          maxTime
+          maxTime,
         );
         return (
           <g key={d.isoAlpha3} transform={`translate(${x} ${y})`}>
@@ -91,7 +93,7 @@ const BtorsByYear: FC<Props> = ({ btors, neCountries }) => {
                 xScale={xScale}
                 yScale={yScale}
                 identifier={d.isoAlpha3}
-                label={getCountryName(d.isoAlpha3, neCountries)}
+                label={getCountryName(d.isoAlpha3, countries)}
                 mouseEnterLeaveHandler={(isoAlpha3?: string) => {
                   setSelectedCountry(isoAlpha3);
                 }}
