@@ -8,7 +8,7 @@ import { FC, memo, useCallback, useMemo, useState } from "react";
 import * as topojson from "topojson-client";
 import CanvasStage from "../../components/CanvasStage";
 import Container from "../../components/Container";
-import Globe from "../../components/Globe/";
+import Globe from "../../components/Globe";
 import GlobeEnvironment from "../../components/Globe/GlobeEnvironment";
 import KPI from "../../components/KPI";
 import Mark3dSphere from "../../components/Mark3dSphere";

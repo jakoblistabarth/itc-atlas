@@ -39,7 +39,7 @@ const Projects: NextPage = () => {
       children: "Naivasha Region",
     },
     {
-      href: `${route}/project-explorer-3d`,
+      href: `${route}/globe`,
       children: "Projects Globe",
     },
     {
@@ -87,7 +87,7 @@ const Projects: NextPage = () => {
             <ChapterHighlights
               highlights={[
                 {
-                  href: "projects/project-explorer-3d",
+                  href: "projects/globe",
                   title: "The globe of projects",
                 },
                 {
