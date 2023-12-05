@@ -17,7 +17,7 @@ const HeroVisualPage: FC<Props> = ({ title, heroVisual, children }) => {
       <Header />
 
       <main>
-        <div className="px-4">{heroVisual}</div>
+        <div className="mt-10 px-4">{heroVisual}</div>
         <Container>
           <Section>
             <h1>{title}</h1>

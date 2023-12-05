@@ -11,7 +11,7 @@ const CanvasStage = forwardRef<
     <div
       ref={propRef}
       className={twMerge(
-        "rounded-md bg-white shadow-md dark:bg-itc-green-950",
+        "overflow-hidden rounded-md bg-white shadow-md dark:bg-itc-green-950",
         className,
       )}
       {...props}
