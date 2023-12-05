@@ -10,12 +10,12 @@ const Navigation: FC = () => {
   return (
     <Container>
       <nav className="flex items-stretch">
-        <div className="flex w-10 items-center justify-center rounded-md bg-white p-1">
+        <div className="flex w-10 items-center justify-center rounded-md bg-white p-1 dark:bg-itc-green-700">
           <Link href="/">
             <HiOutlineHome />
           </Link>
         </div>
-        <div className="mx-3 inline-flex gap-x-2 rounded-md bg-white p-1">
+        <div className="mx-3 inline-flex gap-x-2 rounded-md bg-white p-1 dark:bg-itc-green-700">
           <NavLink href="/introduction">Introduction</NavLink>
           <NavLink disabled href="/education">
             Education
