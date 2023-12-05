@@ -10,10 +10,10 @@ import {
 import { Bar } from "react-chartjs-2";
 import { InternMap } from "d3";
 import { FC } from "react";
-import { NeCountriesTopoJson } from "../../types/NeTopoJson";
 import getCountryName from "../../lib/getCountryName";
 import resolveConfig from "tailwindcss/resolveConfig";
 import tailwindConfig from "../../tailwind.config";
+import { Country } from "@prisma/client";
 
 ChartJS.register(
   CategoryScale,
@@ -30,13 +30,13 @@ type Props = {
     year: string;
     countries: InternMap<string, number>;
   }[];
-  neCountriesTopoJson: NeCountriesTopoJson;
+  countries: Country[];
 };
 
 const SelectedYearDetails: FC<Props> = ({
   selectedYear,
   projectsByYearCountry,
-  neCountriesTopoJson,
+  countries,
 }) => {
   const options = {
     indexAxis: "y" as const,
@@ -56,7 +56,7 @@ const SelectedYearDetails: FC<Props> = ({
 
   const labels = Array.from(
     selectedYearCountries ? selectedYearCountries.keys() : [],
-  ).map((d) => getCountryName(d, neCountriesTopoJson));
+  ).map((d) => getCountryName(d, countries));
 
   const data = {
     labels,

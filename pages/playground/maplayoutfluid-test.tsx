@@ -21,7 +21,11 @@ import Container from "../../components/Container";
 
 type Props = { btorsByYear: BtorsGroupedByYear } & SharedPageProps;
 
-const Page: NextPage<Props> = ({ neCountriesTopoJson, btorsByYear }) => {
+const Page: NextPage<Props> = ({
+  neCountriesTopoJson,
+  countries,
+  btorsByYear,
+}) => {
   const extent: ExtendedFeature = {
     type: "Feature",
     geometry: {
@@ -61,6 +65,7 @@ const Page: NextPage<Props> = ({ neCountriesTopoJson, btorsByYear }) => {
           <MapLayoutFluid projection={geoBertin1953()} extent={extent}>
             <BtorsByYearMap
               neCountries={neCountriesTopoJson}
+              countries={countries}
               btors={btorsByYear}
             />
           </MapLayoutFluid>
@@ -71,6 +76,7 @@ const Page: NextPage<Props> = ({ neCountriesTopoJson, btorsByYear }) => {
         <Section>
           <MapLayoutFluid projection={geoEquirectangular()} extent={extent}>
             <BtorsByYearMap
+              countries={countries}
               neCountries={neCountriesTopoJson}
               btors={btorsByYear}
             />

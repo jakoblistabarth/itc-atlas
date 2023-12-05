@@ -29,7 +29,6 @@ import getBtorsGroupedByYear, {
 import getCountryCodes from "../../lib/data/queries/country/getCountryCodes";
 import { BhosCountry } from "../../types/BhosCountry";
 import { DutchCabinet } from "../../types/DutchCabinet";
-import { NeCountriesTopoJson } from "../../types/NeTopoJson";
 import { SharedPageProps } from "../../types/Props";
 import Section from "../../components/Section";
 import getDepartments from "../../lib/data/queries/departments/getDepartments";
@@ -42,7 +41,6 @@ type Props = SharedPageProps & {
   bhosCountries: BhosCountry[];
   btorsByDepartment: BtorsGroupedByRegionByDepartment;
   dutchCabinets: DutchCabinet[];
-  neCountriesTopoJson: NeCountriesTopoJson;
   departments: Department[];
 };
 
@@ -59,7 +57,11 @@ const Page: NextPage<Props> = ({
 }) => {
   const heroVisual = (
     <MapLayoutFluid projection={geoBertin1953()}>
-      <BtorsByYearMap neCountries={neCountriesTopoJson} btors={btorsByYear} />
+      <BtorsByYearMap
+        countries={countries}
+        neCountries={neCountriesTopoJson}
+        btors={btorsByYear}
+      />
     </MapLayoutFluid>
   );
 
@@ -120,6 +122,7 @@ const Page: NextPage<Props> = ({
           <div className="mt-5">
             <BtorsAndCabinets
               neCountries={neCountriesTopoJson}
+              countries={countries}
               bhosCountries={bhosCountries}
               btorsByYear={btorsByYear}
               dutchCabinets={dutchCabinets}
@@ -137,6 +140,7 @@ const Page: NextPage<Props> = ({
           <div className="mt-5">
             <MapLayoutFluid projection={geoBertin1953()} extent={extent}>
               <BtorsByYearMap
+                countries={countries}
                 neCountries={neCountriesTopoJson}
                 btors={btorsByYear}
               />

@@ -1,18 +1,18 @@
-import { FC, useMemo } from "react";
-import useMeasure from "react-use-measure";
+import { Country } from "@prisma/client";
+import { Group } from "@visx/group";
 import { ScaleOrdinal, format, max, min, scaleLinear, union } from "d3";
+import { FC, useMemo } from "react";
+import { MdArrowUpward, MdInfoOutline } from "react-icons/md";
+import useMeasure from "react-use-measure";
 import { BtorsGroupedByYear } from "../../../lib/data/queries/btors/getBtorsGroupedByYear";
+import getCountryName from "../../../lib/getCountryName";
+import { DutchCabinet } from "../../../types/DutchCabinet";
 import AxisX from "../../AxisX";
 import AxisY from "../../AxisY";
-import RuleY from "../../RuleY";
-import { MdArrowUpward, MdInfoOutline } from "react-icons/md";
-import { DutchCabinet } from "../../../types/DutchCabinet";
-import { BhosCountryWithCategories } from "../BtorsAndCabinets";
 import LinePath from "../../LinePath/LinePath";
-import { Group } from "@visx/group";
-import { NeCountriesTopoJson } from "../../../types/NeTopoJson";
-import getCountryName from "../../../lib/getCountryName";
 import { getFilledSeries } from "../../LinePath/LinePath.helpers";
+import RuleY from "../../RuleY";
+import { BhosCountryWithCategories } from "../BtorsAndCabinets";
 
 type Props = {
   btors: BtorsGroupedByYear;
@@ -21,7 +21,7 @@ type Props = {
   colorScale: ScaleOrdinal<string, string>;
   bhosCountries: BhosCountryWithCategories[];
   mouseEnterLeaveHandler: (isoAlpha3?: string) => void;
-  neCountries: NeCountriesTopoJson;
+  countries: Country[];
 };
 
 const BtorsByYear: FC<Props> = ({
@@ -31,7 +31,7 @@ const BtorsByYear: FC<Props> = ({
   mouseEnterLeaveHandler,
   colorScale,
   bhosCountries,
-  neCountries,
+  countries,
 }) => {
   const [chartRef, { width }] = useMeasure();
 
@@ -84,8 +84,8 @@ const BtorsByYear: FC<Props> = ({
   }, [btors, margin, width]);
 
   const activeCountryName = useMemo(
-    () => getCountryName(activeCountry ?? "", neCountries),
-    [activeCountry, neCountries],
+    () => getCountryName(activeCountry ?? "", countries),
+    [activeCountry, countries],
   );
 
   const hasNoTravelData = useMemo(

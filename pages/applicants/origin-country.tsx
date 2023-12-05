@@ -133,10 +133,10 @@ export const getStaticProps: GetStaticProps<Props> = async () => {
   ]);
 
   const timeseries = [
-    { label: getCountryName("CHN", neCountriesTopoJson), data: china },
-    { label: getCountryName("NLD", neCountriesTopoJson), data: netherlands },
-    { label: getCountryName("IND", neCountriesTopoJson), data: india },
-    { label: getCountryName("KEN", neCountriesTopoJson), data: kenya },
+    { label: getCountryName("CHN", countries), data: china },
+    { label: getCountryName("NLD", countries), data: netherlands },
+    { label: getCountryName("IND", countries), data: india },
+    { label: getCountryName("KEN", countries), data: kenya },
   ].map(({ label, data }) => {
     return {
       label,

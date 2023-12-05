@@ -21,15 +21,18 @@ import TimelineControl from "../TimelineControl";
 import Tooltip from "../Tooltip";
 import SelectedProjectsDetails from "./SelectedProjectsDetails";
 import useProjectEvents from "./useProjectEvents.hook";
+import { Country } from "@prisma/client";
 
 type Props = {
   projects: ProjectsWithCountries;
   neCountriesTopoJson: NeCountriesTopoJson;
+  countries: Country[];
 };
 
 const SpaceTimeCubeProjects: FC<Props> = ({
   projects,
   neCountriesTopoJson,
+  countries,
 }) => {
   const [selectedCountries, setSelectedCountries] = useState<
     FeatureIdentifier[]
@@ -155,7 +158,7 @@ const SpaceTimeCubeProjects: FC<Props> = ({
                       <SelectedYearDetails
                         selectedYear={selectedYear}
                         projectsByYearCountry={projectsByYearCountry}
-                        neCountriesTopoJson={neCountriesTopoJson}
+                        countries={countries}
                       />
                     )}
                   </>
