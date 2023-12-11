@@ -2,7 +2,7 @@ import { descending, max, scaleSqrt } from "d3";
 import type { Feature, FeatureCollection, Point } from "geojson";
 import { FC, useState } from "react";
 import { MdArrowForward } from "react-icons/md";
-import useSWR from "swr";
+import useSWRImmutable from "swr/immutable";
 import { Vector2 } from "three";
 import { feature } from "topojson-client";
 import getCentroidByIsoCode from "../../../lib/data/getCentroidByIsoCode";
@@ -48,12 +48,12 @@ const AlumniOrigin: FC<Props> = ({
     alumniCount: number;
   };
 
-  const { data: sparklineData } = useSWR<
+  const { data: sparklineData } = useSWRImmutable<
     Awaited<ReturnType<typeof getApplicationsByYear>>
   >("/api/data/application/groupByYear?country=" + country);
 
   const { data: filteredApplicants, isLoading: filteredApplicantsIsLoading } =
-    useSWR<Awaited<ReturnType<typeof getCountryWithApplicantCount>>>(
+    useSWRImmutable<Awaited<ReturnType<typeof getCountryWithApplicantCount>>>(
       "/api/data/country/count/applicant?level=" + level,
     );
 

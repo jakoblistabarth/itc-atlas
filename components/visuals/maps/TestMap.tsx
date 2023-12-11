@@ -1,6 +1,6 @@
 import { GeoGeometryObjects, geoPath } from "d3-geo";
 import { FC } from "react";
-import useSWR from "swr";
+import useSWRImmutable from "swr/immutable";
 import MapLayerBase from "../../MapLayerBase";
 import { NeCountriesTopoJson } from "../../../types/NeTopoJson";
 import { useMapLayoutContext } from "../../MapLayout/MapLayoutContext";
@@ -12,7 +12,9 @@ type Props = {
 const TestMap: FC<Props> = ({ neCountriesTopoJson }) => {
   const { projection, width, height } = useMapLayoutContext();
 
-  const { data: aut } = useSWR("/api/data/elevationModel/Grossglockner");
+  const { data: aut } = useSWRImmutable(
+    "/api/data/elevationModel/Grossglockner",
+  );
   const [w, s, e, n] = aut ? aut?.bBox : [0, 0, 0, 0];
   const feature: GeoGeometryObjects = {
     type: "Polygon",

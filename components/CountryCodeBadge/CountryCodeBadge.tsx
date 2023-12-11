@@ -1,6 +1,6 @@
 import { FC } from "react";
 import * as Tooltip from "@radix-ui/react-tooltip";
-import useSWR from "swr";
+import useSWRImmutable from "swr/immutable";
 import getCountry from "../../lib/data/queries/country/getCountry";
 
 type Props = {
@@ -8,7 +8,7 @@ type Props = {
 };
 
 const CountryCodeBadge: FC<Props> = ({ isoAlpha3Code }) => {
-  const { isLoading, error, data } = useSWR<
+  const { isLoading, error, data } = useSWRImmutable<
     Awaited<ReturnType<typeof getCountry>>
   >(`/api/data/country/${isoAlpha3Code}`);
   return (
