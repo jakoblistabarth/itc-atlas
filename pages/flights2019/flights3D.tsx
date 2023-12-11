@@ -55,7 +55,13 @@ const Flights: NextPage<Props> = ({ odMatrix }) => {
                     onPointerEnterHandler={onPointerEnterHandler}
                     onPointerLeaveHandler={onPointerLeaveHandler}
                   />
-                  <OrbitControls enableZoom={false} enablePan={false} />
+                  <OrbitControls
+                    makeDefault
+                    enableDamping
+                    dampingFactor={0.3}
+                    enableZoom={false}
+                    enablePan={false}
+                  />
                 </Canvas>
               </Tooltip.Trigger>
               <Tooltip.Content>

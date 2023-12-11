@@ -87,6 +87,9 @@ const SpaceTimeCubeProjects: FC<Props> = ({
                     shadows
                   >
                     <OrbitControls
+                      makeDefault
+                      enableDamping
+                      dampingFactor={0.3}
                       enableZoom={true}
                       enablePan={true}
                       target-y={height / 2}
