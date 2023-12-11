@@ -19,6 +19,9 @@ export async function cleanPhds(data: PhdRaw[]) {
   const tb = aq
     .from(data)
     .derive({
+      thesisTitle: aq.escape((d: PhdRaw) =>
+        d.TitlePure && d.TitlePure != "0" ? d.TitlePure : d.Thesis_Title,
+      ),
       itcStudentId: aq.escape((d: PhdRaw) =>
         d.ITCStudentNo ? d.ITCStudentNo + "" : undefined,
       ),
@@ -39,18 +42,20 @@ export async function cleanPhds(data: PhdRaw[]) {
       department1: aq.escape((d: PhdRaw) => {
         return mapToDepartment(d.Department);
       }),
-      department2: aq.escape((d: PhdRaw) => {
-        return mapToDepartment(d.DepartmentSecond);
-      }),
       doi: (d: PhdRaw) => aq.op.replace(d.DOI, /\\$/, ""),
       status: (d: PhdRaw) =>
         aq.op.padstart(d.LastStatus ? d.LastStatus + "" : "00", 2, "0"),
+    })
+    .derive({
+      department2: aq.escape((d: PhdRaw & { department1?: string }) => {
+        const dep2 = mapToDepartment(d.DepartmentSecond);
+        return dep2 != d.department1 ? dep2 : null;
+      }),
     })
     .rename({
       Country: "country",
       Department: "department1",
       DepartmentSecond: "department2",
-      Thesis_Title: "thesisTitle",
       Sponsor: "sponsor",
       NamePure: "name",
     })
