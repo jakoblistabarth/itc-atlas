@@ -1,5 +1,6 @@
 import * as ScrollArea from "@radix-ui/react-scroll-area";
 import { rollups, scaleOrdinal } from "d3";
+import { useState } from "react";
 import { geoBertin1953 } from "d3-geo-projection";
 import { GetStaticPaths, GetStaticProps, InferGetStaticPropsType } from "next";
 import { ParsedUrlQuery } from "querystring";
@@ -20,11 +21,24 @@ import Teaser from "../../../components/Teaser";
 import getCentroidByIsoCode from "../../../lib/data/getCentroidByIsoCode";
 import getCountries from "../../../lib/data/getCountries";
 import getCountryCodes from "../../../lib/data/queries/country/getCountryCodes";
+import AlumniOrigin from "../../../components/visuals/maps/AlumniOrigin";
 import getCountryWithProjectCount from "../../../lib/data/queries/country/getCountryWithProjectCount";
 import getDepartment from "../../../lib/data/queries/departments/getDepartment";
 import getDepartments from "../../../lib/data/queries/departments/getDepartments";
 import prisma from "../../../prisma/client";
 import { SharedPageProps } from "../../../types/Props";
+import { BtorsGroupedByCountryByDepartment } from "../../../lib/data/queries/btors/getBtorsGroupedByCountryByDepartment";
+import getBtorsGroupedByCountryByDepartment from "../../../lib/data/queries/btors/getBtorsGroupedByCountryByDepartment";
+import TravelsOfDepartmentPrismMap from "../../../components/visuals/TravelsOfDepartmentPrismMap";
+import getCountryWithApplicantCount, {
+  CountryWithApplicantCount,
+} from "../../../lib/data/queries/country/getCountryWithApplicantCount";
+import getApplicationLevels, {
+  ApplicationLevels,
+} from "../../../lib/data/queries/application/getApplicationLevels";
+import FlightsFlowMap from "../../../components/FlightsFlowMap";
+import getDepartmentOdMatrix from "../../../lib/data/getDepartmentOdMatrix";
+import type { OdMatrix } from "../../../types/OdMatrix";
 
 const Page = ({
   department,
@@ -32,6 +46,10 @@ const Page = ({
   btorCount,
   neCountriesTopoJson,
   countriesWithProjectCount,
+  btorsByCountryByDepartment,
+  levels,
+  applicants,
+  odMatrix,
 }: InferGetStaticPropsType<typeof getStaticProps>) => {
   const thesesByYear = groupThesesByYear(department.phdsMain);
   const data = countriesWithProjectCount.flatMap((d) => {
@@ -48,6 +66,8 @@ const Page = ({
           },
         ];
   });
+  const [level, setLevel] = useState<string | undefined>(undefined);
+
   return (
     <PageBase title={`${department.id} department`}>
       <Container>
@@ -156,6 +176,81 @@ const Page = ({
           </div>
         </Section>
         <Section>
+          <h2>Travels</h2>
+          <Paragraph>
+            Lorem ipsum, dolor sit amet consectetur adipisicing elit. Amet
+            molestiae, sequi animi est dolor nihil qui id, aperiam assumenda
+            suscipit officia, veniam tenetur veritatis saepe! Recusandae animi
+            incidunt fuga perferendis!
+          </Paragraph>
+          <TravelsOfDepartmentPrismMap
+            topology={getCountries()}
+            topologyObject={"ne_admin_0_countries"}
+            projection={geoBertin1953()}
+            width={10}
+            length={10}
+            extrudeGeometryOptions={{
+              depth: 0.01,
+              bevelSize: 0.005,
+              bevelThickness: 0.005,
+              bevelSegments: 12,
+            }}
+            btorsByCountryByDepartment={btorsByCountryByDepartment}
+            department={department}
+          />
+        </Section>
+        <Section>
+          <h2>Alumni</h2>
+          <div className="mb-5">
+            <label>
+              <br />
+              Select a level you want to filter for:
+              <select
+                className="ml-4"
+                name="level"
+                onChange={(event) => setLevel(event.target.value)}
+                placeholder={"none selected"}
+              >
+                <option value={""}>All levels</option>
+                {levels.map((d) => (
+                  <option value={d.level ?? ""} key={d.level}>
+                    {d.level}
+                  </option>
+                ))}
+              </select>
+            </label>
+          </div>
+        </Section>
+
+        <div style={{ padding: "0 1em", width: "42%", height: "100%" }}>
+          <MapLayoutFluid projection={geoBertin1953()}>
+            <AlumniOrigin
+              neCountriesTopoJson={neCountriesTopoJson}
+              level={level}
+              applicants={applicants}
+            />
+          </MapLayoutFluid>
+        </div>
+
+        <Section>
+          <h2>Flights</h2>
+          <Paragraph>
+            Lorem ipsum, dolor sit amet consectetur adipisicing elit. Amet
+            molestiae, sequi animi est dolor nihil qui id, aperiam assumenda
+            suscipit officia, veniam tenetur veritatis saepe! Recusandae animi
+            incidunt fuga perferendis!
+          </Paragraph>
+          <div style={{ padding: "0 1em", width: "42%", height: "100%" }}>
+            <MapLayoutFluid projection={geoBertin1953()}>
+              <FlightsFlowMap
+                odMatrix={odMatrix}
+                neCountriesTopoJson={neCountriesTopoJson}
+              />
+            </MapLayoutFluid>
+          </div>
+        </Section>
+
+        <Section>
           <h2>Projects</h2>
           <div className="my-5 max-w-lg">
             <MapLayoutFluid projection={geoBertin1953()}>
@@ -218,6 +313,10 @@ export const getStaticProps = (async (context) => {
     countriesWithProjectCount,
     neCountriesTopoJson,
     countries,
+    btorsByCountryByDepartment,
+    applicants,
+    levels,
+    odMatrix,
   ] = await Promise.all([
     getDepartment(id),
     prisma.employee.count({
@@ -241,6 +340,10 @@ export const getStaticProps = (async (context) => {
     getCountryWithProjectCount(id),
     getCountries(),
     getCountryCodes(),
+    getBtorsGroupedByCountryByDepartment(),
+    getCountryWithApplicantCount(),
+    getApplicationLevels(),
+    getDepartmentOdMatrix(id),
   ]);
   return {
     props: {
@@ -250,6 +353,10 @@ export const getStaticProps = (async (context) => {
       countriesWithProjectCount,
       neCountriesTopoJson,
       countries,
+      btorsByCountryByDepartment,
+      applicants,
+      levels,
+      odMatrix,
     },
   };
 }) satisfies GetStaticProps<
@@ -260,5 +367,9 @@ export const getStaticProps = (async (context) => {
     countriesWithProjectCount: Awaited<
       ReturnType<typeof getCountryWithProjectCount>
     >;
+    btorsByCountryByDepartment: BtorsGroupedByCountryByDepartment;
+    applicants: CountryWithApplicantCount;
+    levels: ApplicationLevels;
+    odMatrix: OdMatrix;
   } & SharedPageProps
 >;
