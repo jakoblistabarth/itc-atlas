@@ -65,3 +65,29 @@ export const LongFlow: Story = {
     },
   },
 };
+
+const SFO = { position: [-122.38, 37.6201], airport: "SFO" };
+const AMS = { position: [4.7725, 52.313], airport: "AMS" };
+
+export const SFO_to_AMS: Story = {
+  args: {
+    origin: SFO,
+    destination: AMS,
+    arcHeight: 0.5,
+    data: {
+      origin: SFO.airport,
+      destination: AMS.airport,
+    },
+  },
+};
+export const AMS_to_SFO: Story = {
+  args: {
+    origin: AMS,
+    destination: SFO,
+    arcHeight: 0.5,
+    data: {
+      origin: AMS.airport,
+      destination: SFO.airport,
+    },
+  },
+};

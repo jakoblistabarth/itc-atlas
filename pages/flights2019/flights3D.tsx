@@ -1,19 +1,19 @@
 import { OrbitControls } from "@react-three/drei";
 import { Canvas } from "@react-three/fiber";
 import * as d3 from "d3";
+import type { GeoJsonProperties } from "geojson";
 import type { NextPage } from "next";
-import { Suspense, useState, useCallback, FC, memo } from "react";
+import { FC, Suspense, memo, useCallback, useState } from "react";
+import { HiArrowRight } from "react-icons/hi2";
+import Container from "../../components/Container";
 import Globe, { FallBackGlobe } from "../../components/Globe/";
 import GlobeEnvironment from "../../components/Globe/GlobeEnvironment";
+import KPI from "../../components/KPI";
 import Mark3dFlow from "../../components/Mark3dFlow";
 import PageBase from "../../components/PageBase";
+import Tooltip from "../../components/Tooltip";
 import getOdMatrix from "../../lib/data/getOdMatrix";
 import type { OdMatrix } from "../../types/OdMatrix";
-import Container from "../../components/Container";
-import type { GeoJsonProperties } from "geojson";
-import Tooltip from "../../components/Tooltip";
-import { HiArrowRight } from "react-icons/hi2";
-import KPI from "../../components/KPI";
 
 type Props = {
   odMatrix: OdMatrix;
@@ -121,6 +121,7 @@ const Flows: FC<{
     .range([0, 100]);
   return (
     <>
+      {/* {odMatrix.flows.features.map((flow) => { */}
       {odMatrix.flows.features.map((flow) => {
         const originPosition = flow.geometry.coordinates[0];
         const originAirport = flow.properties.o;
