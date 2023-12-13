@@ -37,7 +37,7 @@ import getApplicationLevels, {
   ApplicationLevels,
 } from "../../../lib/data/queries/application/getApplicationLevels";
 import FlightsFlowMap from "../../../components/FlightsFlowMap";
-import getDepartmentOdMatrix from "../../../lib/data/getDepartmentOdMatrix";
+import getOdMatrix from "../../../lib/data/getOdMatrix";
 import type { OdMatrix } from "../../../types/OdMatrix";
 
 const Page = ({
@@ -220,17 +220,16 @@ const Page = ({
               </select>
             </label>
           </div>
+          <div className="my-5 max-w-lg">
+            <MapLayoutFluid projection={geoBertin1953()}>
+              <AlumniOrigin
+                neCountriesTopoJson={neCountriesTopoJson}
+                level={level}
+                applicants={applicants}
+              />
+            </MapLayoutFluid>
+          </div>
         </Section>
-
-        <div style={{ padding: "0 1em", width: "42%", height: "100%" }}>
-          <MapLayoutFluid projection={geoBertin1953()}>
-            <AlumniOrigin
-              neCountriesTopoJson={neCountriesTopoJson}
-              level={level}
-              applicants={applicants}
-            />
-          </MapLayoutFluid>
-        </div>
 
         <Section>
           <h2>Flights</h2>
@@ -240,7 +239,7 @@ const Page = ({
             suscipit officia, veniam tenetur veritatis saepe! Recusandae animi
             incidunt fuga perferendis!
           </Paragraph>
-          <div style={{ padding: "0 1em", width: "42%", height: "100%" }}>
+          <div className="my-5 max-w-lg">
             <MapLayoutFluid projection={geoBertin1953()}>
               <FlightsFlowMap
                 odMatrix={odMatrix}
@@ -343,7 +342,7 @@ export const getStaticProps = (async (context) => {
     getBtorsGroupedByCountryByDepartment(),
     getCountryWithApplicantCount(),
     getApplicationLevels(),
-    getDepartmentOdMatrix(id),
+    getOdMatrix(id),
   ]);
   return {
     props: {

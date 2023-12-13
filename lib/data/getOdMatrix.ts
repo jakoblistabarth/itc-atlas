@@ -18,8 +18,8 @@ type od = {
   props: GeoJsonProperties;
 };
 
-const getOdMatrix = async () => {
-  const flows = await getODFlows();
+const getOdMatrix = async (...args: string[]) => {
+  const flows = await getODFlows(args[0]);
   const points = getODPoints(flows);
   return {
     flows,
@@ -27,10 +27,10 @@ const getOdMatrix = async () => {
   };
 };
 
-const getODFlows = async (): Promise<
-  FeatureCollection<LineString, FlowProperties>
-> => {
-  const flights = await getFlights2019();
+const getODFlows = async (
+  departmentId: string,
+): Promise<FeatureCollection<LineString, FlowProperties>> => {
+  const flights = await getFlights2019(departmentId);
   const airports = getAirports().json;
 
   const od = flights.reduce((acc: od[], d) => {
@@ -49,7 +49,7 @@ const getODFlows = async (): Promise<
     .rollups(
       od,
       (v) => v.length,
-      (d) => d.od
+      (d) => d.od,
     )
     .sort((a, b) => d3.descending(a[1], b[1]))
     .reduce((acc: Feature<LineString, FlowProperties>[], d) => {
@@ -86,7 +86,7 @@ const getODFlows = async (): Promise<
 };
 
 function getODPoints(
-  flows: FeatureCollection<LineString, FlowProperties>
+  flows: FeatureCollection<LineString, FlowProperties>,
 ): FeatureCollection<Point, FlowPointProperties> {
   const features = flows.features.reduce(
     (points: Feature<Point, FlowPointProperties>[], flow) => {
@@ -107,7 +107,7 @@ function getODPoints(
       });
       return points;
     },
-    []
+    [],
   );
 
   return {

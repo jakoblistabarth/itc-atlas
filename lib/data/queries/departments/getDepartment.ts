@@ -5,6 +5,7 @@ export default async function getDepartment(id: string) {
     select: {
       id: true,
       name: true,
+      number: true,
       projectMain: {
         include: {
           countries: true,
