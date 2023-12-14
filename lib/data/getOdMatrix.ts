@@ -18,8 +18,8 @@ type od = {
   props: GeoJsonProperties;
 };
 
-const getOdMatrix = async (...args: string[]) => {
-  const flows = await getODFlows(args[0]);
+const getOdMatrix = async (departmentId?: string) => {
+  const flows = await getODFlows(departmentId);
   const points = getODPoints(flows);
   return {
     flows,
