@@ -28,7 +28,7 @@ const getOdMatrix = async (departmentId?: string) => {
 };
 
 const getODFlows = async (
-  departmentId: string,
+  departmentId?: string,
 ): Promise<FeatureCollection<LineString, FlowProperties>> => {
   const flights = await getFlights2019(departmentId);
   const airports = getAirports().json;

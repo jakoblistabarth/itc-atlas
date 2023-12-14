@@ -1,6 +1,6 @@
 import * as ScrollArea from "@radix-ui/react-scroll-area";
 import { rollups, scaleOrdinal } from "d3";
-import { useState } from "react";
+import AlumniWithSelectBox from "../../../components/visuals/maps/AlumniWithSelectBox";
 import { geoBertin1953 } from "d3-geo-projection";
 import { GetStaticPaths, GetStaticProps, InferGetStaticPropsType } from "next";
 import { ParsedUrlQuery } from "querystring";
@@ -21,7 +21,6 @@ import Teaser from "../../../components/Teaser";
 import getCentroidByIsoCode from "../../../lib/data/getCentroidByIsoCode";
 import getCountries from "../../../lib/data/getCountries";
 import getCountryCodes from "../../../lib/data/queries/country/getCountryCodes";
-import AlumniOrigin from "../../../components/visuals/maps/AlumniOrigin";
 import getCountryWithProjectCount from "../../../lib/data/queries/country/getCountryWithProjectCount";
 import getDepartment from "../../../lib/data/queries/departments/getDepartment";
 import getDepartments from "../../../lib/data/queries/departments/getDepartments";
@@ -66,7 +65,6 @@ const Page = ({
           },
         ];
   });
-  const [level, setLevel] = useState<string | undefined>(undefined);
 
   return (
     <PageBase title={`${department.id} department`}>
@@ -199,36 +197,13 @@ const Page = ({
             department={department}
           />
         </Section>
+
         <Section>
-          <h2>Alumni</h2>
-          <div className="mb-5">
-            <label>
-              <br />
-              Select a level you want to filter for:
-              <select
-                className="ml-4"
-                name="level"
-                onChange={(event) => setLevel(event.target.value)}
-                placeholder={"none selected"}
-              >
-                <option value={""}>All levels</option>
-                {levels.map((d) => (
-                  <option value={d.level ?? ""} key={d.level}>
-                    {d.level}
-                  </option>
-                ))}
-              </select>
-            </label>
-          </div>
-          <div className="my-5 max-w-lg">
-            <MapLayoutFluid projection={geoBertin1953()}>
-              <AlumniOrigin
-                neCountriesTopoJson={neCountriesTopoJson}
-                level={level}
-                applicants={applicants}
-              />
-            </MapLayoutFluid>
-          </div>
+          <AlumniWithSelectBox
+            neCountriesTopoJson={neCountriesTopoJson}
+            levels={levels}
+            applicants={applicants}
+          />
         </Section>
 
         <Section>

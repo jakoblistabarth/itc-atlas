@@ -17,6 +17,7 @@ import KPI from "../KPI";
 import { MemoizedPrismMap } from "../PrismMap";
 import SoftLight from "../SoftLight";
 import Tooltip from "../Tooltip";
+import CanvasStage from "../CanvasStage";
 
 type Props = {
   btorsByCountryByDepartment: BtorsGroupedByCountryByDepartment;
@@ -77,7 +78,7 @@ const TravelsOfDepartmentPrismMap: FC<Props> = ({
     <div>
       <Tooltip.Root open={!!hoverInfo} followCursor placement="top-start">
         <Tooltip.Trigger asChild>
-          <div className="h-[400px] w-[600px]">
+          <CanvasStage className="h-[500px] w-[600px]">
             <Canvas
               orthographic
               camera={{ position: [0, 5, 5], zoom: 75 }}
@@ -115,7 +116,7 @@ const TravelsOfDepartmentPrismMap: FC<Props> = ({
                 maxPolarAngle={Math.PI / 2}
               />
             </Canvas>
-          </div>
+          </CanvasStage>
         </Tooltip.Trigger>
         <Tooltip.Content>
           <KPI
