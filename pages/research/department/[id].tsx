@@ -1,5 +1,6 @@
 import * as ScrollArea from "@radix-ui/react-scroll-area";
 import { rollups, scaleOrdinal } from "d3";
+import AlumniOrginByLevel from "../../../components/AlumniOriginByLevel";
 import { geoBertin1953 } from "d3-geo-projection";
 import { GetStaticPaths, GetStaticProps, InferGetStaticPropsType } from "next";
 import { ParsedUrlQuery } from "querystring";
@@ -25,6 +26,18 @@ import getDepartment from "../../../lib/data/queries/departments/getDepartment";
 import getDepartments from "../../../lib/data/queries/departments/getDepartments";
 import prisma from "../../../prisma/client";
 import { SharedPageProps } from "../../../types/Props";
+import { BtorsGroupedByCountryByDepartment } from "../../../lib/data/queries/btors/getBtorsGroupedByCountryByDepartment";
+import getBtorsGroupedByCountryByDepartment from "../../../lib/data/queries/btors/getBtorsGroupedByCountryByDepartment";
+import TravelsOfDepartmentPrismMap from "../../../components/TravelsOfDepartmentPrismMap";
+import getCountryWithApplicantCount, {
+  CountryWithApplicantCount,
+} from "../../../lib/data/queries/country/getCountryWithApplicantCount";
+import getApplicationLevels, {
+  ApplicationLevels,
+} from "../../../lib/data/queries/application/getApplicationLevels";
+import FlightsFlowMap from "../../../components/FlightsFlowMap";
+import getOdMatrix from "../../../lib/data/getOdMatrix";
+import type { OdMatrix } from "../../../types/OdMatrix";
 
 const Page = ({
   department,
@@ -32,6 +45,10 @@ const Page = ({
   btorCount,
   neCountriesTopoJson,
   countriesWithProjectCount,
+  btorsByCountryByDepartment,
+  levels,
+  applicants,
+  odMatrix,
 }: InferGetStaticPropsType<typeof getStaticProps>) => {
   const thesesByYear = groupThesesByYear(department.phdsMain);
   const data = countriesWithProjectCount.flatMap((d) => {
@@ -48,6 +65,7 @@ const Page = ({
           },
         ];
   });
+
   return (
     <PageBase title={`${department.id} department`}>
       <Container>
@@ -156,6 +174,59 @@ const Page = ({
           </div>
         </Section>
         <Section>
+          <h2>Travels</h2>
+          <Paragraph>
+            Lorem ipsum, dolor sit amet consectetur adipisicing elit. Amet
+            molestiae, sequi animi est dolor nihil qui id, aperiam assumenda
+            suscipit officia, veniam tenetur veritatis saepe! Recusandae animi
+            incidunt fuga perferendis!
+          </Paragraph>
+          <div className="max-w-screen-sm">
+            <TravelsOfDepartmentPrismMap
+              topology={getCountries()}
+              topologyObject={"ne_admin_0_countries"}
+              projection={geoBertin1953()}
+              width={10}
+              length={10}
+              extrudeGeometryOptions={{
+                depth: 0.01,
+                bevelSize: 0.005,
+                bevelThickness: 0.005,
+                bevelSegments: 12,
+              }}
+              btorsByCountryByDepartment={btorsByCountryByDepartment}
+              department={department}
+            />
+          </div>
+        </Section>
+
+        <Section>
+          <AlumniOrginByLevel
+            neCountriesTopoJson={neCountriesTopoJson}
+            levels={levels}
+            applicants={applicants}
+          />
+        </Section>
+
+        <Section>
+          <h2>Flights</h2>
+          <Paragraph>
+            Lorem ipsum, dolor sit amet consectetur adipisicing elit. Amet
+            molestiae, sequi animi est dolor nihil qui id, aperiam assumenda
+            suscipit officia, veniam tenetur veritatis saepe! Recusandae animi
+            incidunt fuga perferendis!
+          </Paragraph>
+          <div className="my-5 max-w-lg">
+            <MapLayoutFluid projection={geoBertin1953()}>
+              <FlightsFlowMap
+                odMatrix={odMatrix}
+                neCountriesTopoJson={neCountriesTopoJson}
+              />
+            </MapLayoutFluid>
+          </div>
+        </Section>
+
+        <Section>
           <h2>Projects</h2>
           <div className="my-5 max-w-lg">
             <MapLayoutFluid projection={geoBertin1953()}>
@@ -218,6 +289,10 @@ export const getStaticProps = (async (context) => {
     countriesWithProjectCount,
     neCountriesTopoJson,
     countries,
+    btorsByCountryByDepartment,
+    applicants,
+    levels,
+    odMatrix,
   ] = await Promise.all([
     getDepartment(id),
     prisma.employee.count({
@@ -241,6 +316,10 @@ export const getStaticProps = (async (context) => {
     getCountryWithProjectCount(id),
     getCountries(),
     getCountryCodes(),
+    getBtorsGroupedByCountryByDepartment(),
+    getCountryWithApplicantCount(),
+    getApplicationLevels(),
+    getOdMatrix(id),
   ]);
   return {
     props: {
@@ -250,6 +329,10 @@ export const getStaticProps = (async (context) => {
       countriesWithProjectCount,
       neCountriesTopoJson,
       countries,
+      btorsByCountryByDepartment,
+      applicants,
+      levels,
+      odMatrix,
     },
   };
 }) satisfies GetStaticProps<
@@ -260,5 +343,9 @@ export const getStaticProps = (async (context) => {
     countriesWithProjectCount: Awaited<
       ReturnType<typeof getCountryWithProjectCount>
     >;
+    btorsByCountryByDepartment: BtorsGroupedByCountryByDepartment;
+    applicants: CountryWithApplicantCount;
+    levels: ApplicationLevels;
+    odMatrix: OdMatrix;
   } & SharedPageProps
 >;
