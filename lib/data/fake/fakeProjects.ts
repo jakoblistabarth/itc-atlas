@@ -5,6 +5,7 @@ import loadUnsdCountries from "../load/loadUnsdCountries";
 import { ProjectStatus, ProjectType } from "@prisma/client";
 import addDays from "../../utilities/addDays";
 import { random, range, sample, sampleSize } from "lodash";
+import { Department } from "../../mappings/departments";
 
 const fakeProjects = async (number = 1600): Promise<ProjectClean[]> => {
   const departments = loadDepartments();
@@ -14,15 +15,13 @@ const fakeProjects = async (number = 1600): Promise<ProjectClean[]> => {
   const focusCountries = sampleSize(countriesSample, 7);
 
   const data = range(number).map((_, i) => {
-    const leadDepartment = sample(departments);
-    const otherDepartments = Array.from({
-      length: random(1, 3),
-    }).reduce((acc: string[]) => {
-      const department = sample(departments)?.id ?? "";
-      if (!acc.includes(department) && department !== leadDepartment?.id)
-        acc.push(department);
-      return acc;
-    }, []);
+    const departmentsMain = sampleSize(departments, random(1, 2)).map(
+      (d) => d.id,
+    ) as Department[];
+    const departmentsSecondary = sampleSize(
+      departments.filter((d) => !departmentsMain.includes(d.id as Department)),
+      random(1, 3),
+    ).map((d) => d.id) as Department[];
 
     const durationInDays = random(30, 365 * 3);
     const start = faker.date.between(new Date("2000"), new Date("2022"));
@@ -39,8 +38,8 @@ const fakeProjects = async (number = 1600): Promise<ProjectClean[]> => {
       description: faker.lorem.paragraphs(),
       dateStart: start.toISOString(),
       dateEnd: end.toISOString(),
-      leadDepartment: leadDepartment?.id ?? "",
-      otherDepartments: otherDepartments,
+      departmentsMain: departmentsMain,
+      departmentsSecondary: departmentsSecondary,
       allCountries: projectCountries,
       type: sample(Object.values(ProjectType)) ?? "",
       status: sample(Object.values(ProjectStatus)) ?? "",

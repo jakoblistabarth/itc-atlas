@@ -3,8 +3,8 @@ import prisma from "./client";
 async function main() {
   const res = await prisma.phd.findMany({
     where: {
-      departmentMain: {
-        is: {
+      departmentsMain: {
+        some: {
           name: "Department of Applied Earth Sciences",
         },
       },

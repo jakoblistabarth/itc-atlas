@@ -1,3 +1,5 @@
+import { Department } from "../lib/mappings/departments";
+
 export type EmploymentClean = {
   mId: string;
   mId_actual: string;
@@ -5,7 +7,7 @@ export type EmploymentClean = {
   endYear: number;
   employedDays?: number;
   unitEndYear?: number;
-  department?: string;
+  departments: Department[];
   type?: string;
   description?: string;
 };

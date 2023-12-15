@@ -12,23 +12,24 @@ datasource db {
 }
 
 model Department {
-  id                String       @id
+  id                String        @id
   name              String
-  number            Int?         @unique
-  phdsMain          Phd[]        @relation("DepartmentPhdMain")
-  phdsSecondary     Phd[]        @relation("DepartmentPhdSecondary")
-  employments       Employment[] @relation("DepartmentEmployment")
-  projectMain       Project[]    @relation("DepartmentProjectMain")
-  projectsSecondary Project[]
-  btors             Btor[]       @relation("BtorsDepartment")
-  flights2019       Flight2019[] @relation("Flight2019Department")
+  number            Int?          @unique
+  phdsMain          Phd[]         @relation("PhdDepartmentMain")
+  phdsSecondary     Phd[]         @relation("PhdDepartmentSecondary")
+  employments       Employment[]
+  projectsMain      Project[]     @relation("ProjectDepartmentMain")
+  projectsSecondary Project[]     @relation("ProjectDepartmentSecondary")
+  btors             Btor[]
+  applications      Application[]
+  flights2019       Flight2019[]  @relation("Flight2019Department")
 }
 
 model Status {
   id           String        @id
   label        String
-  applications Application[] @relation("StatusApplication")
-  phds         Phd[]         @relation("StatusPhd")
+  applications Application[] @relation("ApplicationStatus")
+  phds         Phd[]         @relation("PhdStatus")
 }
 
 //TODO: add city
@@ -41,22 +42,19 @@ model Applicant {
   country      Country?      @relation("ApplicantNationality", fields: [countryId], references: [id])
   phds         Phd[]         @relation("ApplicantPhd")
   employees    Employee[]    @relation("ApplicantEmployee")
-  applications Application[] @relation("ApplicantApplication")
+  applications Application[] @relation("ApplicationApplicant")
 }
 
-// TODO: add model programms
-// TODO: add programm relation to departments
-
-// TODO: add programm relation to application
 model Application {
-  id                  String    @id
+  id                  String       @id
   applicantId         String
-  applicant           Applicant @relation("ApplicantApplication", fields: [applicantId], references: [id])
+  applicant           Applicant    @relation("ApplicationApplicant", fields: [applicantId], references: [id])
   courseId            String
   programmId          String?
+  departments         Department[]
   level               String?
   statusId            String
-  status              Status    @relation("StatusApplication", fields: [statusId], references: [id])
+  status              Status       @relation("ApplicationStatus", fields: [statusId], references: [id])
   examYear            Int?
   enrollmentStartYear Int?
   enrollmentEndYear   Int?
@@ -67,23 +65,21 @@ model Application {
 }
 
 model Phd {
-  id                    String      @id
-  itcStudentId          String?
-  applicant             Applicant?  @relation("ApplicantPhd", fields: [itcStudentId], references: [itcStudentId])
-  departmentMainId      String?
-  departmentMain        Department? @relation("DepartmentPhdMain", fields: [departmentMainId], references: [id])
-  departmentSecondaryId String?
-  departmentSecondary   Department? @relation("DepartmentPhdSecondary", fields: [departmentSecondaryId], references: [id])
-  thesisTitle           String?
-  doi                   String?
-  name                  String?
-  startYear             Int?
-  graduationYear        Int?
-  promotionYear         Int?
-  statusId              String?
-  status                Status?     @relation("StatusPhd", fields: [statusId], references: [id])
-  countryId             Int?
-  country               Country?    @relation("PhdCountry", fields: [countryId], references: [id])
+  id                   String       @id
+  itcStudentId         String?
+  applicant            Applicant?   @relation("ApplicantPhd", fields: [itcStudentId], references: [itcStudentId])
+  departmentsMain      Department[] @relation("PhdDepartmentMain")
+  departmentsSecondary Department[] @relation("PhdDepartmentSecondary")
+  thesisTitle          String?
+  doi                  String?
+  name                 String?
+  startYear            Int?
+  graduationYear       Int?
+  promotionYear        Int?
+  statusId             String?
+  status               Status?      @relation("PhdStatus", fields: [statusId], references: [id])
+  countryId            Int?
+  country              Country?     @relation("PhdCountry", fields: [countryId], references: [id])
 }
 
 model Employee {
@@ -97,14 +93,13 @@ model Employee {
 }
 
 model Employment {
-  id           String      @id
+  id           String       @id
   startYear    Int?
   endYear      Int?
   employedDays Int?
   employeeId   String
-  employee     Employee    @relation(fields: [employeeId], references: [id])
-  departmentId String?
-  department   Department? @relation("DepartmentEmployment", fields: [departmentId], references: [id])
+  employee     Employee     @relation(fields: [employeeId], references: [id])
+  departments  Department[]
 }
 
 model Country {
@@ -136,9 +131,8 @@ model Project {
   countries            Country[]
   start                DateTime?      @db.Date
   end                  DateTime?      @db.Date
-  departmentMainId     String?
-  departmentMain       Department?    @relation("DepartmentProjectMain", fields: [departmentMainId], references: [id])
-  departmentsSecondary Department[]
+  departmentsMain      Department[]   @relation("ProjectDepartmentMain")
+  departmentsSecondary Department[]   @relation("ProjectDepartmentSecondary")
   type                 ProjectType?
   status               ProjectStatus?
   leadOrganization     String?
@@ -160,14 +154,13 @@ enum ProjectStatus {
 }
 
 model Btor {
-  id           Int              @id @default(autoincrement())
-  year         Int
-  start        DateTime?        @db.Date
-  end          DateTime?        @db.Date
-  departmentId String?
-  department   Department?      @relation("BtorsDepartment", fields: [departmentId], references: [id])
-  countries    Country[]
-  purpose      PurposeOfTravel?
+  id          Int              @id @default(autoincrement())
+  year        Int
+  start       DateTime?        @db.Date
+  end         DateTime?        @db.Date
+  departments Department[]
+  countries   Country[]
+  purpose     PurposeOfTravel?
 }
 
 enum PurposeOfTravel {

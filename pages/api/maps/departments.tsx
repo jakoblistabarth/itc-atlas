@@ -39,7 +39,7 @@ import { MapOptions } from "../../../types/MapOptions";
  */
 export default async function handler(
   req: NextApiRequest,
-  res: NextApiResponse
+  res: NextApiResponse,
 ) {
   const themeReq = req.query.theme?.toString() as ThemeNames;
   const theme = !themeReq ? defaultTheme : themes.get(themeReq);
@@ -93,16 +93,18 @@ export default async function handler(
         <MapLayerBase countries={neCountriesTopoJson} theme={theme} />
         <g id="symbols">
           {data.map((d) => {
-            return (
+            return d.coordinates ? (
               <MarkScaledPie
                 key={d.isoAlpha3}
-                longitude={d.coordinates[0]}
-                latitude={d.coordinates[1]}
+                longitude={d.coordinates?.[0]}
+                latitude={d.coordinates?.[1]}
                 radius={scale(d.totalCount)}
                 colorScale={departmentColorScale}
                 data={d.departments}
                 stroke="lightgrey"
               />
+            ) : (
+              <></>
             );
           })}
         </g>
@@ -113,14 +115,14 @@ export default async function handler(
           <LegendNominal
             title={"Top 5 PhD countries"}
             entries={data.slice(0, 5).map((d) => ({
-              label: `${d.countryName} (${d.totalCount})`,
+              label: `${d.isoAlpha3} (${d.totalCount})`,
               color: "none",
               symbol: <g></g>,
             }))}
           />
         </g>
       </MapLayoutAside>
-    </MapLayout>
+    </MapLayout>,
   );
 
   res

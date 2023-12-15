@@ -1,23 +1,23 @@
+import { createId } from "@paralleldrive/cuid2";
 import {
   Prisma,
   ProjectStatus,
   ProjectType,
   PurposeOfTravel,
 } from "@prisma/client";
-import prisma from "./client";
-import fakeFlights2019 from "../lib/data/fake/fakeFlights2019";
+import fakeApplicants from "../lib/data/fake/fakeApplicants";
+import fakeApplications from "../lib/data/fake/fakeApplications";
 import fakeBTORS from "../lib/data/fake/fakeBtors";
+import fakeEmployees from "../lib/data/fake/fakeEmployees";
+import fakeEmployments from "../lib/data/fake/fakeEmployments";
+import fakeFlights2019 from "../lib/data/fake/fakeFlights2019";
+import fakePhds from "../lib/data/fake/fakePhds";
+import fakeProjects from "../lib/data/fake/fakeProjects";
 import loadDepartments from "../lib/data/load/loadDepartments";
 import loadStatus from "../lib/data/load/loadStatus";
 import loadUnsdCountries from "../lib/data/load/loadUnsdCountries";
+import prisma from "./client";
 import resetDatabase from "./resetDatabase";
-import fakeProjects from "../lib/data/fake/fakeProjects";
-import fakeApplicants from "../lib/data/fake/fakeApplicants";
-import fakeApplications from "../lib/data/fake/fakeApplications";
-import fakePhds from "../lib/data/fake/fakePhds";
-import fakeEmployees from "../lib/data/fake/fakeEmployees";
-import fakeEmployments from "../lib/data/fake/fakeEmployments";
-import { createId } from "@paralleldrive/cuid2";
 
 async function main() {
   await resetDatabase();
@@ -51,7 +51,7 @@ async function main() {
         },
       };
       return await prisma.department.create(createArgs);
-    })
+    }),
   );
   console.log("Seeded model Department. 🌱");
 
@@ -64,7 +64,7 @@ async function main() {
         },
       };
       return await prisma.status.create(createArgs);
-    })
+    }),
   );
   console.log("Seeded model Status. 🌱");
 
@@ -88,7 +88,7 @@ async function main() {
         },
       };
       return await prisma.country.create(createArgs);
-    })
+    }),
   );
   console.log("Seeded model Country. 🌱");
 
@@ -103,7 +103,7 @@ async function main() {
             ? {
                 connect: { id: countryId },
               }
-            : undefined,
+            : {},
           departure: d.departure,
           arrival: d.arrival,
           type: d.type,
@@ -113,13 +113,13 @@ async function main() {
                   number: d.department,
                 },
               }
-            : undefined,
+            : {},
           emissions: d.emissions,
           airportCodes: d.airportCodes,
         },
       };
       return await prisma.flight2019.create(createArgs);
-    })
+    }),
   );
   console.log("Seeded model Flight2019. 🌱");
 
@@ -136,14 +136,14 @@ async function main() {
           start: d.start,
           end: d.end,
           year: d.year,
-          department: {
-            connect: { id: d.department },
+          departments: {
+            connect: d.departments?.map((d) => ({ id: d })),
           },
           purpose: d.purpose as PurposeOfTravel,
         },
       };
       return await prisma.btor.create(createArgs);
-    })
+    }),
   );
   console.log("Seeded model Btor. 🌱");
 
@@ -163,13 +163,12 @@ async function main() {
           },
           start: d.dateStart,
           end: d.dateEnd,
-          departmentMainId: d.leadDepartment,
-          departmentsSecondary:
-            Array.isArray(d.otherDepartments) && d.otherDepartments.length > 1
-              ? {
-                  connect: d.otherDepartments.map((d) => ({ id: d })),
-                }
-              : undefined,
+          departmentsMain: {
+            connect: d.departmentsMain?.map((d) => ({ id: d })),
+          },
+          departmentsSecondary: {
+            connect: d.departmentsSecondary?.map((d) => ({ id: d })),
+          },
           leadOrganization: d.leadOrganization,
           fundingOrganization: d.fundingOrganization,
           type: d.type as ProjectType,
@@ -177,14 +176,14 @@ async function main() {
         },
       };
       return await prisma.project.create(createArgs);
-    })
+    }),
   );
   console.log("Seeded model Project. 🌱");
 
   await Promise.all(
     applicants.map(async (d) => {
       const country = countriesDB.find(
-        (c) => c.isoAlpha3 === d.countryIsoAlpha3
+        (c) => c.isoAlpha3 === d.countryIsoAlpha3,
       );
 
       const createArgs: Prisma.ApplicantCreateArgs = {
@@ -197,7 +196,7 @@ async function main() {
         },
       };
       return await prisma.applicant.create(createArgs);
-    })
+    }),
   );
   console.log("Seeded model Applicant. 🌱");
 
@@ -209,6 +208,11 @@ async function main() {
         data: {
           id: d.id,
           applicantId: d.applicantId,
+          departments: d.departments
+            ? {
+                connect: d.departments.map((d) => ({ id: d })),
+              }
+            : {},
           courseId: d.courseId,
           programmId: d.programmId,
           level: d.level,
@@ -222,7 +226,7 @@ async function main() {
         },
       };
       return await prisma.application.create(createArgs);
-    })
+    }),
   );
   console.log("Seeded model Application. 🌱");
 
@@ -248,8 +252,12 @@ async function main() {
         data: {
           id: createId(),
           itcStudentId: itcStudentId,
-          departmentMainId: d.department1,
-          departmentSecondaryId: d.department2,
+          departmentsMain: {
+            connect: d.departmentsMain?.map((d) => ({ id: d })),
+          },
+          departmentsSecondary: {
+            connect: d.departmentsSecondary?.map((d) => ({ id: d })),
+          },
           thesisTitle: d.thesisTitle,
           statusId: d.status,
           startYear: d.dateStart?.getFullYear(),
@@ -259,7 +267,7 @@ async function main() {
         },
       };
       return await prisma.phd.create(createArgs);
-    })
+    }),
   );
   console.log("Seeded model Phd. 🌱");
 
@@ -279,7 +287,7 @@ async function main() {
         },
       };
       return await prisma.employee.create(createArgs);
-    })
+    }),
   );
   console.log("Seeded model Employee. 🌱");
 
@@ -287,17 +295,6 @@ async function main() {
 
   await Promise.all(
     employments.map(async (d) => {
-      const department = d.department
-        ? await prisma.department.findFirst({
-            select: { id: true },
-            where: {
-              id: {
-                equals: d.department,
-              },
-            },
-          })
-        : null;
-
       // TODO: add unit end?
       const createArgs: Prisma.EmploymentCreateArgs = {
         data: {
@@ -306,11 +303,13 @@ async function main() {
           startYear: d.startYear,
           endYear: d.endYear,
           employedDays: d.employedDays,
-          departmentId: department?.id,
+          departments: {
+            connect: d.departments?.map((d) => ({ id: d })),
+          },
         },
       };
       return await prisma.employment.create(createArgs);
-    })
+    }),
   );
   console.log("Seeded model Employment. 🌱");
 }

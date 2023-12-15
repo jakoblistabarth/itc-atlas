@@ -105,7 +105,7 @@ async function main() {
             ? {
                 connect: { id: countryId },
               }
-            : undefined,
+            : {},
           departure: d.departure,
           arrival: d.arrival,
           type: d.type,
@@ -115,7 +115,7 @@ async function main() {
                   number: d.department,
                 },
               }
-            : undefined,
+            : {},
           emissions: d.emissions,
           airportCodes: d.airportCodes,
         },
@@ -138,9 +138,11 @@ async function main() {
           start: d.start,
           end: d.end,
           year: d.year,
-          department: {
-            connect: { id: d.department },
-          },
+          departments: d.departments
+            ? {
+                connect: d.departments.map((d) => ({ id: d })),
+              }
+            : {},
           purpose: d.purpose as PurposeOfTravel,
         },
       };
@@ -165,12 +167,16 @@ async function main() {
           },
           start: d.dateStart,
           end: d.dateEnd,
-          departmentMainId: d.leadDepartment,
-          departmentsSecondary: d.otherDepartments
+          departmentsMain: d.departmentsMain
             ? {
-                connect: d.otherDepartments.map((d) => ({ id: d })),
+                connect: d.departmentsMain.map((d) => ({ id: d })),
               }
-            : undefined,
+            : {},
+          departmentsSecondary: d.departmentsSecondary
+            ? {
+                connect: d.departmentsSecondary.map((d) => ({ id: d })),
+              }
+            : {},
           leadOrganization: d.leadOrganization,
           fundingOrganization: d.fundingOrganization,
           type: d.type as ProjectType,
@@ -208,6 +214,11 @@ async function main() {
         data: {
           id: createId(),
           applicantId: d.applicantId,
+          departments: d.departments
+            ? {
+                connect: d.departments.map((d) => ({ id: d })),
+              }
+            : {},
           courseId: d.courseId,
           programmId: d.programmId,
           level: d.level,
@@ -246,8 +257,20 @@ async function main() {
         data: {
           id: createId(),
           itcStudentId: applicantMatch?.itcStudentId,
-          departmentMainId: phd.department1,
-          departmentSecondaryId: phd.department2,
+          departmentsMain: phd.departmentsMain
+            ? {
+                connect: phd.departmentsMain.map((department) => ({
+                  id: department,
+                })),
+              }
+            : {},
+          departmentsSecondary: phd.departmentsSecondary
+            ? {
+                connect: phd.departmentsSecondary.map((department) => ({
+                  id: department,
+                })),
+              }
+            : {},
           thesisTitle: phd.thesisTitle,
           doi: phd.doi,
           name: phd.name,
@@ -293,12 +316,12 @@ async function main() {
 
   await Promise.all(
     employments.map(async (d) => {
-      const department = d.department
-        ? await prisma.department.findFirst({
+      const departments = d.departments
+        ? await prisma.department.findMany({
             select: { id: true },
             where: {
               id: {
-                equals: d.department,
+                in: d.departments,
               },
             },
           })
@@ -312,7 +335,13 @@ async function main() {
           startYear: d.startYear,
           endYear: d.endYear,
           employedDays: d.employedDays,
-          departmentId: department?.id,
+          departments: departments
+            ? {
+                connect: d.departments.map((department) => ({
+                  id: department,
+                })),
+              }
+            : {},
         },
       };
       return await prisma.employment.create(createArgs);

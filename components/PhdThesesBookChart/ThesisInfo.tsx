@@ -65,7 +65,7 @@ const ThesisInfo: FC<Props> = ({ info, colorScale, onCloseHandler }) => {
                       position-y={0.2}
                     >
                       <Book
-                        color={colorScale(info?.departmentMainId ?? "")}
+                        color={colorScale(info?.departmentsMain[0].id ?? "")}
                         thesisId={"1"}
                         active={false}
                       />
@@ -96,8 +96,14 @@ const ThesisInfo: FC<Props> = ({ info, colorScale, onCloseHandler }) => {
             <table className="mt-3 text-xs">
               <tbody>
                 {[
-                  ["Main department", info?.departmentMainId],
-                  ["Secondary department", info?.departmentSecondaryId],
+                  [
+                    "Main departments",
+                    info?.departmentsMain.map((d) => d.id).join(", "),
+                  ],
+                  [
+                    "Secondary departments",
+                    info?.departmentsSecondary.map((d) => d.id).join(", "),
+                  ],
                   ["Published", info?.graduationYear],
                 ].map(([k, v], idx) => (
                   <tr

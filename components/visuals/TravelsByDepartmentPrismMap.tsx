@@ -51,7 +51,7 @@ const TravelsByDepartmentPrismMap: FC<Props> = ({
       new Map(
         btorsByCountryByDepartment
           .get(activeDepartment)
-          ?.map(({ country, count }) => [country, { count }]),
+          ?.map(({ isoAlpha3, count }) => [isoAlpha3, { count }]),
       ),
     [activeDepartment, btorsByCountryByDepartment],
   );
@@ -141,7 +141,7 @@ const TravelsByDepartmentPrismMap: FC<Props> = ({
             number={
               btorsByCountryByDepartment
                 ?.get(activeDepartment)
-                ?.find((d) => d.country === hoverInfo?.id)?.count ?? 0
+                ?.find((d) => d.isoAlpha3 === hoverInfo?.id)?.count ?? 0
             }
           />
           {hoverInfo?.label}

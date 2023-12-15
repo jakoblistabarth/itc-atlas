@@ -7,8 +7,8 @@ const getPhdTheses = async () => {
       id: true,
       thesisTitle: true,
       promotionYear: true,
-      departmentMainId: true,
-      departmentSecondaryId: true,
+      departmentsMain: true,
+      departmentsSecondary: true,
       graduationYear: true,
       country: {
         select: {

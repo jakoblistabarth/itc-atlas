@@ -85,7 +85,7 @@ const Page = ({
               },
               { value: btorCount, unit: "Back-to-office reports" },
               {
-                value: department.projectMain.length,
+                value: department.projectsMain.length,
                 unit: "projects",
                 description: "as primary department",
               },
@@ -140,7 +140,7 @@ const Page = ({
                           (v) => v.length,
                           (d) => d.country?.isoAlpha3,
                         )
-                          // .filter(([isoAlpha3Code]) => isoAlpha3Code)
+                          .filter(([isoAlpha3Code]) => isoAlpha3Code)
                           .sort((a, b) => b[1] - a[1])
                           .map(([isoAlpha3Code, count]) => {
                             return (
@@ -235,7 +235,7 @@ const Page = ({
             </MapLayoutFluid>
           </div>
           <div className="grid grid-cols-4 gap-4">
-            {department.projectMain.map((d) => {
+            {department.projectsMain.map((d) => {
               return (
                 <Card key={d.id}>
                   <Card.Body>
@@ -299,8 +299,12 @@ export const getStaticProps = (async (context) => {
       where: {
         employment: {
           some: {
-            departmentId: {
-              equals: id,
+            departments: {
+              some: {
+                id: {
+                  equals: id,
+                },
+              },
             },
           },
         },
@@ -308,8 +312,12 @@ export const getStaticProps = (async (context) => {
     }),
     prisma.btor.count({
       where: {
-        departmentId: {
-          equals: id,
+        departments: {
+          some: {
+            id: {
+              equals: id,
+            },
+          },
         },
       },
     }),

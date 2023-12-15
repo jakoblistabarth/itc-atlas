@@ -9,7 +9,7 @@ describe("Projects have one or more secondary departments", () => {
       },
     });
     const projectsWithSecondaryDepartment = projects.filter(
-      (d) => d.departmentsSecondary.length > 0
+      (d) => d.departmentsSecondary.length > 0,
     );
 
     expect(projectsWithSecondaryDepartment.length).toBe(144);
@@ -18,15 +18,16 @@ describe("Projects have one or more secondary departments", () => {
   test("which are all different from their main department.", async () => {
     const projects = await prisma.project.findMany({
       include: {
+        departmentsMain: true,
         departmentsSecondary: true,
       },
     });
     const projectsHaveRedundantSecondaryDepartments = projects.some(
       (project) =>
-        project.departmentMainId &&
-        project.departmentsSecondary
-          .map((d) => d.id)
-          .includes(project.departmentMainId)
+        project.departmentsMain &&
+        project.departmentsSecondary.some((d) =>
+          project.departmentsMain.map((d) => d.id).includes(d.id),
+        ),
     );
 
     expect(projectsHaveRedundantSecondaryDepartments).toBe(false);

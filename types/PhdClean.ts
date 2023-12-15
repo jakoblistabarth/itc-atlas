@@ -1,8 +1,10 @@
+import { Department } from "../lib/mappings/departments";
+
 export type PhdClean = {
   itcStudentId: string | undefined;
   country: string | null;
-  department1: string | null;
-  department2: string | null;
+  departmentsMain?: Department[];
+  departmentsSecondary?: Department[];
   sponsor: string | null;
   status: string;
   dateStart: Date | null;

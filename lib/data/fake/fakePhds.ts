@@ -1,11 +1,12 @@
 import { faker } from "@faker-js/faker";
 import loadUnsdCountries from "../load/loadUnsdCountries";
-import { sampleSize, range, sample } from "lodash";
+import { sampleSize, range, sample, random } from "lodash";
 import { PhdClean } from "../../../types/PhdClean";
 import loadStatus from "../load/loadStatus";
 import loadDepartments from "../load/loadDepartments";
 import addDays from "../../utilities/addDays";
 import { ApplicantClean } from "../../../types/ApplicantClean";
+import { Department } from "../../mappings/departments";
 
 const fakePhds = async (
   applicants: ApplicantClean[],
@@ -14,6 +15,12 @@ const fakePhds = async (
   const countries = await loadUnsdCountries();
   const status = loadStatus();
   const departments = loadDepartments();
+
+  const departmentMain = sample(departments)?.id as Department;
+  const departmentsSecondary = sampleSize(
+    departments.filter((d) => d.id !== departmentMain),
+    random(1, 2),
+  ).map((d) => d.id) as Department[];
 
   const countriesSample = sampleSize(countries, 50);
   const focusCountries = sampleSize(countriesSample, 12);
@@ -32,8 +39,8 @@ const fakePhds = async (
           : undefined,
       country: country ?? "",
       status: sample(Object.values(status))?.id ?? "",
-      department1: sample(departments)?.id ?? "",
-      department2: sample(departments)?.id ?? "",
+      departmentsMain: [departmentMain],
+      departmentsSecondary: departmentsSecondary,
       thesisTitle: faker.lorem.sentence(),
       sponsor: sample(organizationNames) ?? "",
       dateStart: start,

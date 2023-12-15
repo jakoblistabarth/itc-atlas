@@ -1,11 +1,12 @@
 import { faker } from "@faker-js/faker";
+import { PurposeOfTravel } from "@prisma/client";
+import { randomInt, range } from "d3";
+import { sample, sampleSize } from "lodash";
+import { Department } from "../../mappings/departments";
+import addDays from "../../utilities/addDays";
 import { BtorClean } from "../clean/cleanBTORs";
 import loadDepartments from "../load/loadDepartments";
 import loadUnsdCountries from "../load/loadUnsdCountries";
-import { PurposeOfTravel } from "@prisma/client";
-import addDays from "../../utilities/addDays";
-import { sample, sampleSize } from "lodash";
-import { range, randomInt } from "d3";
 
 const fakeBtors = async (number = 5000): Promise<BtorClean[]> => {
   const departments = loadDepartments();
@@ -20,7 +21,7 @@ const fakeBtors = async (number = 5000): Promise<BtorClean[]> => {
     const arrivalDate = addDays(departureDate, traveldays);
     const travelledCountries = sampleSize(
       countriesSelection,
-      randomInt(1, 4)()
+      randomInt(1, 4)(),
     ).map((d) => d["ISO-alpha3 Code"] as string);
     const btor: BtorClean = {
       id: i,
@@ -28,7 +29,9 @@ const fakeBtors = async (number = 5000): Promise<BtorClean[]> => {
       start: departureDate.toISOString(),
       end: arrivalDate.toISOString(),
       year: departureDate.getFullYear(),
-      department: sample(departments)?.id ?? "",
+      departments: sampleSize(departments, randomInt(2)()).map(
+        (d) => d.id as Department,
+      ),
       countries: travelledCountries,
       purpose: sample(Object.values(PurposeOfTravel)) ?? "",
     };

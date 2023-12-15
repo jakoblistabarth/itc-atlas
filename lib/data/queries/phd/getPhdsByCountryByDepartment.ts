@@ -1,8 +1,7 @@
-import { group, geoCentroid, descending } from "d3";
-import getCountries from "../../getCountries";
-import * as topojson from "topojson-client";
-import { pieDatum } from "../../../../components/ScaledPieChart/ScaledPieChart";
+import { descending, groups } from "d3";
 import prisma from "../../../../prisma/client";
+import getCentroidByIsoCode from "../../getCentroidByIsoCode";
+import { Prisma } from "@prisma/client";
 
 export type phdPerCountryDepartment = {
   countryId: number;
@@ -10,72 +9,44 @@ export type phdPerCountryDepartment = {
   count: number;
 };
 
+type Row = { departmentId: string; isoAlpha3: string; count: number };
+
 const getPhdsByCountryByDepartment = async (
-  onlyGraduates?: boolean // TODO: refactor
+  onlyGraduates?: boolean, // TODO: refactor
 ) => {
-  const filter = onlyGraduates ? { status: { id: { equals: "38" } } } : {};
-  const phdsGrouped = await prisma.phd.groupBy({
-    by: ["countryId", "departmentMainId"],
-    _count: {
-      _all: true,
-    },
-    where: filter,
-    orderBy: { countryId: "asc" },
-  });
-  const countries = await prisma.country.findMany();
+  const filter = onlyGraduates
+    ? Prisma.sql`AND "statusId" = '38'`
+    : Prisma.empty;
+  const rows = await prisma.$queryRaw<Row[]>`
+  SELECT
+    rel."A" as "departmentId",
+    c."isoAlpha3" as "isoAlpha3",
+    Count(*)::INT as count
+  FROM "Phd" AS p
+  LEFT JOIN "Country" AS c
+  ON p."countryId" = c."id"
+  RIGHT JOIN "_PhdDepartmentMain" AS rel
+  ON p.id = rel."B"
+  WHERE
+    p."countryId" IS NOT NULL
+    ${filter}
+  GROUP BY "isoAlpha3", "departmentId"
+  ORDER BY "isoAlpha3";
+  `;
 
-  const phdCount = phdsGrouped.map((d) => {
-    const c = countries.find((c) => c.id == d.countryId);
-    return {
-      countryIsoAlpha3: c?.isoAlpha3,
-      countryName: c?.nameLongEn,
-      departmentMainCode: d.departmentMainId,
-      count: d._count._all,
-    };
-  });
-  const count = group(phdCount, (d) => d.countryIsoAlpha3);
-
-  // TODO: replace by getCountriesCentroids()
-  const neCountriesTopojson = getCountries();
-  const neCountriesGeoJson = topojson.feature(
-    neCountriesTopojson,
-    neCountriesTopojson.objects.ne_admin_0_countries
-  );
-
-  const countriesWithDepartments = neCountriesGeoJson.features
-    .reduce(
-      (
-        acc: {
-          isoAlpha3: string;
-          countryName: string;
-          departments: pieDatum[];
-          totalCount: number;
-          coordinates: number[];
-        }[],
-        feature
-      ) => {
-        const departmentCount = count.get(feature.properties?.ADM0_A3_NL);
-        if (!departmentCount) return acc;
-        const departments = departmentCount.map((d) => {
-          return {
-            label: d.departmentMainCode ?? "NA",
-            value: d.count,
-          };
-        });
-        const totalCount = departmentCount.reduce((sum, d) => sum + d.count, 0);
-        const c = geoCentroid(feature);
-        const coordinates = [c[0], c[1]];
-        acc.push({
-          isoAlpha3: feature.properties?.ADM0_A3_NL,
-          countryName: departmentCount[0].countryName ?? "",
-          departments,
-          totalCount,
-          coordinates,
-        });
-        return acc;
-      },
-      []
-    )
+  const countriesWithDepartments = groups(rows, (d) => d.isoAlpha3)
+    .map(([isoAlpha3, departments]) => {
+      return {
+        isoAlpha3,
+        coordinates: getCentroidByIsoCode(isoAlpha3)?.toArray(),
+        totalCount: departments.reduce((acc, d) => (acc += d.count), 0),
+        departments: departments.map((d) => ({
+          label: d.departmentId,
+          value: d.count,
+        })),
+      };
+    })
+    .filter((d) => d.coordinates)
     .sort((a, b) => descending(a.totalCount ?? 0, b.totalCount ?? 0));
 
   return countriesWithDepartments;

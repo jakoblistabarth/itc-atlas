@@ -9,7 +9,7 @@ export default async function getBtorsByCountry(isoAlpha3: string) {
           isoAlpha3: true,
         },
       },
-      department: {
+      departments: {
         select: {
           id: true,
         },

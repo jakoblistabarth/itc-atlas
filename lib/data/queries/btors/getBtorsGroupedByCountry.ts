@@ -4,7 +4,7 @@ import * as aq from "arquero";
 type Row = { id: string; year: number; countries: string[] };
 
 export default async function getBtorsGroupedByCountry() {
-  const rows: Row[] = await prisma.$queryRaw`
+  const rows = await prisma.$queryRaw<Row[]>`
   SELECT
     "Btor".id,
     "Btor".year, 

@@ -42,7 +42,7 @@ const fakeFlights2019 = async (number = 900): Promise<Flight2019Clean[]> => {
 
 const getRandomAirports = (
   airportCodes: string[],
-  hubs: string[]
+  hubs: string[],
 ): string[] => {
   const numberOfStops = Math.ceil(Math.pow(Math.random(), 24) * 4);
   const originAirport = sample(airportCodes) as string;

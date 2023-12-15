@@ -20,30 +20,19 @@ export const departmentColors = {
   NA: "#ffffff",
 };
 
-// TODO: check with Menno-Jan how to proceed with department mapping
-// CTW, BMS, PERS, S&A, FM, COM -> SUP
-// RES -> VAR
-// RC ?
-// BOOZ ?
-// IIH ?
-// TA ?
-// AA
+// TODO: Should we differentiate VAR further into internal (within ITC/UT) and external
 
-export const mapToDepartment = (
-  str?: string,
-): string | Department | undefined => {
+export const mapToDepartment = (str?: string): Department[] | undefined => {
   if (!str || str.match(/^(NULL|EN|IR|MPS|BOOZ|RC|IIH|TA|AA)$/))
     return undefined;
-  if (str.match(/^GFM$/)) return Department.VAR; //TODO: split into EOS and GIP
-  if (str.match(/^(EOS)$/)) return Department.EOS;
-  if (str.match(/^(AES|ARS|ENG|ESA|EREG|NHR)$/)) return Department.AES;
-  if (str.match(/^(GIP|CART|GIM|GIMA)$/)) return Department.GIP;
-  if (str.match(/^(NRS|NRM|GEM|IGEON)$/)) return Department.NRS;
-  if (str.match(/^(PGM|(GIM|UP)?LA|GSIM|UPM)$/)) return Department.PGM;
-  if (str.match(/^(WRS|WREM)$/)) return Department.WRS;
+  if (str.match(/^GFM$/)) return [Department.EOS, Department.GIP];
+  if (str.match(/^(EOS)$/)) return [Department.EOS];
+  if (str.match(/^(AES|ARS|ENG|ESA|EREG|NHR)$/)) return [Department.AES];
+  if (str.match(/^(GIP|CART|GIM|GIMA)$/)) return [Department.GIP];
+  if (str.match(/^(NRS|NRM|GEM|IGEON)$/)) return [Department.NRS];
+  if (str.match(/^(PGM|(GIM|UP)?LA|GSIM|UPM)$/)) return [Department.PGM];
+  if (str.match(/^(WRS|WREM)$/)) return [Department.WRS];
   if (str.match(/^(CRIB|FB|IT|BPS|MPS|CTW|BMS|PERS|S&A|FM|COM|Library)$/))
-    return Department.SUP;
-  if (str.match(/^(EA|ITC|Various|RES|)$|^(TUD\/|UT \/)/))
-    return Department.VAR;
-  return str;
+    return [Department.SUP];
+  return [Department.VAR];
 };

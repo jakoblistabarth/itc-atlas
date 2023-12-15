@@ -39,7 +39,7 @@ export async function cleanPhds(data: PhdRaw[]) {
         if (!result) return null;
         return result.item["ISO-alpha3 Code"];
       }),
-      department1: aq.escape((d: PhdRaw) => {
+      departmentsMain: aq.escape((d: PhdRaw) => {
         return mapToDepartment(d.Department);
       }),
       doi: (d: PhdRaw) => aq.op.replace(d.DOI, /\\$/, ""),
@@ -47,23 +47,28 @@ export async function cleanPhds(data: PhdRaw[]) {
         aq.op.padstart(d.LastStatus ? d.LastStatus + "" : "00", 2, "0"),
     })
     .derive({
-      department2: aq.escape((d: PhdRaw & { department1?: string }) => {
-        const dep2 = mapToDepartment(d.DepartmentSecond);
-        return dep2 != d.department1 ? dep2 : null;
-      }),
+      departmentsSecondary: aq.escape(
+        (d: PhdRaw & { departmentsMain?: string }) => {
+          const dep2 = mapToDepartment(d.DepartmentSecond);
+          return dep2
+            ? dep2?.filter(
+                (departmentSecondary) =>
+                  !d.departmentsMain?.includes(departmentSecondary),
+              )
+            : null;
+        },
+      ),
     })
     .rename({
       Country: "country",
-      Department: "department1",
-      DepartmentSecond: "department2",
       Sponsor: "sponsor",
       NamePure: "name",
     })
     .select(
       "itcStudentId",
       "country",
-      "department1",
-      "department2",
+      "departmentsMain",
+      "departmentsSecondary",
       "sponsor",
       "status",
       "dateStart",

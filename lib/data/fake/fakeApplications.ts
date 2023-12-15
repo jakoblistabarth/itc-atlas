@@ -1,13 +1,15 @@
 import { faker } from "@faker-js/faker";
 import { ApplicantClean } from "../../../types/ApplicantClean";
-import { range, sample } from "lodash";
+import { random, range, sample, sampleSize } from "lodash";
 import { ApplicationClean } from "../../../types/ApplicationClean";
 import loadStatus from "../load/loadStatus";
 import addDays from "../../utilities/addDays";
+import loadDepartments from "../load/loadDepartments";
+import { Department } from "../../mappings/departments";
 
 const fakeApplications = async (
   applicants: ApplicantClean[],
-  number = 7000
+  number = 7000,
 ): Promise<ApplicationClean[]> => {
   const status = loadStatus();
   const courseIds = range(3000).map(() => "C00" + faker.random.numeric(4));
@@ -40,21 +42,24 @@ const fakeApplications = async (
     "GRAD.PHD",
     "GRAD.INT",
   ];
+  const departments = loadDepartments().map((d) => d.id as Department);
 
   const data = range(number).map((d) => {
+    const assignedDepartments = sampleSize(departments, random(1, 2));
     const enrollmentStart = faker.date.between(new Date("1950"), new Date());
     const enrollmentEnd = addDays(
       enrollmentStart,
-      sample([14, 180, 365]) as number
+      sample([14, 180, 365]) as number,
     );
     const certificationDate = addDays(
       enrollmentEnd,
-      sample(range(2, 30)) as number
+      sample(range(2, 30)) as number,
     );
     const application: ApplicationClean = {
       id: String(d),
       applicantId: sample(applicants)?.applicantId ?? "",
       applicantId_actual: "doesNotApply",
+      departments: assignedDepartments,
       statusId: sample(status)?.id ?? "",
       courseId: sample(courseIds) ?? "",
       enrollmentStart: enrollmentStart,

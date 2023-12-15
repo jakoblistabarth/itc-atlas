@@ -4,11 +4,14 @@ import { UnLevel } from "../../../types/UnsdCodes";
 import loadUnsdCountries from "../load/loadUnsdCountries";
 import * as aq from "arquero";
 import { ProjectPre2019Raw, ProjectPost2019Raw } from "../load/loadProjects";
-import { mapToDepartment } from "../../mappings/departments";
+import { Department, mapToDepartment } from "../../mappings/departments";
 import { mapToOrganizationGroup } from "../../mappings/organizationGroup";
 import mapToProjectStatus from "../../mappings/project.status";
 
-export type ProjectClean = Omit<ProjectMerged, "id"> & {
+export type ProjectClean = Omit<
+  ProjectMerged,
+  "id" | "departmentsMain" | "departmentsSecondary"
+> & {
   id: number;
   countriesRegionArr: string[];
   regions: string[];
@@ -16,6 +19,8 @@ export type ProjectClean = Omit<ProjectMerged, "id"> & {
   intermediateRegions: string[];
   countries: string[];
   allCountries: string[];
+  departmentsMain?: Department[];
+  departmentsSecondary?: Department[];
 };
 
 type ProjectMerged = {
@@ -29,8 +34,8 @@ type ProjectMerged = {
   fundingType: string;
   fundingOrganization: string;
   leadOrganization: string;
-  leadDepartment: string;
-  otherDepartments?: string[];
+  departmentsMain?: string[];
+  departmentsSecondary?: string[];
   countriesRegion: string;
   dateStart: string;
   dateEnd: string;
@@ -48,9 +53,10 @@ const cleanProjects = async ({
   const pre2019 = aq
     .from(projectsPre2019)
     .derive({
-      leadDepartment: (d: ProjectPre2019Raw) =>
+      departmentsMain: (d: ProjectPre2019Raw) => [
         aq.op.split(d["Division"], /,\s?|\s?\/\s?/, 10)[0],
-      otherDepartments: aq.escape((d: ProjectPre2019Raw) => {
+      ],
+      departmentsSecondary: aq.escape((d: ProjectPre2019Raw) => {
         const list = aq.op.split(d["Division"], /,\s?|\s?\/\s?/, 10);
         return aq.op.slice(list, 1, list.length);
       }),
@@ -92,24 +98,24 @@ const cleanProjects = async ({
     .from(projectsPost2019)
     .derive({
       fundingOrganization: aq.escape((d: ProjectPost2019Raw) =>
-        mapToOrganizationGroup(d.Client_FundingAgency)
+        mapToOrganizationGroup(d.Client_FundingAgency),
       ),
       leadOrganization: aq.escape((d: ProjectPost2019Raw) =>
-        mapToOrganizationGroup(d.LeadOrganisation)
+        mapToOrganizationGroup(d.LeadOrganisation),
       ),
+      departmentsMain: aq.escape((d: ProjectPost2019Raw) => [d.LeadDepartment]),
     })
     .rename({
       projectName: "name",
       projectShortName: "projectShortName",
       CountriesRegion: "countriesregion",
       descriptionProject: "description",
-      LeadDepartment: "leadDepartment",
       projectID: "id",
       projecttype: "type",
       Status: "status",
     })
     .derive({
-      otherDepartments: (d: ProjectPost2019Raw) =>
+      departmentsSecondary: (d: ProjectPost2019Raw) =>
         aq.op.split(d.OtherDepartments, /,\s?/, 10),
     });
 
@@ -121,13 +127,13 @@ const cleanProjects = async ({
       nameShort: aq.escape((row: ProjectMerged) =>
         row.nameShort === ""
           ? `[${row.id}-${row.name.substring(0, 3)}]`
-          : row.nameShort
+          : row.nameShort,
       ),
       dateStart: aq.escape((row: ProjectMerged) =>
-        !row.dateStart || row.dateStart === "NULL" ? null : row.dateStart
+        !row.dateStart || row.dateStart === "NULL" ? null : row.dateStart,
       ),
       dateEnd: aq.escape((row: ProjectMerged) =>
-        !row.dateEnd || row.dateEnd === "NULL" ? null : row.dateEnd
+        !row.dateEnd || row.dateEnd === "NULL" ? null : row.dateEnd,
       ),
       status: aq.escape((row: ProjectMerged) => {
         return mapToProjectStatus(row.status);
@@ -139,28 +145,31 @@ const cleanProjects = async ({
         if (!!row.type.match(/Consulting/g)) return "Consulting";
         return "Other";
       }),
-      leadDepartment: aq.escape((row: ProjectMerged) =>
-        mapToDepartment(row.leadDepartment)
+      departmentsMain: aq.escape(
+        (row: ProjectMerged) =>
+          row.departmentsMain
+            ?.map((d) => mapToDepartment(d))
+            .flat()
+            .filter((d) => d),
       ),
       countriesRegion: aq.escape((row: ProjectMerged) =>
-        mapCountries(row.countriesRegion)
+        mapCountries(row.countriesRegion),
       ),
     })
     .derive({
-      otherDepartments: aq.escape((row: ProjectMerged) =>
-        Array.isArray(row.otherDepartments) && row.otherDepartments[0]
-          ? row.otherDepartments
-              .map((d) => mapToDepartment(d))
-              .filter((d) => d != row.leadDepartment)
-          : undefined
-      ),
+      departmentsSecondary: aq.escape((row: ProjectMerged) => {
+        const dep2 = row.departmentsSecondary
+          ?.map((d) => mapToDepartment(d))
+          .flat();
+        return dep2?.filter((d) => d && !row.departmentsMain?.includes(d));
+      }),
     })
     .filter(
       aq.escape(
         (row: ProjectMerged) =>
           row.dateEnd === null ||
-          new Date(row.dateStart) < new Date(row.dateEnd)
-      )
+          new Date(row.dateStart) < new Date(row.dateEnd),
+      ),
     ); // TODO: fix projects whith old entries
 
   const output = merged.objects() as ProjectClean[];
@@ -178,7 +187,7 @@ const cleanProjects = async ({
   const regionCodes = await loadUnsdCodes(UnLevel.Regions);
   const subRegionCodes = await loadUnsdCodes(UnLevel.SubRegions);
   const intermediateRegionCodes = await loadUnsdCodes(
-    UnLevel.IntermediateRegions
+    UnLevel.IntermediateRegions,
   );
 
   // Matching
@@ -202,7 +211,7 @@ const cleanProjects = async ({
 
       const intermediateRegions = output[row].intermediateRegions;
       const intermediateRegionMatch = intermediateRegionCodes.find(
-        (f) => f.name?.toUpperCase() === e.toUpperCase()
+        (f) => f.name?.toUpperCase() === e.toUpperCase(),
       );
       if (
         intermediateRegionMatch &&
@@ -213,7 +222,7 @@ const cleanProjects = async ({
       }
 
       const countryMatch = countries.find((f) =>
-        f["Country or Area"].toUpperCase().match(e.toUpperCase())
+        f["Country or Area"].toUpperCase().match(e.toUpperCase()),
       );
       const countriesList = output[row].countries;
       if (!countryMatch || !Array.isArray(countriesList)) return;
@@ -231,7 +240,7 @@ const cleanProjects = async ({
         allCountries.push(
           ...countries
             .filter((e) => e["Region Name"] === region)
-            .map((e) => e["ISO-alpha3 Code"])
+            .map((e) => e["ISO-alpha3 Code"]),
         );
       });
 
@@ -240,7 +249,7 @@ const cleanProjects = async ({
         allCountries.push(
           ...countries
             .filter((e) => e["Sub-region Name"] === subregion)
-            .map((e) => e["ISO-alpha3 Code"])
+            .map((e) => e["ISO-alpha3 Code"]),
         );
       });
 
@@ -249,7 +258,7 @@ const cleanProjects = async ({
         allCountries.push(
           ...countries
             .filter((e) => e["Intermediate Region Name"] === intermediateRegion)
-            .map((e) => e["ISO-alpha3 Code"])
+            .map((e) => e["ISO-alpha3 Code"]),
         );
       });
 

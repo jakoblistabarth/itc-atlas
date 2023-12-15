@@ -3,7 +3,7 @@ import prisma from "../../../../prisma/client";
 
 const getCountryWithProjectCount = async (departmentId?: string) => {
   const departmentFilter = departmentId
-    ? { departmentMainId: departmentId }
+    ? { departmentsMain: { some: { id: departmentId } } }
     : undefined;
   return prisma.country.findMany({
     select: {

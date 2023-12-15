@@ -30,7 +30,7 @@ const BookStack: FC<Props> = ({
           key={idx}
           thesisId={d.id}
           active={d.id === activeThesis}
-          color={colorScale(d.departmentMainId ?? "na")}
+          color={colorScale(d.departmentsMain[0].id ?? "na")}
           wiggle={true}
           position-y={-0.01 + 0.02 * (idx + 1)}
           setActiveThesis={setActiveThesis}

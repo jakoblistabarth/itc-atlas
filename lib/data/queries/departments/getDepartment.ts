@@ -6,7 +6,7 @@ export default async function getDepartment(id: string) {
       id: true,
       name: true,
       number: true,
-      projectMain: {
+      projectsMain: {
         include: {
           countries: true,
         },
@@ -21,8 +21,8 @@ export default async function getDepartment(id: string) {
           id: true,
           thesisTitle: true,
           promotionYear: true,
-          departmentMainId: true,
-          departmentSecondaryId: true,
+          departmentsMain: true,
+          departmentsSecondary: true,
           graduationYear: true,
           doi: true,
           name: true,

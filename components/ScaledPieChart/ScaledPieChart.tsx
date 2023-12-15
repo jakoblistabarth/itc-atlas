@@ -3,7 +3,7 @@ import type { PieArcDatum, ScaleOrdinal } from "d3";
 import type { FC, SVGProps } from "react";
 import { Vector2 } from "three";
 
-export type pieDatum = {
+export type PieDatum = {
   value: number;
   label: string;
 };
@@ -12,7 +12,7 @@ type Props = {
   position?: Vector2;
   radius: number;
   innerRadius?: number;
-  data: pieDatum[];
+  data: PieDatum[];
   colorScale?: ScaleOrdinal<string, string>;
 } & SVGProps<SVGPathElement>;
 

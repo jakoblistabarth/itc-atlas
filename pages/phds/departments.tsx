@@ -81,12 +81,12 @@ const PhdDepartments: NextPage<Props> = ({
             {!isLoading && (
               <g id="symbols">
                 {mapData.map((country) => {
-                  if (!country.departments) return;
+                  if (!country.departments || !country.coordinates) return;
                   return (
                     <MarkScaledPieChart
                       key={country.isoAlpha3}
-                      longitude={country.coordinates[0]}
-                      latitude={country.coordinates[1]}
+                      longitude={country.coordinates?.[0]}
+                      latitude={country.coordinates?.[1]}
                       radius={scale(country.totalCount)}
                       colorScale={departmentColorScale}
                       data={country.departments}
@@ -104,7 +104,7 @@ const PhdDepartments: NextPage<Props> = ({
               <LegendNominal
                 title={"Top 5 PhD countries"}
                 entries={mapData.slice(0, 5).map((d) => ({
-                  label: `${d.countryName} (${d.totalCount})`,
+                  label: `${d.isoAlpha3} (${d.totalCount})`,
                   color: "none",
                   symbol: <g></g>,
                 }))}
