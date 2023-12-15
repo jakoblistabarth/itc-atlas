@@ -82,12 +82,14 @@ const SpaceTimeCubeProjects: FC<Props> = ({
               <Tooltip.Trigger asChild>
                 <CanvasStage className="h-[700px]">
                   <Canvas
-                    className="bg-white"
                     orthographic
                     camera={{ position: [10, 10, 10], zoom: 50, near: 0 }}
                     shadows
                   >
                     <OrbitControls
+                      makeDefault
+                      enableDamping
+                      dampingFactor={0.3}
                       enableZoom={true}
                       enablePan={true}
                       target-y={height / 2}

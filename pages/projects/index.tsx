@@ -5,7 +5,7 @@ import { AgGridReact } from "ag-grid-react";
 import * as aq from "arquero";
 import type { NextPage } from "next";
 import { useRouter } from "next/router";
-import useSWR from "swr";
+import useSWRImmutable from "swr/immutable";
 import CardLink from "../../components/CardLink";
 import ChapterHeader from "../../components/ChapterHeader";
 import Footer from "../../components/Footer";
@@ -19,7 +19,7 @@ import Paragraph from "../../components/Paragraph";
 import SecondaryNavigation from "../../components/SecondaryNavigation";
 
 const Projects: NextPage = () => {
-  const { data, error, isLoading } = useSWR("/api/data/project/");
+  const { data, error, isLoading } = useSWRImmutable("/api/data/project/");
   const { route } = useRouter();
   const links = [
     {
@@ -39,7 +39,7 @@ const Projects: NextPage = () => {
       children: "Naivasha Region",
     },
     {
-      href: `${route}/project-explorer-3d`,
+      href: `${route}/globe`,
       children: "Projects Globe",
     },
     {
@@ -87,7 +87,7 @@ const Projects: NextPage = () => {
             <ChapterHighlights
               highlights={[
                 {
-                  href: "projects/project-explorer-3d",
+                  href: "projects/globe",
                   title: "The globe of projects",
                 },
                 {

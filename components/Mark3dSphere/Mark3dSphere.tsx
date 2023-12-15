@@ -1,14 +1,22 @@
-import { FC, useState } from "react";
+import { FC, PropsWithChildren, useState } from "react";
 import { Vector3 } from "three";
 import { useSpring, animated, config } from "@react-spring/three";
 import { useCursor } from "@react-three/drei";
 
-const Mark3dSphere: FC<{
+type Props = PropsWithChildren<{
   pos: Vector3;
   radius: number;
   onPointerEnterHandler?: () => void;
   onPointerLeaveHandler?: () => void;
-}> = ({ pos, radius, onPointerEnterHandler, onPointerLeaveHandler }) => {
+}>;
+
+const Mark3dSphere: FC<Props> = ({
+  pos,
+  radius,
+  onPointerEnterHandler,
+  onPointerLeaveHandler,
+  children,
+}) => {
   const [hover, setHover] = useState(false);
   useCursor(hover);
 
@@ -33,7 +41,7 @@ const Mark3dSphere: FC<{
       castShadow
     >
       <sphereGeometry args={[radius]} />
-      <meshStandardMaterial color={hover ? "red" : "black"} />
+      {children}
     </animated.mesh>
   );
 };

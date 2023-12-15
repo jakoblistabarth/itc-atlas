@@ -57,7 +57,9 @@ const Mark3dFlow: FC<{
             radius={0.005}
             onPointerEnterHandler={() => onPointerEnterHandler(info)}
             onPointerLeaveHandler={onPointerLeaveHandler}
-          />
+          >
+            <meshStandardMaterial color="teal" />
+          </Mark3dSphere>
         );
       })}
       <mesh
@@ -74,7 +76,7 @@ const Mark3dFlow: FC<{
         receiveShadow
       >
         <tubeGeometry args={[curve, 60, radius, 16, false]} />
-        <meshStandardMaterial color={hover ? "lightgrey" : "white"} />
+        <meshStandardMaterial color={hover ? "white" : "grey"} />
       </mesh>
     </>
   );

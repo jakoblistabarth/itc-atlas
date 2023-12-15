@@ -2,7 +2,7 @@ import { max, min, scaleSqrt } from "d3";
 import { geoInterruptedMollweide } from "d3-geo-projection";
 import type { GetStaticProps, NextPage } from "next";
 import { useState } from "react";
-import useSWR from "swr";
+import useSWRImmutable from "swr/immutable";
 import LegendNominal from "../../components/LegendNominal";
 import MapLayerBase from "../../components/MapLayerBase";
 import MapLayoutFluid from "../../components/MapLayout/MapLayoutFluid";
@@ -33,7 +33,7 @@ const PhdDepartments: NextPage<Props> = ({
   };
   const filter = isChecked ? "?graduated=true" : ""; //TODO: switch only true/false no separate variable?
 
-  const { data, error, isLoading } = useSWR<
+  const { data, error, isLoading } = useSWRImmutable<
     Awaited<ReturnType<typeof getPhdsByCountryByDepartment>>
   >("/api/data/phd/by-country" + filter);
 
