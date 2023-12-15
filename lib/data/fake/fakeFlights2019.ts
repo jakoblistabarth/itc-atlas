@@ -20,10 +20,16 @@ const fakeFlights2019 = async (number = 900): Promise<Flight2019Clean[]> => {
     const traveldays = random(1, 30);
     const minArrival = new Date("2019");
     minArrival.setDate(minArrival.getDate() + traveldays + 1);
-    const arrivalDate = faker.date.between(minArrival, new Date("2020"));
+    const arrivalDate = faker.date.between({
+      from: minArrival,
+      to: new Date("2020"),
+    });
     const departureDate = new Date(arrivalDate.toISOString());
     departureDate.setDate(arrivalDate.getDate() - traveldays);
-    const orderDate = faker.date.between(new Date("2019"), departureDate);
+    const orderDate = faker.date.between({
+      from: new Date("2019"),
+      to: departureDate,
+    });
     departureDate.setDate(orderDate.getDate() + Math.random());
     const flight: Flight2019Clean = {
       departure: departureDate.toISOString(),
@@ -31,7 +37,7 @@ const fakeFlights2019 = async (number = 900): Promise<Flight2019Clean[]> => {
       airportCodes: getRandomAirports(airportCodes, hubs),
       type: sample(Object.values(Flight2019Type)),
       country: sample(countries)?.["ISO-alpha3 Code"] ?? "",
-      emissions: +faker.random.numeric(4),
+      emissions: +faker.string.numeric(4),
       department: sample(departments)?.number ?? 0,
     };
     return flight;

@@ -12,7 +12,7 @@ const fakeApplications = async (
   number = 7000,
 ): Promise<ApplicationClean[]> => {
   const status = loadStatus();
-  const courseIds = range(3000).map(() => "C00" + faker.random.numeric(4));
+  const courseIds = range(3000).map(() => "C00" + faker.string.numeric(4));
   const sponsorNames = range(100).map(() => faker.company.name());
   const certificates = [
     "Certificate of Attendance",
@@ -46,7 +46,10 @@ const fakeApplications = async (
 
   const data = range(number).map((d) => {
     const assignedDepartments = sampleSize(departments, random(1, 2));
-    const enrollmentStart = faker.date.between(new Date("1950"), new Date());
+    const enrollmentStart = faker.date.between({
+      from: new Date("1950"),
+      to: new Date(),
+    });
     const enrollmentEnd = addDays(
       enrollmentStart,
       sample([14, 180, 365]) as number,

@@ -78,11 +78,11 @@ type DatumBigData = {
 };
 
 export const getBigTestData = (): DatumBigData[] => {
-  const jobs = range(20).map(() => faker.name.jobTitle());
+  const jobs = range(20).map(() => faker.person.jobTitle());
 
   return range(400).map(() => ({
-    name: faker.name.fullName(),
-    date: faker.date.between("1950", "2022").toISOString(),
+    name: faker.person.fullName(),
+    date: faker.date.between({ from: "1950", to: "2022" }).toISOString(),
     job: sample(jobs) ?? "",
   }));
 };

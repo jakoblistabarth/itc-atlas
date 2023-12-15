@@ -24,7 +24,10 @@ const fakeProjects = async (number = 1600): Promise<ProjectClean[]> => {
     ).map((d) => d.id) as Department[];
 
     const durationInDays = random(30, 365 * 3);
-    const start = faker.date.between(new Date("2000"), new Date("2022"));
+    const start = faker.date.between({
+      from: new Date("2000"),
+      to: new Date("2022"),
+    });
     const end = addDays(start, durationInDays);
     const projectCountries = range(random(1, 3)).map(() => {
       const pool = Math.random() < 0.5 ? focusCountries : countriesSample;

@@ -14,10 +14,10 @@ const fakeBtors = async (number = 5000): Promise<BtorClean[]> => {
   const countriesSelection = sampleSize(countries, 30);
   const data = range(number).map((_, i) => {
     const traveldays = randomInt(1, 31)();
-    const departureDate = faker.date.between(
-      new Date("2000"),
-      new Date("2022")
-    );
+    const departureDate = faker.date.between({
+      from: new Date("2000"),
+      to: new Date("2022"),
+    });
     const arrivalDate = addDays(departureDate, traveldays);
     const travelledCountries = sampleSize(
       countriesSelection,
@@ -25,7 +25,7 @@ const fakeBtors = async (number = 5000): Promise<BtorClean[]> => {
     ).map((d) => d["ISO-alpha3 Code"] as string);
     const btor: BtorClean = {
       id: i,
-      budgetId: faker.random.numeric(6),
+      budgetId: faker.string.numeric(6),
       start: departureDate.toISOString(),
       end: arrivalDate.toISOString(),
       year: departureDate.getFullYear(),

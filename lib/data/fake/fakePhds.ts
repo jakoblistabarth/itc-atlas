@@ -30,7 +30,10 @@ const fakePhds = async (
   const data = range(number).map(() => {
     const countryPool = Math.random() > 0.5 ? countriesSample : focusCountries;
     const country = sample(countryPool)?.["ISO-alpha3 Code"];
-    const start = faker.date.between(new Date("1960"), new Date());
+    const start = faker.date.between({
+      from: new Date("1960"),
+      to: new Date(),
+    });
     const graduation = addDays(start, 365 * 6);
     const phd: PhdClean = {
       itcStudentId:
