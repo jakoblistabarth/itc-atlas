@@ -1,10 +1,10 @@
 import { FC, useState } from "react";
-import { CountryWithApplicantCount } from "../../../lib/data/queries/country/getCountryWithApplicantCount";
-import { NeCountriesTopoJson } from "../../../types/NeTopoJson";
-import Section from "../../Section";
-import MapLayoutFluid from "../../MapLayout/MapLayoutFluid";
-import AlumniOrigin from "./AlumniOrigin";
-import { ApplicationLevels } from "../../../lib/data/queries/application/getApplicationLevels";
+import { CountryWithApplicantCount } from "../lib/data/queries/country/getCountryWithApplicantCount";
+import { NeCountriesTopoJson } from "../types/NeTopoJson";
+import Section from "./Section";
+import MapLayoutFluid from "./MapLayout/MapLayoutFluid";
+import AlumniOrigin from "./visuals/maps/AlumniOrigin";
+import { ApplicationLevels } from "../lib/data/queries/application/getApplicationLevels";
 import { geoBertin1953 } from "d3-geo-projection";
 
 type Props = {
@@ -13,7 +13,7 @@ type Props = {
   applicants: CountryWithApplicantCount;
 };
 
-const AlumniWithSelectBox: FC<Props> = ({
+const AlumniOriginByLevel: FC<Props> = ({
   neCountriesTopoJson,
   levels,
   applicants,
@@ -56,4 +56,4 @@ const AlumniWithSelectBox: FC<Props> = ({
   );
 };
 
-export default AlumniWithSelectBox;
+export default AlumniOriginByLevel;

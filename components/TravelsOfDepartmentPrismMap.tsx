@@ -11,13 +11,13 @@ import { GeoJsonProperties } from "geojson";
 import { FC, useCallback, useMemo, useState } from "react";
 import { ExtrudeGeometryOptions } from "three";
 import type { Topology } from "topojson-specification";
-import { BtorsGroupedByCountryByDepartment } from "../../lib/data/queries/btors/getBtorsGroupedByCountryByDepartment";
-import { FeatureIdentifier } from "../../types/FeatureIdentifier";
-import KPI from "../KPI";
-import { MemoizedPrismMap } from "../PrismMap";
-import SoftLight from "../SoftLight";
-import Tooltip from "../Tooltip";
-import CanvasStage from "../CanvasStage";
+import { BtorsGroupedByCountryByDepartment } from "../lib/data/queries/btors/getBtorsGroupedByCountryByDepartment";
+import { FeatureIdentifier } from "../types/FeatureIdentifier";
+import KPI from "./KPI";
+import { MemoizedPrismMap } from "./PrismMap";
+import SoftLight from "./SoftLight";
+import Tooltip from "./Tooltip";
+import CanvasStage from "./CanvasStage";
 
 type Props = {
   btorsByCountryByDepartment: BtorsGroupedByCountryByDepartment;
@@ -78,7 +78,7 @@ const TravelsOfDepartmentPrismMap: FC<Props> = ({
     <div>
       <Tooltip.Root open={!!hoverInfo} followCursor placement="top-start">
         <Tooltip.Trigger asChild>
-          <CanvasStage className="h-[500px] w-[600px]">
+          <CanvasStage className="h-[500px]">
             <Canvas
               orthographic
               camera={{ position: [0, 5, 5], zoom: 75 }}

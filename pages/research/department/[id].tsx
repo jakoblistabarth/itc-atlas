@@ -1,6 +1,6 @@
 import * as ScrollArea from "@radix-ui/react-scroll-area";
 import { rollups, scaleOrdinal } from "d3";
-import AlumniWithSelectBox from "../../../components/visuals/maps/AlumniWithSelectBox";
+import AlumniOrginByLevel from "../../../components/AlumniOriginByLevel";
 import { geoBertin1953 } from "d3-geo-projection";
 import { GetStaticPaths, GetStaticProps, InferGetStaticPropsType } from "next";
 import { ParsedUrlQuery } from "querystring";
@@ -28,7 +28,7 @@ import prisma from "../../../prisma/client";
 import { SharedPageProps } from "../../../types/Props";
 import { BtorsGroupedByCountryByDepartment } from "../../../lib/data/queries/btors/getBtorsGroupedByCountryByDepartment";
 import getBtorsGroupedByCountryByDepartment from "../../../lib/data/queries/btors/getBtorsGroupedByCountryByDepartment";
-import TravelsOfDepartmentPrismMap from "../../../components/visuals/TravelsOfDepartmentPrismMap";
+import TravelsOfDepartmentPrismMap from "../../../components/TravelsOfDepartmentPrismMap";
 import getCountryWithApplicantCount, {
   CountryWithApplicantCount,
 } from "../../../lib/data/queries/country/getCountryWithApplicantCount";
@@ -181,25 +181,27 @@ const Page = ({
             suscipit officia, veniam tenetur veritatis saepe! Recusandae animi
             incidunt fuga perferendis!
           </Paragraph>
-          <TravelsOfDepartmentPrismMap
-            topology={getCountries()}
-            topologyObject={"ne_admin_0_countries"}
-            projection={geoBertin1953()}
-            width={10}
-            length={10}
-            extrudeGeometryOptions={{
-              depth: 0.01,
-              bevelSize: 0.005,
-              bevelThickness: 0.005,
-              bevelSegments: 12,
-            }}
-            btorsByCountryByDepartment={btorsByCountryByDepartment}
-            department={department}
-          />
+          <div className="max-w-screen-sm">
+            <TravelsOfDepartmentPrismMap
+              topology={getCountries()}
+              topologyObject={"ne_admin_0_countries"}
+              projection={geoBertin1953()}
+              width={10}
+              length={10}
+              extrudeGeometryOptions={{
+                depth: 0.01,
+                bevelSize: 0.005,
+                bevelThickness: 0.005,
+                bevelSegments: 12,
+              }}
+              btorsByCountryByDepartment={btorsByCountryByDepartment}
+              department={department}
+            />
+          </div>
         </Section>
 
         <Section>
-          <AlumniWithSelectBox
+          <AlumniOrginByLevel
             neCountriesTopoJson={neCountriesTopoJson}
             levels={levels}
             applicants={applicants}
