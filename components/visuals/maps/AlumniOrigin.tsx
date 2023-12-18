@@ -27,12 +27,14 @@ import Tooltip from "../../Tooltip/";
 type Props = {
   neCountriesTopoJson: NeCountriesTopoJson;
   level?: string;
+  department?: string;
   applicants: CountryWithApplicantCount;
 };
 
 const AlumniOrigin: FC<Props> = ({
   neCountriesTopoJson,
   level,
+  department,
   applicants,
 }) => {
   const { projection, width } = useMapLayoutContext();
@@ -54,7 +56,12 @@ const AlumniOrigin: FC<Props> = ({
 
   const { data: filteredApplicants, isLoading: filteredApplicantsIsLoading } =
     useSWRImmutable<Awaited<ReturnType<typeof getCountryWithApplicantCount>>>(
-      "/api/data/country/count/applicant?level=" + level,
+      department
+        ? "/api/data/country/count/applicant?level=" +
+            level +
+            "&department=" +
+            department
+        : "/api/data/country/count/applicant?level=" + level,
     );
 
   const mapData = filteredApplicants ?? applicants;

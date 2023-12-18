@@ -205,6 +205,7 @@ const Page = ({
             neCountriesTopoJson={neCountriesTopoJson}
             levels={levels}
             applicants={applicants}
+            department={department.id}
           />
         </Section>
 
