@@ -56,12 +56,7 @@ const AlumniOrigin: FC<Props> = ({
 
   const { data: filteredApplicants, isLoading: filteredApplicantsIsLoading } =
     useSWRImmutable<Awaited<ReturnType<typeof getCountryWithApplicantCount>>>(
-      department
-        ? "/api/data/country/count/applicant?level=" +
-            level +
-            "&department=" +
-            department
-        : "/api/data/country/count/applicant?level=" + level,
+`/api/data/country/count/applicant?level=${level}&department=${department}`,
     );
 
   const mapData = filteredApplicants ?? applicants;
