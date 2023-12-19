@@ -11,9 +11,13 @@ const getCountryWithApplicantCount = async (
         equals: level,
       }
     : {};
-  const departmentFilter = department
+const departmentFilter = department
     ? {
-        equals: department,
+        some: {
+          id: {
+            equals: department,
+          },
+        },
       }
     : {};
   return prisma.country.findMany({
