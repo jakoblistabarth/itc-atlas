@@ -35,11 +35,7 @@ const departmentFilter = department
                       equals: "38",
                     },
                   },
-                  departments: {
-                    some: {
-                      id: departmentFilter,
-                    },
-                  },
+                  departments: departmentFilter,
                 },
               },
             },
