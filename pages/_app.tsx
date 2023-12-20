@@ -11,7 +11,15 @@ const MyApp = ({ Component, pageProps }: AppProps) => (
   <SWRConfig
     value={{
       fetcher: (resource: RequestInfo | URL) =>
-        fetch(resource).then((res) => res.json()),
+        fetch(resource).then((res) => {
+          if (!res.ok) {
+            const error = new Error(
+              "An error occurred while fetching the data.",
+            );
+            throw error;
+          }
+          return res.json();
+        }),
     }}
   >
     <ThemeProvider attribute="class">

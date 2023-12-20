@@ -2,10 +2,22 @@ import { Prisma } from "@prisma/client";
 import prisma from "../../../../prisma/client";
 
 //TODO add filter for status
-const getCountryWithApplicantCount = async (level?: string) => {
+const getCountryWithApplicantCount = async (
+  level?: string,
+  department?: string,
+) => {
   const levelFilter = level
     ? {
         equals: level,
+      }
+    : {};
+const departmentFilter = department
+    ? {
+        some: {
+          id: {
+            equals: department,
+          },
+        },
       }
     : {};
   return prisma.country.findMany({
@@ -23,6 +35,7 @@ const getCountryWithApplicantCount = async (level?: string) => {
                       equals: "38",
                     },
                   },
+                  departments: departmentFilter,
                 },
               },
             },

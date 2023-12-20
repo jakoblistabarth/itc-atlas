@@ -11,12 +11,14 @@ type Props = {
   neCountriesTopoJson: NeCountriesTopoJson;
   levels: ApplicationLevels;
   applicants: CountryWithApplicantCount;
+  department: string;
 };
 
 const AlumniOriginByLevel: FC<Props> = ({
   neCountriesTopoJson,
   levels,
   applicants,
+  department,
 }) => {
   const [level, setLevel] = useState<string | undefined>(undefined);
   return (
@@ -48,6 +50,7 @@ const AlumniOriginByLevel: FC<Props> = ({
               neCountriesTopoJson={neCountriesTopoJson}
               level={level}
               applicants={applicants}
+              department={department}
             />
           </MapLayoutFluid>
         </div>
