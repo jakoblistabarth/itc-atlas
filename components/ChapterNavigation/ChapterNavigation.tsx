@@ -14,7 +14,7 @@ const ChapterNavigation: FC<Props> = ({ title, ...props }) => {
       [
         { chapter: "Introduction", slug: "introduction" },
         { chapter: "Research", slug: "research" },
-        { chapter: "Education", slug: "education", disabled: true },
+        { chapter: "Education", slug: "education" },
         { chapter: "Projects", slug: "projects" },
         { chapter: "Appendix", slug: "appendix", disabled: true },
       ] satisfies { chapter: Chapters; slug: string; disabled?: boolean }[],
