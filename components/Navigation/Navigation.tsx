@@ -17,9 +17,7 @@ const Navigation: FC = () => {
         </div>
         <div className="mx-3 inline-flex gap-x-2 rounded-md bg-white p-1 dark:bg-itc-green-700">
           <NavLink href="/introduction">Introduction</NavLink>
-          <NavLink disabled href="/education">
-            Education
-          </NavLink>
+          <NavLink href="/education">Education</NavLink>
           <NavLink href="/research">Research</NavLink>
           <NavLink href="/projects">Projects</NavLink>
           <NavLink disabled href="/appendix">

@@ -37,8 +37,8 @@ const Introduction: NextPage<Props> = ({ departments }) => {
         <ChapterHighlights
           highlights={[
             {
-              href: "research/departments",
-              title: "ITC's departments",
+              href: "/phds/theses",
+              title: "ITC's PhD theses",
             },
           ]}
         />
@@ -46,7 +46,13 @@ const Introduction: NextPage<Props> = ({ departments }) => {
 
       <Section>
         <h2>Departments</h2>
-        <div className="grid max-w-2xl gap-3">
+        <Paragraph>
+          ITC&apos;s research materializes in its {departments.length}{" "}
+          scientific departments. We gathered an overview on the activities of
+          each department. Please note that many research and edcuation
+          activites are carried out accross several of these departments.
+        </Paragraph>
+        <div className="mt-10 grid max-w-2xl gap-3">
           {departments.map((d) => (
             <CardLink href={`/research/department/${d.id}`} key={d.id}>
               <Card.Body>

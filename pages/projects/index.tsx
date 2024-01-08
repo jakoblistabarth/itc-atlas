@@ -65,6 +65,10 @@ const Projects: NextPage = () => {
               href: "projects/projects-spacetimecube",
               title: "Projects over time",
             },
+            {
+              href: "flights2019/flights3D",
+              title: "Flights in 2019",
+            },
           ]}
         />
       </Section>
