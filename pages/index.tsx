@@ -5,7 +5,6 @@ import useMeasure from "react-use-measure";
 import Building, { ITClocations } from "../components/Building";
 import ChapterNavigation from "../components/ChapterNavigation";
 import Container from "../components/Container";
-import Link from "../components/Link";
 import PageBase from "../components/PageBase";
 import Paragraph from "../components/Paragraph";
 import Section from "../components/Section";
@@ -18,54 +17,6 @@ const Home: NextPage = () => {
   useEffect(() => {
     setIsSSR(false);
   }, []);
-
-  const links = [
-    {
-      href: "/btors",
-      children: "Back to Office Reports",
-      description: "Insights into ITC's travels around the globe.",
-    },
-    {
-      href: "/flights2019",
-      children: "Flights 2019",
-      description: "Insights into ITC's travels of 2019.",
-    },
-    {
-      href: "/projects",
-      children: "Projects",
-      description: "Insight into ITC's activity throughout the decades.",
-    },
-    {
-      href: "/introduction/indonesia",
-      children: "Policies",
-      description: "Policy changes framing ITC's work.",
-    },
-    {
-      href: "/employees",
-      children: "Employees",
-      description: "Insights into ITC's employee composition.",
-    },
-    {
-      href: "/applicants",
-      children: "Applicants",
-      description: "ITC's applicants.",
-    },
-    {
-      href: "/phds",
-      children: "PhDs",
-      description: "ITC's PhDs and PhD candidates.",
-    },
-    {
-      href: "/development-policies",
-      children: "Development Policies",
-      description: "Policy changes over time.",
-    },
-    {
-      href: "/courses",
-      children: "Courses",
-      description: "ITC's courses",
-    },
-  ];
 
   const [heroVizRef, { width }] = useMeasure();
   const height = width / 5;
@@ -124,18 +75,6 @@ const Home: NextPage = () => {
         </Section>
 
         <ChapterNavigation title="Chapter overview" />
-
-        <Section>
-          <h2>Quicklinks</h2>
-          <Teaser>based on data sources</Teaser>
-          <div className="mt-2 grid grid-cols-3 gap-2">
-            {links.map((l, idx) => (
-              <Link key={idx} href={l.href}>
-                {l.children}
-              </Link>
-            ))}
-          </div>
-        </Section>
       </Container>
     </PageBase>
   );
