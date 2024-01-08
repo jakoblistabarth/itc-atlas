@@ -1,14 +1,14 @@
-import { FC, useMemo } from "react";
+import { FC, HTMLAttributes, useMemo } from "react";
 import CardLink from "../CardLink";
 import Section from "../Section";
 import ChapterIcon from "../ChapterIcon";
 import { Chapters } from "../../types/Chapter";
 
-type Props = {
+type Props = HTMLAttributes<HTMLDivElement> & {
   title?: string;
 };
 
-const ChapterNavigation: FC<Props> = ({ title = "Chapters" }) => {
+const ChapterNavigation: FC<Props> = ({ title, ...props }) => {
   const chapters = useMemo(
     () =>
       [
@@ -21,8 +21,8 @@ const ChapterNavigation: FC<Props> = ({ title = "Chapters" }) => {
     [],
   );
   return (
-    <Section>
-      <h2>{title}</h2>
+    <Section {...props}>
+      {title && <h2>{title}</h2>}
       <div className="mb-4 mt-2 grid max-w-4xl grid-cols-[repeat(auto-fill,_minmax(240px,_1fr))] gap-3">
         {chapters.map((d) => (
           <CardLink key={d.chapter} href={`/${d.slug}`} disabled={d.disabled}>

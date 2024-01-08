@@ -123,7 +123,7 @@ const Home: NextPage = () => {
           </Paragraph>
         </Section>
 
-        <ChapterNavigation />
+        <ChapterNavigation title="Chapter overview" />
 
         <Section>
           <h2>Quicklinks</h2>
