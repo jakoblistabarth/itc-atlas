@@ -136,22 +136,6 @@ const Home: NextPage = () => {
             ))}
           </div>
         </Section>
-        <Section>
-          <h2>Playground</h2>
-          <Teaser>for development purposes only</Teaser>
-          <div className="mt-4 grid grid-cols-3 gap-3">
-            {[
-              "blockdiagram-test",
-              "three-test",
-              "maplayoutfluid-test",
-              "displacement-test",
-            ].map((d) => (
-              <Link key={d} href={`playground/${d}`}>
-                {d}
-              </Link>
-            ))}
-          </div>
-        </Section>
       </Container>
     </PageBase>
   );

@@ -13,12 +13,7 @@ const Home: NextPage = () => {
       <PageBase title="Playground">
         <Container>
           <SecondaryNavigation>
-            {[
-              "blockdiagram-test",
-              "three-test",
-              "maplayoutfluid-test",
-              "displacement-test",
-            ].map((d) => (
+            {["blockdiagram-test"].map((d) => (
               <CardLink key={d} href={`${route}/${d}`}>
                 <h2>{d}</h2>
               </CardLink>
