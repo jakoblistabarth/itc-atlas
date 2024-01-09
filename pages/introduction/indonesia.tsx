@@ -1,10 +1,13 @@
 import type { GetStaticProps, NextPage } from "next";
 import { Step } from "react-joyride";
-import PageHeroVisual from "../../components/PageHeroVisual";
 import IndonesiaTimeline from "../../components/IndonesiaTimeline";
 import Annotations from "../../components/IndonesiaTimeline/Annotations";
-import Tour from "../../components/Tour";
 import LocatorMap from "../../components/LocatorMap";
+import PageHeroVisual from "../../components/PageHeroVisual";
+import Paragraph from "../../components/Paragraph";
+import Section from "../../components/Section";
+import Teaser from "../../components/Teaser";
+import Tour from "../../components/Tour";
 import getCountries from "../../lib/data/getCountries";
 import getDutchForeignAffairsMinisters from "../../lib/data/getDutchForeignAffairsMinisters";
 import getITCNames from "../../lib/data/getITCNames";
@@ -24,9 +27,8 @@ import { LongTermMission } from "../../types/LongTermMission";
 import { Minister } from "../../types/Minister";
 import { NeCountriesTopoJson } from "../../types/NeTopoJson";
 import { ProjectIndonesia } from "../../types/Project";
-import Teaser from "../../components/Teaser";
-import Section from "../../components/Section";
-import Paragraph from "../../components/Paragraph";
+import ProjectPartnersIndonesia from "../../components/ProjectPartnersIndonesia";
+import Caption from "../../components/Caption";
 
 type Props = {
   projects: ProjectIndonesia[];
@@ -38,6 +40,7 @@ type Props = {
   itcNames: ReturnType<typeof getITCNames>;
   policyTopics: ReturnType<typeof getPolicyTopics>;
   neCountries: NeCountriesTopoJson;
+  neCountries50m: NeCountriesTopoJson;
 };
 
 const Page: NextPage<Props> = ({
@@ -50,6 +53,7 @@ const Page: NextPage<Props> = ({
   itcNames,
   policyTopics,
   neCountries,
+  neCountries50m,
 }) => {
   const steps: Step[] = [
     {
@@ -108,7 +112,7 @@ const Page: NextPage<Props> = ({
       <Section>
         <div className="grid grid-cols-[2fr_1fr] gap-x-5">
           <div>
-            <Paragraph>
+            <Paragraph className="mb-10">
               During the twentieth century traditional development cooperation
               was oriented to poverty reduction and rather broad in scope and
               geography. Pronk, Minister for Development Cooperation for more
@@ -122,12 +126,16 @@ const Page: NextPage<Props> = ({
               approach in development cooperation. This period showed a
               variation in thematic as well as geographic focus.
             </Paragraph>
-            <Paragraph>
+            <ProjectPartnersIndonesia countries={neCountries50m} />
+            <Caption reference="Fig. 1">
+              3 Partners are crucial for ITC in Indonesia.
+            </Caption>
+            <Paragraph className="mt-10">
               In the last decade the thematic focus was more consistent, but the
               geographic focus continues to shift, reflecting political choices.
               Development cooperation is seen as bilateral cooperation among
               stakeholders. From the Dutch side the national government works
-              with societal partners such as NGO’s, knowledge institutions, and
+              with societal partners such as NGOs, knowledge institutions, and
               the private sector.
             </Paragraph>
             <Paragraph>
@@ -153,38 +161,15 @@ const Page: NextPage<Props> = ({
             </Paragraph>
           </div>
           <div>
-            <h2>Indonesia</h2>
             <LocatorMap
               neCountriesTopoJson={neCountries}
               highlight={["IDN"]}
               width={250}
-              roundMarkers={[
-                {
-                  longitude: 106.5,
-                  latitude: -6,
-                  fill: "red",
-                  labelColor: "white",
-                  label: "A",
-                  fontSize: 10,
-                },
-                {
-                  longitude: 106.8,
-                  latitude: -6.5,
-                  fill: "darkred",
-                  labelColor: "white",
-                  fontSize: 10,
-                  label: "B",
-                },
-                {
-                  longitude: 110,
-                  latitude: -7.5,
-                  fill: "red",
-                  labelColor: "white",
-                  label: "C",
-                  fontSize: 10,
-                },
-              ]}
             />
+            <h2>Indonesia</h2>
+            <Paragraph>
+              One of the countries ITC is connected to since its beginning.
+            </Paragraph>
           </div>
         </div>
       </Section>
@@ -205,6 +190,7 @@ export const getStaticProps: GetStaticProps<Props> = async () => {
     itcNames,
     policyTopics,
     neCountries,
+    neCountries50m,
   ] = await Promise.all([
     getProjectsIndonesia(),
     getPhdsByYear("IDN"),
@@ -215,6 +201,7 @@ export const getStaticProps: GetStaticProps<Props> = async () => {
     getITCNames(),
     getPolicyTopics(),
     getCountries(),
+    getCountries("50m"),
   ]);
 
   return {
@@ -228,6 +215,7 @@ export const getStaticProps: GetStaticProps<Props> = async () => {
       itcNames,
       policyTopics,
       neCountries,
+      neCountries50m,
     },
   };
 };
