@@ -9,13 +9,9 @@ import Teaser from "../../components/Teaser";
 import BtorsAndCabinets from "../../components/visuals/BtorsAndCabinets";
 import BtorsByDepartment from "../../components/visuals/maps/BtorsByDepartment";
 import BtorsByYearMap from "../../components/visuals/maps/BtorsByYear";
-import MultiStopBtors from "../../components/MultiStopBtors";
 import getBhosCountries from "../../lib/data/getBhosCountries";
 import getCountries from "../../lib/data/getCountries";
 import getDutchCabinets from "../../lib/data/getDutchCabinets";
-import getBtorsGroupedByCountry, {
-  BtorsGroupedByCountry,
-} from "../../lib/data/queries/btors/getBtorsGroupedByCountry";
 import getBtorsGroupedByCountryByDepartment, {
   BtorsGroupedByCountryByDepartment,
 } from "../../lib/data/queries/btors/getBtorsGroupedByCountryByDepartment";
@@ -35,7 +31,6 @@ import getDepartments from "../../lib/data/queries/departments/getDepartments";
 import { Department } from "@prisma/client";
 
 type Props = SharedPageProps & {
-  btorsByCountry: BtorsGroupedByCountry;
   btorsByCountryByDepartment: BtorsGroupedByCountryByDepartment;
   btorsByYear: BtorsGroupedByYear;
   bhosCountries: BhosCountry[];
@@ -45,7 +40,6 @@ type Props = SharedPageProps & {
 };
 
 const Page: NextPage<Props> = ({
-  btorsByCountry,
   btorsByCountryByDepartment,
   btorsByYear,
   bhosCountries,
@@ -94,21 +88,6 @@ const Page: NextPage<Props> = ({
           elit. Soluta maiores debitis porro totam reiciendis, inventore quas,
           voluptatem eveniet ipsam veniam ex corporis eligendi ea doloribus.
           Consectetur vel aliquam id minus!
-        </Paragraph>
-        <div className="mt-5">
-          <MultiStopBtors
-            neCountries={neCountriesTopoJson}
-            btors={btorsByCountry}
-          />
-          <Caption reference="Fig. 1">
-            This maps shows something specific.
-          </Caption>
-        </div>
-        <Paragraph>
-          Lorem ipsum dolor sit amet consectetur, adipisicing elit. Eveniet,
-          quisquam itaque quis voluptas perspiciatis asperiores iusto excepturi
-          provident eaque magni similique consequuntur dignissimos eos ullam vel
-          sit veritatis sunt quod!
         </Paragraph>
       </Section>
       <Section>
@@ -207,7 +186,6 @@ export default Page;
 
 export const getStaticProps: GetStaticProps<Props> = async () => {
   const [
-    btorsByCountry,
     btorsByCountryByDepartment,
     btorsByYear,
     btorsByDepartment,
@@ -217,7 +195,6 @@ export const getStaticProps: GetStaticProps<Props> = async () => {
     countries,
     departments,
   ] = await Promise.all([
-    getBtorsGroupedByCountry(),
     getBtorsGroupedByCountryByDepartment(),
     getBtorsGroupedByYear(),
     getBtorsGroupedByRegionByDepartment(),
@@ -230,7 +207,6 @@ export const getStaticProps: GetStaticProps<Props> = async () => {
 
   return {
     props: {
-      btorsByCountry,
       btorsByCountryByDepartment,
       btorsByYear,
       btorsByDepartment,
