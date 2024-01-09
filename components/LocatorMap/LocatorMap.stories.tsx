@@ -10,6 +10,7 @@ const meta = {
   component: LocatorMap,
   args: {
     neCountriesTopoJson: countries,
+    highlight: ["NLD"],
   },
   argTypes: {
     neCountriesTopoJson: {
@@ -39,9 +40,11 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const DefaultLocatorMap: Story = {
+export const DefaultLocatorMap: Story = {};
+
+export const LocatorMapWithShading: Story = {
   args: {
-    highlight: ["NLD"],
+    shaded: true,
   },
 };
 

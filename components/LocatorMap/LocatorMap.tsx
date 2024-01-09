@@ -16,6 +16,7 @@ type Props = {
   neCountriesTopoJson: NeCountriesTopoJson;
   highlight?: string[];
   theme?: MapTheme;
+  shaded?: boolean;
   width?: number;
   roundMarkers?: (Omit<React.ComponentProps<typeof MarkGlyph>, "position"> & {
     latitude: number;
@@ -34,6 +35,7 @@ const LocatorMap: FC<Props> = ({
   rectangleMarkers,
   width = 300,
   theme = defaultTheme,
+  shaded = false,
 }) => {
   const dimension = {
     width,
@@ -84,26 +86,26 @@ const LocatorMap: FC<Props> = ({
           />
         </mask>
       </defs>
-      <ellipse
-        cx={dimension.width / 2}
-        cy={dimension.height - shadowRadius}
-        ry={shadowRadius}
-        rx={dimension.width * 0.3}
-        opacity={0.05}
-      />
+      {shaded && (
+        <ellipse
+          cx={dimension.width / 2}
+          cy={dimension.height - shadowRadius}
+          ry={shadowRadius}
+          rx={dimension.width * 0.3}
+          opacity={0.05}
+        />
+      )}
       <MapLayerBase countries={neCountriesTopoJson} theme={theme} />
       <g>
         {highlightCountries.features.map((feature, idx) => (
-          <MarkGeometry
-            key={idx}
-            feature={feature}
-            style={{ ...defaultTheme.choropleth, fill: "lightgray" }}
-          />
+          <MarkGeometry key={idx} feature={feature} className="fill-itc-blue" />
         ))}
       </g>
-      <g mask={`url(#${shadowMaskId})`}>
-        <use xlinkHref={`#${outlineId}`} fill={"black"} fillOpacity={0.05} />
-      </g>
+      {shaded && (
+        <g mask={`url(#${shadowMaskId})`}>
+          <use xlinkHref={`#${outlineId}`} fill={"black"} fillOpacity={0.05} />
+        </g>
+      )}
       {!highlight?.length && (
         <g>
           <rect
