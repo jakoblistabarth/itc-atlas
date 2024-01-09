@@ -79,10 +79,8 @@ const Flights: NextPage<Props> = ({ odMatrix }) => {
                         <span className="font-bold">{hoverInfo?.d}</span>
                       </div>
                       <br />
-                      <KPI
-                        number={hoverInfo.value}
-                        unit={"travels on this route in 2019"}
-                      />
+                      <KPI number={hoverInfo.value} unit={"travels"} />
+                      <p>in 2019</p>
                     </div>
                   ))}
               </Tooltip.Content>
