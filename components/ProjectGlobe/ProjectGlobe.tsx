@@ -1,16 +1,16 @@
-import { OrbitControls, Stars } from "@react-three/drei";
+import { OrbitControls } from "@react-three/drei";
 import { Canvas } from "@react-three/fiber";
 import type { GeoJsonProperties } from "geojson";
+import { useTheme } from "next-themes";
 import { FC, useCallback, useEffect, useState } from "react";
 import CanvasStage from "../../components/CanvasStage";
 import Globe from "../../components/Globe";
 import GlobeEnvironment from "../../components/Globe/GlobeEnvironment";
 import KPI from "../../components/KPI";
 import Tooltip from "../../components/Tooltip";
-import { MemoizedProjectMarkers } from "./ProjectMarker";
 import { CountryWithProjectCount } from "../../lib/data/queries/country/getCountryWithProjectCount";
 import { NeCountriesTopoJson } from "../../types/NeTopoJson";
-import { useTheme } from "next-themes";
+import { MemoizedProjectMarkers } from "./ProjectMarker";
 
 type Props = {
   countryWithProjectCount: CountryWithProjectCount;
@@ -59,7 +59,6 @@ const ProjectGlobe: FC<Props> = ({
               </Globe>
             )}
             <GlobeEnvironment />
-            {theme === "dark" && <Stars />}
             <OrbitControls enableZoom={false} enablePan={false} />
           </Canvas>
         </Tooltip.Trigger>

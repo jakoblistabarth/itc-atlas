@@ -14,6 +14,7 @@ import PageBase from "../../components/PageBase";
 import Tooltip from "../../components/Tooltip";
 import getOdMatrix from "../../lib/data/getOdMatrix";
 import type { OdMatrix } from "../../types/OdMatrix";
+import { useTheme } from "next-themes";
 
 type Props = {
   odMatrix: OdMatrix;
@@ -32,6 +33,8 @@ const Flights: NextPage<Props> = ({ odMatrix }) => {
 
   const [ready, setReady] = useState(false);
 
+  const { theme } = useTheme();
+
   return (
     <PageBase title="ITC's travel activity">
       <Container>
@@ -46,7 +49,10 @@ const Flights: NextPage<Props> = ({ odMatrix }) => {
                   data-ready={ready}
                 >
                   <Suspense fallback={<FallBackGlobe radius={earthRadius} />}>
-                    <Globe radius={earthRadius} texture={"explorer"} />
+                    <Globe
+                      radius={earthRadius}
+                      texture={theme === "dark" ? "night" : "explorer"}
+                    />
                   </Suspense>
                   <GlobeEnvironment />
 
