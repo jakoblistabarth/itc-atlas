@@ -45,6 +45,10 @@ const AlumniOrigin: FC<Props> = ({
 
   const [country, setCountry] = useState<string | undefined>(undefined);
 
+  const [properties, setProperties] = useState<
+    CountryPropertiesWithAlumniCount | undefined
+  >(undefined);
+
   const geographies = feature(
     neCountriesTopoJson,
     neCountriesTopoJson.objects.ne_admin_0_countries,
@@ -105,12 +109,12 @@ const AlumniOrigin: FC<Props> = ({
   return (
     <>
       <MapLayerBase countries={neCountriesTopoJson} />
-      <g id="alumni-countries-symbols">
-        {!filteredApplicantsIsLoading &&
-          points.features.map(({ properties, geometry }, idx) => (
-            <Tooltip.Root key={`tooltip-country-${idx}`}>
-              <Tooltip.Trigger asChild>
-                <g>
+      <Tooltip.Root followCursor={true}>
+        <Tooltip.Trigger asChild>
+          <g id="alumni-countries-symbols">
+            {!filteredApplicantsIsLoading &&
+              points.features.map(({ properties, geometry }, idx) => (
+                <g key={idx}>
                   <MarkCircle
                     longitude={geometry.coordinates[0]}
                     latitude={geometry.coordinates[1]}
@@ -123,21 +127,25 @@ const AlumniOrigin: FC<Props> = ({
                     // seems like the transition is only working once the data is fetched by SWR
                     onMouseEnter={() => {
                       setCountry(properties?.ADM0_A3_NL);
+                      setProperties(properties);
                     }}
-                    onMouseLeave={() => setCountry(undefined)}
+                    onMouseLeave={() => {
+                      setCountry(undefined);
+                      setProperties(undefined);
+                    }}
                     isActive={country === properties?.ADM0_A3_NL}
                     interactive
                   />
                 </g>
-              </Tooltip.Trigger>
-              <TooltipSparkline
-                properties={properties}
-                level={level}
-                country={country}
-              />
-            </Tooltip.Root>
-          ))}
-      </g>
+              ))}
+          </g>
+        </Tooltip.Trigger>
+        <TooltipSparkline
+          properties={properties}
+          level={level}
+          country={country}
+        />
+      </Tooltip.Root>
       <g id="alumni-country-labels" pointerEvents={"none"}>
         {!filteredApplicantsIsLoading &&
           points.features.slice(0, 3).map((point, idx) => {
@@ -175,7 +183,7 @@ export default AlumniOrigin;
 
 type TooltipProps = {
   country?: string;
-  properties: CountryPropertiesWithAlumniCount;
+  properties?: CountryPropertiesWithAlumniCount;
   level?: string;
 };
 
