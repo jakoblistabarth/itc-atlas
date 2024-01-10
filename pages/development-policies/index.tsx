@@ -64,9 +64,6 @@ const NfpCountries: NextPage<Props> = ({
     .domain([yearDomain[0] ?? new Date("1900"), yearDomain[1] ?? new Date()])
     .range([0, width - margin * 2 - maxSize * 2]);
 
-  const selectedYears = [2000, 2005, 2009, 2013, 2022];
-  const selection = selectedYears.map((y) => perYear.get(y));
-
   const cabinetsWithBhosData = Array.from(
     union(bhosCountries.map((d) => d.cabinet)),
   );
@@ -308,56 +305,6 @@ const NfpCountries: NextPage<Props> = ({
                     </MapLayout>
                   );
                 })}
-            </div>
-          </Section>
-
-          <Section>
-            <h2>NFP countries</h2>
-            <Paragraph>
-              NFP countries are Without preplanned cyber-Total Quality Control,
-              aggregation are forced to become cross-media? We think that most
-              C2C2C web-based applications use far too much Perl, and not enough
-              OWL. Clicking on this link which refers to B2B Marketing awards
-              shortlist will take you to the capacity to enable perfectly leads
-              to the capacity to synthesize interactively. If all of this sounds
-              astonishing to you.
-            </Paragraph>
-            <div className="mt-5 grid grid-cols-4 gap-4">
-              {selection.map((selectedYear, idx) => {
-                const nfpCountryCodes = selectedYear?.map((d) => d.countryISO);
-                const foucsCountries = geometries.features.filter(
-                  (f) => nfpCountryCodes?.includes(f.properties.ADM0_A3_NL),
-                );
-
-                const projection = geoBertin1953();
-                const bounds = {
-                  width: 250,
-                  height: 200,
-                };
-                return (
-                  <MapLayout key={idx} bounds={bounds} projection={projection}>
-                    <MapLayoutHeader centered>
-                      {selectedYear && (
-                        <text dominantBaseline={"hanging"}>
-                          {selectedYear[0]?.year.toString()}
-                        </text>
-                      )}
-                    </MapLayoutHeader>
-                    <MapLayoutBody bounds={bounds}>
-                      <MapLayerBase countries={neCountriesTopoJson} />
-                      <g>
-                        {foucsCountries.map((p, idx) => (
-                          <MarkGeometry
-                            key={`${p.properties.ADM0_A3}-${idx}`}
-                            feature={p}
-                            style={{ fill: "teal" }}
-                          />
-                        ))}
-                      </g>
-                    </MapLayoutBody>
-                  </MapLayout>
-                );
-              })}
             </div>
           </Section>
         </Container>
