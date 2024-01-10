@@ -97,8 +97,8 @@ const NfpCountries: NextPage<Props> = ({
           </Paragraph>
 
           <Section>
-            <h2 className="mt-5">Current Dutch development policy</h2>
-            <h3>Rutte IV</h3>
+            <h2 className="mt-5">Dutch development policy with Rutte IV</h2>
+            <h3>2022–2023</h3>
             <MapLayoutFluid projection={geoBertin1953()}>
               <BhosGradientDefs
                 categoryCombinations={categoryCombinations}
