@@ -5,6 +5,7 @@ import {
   Meta,
   Title,
   Subtitle,
+  Source,
 } from "@storybook/addon-docs";
 import * as MarkStories from "./Mark.stories";
 import LocationPin from "./LocationPin";
@@ -24,13 +25,28 @@ Like all `MapElements` it can only be used as a child of `MapLayout`.
 That is why its children need to be `svg` nodes as well.
 
 The indicated coordinates (longitude and latitude) presents the origin (top left) of its child node.
-The origin is indicated by the <svg width="10" height="10" viewBox="-5 -5 10 10"><LocationPin /></svg> in the stories.
-The Mark's child node needs to take care of eventual repositioning (usually centering).
+The origin is indicated by the <svg style={{display: "inline"}} width="10" height="10" viewBox="-5 -5 10 10"><LocationPin /></svg> in the stories.
 
 ## Non-centered Mark
 
 <Canvas of={MarkStories.DefaultMark} />
 
 ## Centered Mark
+
+The Mark's child node needs to take care of eventual repositioning (usually centering). The reposition can be achieved by applying a `transform` to the child node.
+
+<Source
+  code={`
+  <Mark {...props} />
+  <rect
+    height={10}
+    width={10}
+    // 👉 the transform positions the drawn element at the coordinate origin
+    transform="rotate(45) translate(-5 -5)"
+  />
+  `}
+/>
+
+This repositioning strategy is applied in the following story.
 
 <Canvas of={MarkStories.RotatedMark} />
