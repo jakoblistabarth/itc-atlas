@@ -6,6 +6,7 @@ import loadStatus from "../load/loadStatus";
 import addDays from "../../utilities/addDays";
 import loadDepartments from "../load/loadDepartments";
 import { Department } from "../../mappings/departments";
+import { Level } from "../../mappings/levels";
 
 const fakeApplications = async (
   applicants: ApplicantClean[],
@@ -20,7 +21,7 @@ const fakeApplications = async (
     "Certificate",
     "Degree",
   ];
-  const levels = [
+  const levels_detailed = [
     "IME",
     "SC",
     "GRAD.AIO",
@@ -43,6 +44,7 @@ const fakeApplications = async (
     "GRAD.INT",
   ];
   const departments = loadDepartments().map((d) => d.id as Department);
+  const levels = Object.values(Level);
 
   const data = range(number).map((d) => {
     const assignedDepartments = sampleSize(departments, random(1, 2));
@@ -72,6 +74,7 @@ const fakeApplications = async (
       sponsor: Math.random() > 0.5 ? sample(sponsorNames) ?? "" : "",
       certificateType: Math.random() > 0.2 ? sample(certificates) ?? "" : "",
       level: Math.random() > 0.1 ? sample(levels) : "",
+      level_detailed: Math.random() > 0.1 ? sample(levels_detailed) : "",
     };
     return application;
   });

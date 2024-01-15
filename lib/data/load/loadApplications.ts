@@ -6,6 +6,7 @@ import getDaysBetween from "../../utilities/getDaysBetween";
 import { createId } from "@paralleldrive/cuid2";
 import { mapToOrganizationGroup } from "../../mappings/organizationGroup";
 import { mapToDepartment } from "../../mappings/departments";
+import { mapToLevel } from "../../mappings/levels";
 
 export const loadApplications = async (contacts: ContactEnriched[]) => {
   const tb = aq.from(contacts).dedupe("APPnr", "Start Date", "End Date");
@@ -15,10 +16,7 @@ export const loadApplications = async (contacts: ContactEnriched[]) => {
     .filter((d: { COURSENO: string; count: number }) => aq.op.equal(d.count, 1))
     .array("COURSENO");
   const applications = tb
-    .filter(
-      (d: ContactEnriched) =>
-        !d.Level || !aq.op.match(d.Level, /AFUT|MSCD/, undefined),
-    )
+    .filter((d: ContactEnriched) => !aq.op.match(d.Level, /AFUT|MSCD/, null))
     .derive({
       statusId: (d: ContactEnriched) =>
         aq.op.substring(d["Applicant status"], 0, 2),
@@ -44,6 +42,7 @@ export const loadApplications = async (contacts: ContactEnriched[]) => {
       sponsor: aq.escape((d: ContactEnriched) =>
         mapToOrganizationGroup(d.Sponsor),
       ),
+      level: aq.escape((d: ContactEnriched) => mapToLevel(d.Level)),
     })
     .derive({
       enrolledDays: aq.escape(
@@ -61,7 +60,7 @@ export const loadApplications = async (contacts: ContactEnriched[]) => {
       ContactNo_actual: "applicantId_actual",
       Prog: "programmId",
       "Applicant status": "status",
-      Level: "level",
+      Level: "level_detailed",
       Diploma: "certificateType",
       Sponsor: "sponsor",
     })
@@ -73,6 +72,7 @@ export const loadApplications = async (contacts: ContactEnriched[]) => {
       "courseId",
       "programmId",
       "level",
+      "level_detailed",
       "statusId",
       "examYear",
       "certificateType",

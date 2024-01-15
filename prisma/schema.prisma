@@ -53,6 +53,7 @@ model Application {
   programmId          String?
   departments         Department[]
   level               String?
+  level_detailed      String?
   statusId            String
   status              Status       @relation("ApplicationStatus", fields: [statusId], references: [id])
   examYear            Int?

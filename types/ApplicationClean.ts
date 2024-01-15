@@ -8,6 +8,7 @@ export type ApplicationClean = {
   programmId?: string;
   courseId: string;
   level?: string;
+  level_detailed?: string;
   statusId: string;
   examYear?: number;
   enrollmentStart?: Date;

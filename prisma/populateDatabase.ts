@@ -222,6 +222,7 @@ async function main() {
           courseId: d.courseId,
           programmId: d.programmId,
           level: d.level,
+          level_detailed: d.level_detailed,
           statusId: d.statusId,
           examYear: d.examYear,
           enrollmentStartYear: d.enrollmentStart?.getFullYear(),
