@@ -1,20 +1,15 @@
-import {
-  AccumulativeShadows,
-  Environment,
-  OrbitControls,
-  RandomizedLight,
-} from "@react-three/drei";
+import { OrbitControls } from "@react-three/drei";
 import { Canvas } from "@react-three/fiber";
 import { Meta, StoryObj } from "@storybook/react";
-import { geoBertin1953, geoBaker } from "d3-geo-projection";
+import { scaleLinear, scaleOrdinal } from "d3";
+import { geoBaker, geoBertin1953 } from "d3-geo-projection";
+import { GeoJsonProperties } from "geojson";
 import PrismMap from ".";
 import getCountries from "../../lib/data/getCountries";
 import projections, {
   getProjectionNames,
 } from "../../stories/lib/getProjections";
-import { scaleLinear, scaleOrdinal } from "d3";
-import { GeoJsonProperties } from "geojson";
-import { FC, memo } from "react";
+import PrismMapEnvironment from "../PrismMapEnvironment";
 
 const meta = {
   title: "Map Types/PrismMap",
@@ -52,7 +47,7 @@ const meta = {
             shadows
           >
             <axesHelper args={[7.5]} />
-            <MemoizedLighting />
+            <PrismMapEnvironment />
             <Story />
             <OrbitControls />
           </Canvas>
@@ -63,22 +58,6 @@ const meta = {
 } satisfies Meta<typeof PrismMap>;
 export default meta;
 type Story = StoryObj<typeof meta>;
-
-const Lighting: FC = () => (
-  <>
-    <Environment preset="apartment" />
-    <directionalLight
-      position={[10, 10, 5]}
-      intensity={5}
-      castShadow
-      shadow-bias={-0.0001}
-    />
-    <AccumulativeShadows opacity={0.25}>
-      <RandomizedLight position={[10, 10, 5]} />
-    </AccumulativeShadows>
-  </>
-);
-const MemoizedLighting = memo(Lighting);
 
 export const DefaultPrismMap: Story = {};
 
@@ -99,21 +78,5 @@ export const PrismMapWithExtrusionAndColor: Story = {
       ["NLD", { category: "important", value: 50 }],
       ["IDN", { category: "very important", value: 100 }],
     ]),
-  },
-};
-
-export const DefaultPrismMapWithInteraction: Story = {
-  args: {
-    selectedFeatures: [
-      { id: "USA", label: "United States" },
-      { id: "RUS", label: "Russia" },
-    ],
-    onFeaturePointerDownHandler: ({
-      id,
-      label,
-    }: {
-      id: string;
-      label: string;
-    }) => console.log({ id, label }),
   },
 };

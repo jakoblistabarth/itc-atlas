@@ -1,8 +1,4 @@
-import {
-  AccumulativeShadows,
-  Environment,
-  OrbitControls,
-} from "@react-three/drei";
+import { OrbitControls } from "@react-three/drei";
 import { Canvas } from "@react-three/fiber";
 import { max, rollup, scaleLinear, scaleOrdinal } from "d3";
 import { geoBertin1953 } from "d3-geo-projection";
@@ -13,7 +9,7 @@ import { FeatureIdentifier } from "../../types/FeatureIdentifier";
 import { NeCountriesTopoJson } from "../../types/NeTopoJson";
 import KPI from "../KPI";
 import { MemoizedPrismMap } from "../PrismMap";
-import SoftLight from "../SoftLight";
+import PrismMapEnvironment from "../PrismMapEnvironment";
 import Tooltip from "../Tooltip";
 
 type Props = {
@@ -92,16 +88,7 @@ const PoliciesPrismMap: FC<Props> = ({ topology, bhosCountries }) => {
               onFeaturePointerEnterHandler={onPointerEnterHandler}
               onFeaturePointerLeaveHandler={onPointerLeaveHandler}
             />
-            <Environment preset="city" />
-            <directionalLight
-              position={[10, 10, 5]}
-              intensity={5}
-              castShadow
-              shadow-bias={-0.0001}
-            />
-            <AccumulativeShadows frames={0} opacity={0.1}>
-              <SoftLight position={[10, 10, 5]} />
-            </AccumulativeShadows>
+            <PrismMapEnvironment />
             <OrbitControls
               makeDefault
               maxPolarAngle={Math.PI / 2}

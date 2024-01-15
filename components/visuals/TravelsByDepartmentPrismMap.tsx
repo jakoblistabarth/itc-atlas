@@ -1,9 +1,5 @@
 import { Department } from "@prisma/client";
-import {
-  AccumulativeShadows,
-  Environment,
-  OrbitControls,
-} from "@react-three/drei";
+import { OrbitControls } from "@react-three/drei";
 import { Canvas } from "@react-three/fiber";
 import { scaleLinear, scaleQuantile, schemeBlues } from "d3";
 import { GeoProjection } from "d3-geo";
@@ -16,7 +12,7 @@ import { BtorsGroupedByCountryByDepartment } from "../../lib/data/queries/btors/
 import { FeatureIdentifier } from "../../types/FeatureIdentifier";
 import KPI from "../KPI";
 import { MemoizedPrismMap } from "../PrismMap";
-import SoftLight from "../SoftLight";
+import PrismMapEnvironment from "../PrismMapEnvironment";
 import Tooltip from "../Tooltip";
 
 type Props = {
@@ -101,16 +97,7 @@ const TravelsByDepartmentPrismMap: FC<Props> = ({
               camera={{ position: [0, 5, 5], zoom: 75 }}
               shadows
             >
-              <Environment preset="apartment" />
-              <directionalLight
-                position={[10, 10, 5]}
-                intensity={5}
-                castShadow
-                shadow-bias={-0.0001}
-              />
-              <AccumulativeShadows frames={0} opacity={0.2}>
-                <SoftLight position={[10, 10, 5]} />
-              </AccumulativeShadows>
+              <PrismMapEnvironment />
               <MemoizedPrismMap
                 topology={topology}
                 topologyObject={topologyObject}
