@@ -3,11 +3,17 @@ import sliceIntoChunks from "../../lib/utilities/sliceIntoChunks";
 import LegendTitle from "../LegendTitle";
 
 type Props = {
-  entries: { label: string; color: string; symbol?: ReactNode }[];
+  entries: {
+    label: string;
+    color: string;
+    active?: boolean;
+    symbol?: ReactNode;
+  }[];
   title?: string;
   columns?: number;
   columnWidth?: number;
   fontSize?: number;
+  onEntryClick?: (entrylabel: string) => void;
 } & SVGProps<SVGGElement>;
 
 const LegendNominal: FC<Props> = ({
@@ -16,12 +22,16 @@ const LegendNominal: FC<Props> = ({
   columns = 1,
   columnWidth = 100,
   fontSize = 6,
+  onEntryClick,
   ...rest
 }) => {
   const symbolSize = fontSize * 1.2;
   const radius = symbolSize / 2;
   const columnLength = Math.ceil(entries.length / columns);
   const entriesByColumn = sliceIntoChunks(entries, columnLength);
+
+  const hasSelection = entries.some((d) => d.active === true);
+
   return (
     <g {...rest}>
       {title && <LegendTitle fontSize={fontSize}>{title}</LegendTitle>}
@@ -30,6 +40,9 @@ const LegendNominal: FC<Props> = ({
           {column.map((entry, idx) => (
             <g
               key={`${entry.label}-${idx}`}
+              onClick={() => onEntryClick && onEntryClick(entry.label)}
+              opacity={hasSelection && !entry.active ? 0.2 : 1}
+              className={onEntryClick && "cursor-pointer"}
               transform={`translate(0, ${
                 (title ? fontSize * 3 : 0) + idx * fontSize * 1.75
               })`}
