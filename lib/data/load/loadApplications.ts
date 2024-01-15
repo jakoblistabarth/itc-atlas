@@ -15,6 +15,10 @@ export const loadApplications = async (contacts: ContactEnriched[]) => {
     .filter((d: { COURSENO: string; count: number }) => aq.op.equal(d.count, 1))
     .array("COURSENO");
   const applications = tb
+    .filter(
+      (d: ContactEnriched) =>
+        !d.Level || !aq.op.match(d.Level, /AFUT|MSCD/, undefined),
+    )
     .derive({
       statusId: (d: ContactEnriched) =>
         aq.op.substring(d["Applicant status"], 0, 2),
