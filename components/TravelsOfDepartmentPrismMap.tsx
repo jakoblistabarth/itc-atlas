@@ -1,7 +1,7 @@
 import { Department } from "@prisma/client";
 import { OrbitControls } from "@react-three/drei";
 import { Canvas } from "@react-three/fiber";
-import { scaleLinear, scaleQuantile, schemeBlues } from "d3";
+import { scaleLinear } from "d3";
 import { GeoProjection } from "d3-geo";
 import { GeoJsonProperties } from "geojson";
 import { FC, useCallback, useMemo, useState } from "react";
@@ -48,14 +48,6 @@ const TravelsOfDepartmentPrismMap: FC<Props> = ({
       ),
     [department, btorsByCountryByDepartment],
   );
-  const colorScale = useMemo(
-    () =>
-      scaleQuantile<string, string>()
-        .domain(Array.from(featureProperties.values()).map((d) => d.count))
-        .range(schemeBlues[5])
-        .unknown("ligthgrey"),
-    [featureProperties],
-  );
 
   const propertyAccessor = useCallback(
     (properties: GeoJsonProperties) => properties?.count,
@@ -87,8 +79,6 @@ const TravelsOfDepartmentPrismMap: FC<Props> = ({
                 projection={projection}
                 width={width}
                 length={length}
-                colorScale={colorScale}
-                colorPropertyAccessor={propertyAccessor}
                 extrusionPropertyAccessor={propertyAccessor}
                 extrusionScale={extrusionScale}
                 onFeaturePointerEnterHandler={onPointerEnterHandler}
