@@ -21,7 +21,6 @@ import { getFilledSeries } from "../../components/LinePath/LinePath.helpers";
 import Section from "../../components/Section";
 import Container from "../../components/Container";
 import Paragraph from "../../components/Paragraph";
-import React from "react";
 import * as Select from "@radix-ui/react-select";
 import {
   CheckIcon,
