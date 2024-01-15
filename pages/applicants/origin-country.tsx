@@ -22,11 +22,7 @@ import Section from "../../components/Section";
 import Container from "../../components/Container";
 import Paragraph from "../../components/Paragraph";
 import * as Select from "@radix-ui/react-select";
-import {
-  CheckIcon,
-  ChevronDownIcon,
-  ChevronUpIcon,
-} from "@radix-ui/react-icons";
+import { RxCheck, RxChevronDown, RxChevronUp } from "react-icons/rx";
 
 type Props = {
   applicants: CountryWithApplicantCount;
@@ -53,63 +49,64 @@ const Page: NextPage<Props> = ({
             <label>
               Select a level you want to filter for:
               <Select.Root onValueChange={(value) => setLevel(value)}>
-                <Select.Trigger className="text-violet11 hover:bg-mauve3 data-[placeholder]:text-violet9 ml-4 inline-flex h-[35px] items-center justify-center gap-[5px] rounded bg-white px-[15px] text-[13px] leading-none shadow-[0_2px_10px] shadow-black/10 outline-none focus:shadow-[0_0_0_2px] focus:shadow-black">
+                <Select.Trigger className="ml-4 inline-flex h-[35px] items-center justify-center gap-[5px] rounded bg-white px-[15px] text-[13px] leading-none text-itc-green shadow-[0_2px_10px] shadow-black/10 outline-none hover:bg-itc-green-100 focus:shadow-[0_0_0_2px] focus:shadow-black data-[placeholder]:text-itc-green">
                   <Select.Value placeholder="All levels" />
-                  <Select.Icon className="text-violet11">
-                    <ChevronDownIcon />
+                  <Select.Icon className="text-itc-green">
+                    <RxChevronDown />
                   </Select.Icon>
                 </Select.Trigger>
                 <Select.Portal>
                   <Select.Content className="overflow-hidden rounded-md bg-white shadow-[0px_10px_38px_-10px_rgba(22,_23,_24,_0.35),0px_10px_20px_-15px_rgba(22,_23,_24,_0.2)]">
-                    <Select.ScrollUpButton className="text-violet11 flex h-[25px] cursor-default items-center justify-center bg-white">
-                      <ChevronUpIcon />
+                    <Select.ScrollUpButton className="flex h-[25px] cursor-default items-center justify-center bg-white text-itc-green">
+                      <RxChevronUp />
                     </Select.ScrollUpButton>
                     <Select.Viewport className="p-[5px]">
                       <Select.Item
                         value=""
-                        className="text-violet11 data-[disabled]:text-mauve8 data-[highlighted]:bg-violet9 data-[highlighted]:text-violet1 relative flex h-[25px] select-none items-center rounded-[3px] pl-[25px] pr-[35px] text-[13px] leading-none data-[disabled]:pointer-events-none data-[highlighted]:outline-none"
+                        className="relative flex h-[25px] select-none items-center rounded-[3px] pl-[25px] pr-[35px] text-[13px] leading-none text-itc-blue data-[disabled]:pointer-events-none data-[highlighted]:bg-itc-green-100 data-[disabled]:text-white data-[highlighted]:text-itc-green data-[highlighted]:outline-none"
                       >
                         <Select.ItemText>All levels</Select.ItemText>
                         <Select.ItemIndicator className="absolute right-0 inline-flex w-[25px] items-center justify-center">
-                          <CheckIcon />
+                          <RxCheck />
                         </Select.ItemIndicator>
                       </Select.Item>
+                      <Select.Separator className="m-[5px] h-[1px] bg-itc-green-100" />
                       <Select.Group>
-                        <Select.Label className="text-mauve11 px-[25px] text-xs leading-[25px]">
+                        <Select.Label className="px-[25px] text-xs leading-[25px] text-itc-green">
                           Level 1
                         </Select.Label>
                         {levels.map((d, idx) => (
                           <Select.Item
                             key={idx}
                             value={d.level ?? ""}
-                            className="text-violet11 data-[disabled]:text-mauve8 data-[highlighted]:bg-violet9 data-[highlighted]:text-violet1 relative flex h-[25px] select-none items-center rounded-[3px] pl-[25px] pr-[35px] text-[13px] leading-none data-[disabled]:pointer-events-none data-[highlighted]:outline-none"
+                            className="relative flex h-[25px] select-none items-center rounded-[3px] pl-[25px] pr-[35px] text-[13px] leading-none text-itc-blue data-[disabled]:pointer-events-none data-[highlighted]:bg-itc-green-100 data-[disabled]:text-white data-[highlighted]:text-itc-green data-[highlighted]:outline-none"
                           >
                             <Select.ItemText>{d.level}</Select.ItemText>
                             <Select.ItemIndicator className="absolute right-0 inline-flex w-[25px] items-center justify-center">
-                              <CheckIcon />
+                              <RxCheck />
                             </Select.ItemIndicator>
                           </Select.Item>
                         ))}
                       </Select.Group>
 
-                      <Select.Separator className="bg-violet6 m-[5px] h-[1px]" />
+                      <Select.Separator className="m-[5px] h-[1px] bg-itc-green-100" />
 
                       <Select.Group>
-                        <Select.Label className="text-mauve11 px-[25px] text-xs leading-[25px]">
+                        <Select.Label className="px-[25px] text-xs leading-[25px] text-itc-green">
                           Level 2
                         </Select.Label>
                       </Select.Group>
 
-                      <Select.Separator className="bg-violet6 m-[5px] h-[1px]" />
+                      <Select.Separator className="m-[5px] h-[1px] bg-itc-green-100" />
 
                       <Select.Group>
-                        <Select.Label className="text-mauve11 px-[25px] text-xs leading-[25px]">
+                        <Select.Label className="px-[25px] text-xs leading-[25px] text-itc-green">
                           Level 3
                         </Select.Label>
                       </Select.Group>
                     </Select.Viewport>
-                    <Select.ScrollDownButton className="text-violet11 flex h-[25px] cursor-default items-center justify-center bg-white">
-                      <ChevronDownIcon />
+                    <Select.ScrollDownButton className="flex h-[25px] cursor-default items-center justify-center bg-white text-itc-green">
+                      <RxChevronDown />
                     </Select.ScrollDownButton>
                   </Select.Content>
                 </Select.Portal>
