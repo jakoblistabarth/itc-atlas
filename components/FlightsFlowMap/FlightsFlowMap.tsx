@@ -36,7 +36,6 @@ const FlightsFlowMap: FC<Props> = ({ neCountriesTopoJson, odMatrix }) => {
     // @ts-expect-error TODO: refactor to get rid of styleProp
     stroke: twConfig.theme?.colors?.["itc-green"]?.DEFAULT,
     opacity: 0.2,
-    arrowShape: "tip",
   };
   const pointStyle: FlowPointStyleProps = {
     // @ts-expect-error TODO: refactor to get rid of styleProp

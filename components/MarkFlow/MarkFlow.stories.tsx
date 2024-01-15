@@ -15,7 +15,7 @@ const projection = geoRobinson()
     type: "Sphere",
   })
   .translate([width / 2, height / 2]);
-const getLineString = (value = 10): Feature<LineString> => ({
+const getLineString = (value = 20): Feature<LineString> => ({
   type: "Feature",
   properties: { name: "Test", value: value },
   geometry: {
@@ -44,6 +44,7 @@ const meta = {
       <defs>
         <ArrowHead color={args.stroke} shape={"triangle"} />
         <ArrowHead color={args.stroke} shape={"tip"} />
+        <ArrowHead color={args.stroke} shape={"tapered"} />
       </defs>
       <MarkFlow {...args} />
     </>
@@ -67,7 +68,16 @@ type Story = StoryObj<typeof meta>;
 
 export const DefaultMarkFlow: Story = {};
 
-export const BigMarkFlowWithTriangleHead: Story = {
+export const FlowWithTip: Story = {
+  args: {
+    datum: getLineString(),
+    fill: "none",
+    opacity: 0.5,
+    arrowShape: "tip",
+  },
+};
+
+export const BigMarkFlowWithTriangle: Story = {
   args: {
     datum: getLineString(100),
     bend: -0.2,

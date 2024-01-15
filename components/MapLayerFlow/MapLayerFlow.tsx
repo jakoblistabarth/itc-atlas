@@ -3,7 +3,7 @@ import { ComponentProps, FC } from "react";
 import { OdMatrix } from "../../types/OdMatrix";
 import MarkCircle from "../MarkCircle";
 import Flow, { FlowStyleProps } from "../MarkFlow";
-import ArrowHead from "../MarkerArrowHead";
+import MarkerArrowHead from "../MarkerArrowHead";
 
 export type FlowPointStyleProps = Omit<
   ComponentProps<typeof MarkCircle>,
@@ -26,8 +26,8 @@ const MapLayerFlow: FC<Props> = ({
   return (
     <g id="flow-Layer">
       <defs>
-        <ArrowHead
-          shape={flowStyle?.arrowShape ?? "tip"}
+        <MarkerArrowHead
+          shape={flowStyle?.arrowShape ?? "tapered"}
           color={flowStyle?.stroke}
         />
       </defs>

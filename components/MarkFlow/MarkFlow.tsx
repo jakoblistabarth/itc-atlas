@@ -18,7 +18,7 @@ const MarkFlow: FC<
     arrowShape?: ArrowHeadShape;
     strokeWidthScale: ScaleLinear<number, number>;
   } & FlowStyleProps
-> = ({ datum, strokeWidthScale, bend, arrowShape = "tip", ...rest }) => {
+> = ({ datum, strokeWidthScale, bend, arrowShape = "tapered", ...rest }) => {
   const { projection } = useMapLayoutContext();
   const line = d3
     .line()

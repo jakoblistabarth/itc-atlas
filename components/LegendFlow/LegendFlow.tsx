@@ -46,7 +46,7 @@ const LegendFlow: FC<{
                 {...styleProps}
                 d={linePath}
                 strokeWidth={scaleWidth(entry)}
-                markerEnd={`url(#${arrowShape ?? "tip"})`}
+                markerEnd={`url(#${arrowShape ?? "tapered"})`}
               />
               <text x={100} y={fontSize / 2} fontSize={fontSize}>
                 {fInt(entry) + " " + unitLabel ?? null}
