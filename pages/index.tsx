@@ -1,15 +1,15 @@
 import { Group } from "@visx/group";
 import type { NextPage } from "next";
 import { useTheme } from "next-themes";
+import { useEffect, useState } from "react";
 import useMeasure from "react-use-measure";
 import Building, { ITClocations } from "../components/Building";
-import ChapterNavigation from "../components/ChapterNavigation";
+import ChapterNavigationWithImages from "../components/ChapterNavigationWithImages/ChapterNavigationWithImages";
 import Container from "../components/Container";
 import PageBase from "../components/PageBase";
 import Paragraph from "../components/Paragraph";
 import Section from "../components/Section";
 import Teaser from "../components/Teaser";
-import { useEffect, useState } from "react";
 
 const Home: NextPage = () => {
   const { theme } = useTheme();
@@ -74,7 +74,10 @@ const Home: NextPage = () => {
           </Paragraph>
         </Section>
 
-        <ChapterNavigation title="Chapter overview" />
+        <Section>
+          <h2>Explore ITC</h2>
+          <ChapterNavigationWithImages />
+        </Section>
       </Container>
     </PageBase>
   );
