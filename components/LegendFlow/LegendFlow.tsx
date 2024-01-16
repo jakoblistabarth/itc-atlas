@@ -1,19 +1,26 @@
-import { FC } from "react";
+import { FC, SVGProps } from "react";
 import * as d3 from "d3";
 import { ScaleLinear } from "d3";
 import { fInt } from "../../lib/utilities/formaters";
 import LegendTitle from "../LegendTitle";
 import { FlowStyleProps } from "../MarkFlow";
 
-const LegendFlow: FC<{
-  x?: number;
-  y?: number;
+type Props = {
   data: number[];
   scaleWidth: ScaleLinear<number, number>;
   title: string;
   unitLabel: string;
   flowStyle?: FlowStyleProps;
-}> = ({ data, scaleWidth, title, unitLabel, x = 0, y = 0, flowStyle = {} }) => {
+} & SVGProps<SVGGElement>;
+
+const LegendFlow: FC<Props> = ({
+  data,
+  scaleWidth,
+  title,
+  unitLabel,
+  flowStyle = {},
+  ...rest
+}) => {
   const min = d3.min(data);
   const max = d3.max(data);
   if (!min || !max) return <g />;
@@ -33,7 +40,7 @@ const LegendFlow: FC<{
   const { arrowShape, ...styleProps } = flowStyle;
 
   return (
-    <g id="legend" transform={`translate(${x}, ${y})`}>
+    <g id="legend" {...rest}>
       <LegendTitle>{title}</LegendTitle>
       <g id="entries" transform="translate(0, 40)">
         {entries.map((entry, idx) => {

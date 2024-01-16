@@ -1,13 +1,11 @@
-import { FC } from "react";
+import { FC, SVGProps } from "react";
 import { min, max, median, mean, line, ScalePower } from "d3";
 import { fInt } from "../../lib/utilities/formaters";
 import { Appearance } from "../../types/Appearance";
 import LegendTitle from "../LegendTitle";
 import LegednProportionalScaleFunction from "../LegendProportionalScaleFunction";
 
-const LegendProportionalCircle: FC<{
-  x?: number;
-  y?: number;
+type Props = {
   data: number[];
   scaleRadius: ScalePower<number, number>;
   title: string;
@@ -16,9 +14,9 @@ const LegendProportionalCircle: FC<{
   unitLabel: string;
   style?: Appearance;
   showFunction?: boolean;
-}> = ({
-  x = 0,
-  y = 0,
+} & SVGProps<SVGGElement>;
+
+const LegendProportionalCircle: FC<Props> = ({
   data,
   scaleRadius,
   title,
@@ -27,6 +25,7 @@ const LegendProportionalCircle: FC<{
   unitLabel,
   style,
   showFunction = true,
+  ...rest
 }) => {
   const minData = min(data);
   const maxData = max(data);
@@ -51,7 +50,7 @@ const LegendProportionalCircle: FC<{
   const maxDiameter = maxRadius * 2;
 
   return (
-    <g id="legend" transform={`translate(${x}, ${y})`}>
+    <g id="legend" {...rest}>
       <LegendTitle fontSize={titleFontSize}>{title}</LegendTitle>
       <g transform={`translate(1, ${titleFontSize * 2 + maxDiameter / 2})`}>
         <g id="legendEntries">

@@ -14,8 +14,6 @@ const testData = [
 const meta = {
   title: "Map Elements/Legends/LegendProportionalCircle",
   args: {
-    x: 0,
-    y: 0,
     data: testData,
     unitLabel: "fruit",
     scaleRadius: scaleSqrt().domain([0, 200]).range([5, 30]),
