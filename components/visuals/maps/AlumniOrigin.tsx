@@ -109,7 +109,7 @@ const AlumniOrigin: FC<Props> = ({
   return (
     <>
       <MapLayerBase countries={neCountriesTopoJson} />
-      <Tooltip.Root followCursor={true}>
+      <Tooltip.Root open={!!country} followCursor={true}>
         <Tooltip.Trigger asChild>
           <g id="alumni-countries-symbols">
             {!filteredApplicantsIsLoading &&
@@ -140,11 +140,13 @@ const AlumniOrigin: FC<Props> = ({
               ))}
           </g>
         </Tooltip.Trigger>
-        <TooltipSparkline
-          properties={properties}
-          level={level}
-          country={country}
-        />
+        {country && (
+          <TooltipSparkline
+            properties={properties}
+            level={level}
+            country={country}
+          />
+        )}
       </Tooltip.Root>
       <g id="alumni-country-labels" pointerEvents={"none"}>
         {!filteredApplicantsIsLoading &&
@@ -182,15 +184,13 @@ const AlumniOrigin: FC<Props> = ({
 export default AlumniOrigin;
 
 type TooltipProps = {
-  country?: string;
+  country: string;
   properties?: CountryPropertiesWithAlumniCount;
   level?: string;
 };
 
 const TooltipSparkline: FC<TooltipProps> = ({ country, properties, level }) => {
-  const params = new URLSearchParams({
-    country: country ?? "",
-  });
+  const params = new URLSearchParams({ country });
 
   const { data, error, isLoading } = useSWRImmutable<
     Awaited<ReturnType<typeof getApplicationsByYear>>
