@@ -42,7 +42,6 @@ const Page: NextPage<Props> = ({
   timeseries,
 }) => {
   const [level, setLevel] = useState<string | undefined>(undefined);
-  console.log(level ?? "no selected");
 
   return (
     <PageBase title="Where do ITC's alumni come from?">
@@ -69,18 +68,22 @@ const Page: NextPage<Props> = ({
                       <RxChevronUp />
                     </Select.ScrollUpButton>
                     <Select.Viewport className="p-[5px]">
-                      {levels.map((d, idx) => (
-                        <Select.Item
-                          key={idx}
-                          value={d.level}
-                          className="relative flex h-[25px] select-none items-center rounded-[3px] pl-[25px] pr-[35px] text-[13px] leading-none text-itc-blue data-[disabled]:pointer-events-none data-[highlighted]:bg-itc-green-100 data-[disabled]:text-white data-[highlighted]:text-itc-green data-[highlighted]:outline-none"
-                        >
-                          <Select.ItemText>{d.level}</Select.ItemText>
-                          <Select.ItemIndicator className="absolute right-0 inline-flex w-[25px] items-center justify-center">
-                            <RxCheck />
-                          </Select.ItemIndicator>
-                        </Select.Item>
-                      ))}
+                      {levels.map(({ level }) => {
+                        return !level ? (
+                          <></>
+                        ) : (
+                          <Select.Item
+                            key={level}
+                            value={level}
+                            className="relative flex h-[25px] select-none items-center rounded-[3px] pl-[25px] pr-[35px] text-[13px] leading-none text-itc-blue data-[disabled]:pointer-events-none data-[highlighted]:bg-itc-green-100 data-[disabled]:text-white data-[highlighted]:text-itc-green data-[highlighted]:outline-none"
+                          >
+                            <Select.ItemText>{level}</Select.ItemText>
+                            <Select.ItemIndicator className="absolute right-0 inline-flex w-[25px] items-center justify-center">
+                              <RxCheck />
+                            </Select.ItemIndicator>
+                          </Select.Item>
+                        );
+                      })}
                     </Select.Viewport>
                     <Select.ScrollDownButton className="flex h-[25px] cursor-default items-center justify-center bg-white text-itc-green">
                       <RxChevronDown />
