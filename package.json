@@ -78,6 +78,7 @@
     "react-joyride": "^2.5.5",
     "react-use-measure": "^2.1.1",
     "remark-gfm": "^3.0.1",
+    "sharp": "^0.33.2",
     "srtm-elevation": "^2.1.2",
     "stopword": "^2.0.7",
     "superjson": "^1.13.1",
