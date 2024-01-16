@@ -3,10 +3,10 @@ import { Chapter, chapters as chapterNames } from "../../types/Chapter";
 import { Card } from "../Card";
 import Image, { StaticImageData } from "next/image";
 import Link from "../Link";
-import tileIntroduction from "/public/images/tile-introduction.jpg";
-import tileResearch from "/public/images/tile-research.jpg";
-import tileEducation from "/public/images/tile-education.jpg";
-import tileProjects from "/public/images/tile-projects.jpg";
+import tileIntroduction from "../../public/images/tile-introduction.jpg";
+import tileResearch from "../../public/images/tile-research.jpg";
+import tileEducation from "../../public/images/tile-education.jpg";
+import tileProjects from "../../public/images/tile-projects.jpg";
 import ChapterIcon from "../ChapterIcon";
 
 const ChapterNavigationWithImages: FC = () => {
