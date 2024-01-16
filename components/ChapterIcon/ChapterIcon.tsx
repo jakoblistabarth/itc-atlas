@@ -4,10 +4,10 @@ import IconEducation from "../../public/images/icon_education.svg";
 import IconProjects from "../../public/images/icon_projects.svg";
 import IconIntroduction from "../../public/images/icon_introduction.svg";
 import IconAppendix from "../../public/images/icon_appendix.svg";
-import { Chapters } from "../../types/Chapter";
+import { Chapter } from "../../types/Chapter";
 
 type Props = {
-  chapter?: Chapters;
+  chapter?: Chapter;
 } & SVGProps<SVGElement>;
 
 const ChapterIcon: FC<Props> = ({ chapter, ...rest }) => {

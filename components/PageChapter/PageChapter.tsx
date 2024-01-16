@@ -2,13 +2,13 @@ import Footer from "../Footer";
 import Seo from "../Seo";
 import { FC, PropsWithChildren } from "react";
 import Container from "../Container";
-import { Chapters } from "../../types/Chapter";
+import { Chapter } from "../../types/Chapter";
 import ChapterHeader from "../ChapterHeader";
 import ChapterNavigation from "../ChapterNavigation";
 import Paragraph from "../Paragraph";
 
 type Props = PropsWithChildren<{
-  chapterName: Chapters;
+  chapterName: Chapter;
 }>;
 
 const PageChapter: FC<Props> = ({ chapterName, children }) => {

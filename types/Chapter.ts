@@ -6,7 +6,7 @@ export const chapters = [
   "Appendix",
 ] as const;
 
-export type Chapters = (typeof chapters)[number];
+export type Chapter = (typeof chapters)[number];
 
-export const isChapter = (maybeChapter: string): maybeChapter is Chapters =>
+export const isChapter = (maybeChapter: string): maybeChapter is Chapter =>
   !!chapters.find((d) => d === maybeChapter);
