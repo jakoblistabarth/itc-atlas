@@ -77,6 +77,8 @@ const PrismMap: FC<Props> = ({
   width,
   length,
   defaultColor = "lightgrey",
+  colorScale,
+  colorPropertyAccessor,
   defaultExtrusion = 0.01,
   extrusionScale,
   extrusionPropertyAccessor,
@@ -95,6 +97,8 @@ const PrismMap: FC<Props> = ({
     { type: "Sphere" },
   );
 
+  //@ts-expect-error scaleQuantize does not have unknown()
+  if (colorScale) colorScale.unknown(defaultColor);
   if (extrusionScale) extrusionScale.unknown(defaultExtrusion);
 
   const fc = feature(
@@ -120,7 +124,11 @@ const PrismMap: FC<Props> = ({
     () =>
       paths.map((p, idx) => {
         const feature = fcWithProps.features[idx];
-        const color = defaultColor;
+        const color =
+          colorScale && colorPropertyAccessor
+            ? //@ts-expect-error scaleQuantize expects number, scaleOrdinal a string
+              colorScale(colorPropertyAccessor(feature.properties))
+            : defaultColor;
         const shapes = p.toShapes(true);
         return {
           id: feature.properties.ADM0_A3 as string,
@@ -141,6 +149,8 @@ const PrismMap: FC<Props> = ({
       fcWithProps.features,
       paths,
       defaultColor,
+      colorScale,
+      colorPropertyAccessor,
       defaultExtrusion,
       extrusionScale,
       extrusionPropertyAccessor,
