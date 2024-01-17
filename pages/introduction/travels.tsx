@@ -165,12 +165,6 @@ const Page: NextPage<Props> = ({
           projection={geoBertin1953()}
           width={10}
           length={10}
-          extrudeGeometryOptions={{
-            depth: 0.01,
-            bevelSize: 0.005,
-            bevelThickness: 0.005,
-            bevelSegments: 12,
-          }}
           btorsByCountryByDepartment={btorsByCountryByDepartment}
           departments={departments}
         />
