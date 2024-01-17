@@ -85,6 +85,7 @@ const PrismMapTravelsDepartment: FC<Props> = ({
                 projection={projection}
                 width={width}
                 length={length}
+                defaultColor="teal"
                 extrusionPropertyAccessor={propertyAccessor}
                 extrusionScale={extrusionScale}
                 onFeaturePointerEnterHandler={onPointerEnterHandler}
