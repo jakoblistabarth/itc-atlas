@@ -15,7 +15,7 @@ import getDutchCabinets from "../../lib/data/getDutchCabinets";
 import getBtorsGroupedByCountryByDepartment, {
   BtorsGroupedByCountryByDepartment,
 } from "../../lib/data/queries/btors/getBtorsGroupedByCountryByDepartment";
-import TravelsByDepartmentPrismMap from "../../components/visuals/TravelsByDepartmentPrismMap";
+import TravelsAcrossDepartmentsPrismMap from "../../components/TravelsAcrossDepartments";
 import getBtorsGroupedByRegionByDepartment, {
   BtorsGroupedByRegionByDepartment,
 } from "../../lib/data/queries/btors/getBtorsGroupedByRegionByDepartment";
@@ -29,6 +29,7 @@ import { SharedPageProps } from "../../types/Props";
 import Section from "../../components/Section";
 import getDepartments from "../../lib/data/queries/departments/getDepartments";
 import { Department } from "@prisma/client";
+import { useMemo } from "react";
 
 type Props = SharedPageProps & {
   btorsByCountryByDepartment: BtorsGroupedByCountryByDepartment;
@@ -49,8 +50,9 @@ const Page: NextPage<Props> = ({
   countries,
   departments,
 }) => {
+  const projection = useMemo(() => geoBertin1953(), []);
   const heroVisual = (
-    <MapLayoutFluid projection={geoBertin1953()}>
+    <MapLayoutFluid projection={projection}>
       <BtorsByYearMap
         countries={countries}
         neCountries={neCountriesTopoJson}
@@ -159,10 +161,10 @@ const Page: NextPage<Props> = ({
           suscipit officia, veniam tenetur veritatis saepe! Recusandae animi
           incidunt fuga perferendis!
         </Paragraph>
-        <TravelsByDepartmentPrismMap
-          topology={getCountries()}
+        <TravelsAcrossDepartmentsPrismMap
+          topology={neCountriesTopoJson}
           topologyObject={"ne_admin_0_countries"}
-          projection={geoBertin1953()}
+          projection={projection}
           width={10}
           length={10}
           btorsByCountryByDepartment={btorsByCountryByDepartment}

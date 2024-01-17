@@ -17,7 +17,7 @@ type Props = {
   bhosCountries: BhosCountry[];
 };
 
-const PoliciesPrismMap: FC<Props> = ({ topology, bhosCountries }) => {
+const PrismMapPolicies: FC<Props> = ({ topology, bhosCountries }) => {
   const [hoveredFeature, setHoveredFeature] = useState<
     FeatureIdentifier | undefined
   >(undefined);
@@ -110,4 +110,4 @@ const PoliciesPrismMap: FC<Props> = ({ topology, bhosCountries }) => {
   );
 };
 
-export default PoliciesPrismMap;
+export default PrismMapPolicies;

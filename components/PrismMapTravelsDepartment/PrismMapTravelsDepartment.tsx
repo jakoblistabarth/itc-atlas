@@ -7,13 +7,13 @@ import { GeoJsonProperties } from "geojson";
 import { FC, useCallback, useMemo, useState } from "react";
 import { ExtrudeGeometryOptions } from "three";
 import type { Topology } from "topojson-specification";
-import { BtorsGroupedByCountryByDepartment } from "../lib/data/queries/btors/getBtorsGroupedByCountryByDepartment";
-import { FeatureIdentifier } from "../types/FeatureIdentifier";
-import CanvasStage from "./CanvasStage";
-import KPI from "./KPI";
-import { MemoizedPrismMap } from "./PrismMap";
-import PrismMapEnvironment from "./PrismMapEnvironment";
-import Tooltip from "./Tooltip";
+import { BtorsGroupedByCountryByDepartment } from "../../lib/data/queries/btors/getBtorsGroupedByCountryByDepartment";
+import { FeatureIdentifier } from "../../types/FeatureIdentifier";
+import CanvasStage from "../CanvasStage";
+import KPI from "../KPI";
+import { MemoizedPrismMap } from "../PrismMap";
+import PrismMapEnvironment from "../PrismMapEnvironment";
+import Tooltip from "../Tooltip";
 
 type Props = {
   btorsByCountryByDepartment: BtorsGroupedByCountryByDepartment;
@@ -26,13 +26,14 @@ type Props = {
   department: Department;
 };
 
-const TravelsOfDepartmentPrismMap: FC<Props> = ({
+const PrismMapTravelsDepartment: FC<Props> = ({
   btorsByCountryByDepartment,
   topology,
   topologyObject,
   projection,
   width,
   length,
+  //TODO: check why performance is bad if extrude options are not set
   extrudeGeometryOptions = {
     depth: 0.01,
     bevelSize: 0.005,
@@ -116,4 +117,4 @@ const TravelsOfDepartmentPrismMap: FC<Props> = ({
   );
 };
 
-export default TravelsOfDepartmentPrismMap;
+export default PrismMapTravelsDepartment;

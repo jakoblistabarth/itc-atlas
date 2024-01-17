@@ -28,7 +28,7 @@ import prisma from "../../../prisma/client";
 import { SharedPageProps } from "../../../types/Props";
 import { BtorsGroupedByCountryByDepartment } from "../../../lib/data/queries/btors/getBtorsGroupedByCountryByDepartment";
 import getBtorsGroupedByCountryByDepartment from "../../../lib/data/queries/btors/getBtorsGroupedByCountryByDepartment";
-import TravelsOfDepartmentPrismMap from "../../../components/TravelsOfDepartmentPrismMap";
+import PrismMapTravelsDepartment from "../../../components/PrismMapTravelsDepartment";
 import getCountryWithApplicantCount, {
   CountryWithApplicantCount,
 } from "../../../lib/data/queries/country/getCountryWithApplicantCount";
@@ -182,7 +182,7 @@ const Page = ({
             incidunt fuga perferendis!
           </Paragraph>
           <div className="max-w-screen-sm">
-            <TravelsOfDepartmentPrismMap
+            <PrismMapTravelsDepartment
               topology={getCountries()}
               topologyObject={"ne_admin_0_countries"}
               projection={geoBertin1953()}

@@ -1,10 +1,10 @@
 import { Department } from "@prisma/client";
 import { GeoProjection } from "d3-geo";
-import { FC, useState } from "react";
+import { FC, memo, useState } from "react";
 import { twMerge } from "tailwind-merge";
 import type { Topology } from "topojson-specification";
 import { BtorsGroupedByCountryByDepartment } from "../../lib/data/queries/btors/getBtorsGroupedByCountryByDepartment";
-import TravelsOfDepartmentPrismMap from "../TravelsOfDepartmentPrismMap";
+import PrismMapTravelsDepartment from "../PrismMapTravelsDepartment";
 
 type Props = {
   btorsByCountryByDepartment: BtorsGroupedByCountryByDepartment;
@@ -16,7 +16,7 @@ type Props = {
   departments: Department[];
 };
 
-const TravelsByDepartmentPrismMap: FC<Props> = ({
+const TravelsAcrossDepartmentsPrismMap: FC<Props> = ({
   btorsByCountryByDepartment,
   topology,
   topologyObject,
@@ -45,7 +45,7 @@ const TravelsByDepartmentPrismMap: FC<Props> = ({
           </button>
         ))}
       </div>
-      <TravelsOfDepartmentPrismMap
+      <MemoizedPrismMapTravelsDepartment
         btorsByCountryByDepartment={btorsByCountryByDepartment}
         topology={topology}
         topologyObject={topologyObject}
@@ -53,9 +53,17 @@ const TravelsByDepartmentPrismMap: FC<Props> = ({
         width={width}
         length={length}
         department={activeDepartment}
+        extrudeGeometryOptions={{
+          depth: 0.01,
+          bevelSize: 0.005,
+          bevelThickness: 0.005,
+          bevelSegments: 12,
+        }}
       />
     </div>
   );
 };
 
-export default TravelsByDepartmentPrismMap;
+const MemoizedPrismMapTravelsDepartment = memo(PrismMapTravelsDepartment);
+
+export default TravelsAcrossDepartmentsPrismMap;

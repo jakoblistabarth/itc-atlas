@@ -14,7 +14,7 @@ import MapLayoutHeader from "../../components/MapLayout/MapLayoutHeader";
 import MarkGeometry from "../../components/MarkGeometry/MarkGeometry";
 import PageBase from "../../components/PageBase/PageBase";
 import Paragraph from "../../components/Paragraph";
-import PoliciesPrismMap from "../../components/PoliciesPrismMap";
+import PrismMapPolicies from "../../components/PrismMapPolicies";
 import Section from "../../components/Section";
 import Teaser from "../../components/Teaser";
 import getBhosCountries from "../../lib/data/getBhosCountries";
@@ -91,7 +91,7 @@ const Page: NextPage<Props> = ({
           <Section>
             <h2> Occurences of countries in Dutch development policies</h2>
             <CanvasStage className="my-5 h-[350px]">
-              <PoliciesPrismMap
+              <PrismMapPolicies
                 topology={neCountriesTopoJson}
                 bhosCountries={bhosCountries}
               />
