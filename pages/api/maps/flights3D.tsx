@@ -15,7 +15,7 @@ import getBrowser from "../../../puppeteer/browser";
  */
 export default async function handler(
   req: NextApiRequest,
-  res: NextApiResponse
+  res: NextApiResponse,
 ) {
   // TODO: implement caching? Don't start browser if screenshot already exists in cache
   // TODO: only launch browser if browser is not already launched
@@ -27,9 +27,9 @@ export default async function handler(
     deviceScaleFactor: 6,
   });
 
-  await page.goto(`${process.env.SITE_URL}/flights2019/flights3D`);
+  await page.goto(`http://localhost:3000/travels2019`);
 
-  const selector = "div[data-ready='true'] canvas";
+  const selector = "div[data-ready='true'] Canvas";
   await page.waitForSelector(selector); // wait for the selector to load
   const canvas = await page.$(selector);
   // TODO: wait for selector fails after 30s, how to improve error message?

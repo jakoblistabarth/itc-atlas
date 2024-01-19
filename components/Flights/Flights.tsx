@@ -1,28 +1,25 @@
 import { geoPath } from "d3-geo";
 import { geoBertin1953 } from "d3-geo-projection";
-import type { NextPage } from "next";
+import { FC } from "react";
 import { CiPalette } from "react-icons/ci";
 import { MdTour } from "react-icons/md";
 import { Step } from "react-joyride";
-import FlightsFlowMap from "../../components/FlightsFlowMap";
-import MapLayerBase from "../../components/MapLayerBase";
-import MapLayerTissotsIndicatrices from "../../components/MapLayerTissotsIndicatrices";
-import { useMapLayoutContext } from "../../components/MapLayout/MapLayoutContext";
-import MapLayoutFluid from "../../components/MapLayout/MapLayoutFluid";
-import MarkCircle from "../../components/MarkCircle";
-import PageBase from "../../components/PageBase";
-import Tour from "../../components/Tour";
-import getCountries from "../../lib/data/getCountries";
-import getOdMatrix from "../../lib/data/getOdMatrix";
+import FlightsFlowMap from "../FlightsFlowMap";
+import MapLayerBase from "../MapLayerBase";
+import MapLayerTissotsIndicatrices from "../MapLayerTissotsIndicatrices";
+import { useMapLayoutContext } from "../MapLayout/MapLayoutContext";
+import MapLayoutFluid from "../MapLayout/MapLayoutFluid";
+import MarkCircle from "../MarkCircle";
+import Tour from "../Tour";
 import type { OdMatrix } from "../../types/OdMatrix";
-import { SharedPageProps } from "../../types/Props";
-import Container from "../../components/Container";
+import { NeCountriesTopoJson } from "../../types/NeTopoJson";
 
 type Props = {
   odMatrix: OdMatrix;
-} & SharedPageProps;
+  neCountriesTopoJson: NeCountriesTopoJson;
+};
 
-const Flights: NextPage<Props> = ({ odMatrix, neCountriesTopoJson }) => {
+const Flights: FC<Props> = ({ odMatrix, neCountriesTopoJson }) => {
   const Tissot = () => {
     const projection = geoBertin1953();
     return (
@@ -91,43 +88,28 @@ const Flights: NextPage<Props> = ({ odMatrix, neCountriesTopoJson }) => {
   ];
 
   return (
-    <PageBase title="ITC's travel activity">
-      <Container>
-        <main>
-          <MapLayoutFluid projection={geoBertin1953()}>
-            <FlightsFlowMap
-              odMatrix={odMatrix}
-              neCountriesTopoJson={neCountriesTopoJson}
-            />
-            <Targets />
-          </MapLayoutFluid>
-          <Tour steps={steps} />
-          {/* TODO: implement tour restarting */}
-          <button
-            className="bg-itc-green-50 flex items-center p-2"
-            onClick={() => {
-              console.log("restarting tour …");
-            }}
-          >
-            <MdTour className="mr-2" />
-            Restart Tour
-          </button>
-        </main>
-      </Container>
-    </PageBase>
+    <div>
+      <MapLayoutFluid projection={geoBertin1953()}>
+        <FlightsFlowMap
+          odMatrix={odMatrix}
+          neCountriesTopoJson={neCountriesTopoJson}
+        />
+        <Targets />
+      </MapLayoutFluid>
+      <Tour steps={steps} />
+      {/* TODO: implement tour restarting */}
+      <button
+        className="flex items-center bg-itc-green-50 p-2"
+        onClick={() => {
+          console.log("restarting tour …");
+        }}
+      >
+        <MdTour className="mr-2" />
+        Restart Tour
+      </button>
+    </div>
   );
 };
-
-export async function getStaticProps() {
-  const neCountriesTopoJson = getCountries();
-  const [odMatrix] = await Promise.all([getOdMatrix()]);
-  return {
-    props: {
-      odMatrix,
-      neCountriesTopoJson,
-    },
-  };
-}
 
 export default Flights;
 

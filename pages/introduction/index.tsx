@@ -31,7 +31,11 @@ const Introduction: NextPage = () => {
               href: "/development-policies",
               title: "How development policies affect ITC",
             },
-            { href: "introduction/travels", title: "ITC's travels" },
+            {
+              href: "/introduction/travels",
+              title: "In 75 years around the world",
+            },
+            { href: "/travels2019", title: "ITC's travels in 2019" },
           ]}
         />
       </Section>

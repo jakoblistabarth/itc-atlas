@@ -2,17 +2,13 @@ import { OrbitControls } from "@react-three/drei";
 import { Canvas } from "@react-three/fiber";
 import * as d3 from "d3";
 import type { GeoJsonProperties } from "geojson";
-import type { NextPage } from "next";
 import { FC, Suspense, memo, useCallback, useState } from "react";
 import { HiArrowRight } from "react-icons/hi2";
-import Container from "../../components/Container";
 import Globe, { FallBackGlobe } from "../../components/Globe/";
 import GlobeEnvironment from "../../components/Globe/GlobeEnvironment";
 import KPI from "../../components/KPI";
 import Mark3dFlow from "../../components/Mark3dFlow";
-import PageBase from "../../components/PageBase";
 import Tooltip from "../../components/Tooltip";
-import getOdMatrix from "../../lib/data/getOdMatrix";
 import type { OdMatrix } from "../../types/OdMatrix";
 import { useTheme } from "next-themes";
 
@@ -22,7 +18,7 @@ type Props = {
 
 const earthRadius = 1;
 
-const Flights: NextPage<Props> = ({ odMatrix }) => {
+const Flights3D: FC<Props> = ({ odMatrix }) => {
   const [hoverInfo, setHoverInfo] = useState<GeoJsonProperties | undefined>(
     undefined,
   );
@@ -36,78 +32,62 @@ const Flights: NextPage<Props> = ({ odMatrix }) => {
   const { theme } = useTheme();
 
   return (
-    <PageBase title="ITC's travel activity">
-      <Container>
-        <main>
-          <div style={{ width: "100%", height: "700px" }}>
-            <Tooltip.Root open={!!hoverInfo} followCursor placement="top-start">
-              <Tooltip.Trigger asChild>
-                <Canvas
-                  camera={{ position: [0, 0, 5], fov: 30 }}
-                  shadows
-                  onCreated={() => setReady(true)}
-                  data-ready={ready}
-                >
-                  <Suspense fallback={<FallBackGlobe radius={earthRadius} />}>
-                    <Globe
-                      radius={earthRadius}
-                      texture={theme === "dark" ? "night" : "explorer"}
-                    />
-                  </Suspense>
-                  <GlobeEnvironment />
+    <div style={{ width: "100%", height: "700px" }}>
+      <Tooltip.Root open={!!hoverInfo} followCursor placement="top-start">
+        <Tooltip.Trigger asChild>
+          <Canvas
+            camera={{ position: [0, 0, 5], fov: 30 }}
+            shadows
+            onCreated={() => setReady(true)}
+            data-ready={ready}
+          >
+            <Suspense fallback={<FallBackGlobe radius={earthRadius} />}>
+              <Globe
+                radius={earthRadius}
+                texture={theme === "dark" ? "night" : "explorer"}
+              />
+            </Suspense>
+            <GlobeEnvironment />
 
-                  <MemoizedFlows
-                    odMatrix={odMatrix}
-                    onPointerEnterHandler={onPointerEnterHandler}
-                    onPointerLeaveHandler={onPointerLeaveHandler}
-                  />
-                  <OrbitControls
-                    makeDefault
-                    enableDamping
-                    dampingFactor={0.3}
-                    enableZoom={false}
-                    enablePan={false}
-                  />
-                </Canvas>
-              </Tooltip.Trigger>
-              <Tooltip.Content>
-                {hoverInfo &&
-                  (hoverInfo.name ? (
-                    <p>
-                      Airport:{" "}
-                      <span className="font-bold">{hoverInfo.name}</span>
-                    </p>
-                  ) : (
-                    <div>
-                      <div className="flex items-center gap-1">
-                        <span className="font-bold">{hoverInfo?.o}</span>{" "}
-                        <HiArrowRight />{" "}
-                        <span className="font-bold">{hoverInfo?.d}</span>
-                      </div>
-                      <br />
-                      <KPI number={hoverInfo.value} unit={"travels"} />
-                      <p>in 2019</p>
-                    </div>
-                  ))}
-              </Tooltip.Content>
-            </Tooltip.Root>
-          </div>
-        </main>
-      </Container>
-    </PageBase>
+            <MemoizedFlows
+              odMatrix={odMatrix}
+              onPointerEnterHandler={onPointerEnterHandler}
+              onPointerLeaveHandler={onPointerLeaveHandler}
+            />
+            <OrbitControls
+              makeDefault
+              enableDamping
+              dampingFactor={0.3}
+              enableZoom={false}
+              enablePan={false}
+            />
+          </Canvas>
+        </Tooltip.Trigger>
+        <Tooltip.Content>
+          {hoverInfo &&
+            (hoverInfo.name ? (
+              <p>
+                Airport: <span className="font-bold">{hoverInfo.name}</span>
+              </p>
+            ) : (
+              <div>
+                <div className="flex items-center gap-1">
+                  <span className="font-bold">{hoverInfo?.o}</span>{" "}
+                  <HiArrowRight />{" "}
+                  <span className="font-bold">{hoverInfo?.d}</span>
+                </div>
+                <br />
+                <KPI number={hoverInfo.value} unit={"travels"} />
+                <p>in 2019</p>
+              </div>
+            ))}
+        </Tooltip.Content>
+      </Tooltip.Root>
+    </div>
   );
 };
 
-export async function getStaticProps() {
-  const odMatrix = await getOdMatrix();
-  return {
-    props: {
-      odMatrix,
-    },
-  };
-}
-
-export default Flights;
+export default Flights3D;
 
 const Flows: FC<{
   odMatrix: OdMatrix;
