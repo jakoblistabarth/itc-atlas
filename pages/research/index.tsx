@@ -52,14 +52,12 @@ const Introduction: NextPage<Props> = ({ departments }) => {
           each department. Please note that many research and edcuation
           activites are carried out accross several of these departments.
         </Paragraph>
-        <div className="mt-10 grid max-w-2xl gap-3">
+        <div className="mt-10 grid max-w-2xl grid-cols-[repeat(auto-fill,_minmax(240px,_1fr))] gap-3">
           {departments.map((d) => (
             <CardLink href={`/research/department/${d.id}`} key={d.id}>
               <Card.Body>
                 <h3>{d.name}</h3>
-                <div>
-                  {d.id} {d.number}
-                </div>
+                <div>{d.id}</div>
               </Card.Body>
             </CardLink>
           ))}
