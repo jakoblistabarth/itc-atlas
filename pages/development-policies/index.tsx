@@ -74,7 +74,9 @@ const Page: NextPage<Props> = ({
           <Section>
             <h2>Number of BHOS countries over time</h2>
             <BhosCountriesOverTime
-              bhosCountries={bhosCountries}
+              bhosCountries={bhosCountries.filter(
+                (d) => d.category === "General Focus Country",
+              )}
               dutchCabinets={dutchCabinets}
             />
             <Caption reference="Fig.2">
@@ -136,7 +138,9 @@ const Page: NextPage<Props> = ({
           </Section>
 
           <Section>
-            <h2>Focus countries of Dutch development policies</h2>
+            <h2 className="mb-3">
+              Focus countries of Dutch development policies
+            </h2>
             <div className="grid grid-cols-4 gap-1">
               {dutchCabinets
                 .filter((d) => cabinetsWithBhosData.includes(d.name))

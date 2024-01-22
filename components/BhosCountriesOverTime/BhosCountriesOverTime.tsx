@@ -1,12 +1,13 @@
-import { extent, group, min, scaleLinear, scaleTime } from "d3";
+import { group, max, min, scaleLinear, scaleTime } from "d3";
 import { FC, useState } from "react";
+import { fDateLong } from "../../lib/utilities/formaters";
 import { BhosCountry } from "../../types/BhosCountry";
 import { DutchCabinet } from "../../types/DutchCabinet";
+import KPI from "../KPI";
 import Timeline from "../Timeline";
 import EventPeriod from "../Timeline/EventPeriod";
 import TimelineGrid from "../Timeline/TimelineGrid";
 import Tooltip from "../Tooltip";
-import KPI from "../KPI";
 
 type Props = {
   bhosCountries: BhosCountry[];
@@ -29,9 +30,7 @@ const BhosCountriesOverTime: FC<Props> = ({ bhosCountries, dutchCabinets }) => {
 
   const perCabinet = group(bhosCountries, (d) => d.cabinet);
 
-  const sizeExtent = extent(
-    Array.from(perCabinet.values()).map((d) => d.length),
-  );
+  const sizes = Array.from(perCabinet.values()).map((d) => d.length);
 
   const timeMin =
     min(
@@ -44,9 +43,9 @@ const BhosCountriesOverTime: FC<Props> = ({ bhosCountries, dutchCabinets }) => {
     .domain([timeMin, new Date()])
     .range([0, width - margin * 2]);
 
-  const [heightMin, heightMax] = [sizeExtent[0] ?? 0, sizeExtent[1] ?? 1];
+  const heightMax = max(sizes) ?? 1;
   const yScale = scaleLinear()
-    .domain([heightMin, heightMax])
+    .domain([0, heightMax])
     .range([10, height - margin]);
 
   return (
@@ -87,15 +86,20 @@ const BhosCountriesOverTime: FC<Props> = ({ bhosCountries, dutchCabinets }) => {
           <Tooltip.Content>
             <strong>{tooltipContent.cabinet.name}</strong>
             <p>
-              {tooltipContent.cabinet.dateStart}–
-              {tooltipContent.cabinet.dateEnd}
+              {fDateLong(new Date(tooltipContent.cabinet.dateStart))}
+              <br />
+              {fDateLong(new Date(tooltipContent.cabinet.dateEnd))}
             </p>
-            {tooltipContent.bhosCountries && (
-              <KPI
-                number={tooltipContent.bhosCountries}
-                unit={"BHOS countries"}
-              />
-            )}
+            <div className="mt-3">
+              {tooltipContent.bhosCountries ? (
+                <KPI
+                  number={tooltipContent.bhosCountries}
+                  unit={"BHOS countries"}
+                />
+              ) : (
+                <div className="text-gray-400">No Data.</div>
+              )}
+            </div>
           </Tooltip.Content>
         )}
       </Tooltip.Root>
