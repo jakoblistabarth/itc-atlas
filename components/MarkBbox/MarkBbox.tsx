@@ -9,26 +9,26 @@ type Props = {
 } & SVGProps<SVGPathElement>;
 
 const MarkBbox: FC<Props> = ({ bounds, ...rest }) => {
-  const [minLng, maxLat, maxLng, minLat] = bounds;
+  const [sWLng, sWLat, nELng, nELat] = bounds;
   const { projection } = useMapLayoutContext();
 
   const top = [
-    [minLng, maxLat],
-    ...range(Math.ceil(minLng), Math.floor(maxLng)).map((d) => [d, maxLat]),
+    [sWLng, nELat],
+    ...range(Math.floor(sWLng), Math.ceil(nELng), 0.25).map((d) => [d, nELat]),
   ];
   const right = [
-    [maxLng, maxLat],
-    ...range(Math.ceil(minLat), Math.floor(maxLat)).map((d) => [maxLng, d]),
+    [nELng, nELat],
+    ...range(Math.floor(nELat), Math.ceil(sWLat), -0.25).map((d) => [nELng, d]),
   ];
   const bottom = [
-    [maxLng, minLat],
-    ...range(Math.floor(maxLng), Math.ceil(minLng), -1).map((d) => [d, minLat]),
+    [nELng, sWLat],
+    ...range(Math.floor(nELng), Math.ceil(sWLng), -0.25).map((d) => [d, sWLat]),
   ];
   const left = [
-    [minLng, minLat],
-    ...range(Math.ceil(minLat), Math.floor(maxLat)).map((d) => [minLng, d]),
+    [sWLng, sWLat],
+    ...range(Math.ceil(sWLat), Math.floor(nELat), 0.25).map((d) => [sWLng, d]),
   ];
-  const detailedCoordinates = [[...top, ...right, ...bottom, ...left]];
+  const detailedCoordinates = [[...top, ...right, ...bottom, ...left, top[0]]];
 
   const feature: Feature<Polygon> = {
     type: "Feature",
@@ -39,6 +39,7 @@ const MarkBbox: FC<Props> = ({ bounds, ...rest }) => {
     },
   };
   const path = geoPath(projection);
+
   return (
     <g>
       <path

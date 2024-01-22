@@ -3,7 +3,7 @@ import loadHgt from "./loadHgt";
 
 const loadHgtData = async () => {
   const areas = await getBlockdiagramAreas();
-  return areas.forEach((d) => loadHgt(d.locations, d.name));
+  return areas.forEach((d) => loadHgt(d.bbox, d.name));
 };
 
 export default loadHgtData;

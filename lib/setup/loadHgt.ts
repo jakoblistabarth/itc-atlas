@@ -5,7 +5,8 @@ import proj4 from "proj4";
 import { BBox } from "geojson";
 
 const loadHgt = async (bBox: BBox, name: string) => {
-  const [minLat, minLng, maxLat, maxLng] = bBox;
+  console.log(`🛰️ Loading height data for ${name}`);
+  const [minLng, minLat, maxLng, maxLat] = bBox;
   const moll =
     "+proj=moll +lon_0=0 +x_0=0 +y_0=0 +datum=WGS84 +units=m +no_defs +type=crs";
   const [west, south] = proj4(moll).forward([
@@ -16,7 +17,8 @@ const loadHgt = async (bBox: BBox, name: string) => {
     maxLng ?? Infinity,
     maxLat ?? Infinity,
   ]);
-  if (!south || !west || !north || !east) throw new Error("invalid locations");
+  if ([south, west, north, east].some((d) => d === undefined))
+    throw new Error(`invalid locations for area ${name}!`);
   const width = Math.abs(east - west);
   const depth = Math.abs(north - south);
   const segments = 250;

@@ -82,7 +82,7 @@ export const WithMarkers: Story = {
     })),
     rectangleMarkers: [
       {
-        bounds: [108, 3, 114, -3],
+        bounds: [108, -3, 114, 3],
         stroke: "black",
         strokeWidth: "1",
       },
@@ -95,12 +95,12 @@ export const WithMultipleMarkRectangle: Story = {
     highlight: ["ITA"],
     rectangleMarkers: [
       {
-        bounds: [-10, 60, 35, 35],
+        bounds: [-10, 35, 35, 60],
         stroke: "black",
         strokeWidth: "1",
       },
       {
-        bounds: [40, 20, 50, 10],
+        bounds: [40, 10, 50, 20],
         stroke: "black",
         strokeWidth: "1",
       },
@@ -113,12 +113,12 @@ export const WithRectanglesInSouthernHemisphere: Story = {
     highlight: ["CHL"],
     rectangleMarkers: [
       {
-        bounds: [-78, -15, -65, -58],
+        bounds: [-78, -58, -65, -15],
         stroke: "black",
         strokeWidth: "1",
       },
       {
-        bounds: [-82, 3, -75, -6],
+        bounds: [-82, -6, -75, 3],
         stroke: "black",
         strokeWidth: "1",
       },
