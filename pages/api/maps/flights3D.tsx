@@ -27,7 +27,7 @@ export default async function handler(
     deviceScaleFactor: 6,
   });
 
-  await page.goto(`http://localhost:3000/travels2019`);
+  await page.goto(`${process.env.SITE_URL}/travels2019`);
 
   const selector = "div[data-ready='true'] Canvas";
   await page.waitForSelector(selector); // wait for the selector to load

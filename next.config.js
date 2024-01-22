@@ -24,7 +24,7 @@ const nextConfig = {
           context: "./",
           extensions: ["js", "jsx", "ts", "tsx"],
           exclude: ["node_modules"],
-        })
+        }),
       );
     }
     config.module.rules.push({
@@ -49,6 +49,20 @@ const nextConfig = {
       },
     });
     return config;
+  },
+  images: {
+    remotePatterns: [
+      {
+        protocol: "http",
+        hostname: "localhost",
+        port: "3000",
+      },
+      {
+        protocol: "https",
+        hostname: "atlas.itc.utwente.nl",
+        port: "",
+      },
+    ],
   },
 };
 
