@@ -29,6 +29,7 @@
     "@paralleldrive/cuid2": "^2.2.0",
     "@prisma/client": "^5.2.0",
     "@radix-ui/colors": "^3.0.0",
+    "@radix-ui/react-popover": "^1.0.7",
     "@radix-ui/react-scroll-area": "^1.0.5",
     "@radix-ui/react-select": "^2.0.0",
     "@radix-ui/react-toolbar": "^1.0.4",

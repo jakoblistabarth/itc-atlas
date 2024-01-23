@@ -65,7 +65,7 @@ const LineChart: FC<Props> = ({
       top: 30,
       right: 20,
       bottom: 20,
-      left: 50,
+      left: 30,
     }),
     [],
   );

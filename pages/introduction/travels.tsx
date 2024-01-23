@@ -30,6 +30,9 @@ import Section from "../../components/Section";
 import getDepartments from "../../lib/data/queries/departments/getDepartments";
 import { Department } from "@prisma/client";
 import { useMemo } from "react";
+import Container from "../../components/Container";
+import Callout from "../../components/Callout";
+import { HiCursorClick } from "react-icons/hi";
 
 type Props = SharedPageProps & {
   btorsByCountryByDepartment: BtorsGroupedByCountryByDepartment;
@@ -52,13 +55,20 @@ const Page: NextPage<Props> = ({
 }) => {
   const projection = useMemo(() => geoBertin1953(), []);
   const heroVisual = (
-    <MapLayoutFluid projection={projection}>
-      <BtorsByYearMap
-        countries={countries}
-        neCountries={neCountriesTopoJson}
-        btors={btorsByYear}
-      />
-    </MapLayoutFluid>
+    <>
+      <MapLayoutFluid projection={projection}>
+        <BtorsByYearMap
+          countries={countries}
+          neCountries={neCountriesTopoJson}
+          btors={btorsByYear}
+        />
+      </MapLayoutFluid>
+      <Container>
+        <Callout Icon={HiCursorClick}>
+          Click on a symbol to retrieve additional information.
+        </Callout>
+      </Container>
+    </>
   );
 
   const extent: ExtendedFeature = {

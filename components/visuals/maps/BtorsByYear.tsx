@@ -1,16 +1,19 @@
 import { Country } from "@prisma/client";
-import { Group } from "@visx/group";
-import { groups, max, min, scaleLinear } from "d3";
-import { FC, useState } from "react";
+import * as Popover from "@radix-ui/react-popover";
+import { groups, max, min, scaleOrdinal, scaleSqrt } from "d3";
+import { FC } from "react";
+import { RxCross2 } from "react-icons/rx";
 import { Vector2 } from "three";
 import getCentroidByIsoCode from "../../../lib/data/getCentroidByIsoCode";
 import { BtorsGroupedByYear } from "../../../lib/data/queries/btors/getBtorsGroupedByYear";
 import getCountryName from "../../../lib/getCountryName";
-import LinePath from "../../LinePath/";
+import { NeCountriesTopoJson } from "../../../types/NeTopoJson";
+import LineChart from "../../LineChart";
 import { getFilledSeries } from "../../LinePath/LinePath.helpers";
 import MapLayerBase from "../../MapLayerBase";
-import { useMapLayoutContext } from "../../MapLayout/MapLayoutContext";
-import { NeCountriesTopoJson } from "../../../types/NeTopoJson";
+import MarkCircle from "../../MarkCircle";
+import LegendProportionalCircle from "../../LegendProportionalCircle";
+import { fInt } from "../../../lib/utilities/formaters";
 
 type Props = {
   countries: Country[];
@@ -19,20 +22,8 @@ type Props = {
 };
 
 const BtorsByYear: FC<Props> = ({ btors, countries, neCountries }) => {
-  const [selectedCountry, setSelectedCountry] = useState<string | undefined>(
-    undefined,
-  );
-
-  const chartWidth = 40;
-  const chartHeight = 40;
-
-  const maxCount = max(btors, (d) => d.count) ?? 1;
   const minTime = min(btors, (d) => d.year) ?? 2000;
   const maxTime = max(btors, (d) => d.year) ?? new Date().getFullYear();
-  const xScale = scaleLinear()
-    .domain([minTime, maxTime])
-    .range([0, chartWidth]);
-  const yScale = scaleLinear().domain([0, maxCount]).range([chartHeight, 0]);
 
   type BtorCountry = {
     isoAlpha3: string;
@@ -50,56 +41,85 @@ const BtorsByYear: FC<Props> = ({ btors, countries, neCountries }) => {
   };
 
   const btorsByCountry = groups(btors, (d) => d.isoAlpha3)
-    .map((d) => ({
-      isoAlpha3: d[0],
-      data: d[1],
-      centroid: getCentroidByIsoCode(d[0]),
+    .map(([isoAlpha3, data]) => ({
+      isoAlpha3,
+      data,
+      centroid: getCentroidByIsoCode(isoAlpha3),
     }))
     .filter(hasCentroid);
-
-  const { projection } = useMapLayoutContext();
+  const btorsByCountrySum = btorsByCountry.map((d) => {
+    return d.data.reduce((acc, d) => (acc += d.count), 0);
+  }, 0);
+  const maxCount = max(btorsByCountrySum) ?? 1;
+  const scaleRadius = scaleSqrt().domain([0, maxCount]).range([0, 20]);
 
   return (
     <>
+      <LegendProportionalCircle
+        data={btorsByCountrySum}
+        scaleRadius={scaleRadius}
+        title={"No. of travels"}
+        unitLabel={"travels"}
+      />
       <MapLayerBase countries={neCountries} />
       {btorsByCountry.map((d) => {
-        const centroid = projection([d.centroid.x, d.centroid.y]);
-        if (!centroid) return <></>;
-        const isSelectedCountry = selectedCountry == d.isoAlpha3;
-        const [x, y] = centroid;
-        const data = getFilledSeries<(typeof d.data)[number]>(
-          d.data,
-          (d) => d.year,
-          (d) => d.count,
-          minTime,
-          maxTime,
-        );
+        const label = getCountryName(d.isoAlpha3, countries);
+        const data = {
+          id: d.isoAlpha3,
+          label,
+          data: getFilledSeries<(typeof d.data)[number]>(
+            d.data,
+            (d) => d.year,
+            (d) => d.count,
+            minTime,
+            maxTime,
+          ),
+        };
+        const total = data.data.reduce((acc, d) => (acc += d.y), 0);
         return (
-          <g key={d.isoAlpha3} transform={`translate(${x} ${y})`}>
-            <Group top={-chartHeight} left={chartWidth / -2}>
-              <line
-                x1={xScale(minTime)}
-                y1={yScale(0)}
-                x2={xScale(maxTime)}
-                y2={yScale(0)}
-                stroke="grey"
-                strokeWidth={0.5}
-              />
-              <LinePath
-                isSelection={false}
-                isFocus={true}
-                isSelected={isSelectedCountry}
-                data={data}
-                xScale={xScale}
-                yScale={yScale}
-                identifier={d.isoAlpha3}
-                label={getCountryName(d.isoAlpha3, countries)}
-                mouseEnterLeaveHandler={(isoAlpha3?: string) => {
-                  setSelectedCountry(isoAlpha3);
-                }}
-              />
-            </Group>
-          </g>
+          <Popover.Root key={d.isoAlpha3}>
+            <Popover.Trigger asChild className="group">
+              <g>
+                <MarkCircle
+                  longitude={d.centroid.x}
+                  latitude={d.centroid.y}
+                  radius={scaleRadius(total)}
+                  className="fill-itc-green stroke-itc-green transition-all hover:fill-itc-blue hover:stroke-itc-blue  group-data-[state=open]:fill-itc-blue group-data-[state=open]:stroke-itc-blue group-data-[state=open]:stroke-2"
+                />
+              </g>
+            </Popover.Trigger>
+            <Popover.Portal>
+              <Popover.Content
+                sideOffset={5}
+                className="rounded-sm bg-white p-3 shadow-lg"
+              >
+                <Popover.Arrow className="fill-white" />
+                <div className="flex items-center">
+                  <span className="text-xs">
+                    {fInt(total)} travels over time
+                  </span>
+                  <Popover.Close className="ml-auto rounded-full p-1 hover:bg-itc-green-50">
+                    <RxCross2 />
+                  </Popover.Close>
+                </div>
+                <div className="my-2 flex items-baseline gap-2">
+                  <span className="font-serif text-lg">{label}</span>
+                  <span className="rounded border border-itc-blue p-1 text-xs text-itc-blue">
+                    {d.isoAlpha3}
+                  </span>
+                </div>
+                <LineChart
+                  data={[data]}
+                  colorScale={scaleOrdinal<string, string>().range([
+                    "darkblue",
+                  ])}
+                  mouseEnterLeaveHandler={() => undefined}
+                  xLabel="year"
+                  yLabel="No. travels"
+                />
+              </Popover.Content>
+            </Popover.Portal>
+          </Popover.Root>
         );
       })}
     </>
