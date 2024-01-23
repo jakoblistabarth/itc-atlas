@@ -23,7 +23,6 @@ type Props = {
 } & SharedPageProps;
 
 const Page: NextPage<Props> = ({ odMatrix, airports, neCountriesTopoJson }) => {
-  console.log(airports.features.map((d) => d.properties));
   return (
     <div>
       <PageBase title="ITC's travels in 2019">
