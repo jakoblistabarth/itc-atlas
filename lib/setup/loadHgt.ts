@@ -25,7 +25,7 @@ const loadHgt = async (bBox: BBox, name: string) => {
   const vertices = segments + 1;
   const stepY = depth / vertices;
   const stepX = width / vertices;
-  const pois = Array.from({ length: vertices })
+  const poisProjected = Array.from({ length: vertices })
     .map((_, rowIdx) => {
       const y = north - rowIdx * stepY;
       return Array.from({ length: vertices }).map((_, colIdx) => {
@@ -35,17 +35,22 @@ const loadHgt = async (bBox: BBox, name: string) => {
     })
     .flat()
     .map((d) => d.map((c) => +c.toFixed(6)));
+  const pois = poisProjected.map(([x, y]) => {
+    const [lng, lat] = proj4(moll).inverse([x, y]);
+    return [lng, lat];
+  });
   const tileset = new SyncTileSet(
     "./data/topographic/elevation",
-    [minLat, minLng],
-    [maxLat, maxLng],
+    //TODO: replace buffer with fixed numbers
+    // by a new bounding box based on unprojected pois
+    [minLat - 1, minLng - 1],
+    [maxLat + 1, maxLng + 1],
     function (err: string) {
       if (err) {
-        console.log(err);
+        console.log(`Error for ${name}: ${err}`);
         return;
       }
-      const elevation = pois.map(([x, y]) => {
-        const [lng, lat] = proj4(moll).inverse([x, y]);
+      const elevation = pois.map(([lng, lat]) => {
         const elevation = tileset.getElevation([lat, lng]);
         return +elevation.toFixed(1);
       });
