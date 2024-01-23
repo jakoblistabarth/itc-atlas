@@ -36,10 +36,13 @@ const Projects: NextPage = () => {
   ];
 
   return (
-    <PageChapter chapterName="Projects">
+    <PageChapter chapterName="Institutional strengthening">
       <Section>
-        <h1>Chapter Projects</h1>
-        <Teaser>Insights into ITC&apos;s projects around the globe.</Teaser>
+        <h1>Chapter Institutional Strengthening</h1>
+        <Teaser>
+          Insights into ITC&apos;s institutional strengthening efforts and
+          projects around the globe.
+        </Teaser>
         <Paragraph>
           The last decade the thematic focus was more consistent, but the
           geographic focus continues to shift, reflecting political choices.
@@ -58,11 +61,11 @@ const Projects: NextPage = () => {
               title: "ITC's impact in Indonesia",
             },
             {
-              href: "projects/globe",
+              href: "institutional-strengthening/globe",
               title: "The globe of projects",
             },
             {
-              href: "projects/projects-spacetimecube",
+              href: "institutional-strengthening/projects-spacetimecube",
               title: "Projects over time",
             },
             {
@@ -74,7 +77,7 @@ const Projects: NextPage = () => {
       </Section>
 
       <Section>
-        <h2>More on Projects</h2>
+        <h2>More on Institutional strengthening</h2>
         <Paragraph>
           The last decade the thematic focus was more consistent, but the
           geographic focus continues to shift, reflecting political choices.

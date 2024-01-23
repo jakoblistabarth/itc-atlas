@@ -19,7 +19,9 @@ const Navigation: FC = () => {
           <NavLink href="/introduction">Introduction</NavLink>
           <NavLink href="/education">Education</NavLink>
           <NavLink href="/research">Research</NavLink>
-          <NavLink href="/projects">Projects</NavLink>
+          <NavLink href="/institutional-strengthening">
+            Institutional strengthening
+          </NavLink>
           <NavLink disabled href="/appendix">
             Appendix
           </NavLink>

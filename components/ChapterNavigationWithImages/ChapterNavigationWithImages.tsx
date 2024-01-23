@@ -11,7 +11,7 @@ const ChapterNavigationWithImages: FC = () => {
       .filter((d) => d !== "Appendix")
       .map((chapter) => ({
         chapter,
-        slug: chapter.toLowerCase(),
+        slug: chapter.toLowerCase().replaceAll(" ", "-"),
         disabled: chapter === "Appendix" ? true : false,
       }));
   }, []);

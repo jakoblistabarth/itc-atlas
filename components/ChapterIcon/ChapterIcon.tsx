@@ -16,7 +16,7 @@ const ChapterIcon: FC<Props> = ({ chapter, ...rest }) => {
       return <IconResearch {...rest} />;
     case "Education":
       return <IconEducation {...rest} />;
-    case "Projects":
+    case "Institutional strengthening":
       return <IconProjects {...rest} />;
     case "Introduction":
       return <IconIntroduction {...rest} />;

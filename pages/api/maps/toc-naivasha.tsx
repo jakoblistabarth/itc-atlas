@@ -15,14 +15,16 @@ import getBrowser from "../../../puppeteer/browser";
  */
 export default async function handler(
   req: NextApiRequest,
-  res: NextApiResponse
+  res: NextApiResponse,
 ) {
   // TODO: implement caching? Don't start browser if screenshot already exists in cache
   // TODO: only launch browser if browser is not already launched
   const browser = await getBrowser();
   const page = await browser.newPage();
 
-  await page.goto(`${process.env.SITE_URL}/projects/naivasha`);
+  await page.goto(
+    `${process.env.SITE_URL}/institutional-strengthening/naivasha`,
+  );
 
   const selector = "svg.hierarchy-tree";
   await page.waitForSelector(selector);

@@ -17,7 +17,7 @@ type Story = StoryObj<typeof meta>;
 export const DefaultChapterIcon: Story = {};
 export const StyledIcon: Story = {
   args: {
-    chapter: "Projects",
+    chapter: "Institutional strengthening",
     opacity: 0.5,
     transform: "rotate(20)",
   },
