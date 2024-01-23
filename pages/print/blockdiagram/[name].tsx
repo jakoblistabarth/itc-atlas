@@ -10,19 +10,42 @@ import getCountryCodes from "../../../lib/data/queries/country/getCountryCodes";
 import BlockDiagramAreas from "../../../components/BlockDiagramAreas";
 import PageBase from "../../../components/PageBase";
 import Container from "../../../components/Container";
+import BlockDiagram from "../../../components/BlockDiagram";
+import CanvasStage from "../../../components/CanvasStage";
+import { Canvas } from "@react-three/fiber";
+import BlockDiagramEnvironment from "../../../components/BlockDiagram/BlockDiagramEnvironment";
+import Paragraph from "../../../components/Paragraph";
 
 const Page = ({
   blockDiagramAreas,
   areaName,
   neCountriesTopoJson,
 }: InferGetStaticPropsType<typeof getStaticProps>) => {
-  //   const data = useSWRImmutable(`/api/data/elevationModel/${areaName}`);
+  const { data } = useSWRImmutable(`/api/data/elevationModel/${areaName}`);
 
   return (
     <PageBase title={`BlockDiagram ${areaName}`}>
       <Container>
-        <h1>{areaName}</h1>
-        {blockDiagramAreas.map(({ name }) => name).join(" ")}
+        <Paragraph>
+          This pages shows a preview of generated Blockdiagram for {areaName}.
+        </Paragraph>
+        <CanvasStage className="my-5 h-[500px]">
+          <Canvas shadows>
+            {data && (
+              <>
+                <BlockDiagram
+                  side={1}
+                  ratio={data.dimensions.ratio}
+                  yScale={0.00002}
+                  zOffset={0.1}
+                  data={Float32Array.from(data.elevation)}
+                  bBox={data.bBox}
+                />
+                <BlockDiagramEnvironment />
+              </>
+            )}
+          </Canvas>
+        </CanvasStage>
         <Section>
           <h2 className="mb-5">Overview block diagram areas</h2>
           <BlockDiagramAreas
