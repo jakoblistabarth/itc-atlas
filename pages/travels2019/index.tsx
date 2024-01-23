@@ -15,6 +15,7 @@ import getCountryCodes from "../../lib/data/queries/country/getCountryCodes";
 import Flights from "../../components/Flights";
 import Flights3D from "../../components/Flights3D";
 import Airports from "../../components/Airports";
+import CanvasStage from "../../components/CanvasStage";
 
 type Props = {
   odMatrix: OdMatrix;
@@ -40,14 +41,16 @@ const Page: NextPage<Props> = ({ odMatrix, airports, neCountriesTopoJson }) => {
             />
           </Section>
           <Section>
-            <h2>Flights3D</h2>
+            <h2>Flights of 2019 on a globe</h2>
             <Paragraph>
               Lorem ipsum, dolor sit amet consectetur adipisicing elit. Amet
               molestiae, sequi animi est dolor nihil qui id, aperiam assumenda
               suscipit officia, veniam tenetur veritatis saepe! Recusandae animi
               incidunt fuga perferendis!
             </Paragraph>
-            <Flights3D odMatrix={odMatrix} />
+            <CanvasStage className="mt-5">
+              <Flights3D odMatrix={odMatrix} />
+            </CanvasStage>
           </Section>
           <Section>
             <h2>Airports</h2>
