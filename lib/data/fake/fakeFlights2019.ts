@@ -10,9 +10,8 @@ const fakeFlights2019 = async (number = 900): Promise<Flight2019Clean[]> => {
   // TODO: use a set of origin-destination combinations to make fake data more realistic
   // hubs improved the results but still too many different combinations
   const airportCodes = (await getAirports()).json
-    .filter((airport) => airport.type == "large_airport")
-    .filter((airport) => airport.iata_code)
-    .map((airport) => airport.iata_code);
+    .filter((airport) => airport.iataCode)
+    .map((airport) => airport.iataCode);
   const hubs = sampleSize(airportCodes, 6);
   const departments = loadDepartments();
   const countries = await loadUnsdCountries();

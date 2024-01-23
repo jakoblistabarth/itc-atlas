@@ -17,17 +17,17 @@ const getFlightsPerAirport = async () => {
   const count = d3.rollup(
     allAirports,
     (v) => v.length,
-    (d) => d
+    (d) => d,
   );
 
   const features = airports
     .map((d) => {
-      const value = count.get(d.iata_code);
+      const value = count.get(d.iataCode);
       const feature: Feature<Point, AirportPropertiesWithCount> = {
         type: "Feature",
         geometry: {
           type: "Point",
-          coordinates: [d.lon, d.lat],
+          coordinates: [d.longitude, d.latitude],
         },
         properties: { ...d, value: value ?? 0 },
       };

@@ -55,8 +55,8 @@ const getODFlows = async (
     .reduce((acc: Feature<LineString, FlowProperties>[], d) => {
       const [od, value] = d;
       const [origin, destination] = od.split("-");
-      const oAirport = airports.find((d) => d.iata_code == origin);
-      const dAirport = airports.find((d) => d.iata_code == destination);
+      const oAirport = airports.find((d) => d.iataCode == origin);
+      const dAirport = airports.find((d) => d.iataCode == destination);
       if (!oAirport || !dAirport) return acc;
       const properties: FlowProperties = {
         od: od,
@@ -70,8 +70,8 @@ const getODFlows = async (
         geometry: {
           type: "LineString",
           coordinates: [
-            [oAirport.lon, oAirport.lat],
-            [dAirport.lon, dAirport.lat],
+            [oAirport.longitude, oAirport.latitude],
+            [dAirport.longitude, dAirport.latitude],
           ],
         },
       };
