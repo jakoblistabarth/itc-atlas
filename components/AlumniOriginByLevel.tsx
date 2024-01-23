@@ -44,7 +44,7 @@ const AlumniOriginByLevel: FC<Props> = ({
             </select>
           </label>
         </div>
-        <div className="my-5 max-w-lg">
+        <div className="max-w-screen-sm">
           <MapLayoutFluid projection={geoBertin1953()}>
             <AlumniOrigin
               neCountriesTopoJson={neCountriesTopoJson}
