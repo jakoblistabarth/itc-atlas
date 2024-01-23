@@ -90,11 +90,11 @@ const Flights: FC<Props> = ({ odMatrix, neCountriesTopoJson }) => {
   return (
     <div>
       <MapLayoutFluid projection={geoBertin1953()}>
+        <Targets />
         <FlightsFlowMap
           odMatrix={odMatrix}
           neCountriesTopoJson={neCountriesTopoJson}
         />
-        <Targets />
       </MapLayoutFluid>
       <Tour steps={steps} />
       {/* TODO: implement tour restarting */}
