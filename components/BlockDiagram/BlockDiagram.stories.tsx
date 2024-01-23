@@ -4,7 +4,7 @@ import { BBox } from "geojson";
 
 import BlockDiagram from ".";
 import * as grossglockner from "../../data/topographic/elevation-Grossglockner.json";
-import * as malta from "../../data/topographic/elevation-Malta.json";
+import * as dominica from "../../data/topographic/elevation-Dominica.json";
 import * as paramaribo from "../../data/topographic/elevation-Paramaribo.json";
 import BlockDiagramEnvironment from "./BlockDiagramEnvironment";
 
@@ -64,18 +64,17 @@ export const Paramaribo: Story = {
     data: Float32Array.from(paramaribo.elevation),
     ratio: paramaribo.dimensions.ratio,
     yScale: 0.001,
-    textureFileName: "paramaribo.png",
     bBox: paramaribo.bBox as BBox,
   },
 };
 
-export const Malta: Story = {
+export const Dominica: Story = {
   args: {
-    data: Float32Array.from(malta.elevation),
-    ratio: malta.dimensions.ratio,
+    data: Float32Array.from(dominica.elevation),
+    ratio: dominica.dimensions.ratio,
     yScale: 0.0001,
     textureFileName: "uv-grid.png",
     sideColor: "#3689a5",
-    bBox: malta.bBox as BBox,
+    bBox: dominica.bBox as BBox,
   },
 };
