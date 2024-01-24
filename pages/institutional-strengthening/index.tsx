@@ -68,10 +68,6 @@ const Projects: NextPage = () => {
               href: "institutional-strengthening/projects-spacetimecube",
               title: "Projects over time",
             },
-            {
-              href: "flights2019/flights3D",
-              title: "Flights in 2019",
-            },
           ]}
         />
       </Section>
