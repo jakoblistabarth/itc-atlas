@@ -28,6 +28,10 @@ const Introduction: NextPage = () => {
         <ChapterHighlights
           highlights={[
             {
+              href: "/introduction/about-itc",
+              title: "What's the ITC?",
+            },
+            {
               href: "/development-policies",
               title: "How development policies affect ITC",
             },
