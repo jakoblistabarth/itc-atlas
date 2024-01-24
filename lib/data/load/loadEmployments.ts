@@ -8,10 +8,10 @@ const loadEmployments = async (staff: StaffEnriched[]) => {
   const tb = aq
     .from(staff)
     .derive({
-      department: aq.escape((d: StaffEnriched) =>
+      departments: aq.escape((d: StaffEnriched) =>
         d["Organisatiecode"]
           ? mapToDepartment(d["Organisatiecode"].replace(/ITC-/, ""))
-          : null
+          : null,
       ),
       startYear: (d: StaffEnriched) => aq.op.year(d["Begin Datum Aanstelling"]),
       endYear: (d: StaffEnriched) => aq.op.year(d["Einddatum Aanstelling"]),
@@ -22,7 +22,7 @@ const loadEmployments = async (staff: StaffEnriched[]) => {
           return undefined;
         return getDaysBetween(
           d["Begin Datum Aanstelling"],
-          d["Einddatum Aanstelling"]
+          d["Einddatum Aanstelling"],
         );
       }),
     })
@@ -37,9 +37,9 @@ const loadEmployments = async (staff: StaffEnriched[]) => {
       "endYear",
       "unitEndYear",
       "employedDays",
-      "department",
+      "departments",
       "type",
-      "description"
+      "description",
     );
 
   return tb.objects() as EmploymentClean[];
