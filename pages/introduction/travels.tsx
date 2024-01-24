@@ -128,20 +128,6 @@ const Page: NextPage<Props> = ({
             suscipit officia, veniam tenetur veritatis saepe! Recusandae animi
             incidunt fuga perferendis!
           </Paragraph>
-          <div className="mt-5">
-            <MapLayoutFluid projection={geoBertin1953()} extent={extent}>
-              <BtorsByYearMap
-                countries={countries}
-                neCountries={neCountriesTopoJson}
-                btors={btorsByYear}
-              />
-            </MapLayoutFluid>
-            <Caption reference="Fig. 3">
-              This map shows travels over time with destinations within Europe,
-              showing a tendency to less travels over time across the
-              contintent.
-            </Caption>
-          </div>
         </div>
       </Section>
       <Section>
