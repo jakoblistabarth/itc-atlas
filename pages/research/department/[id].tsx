@@ -1,5 +1,4 @@
-import * as ScrollArea from "@radix-ui/react-scroll-area";
-import { rollups, scaleOrdinal } from "d3";
+import { scaleOrdinal } from "d3";
 import AlumniOrginByLevel from "../../../components/AlumniOriginByLevel";
 import { geoBertin1953 } from "d3-geo-projection";
 import { GetStaticPaths, GetStaticProps, InferGetStaticPropsType } from "next";
@@ -114,7 +113,7 @@ const Page = ({
         </Section>
         <Section>
           <h2>PhD Theses</h2>
-          <div className="grid grid-cols-2 gap-5">
+          <div className="max-w-screen-sm">
             <PhdThesesBookChart
               thesesByYear={thesesByYear}
               colorScale={scaleOrdinal<string, string, string>().unknown(
@@ -122,55 +121,6 @@ const Page = ({
               )}
               startYear={1990}
             />
-            <Card className="max-w-xs self-start">
-              <Card.Header>PhD theses by alumni origin</Card.Header>
-              <ScrollArea.Root className="h-[300px] w-full">
-                <ScrollArea.Viewport className="h-full w-full">
-                  <Card.Body>
-                    <table className="w-full border-collapse text-xs [&_tbody_tr]:border-t dark:[&_tbody_tr]:border-itc-green-800 [&_td]:py-2">
-                      <thead className="font-serif">
-                        <tr>
-                          <th className="text-left">Country</th>
-                          <th className="text-right">No. of PhDs</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {rollups(
-                          department.phdsMain,
-                          (v) => v.length,
-                          (d) => d.country?.isoAlpha3,
-                        )
-                          .filter(([isoAlpha3Code]) => isoAlpha3Code)
-                          .sort((a, b) => b[1] - a[1])
-                          .map(([isoAlpha3Code, count]) => {
-                            return (
-                              <tr key={isoAlpha3Code}>
-                                <td>
-                                  {isoAlpha3Code ? (
-                                    <CountryCodeBadge
-                                      isoAlpha3Code={isoAlpha3Code}
-                                    />
-                                  ) : (
-                                    "No Data"
-                                  )}
-                                </td>
-                                <td className="text-right">{count}</td>
-                              </tr>
-                            );
-                          })}
-                      </tbody>
-                    </table>
-                  </Card.Body>
-                </ScrollArea.Viewport>
-                <ScrollArea.Scrollbar
-                  className="flex touch-none select-none bg-blackA1 p-0.5 transition-colors duration-[160ms] ease-out hover:bg-blackA3 data-[orientation=horizontal]:h-2.5 data-[orientation=vertical]:w-2.5 data-[orientation=horizontal]:flex-col"
-                  orientation="vertical"
-                >
-                  <ScrollArea.Thumb className="relative flex-1 rounded-[10px] bg-itc-green before:absolute before:left-1/2 before:top-1/2 before:h-full before:min-h-[44px] before:w-full before:min-w-[44px] before:-translate-x-1/2 before:-translate-y-1/2 before:content-['']" />
-                </ScrollArea.Scrollbar>
-                <ScrollArea.Corner />
-              </ScrollArea.Root>
-            </Card>
           </div>
         </Section>
         <Section>
@@ -217,7 +167,7 @@ const Page = ({
             suscipit officia, veniam tenetur veritatis saepe! Recusandae animi
             incidunt fuga perferendis!
           </Paragraph>
-          <div className="my-5 max-w-lg">
+          <div className="max-w-screen-sm">
             <MapLayoutFluid projection={geoBertin1953()}>
               <FlightsFlowMap
                 odMatrix={odMatrix}
@@ -229,7 +179,7 @@ const Page = ({
 
         <Section>
           <h2>Projects</h2>
-          <div className="my-5 max-w-lg">
+          <div className="max-w-screen-sm">
             <MapLayoutFluid projection={geoBertin1953()}>
               <MapLayerBase countries={neCountriesTopoJson} />
               <MapLayerProportionalSymbols data={data} maxRadius={10} />
