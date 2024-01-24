@@ -37,10 +37,14 @@ import getApplicationLevels, {
 import FlightsFlowMap from "../../../components/FlightsFlowMap";
 import getOdMatrix from "../../../lib/data/getOdMatrix";
 import type { OdMatrix } from "../../../types/OdMatrix";
+import getEmploymentExtent, {
+  EmploymentExtent,
+} from "../../../lib/data/queries/employment/employment-extent";
 
 const Page = ({
   department,
   employeeCount,
+  employmentExtent,
   btorCount,
   neCountriesTopoJson,
   countriesWithProjectCount,
@@ -80,7 +84,7 @@ const Page = ({
               {
                 value: employeeCount,
                 unit: "employees",
-                description: "between xx and xx",
+                description: `between ${employmentExtent._min.startYear} and ${employmentExtent._max.startYear}`,
               },
               { value: btorCount, unit: "Back-to-office reports" },
               {
@@ -236,6 +240,7 @@ export const getStaticProps = (async (context) => {
   const [
     department,
     employeeCount,
+    employmentExtent,
     btorCount,
     countriesWithProjectCount,
     neCountriesTopoJson,
@@ -261,6 +266,7 @@ export const getStaticProps = (async (context) => {
         },
       },
     }),
+    getEmploymentExtent(),
     prisma.btor.count({
       where: {
         departments: {
@@ -284,6 +290,7 @@ export const getStaticProps = (async (context) => {
     props: {
       department,
       employeeCount,
+      employmentExtent,
       btorCount,
       countriesWithProjectCount,
       neCountriesTopoJson,
@@ -298,6 +305,7 @@ export const getStaticProps = (async (context) => {
   {
     department: Awaited<ReturnType<typeof getDepartment>>;
     employeeCount: number;
+    employmentExtent: EmploymentExtent;
     btorCount: number;
     countriesWithProjectCount: Awaited<
       ReturnType<typeof getCountryWithProjectCount>
