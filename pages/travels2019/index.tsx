@@ -73,8 +73,8 @@ const Page: NextPage<Props> = ({ odMatrix, airports, neCountriesTopoJson }) => {
 
 export async function getStaticProps() {
   const neCountriesTopoJson = getCountries();
-  const [odMatrix] = await Promise.all([getOdMatrix()]);
-  const [airports, countries] = await Promise.all([
+  const [odMatrix, airports, countries] = await Promise.all([
+    getOdMatrix(),
     getFlightsPerAirport(),
     getCountryCodes(),
   ]);

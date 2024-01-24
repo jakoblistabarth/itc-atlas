@@ -39,9 +39,6 @@ export default async function handler(
       .setHeader("Content-Type", "text/html; charset=utf-8;")
       .send(svg);
   } catch (e) {
-    const string = node?.toString();
-    console.log({ string, e });
-
     res
       .status(404)
       .setHeader("Content-Type", "text/html; charset=utf-8;")
