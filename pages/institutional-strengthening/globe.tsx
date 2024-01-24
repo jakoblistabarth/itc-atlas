@@ -8,6 +8,8 @@ import getCountryWithProjectCount, {
   CountryWithProjectCount,
 } from "../../lib/data/queries/country/getCountryWithProjectCount";
 import { SharedPageProps } from "../../types/Props";
+import Paragraph from "../../components/Paragraph";
+import Teaser from "../../components/Teaser";
 
 type Props = SharedPageProps & {
   countryWithProjectCount: CountryWithProjectCount;
@@ -21,6 +23,16 @@ const Page: NextPage<Props> = ({
     <PageBase title="Projects Explorer">
       <Container>
         <main>
+          <Teaser>
+            ITC and changing government policies illustrated by its activities
+            in Indonesia.
+          </Teaser>
+          <Paragraph>
+            Dutch development policies change over time. According to the
+            cabinets in office the perspective and focus on development shifts
+            slighty, affecting ITC&apos;s work.
+          </Paragraph>
+
           <ProjectGlobe
             neCountriesTopoJson={neCountriesTopoJson}
             countryWithProjectCount={countryWithProjectCount}

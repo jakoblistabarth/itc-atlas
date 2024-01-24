@@ -29,7 +29,7 @@ const ProjectGlobe: FC<Props> = ({
     setHoverInfo(properties);
   }, []);
   const onPointerLeaveHandler = useCallback(() => setHoverInfo(undefined), []);
-  const earthRadius = 1;
+  const earthRadius = 1.2;
 
   useEffect(() => {
     setIsSSR(false);
@@ -38,7 +38,7 @@ const ProjectGlobe: FC<Props> = ({
   const { theme } = useTheme();
 
   return (
-    <CanvasStage className="h-[700px]">
+    <CanvasStage className="h-[800px]">
       <Tooltip.Root open={!!hoverInfo} followCursor placement="top-start">
         <Tooltip.Trigger asChild>
           <Canvas camera={{ position: [0, 0, 5], fov: 30 }} shadows>
