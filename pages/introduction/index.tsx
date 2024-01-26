@@ -29,7 +29,7 @@ const Introduction: NextPage = () => {
           highlights={[
             {
               href: "/introduction/about-itc",
-              title: "What's the ITC?",
+              title: "About ITC",
             },
             {
               href: "/development-policies",

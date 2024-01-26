@@ -21,7 +21,7 @@ const AboutITC: NextPage = () => {
           </Paragraph>
 
           <Section>
-            <h2 className="mt-5">ITC moves in the last 70 years</h2>
+            <h2 className="mt-5">ITC&apos;s moves</h2>
             <Paragraph>
               A company that can incubate faithfully will (at some unspecified
               point in the future) be able to orchestrate correctly. If you
@@ -38,7 +38,7 @@ const AboutITC: NextPage = () => {
           </Section>
 
           <Section>
-            <h2 className="mt-5">organigramm</h2>
+            <h2 className="mt-5">How is ITC organized?</h2>
             <Paragraph>
               A company that can incubate faithfully will (at some unspecified
               point in the future) be able to orchestrate correctly. If you
@@ -51,7 +51,7 @@ const AboutITC: NextPage = () => {
               height={900}
               alt={`organigramm`}
             />
-            <Caption reference="Fig.2">organigramm</Caption>
+            <Caption reference="Fig.2">Organigramm</Caption>
           </Section>
 
           <Section>
@@ -63,12 +63,13 @@ const AboutITC: NextPage = () => {
               Without development, you will lack experiences.
             </Paragraph>
             <Image
+              className="my-10 max-w-lg"
               src={`${process.env.NEXT_PUBLIC_SITE_URL}/images/levels-of-capacity-development.png`}
               width={1600}
               height={900}
               alt={`Capacity-development`}
             />
-            <Caption reference="Fig.3">levels-of-capacity-development</Caption>
+            <Caption reference="Fig.3">Levels of capacity development</Caption>
           </Section>
         </Container>
       </PageBase>
