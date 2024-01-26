@@ -1,4 +1,3 @@
-import { ExtendedFeature } from "d3-geo";
 import { geoBertin1953 } from "d3-geo-projection";
 import type { GetStaticProps, NextPage } from "next";
 import Caption from "../../components/Caption";
@@ -70,20 +69,6 @@ const Page: NextPage<Props> = ({
       </Container>
     </>
   );
-
-  const extent: ExtendedFeature = {
-    type: "Feature",
-    geometry: {
-      type: "MultiPoint",
-      coordinates: [
-        [-30, 60],
-        [48, 70],
-        [34, 36],
-        [-8, 35],
-      ],
-    },
-    properties: {},
-  };
 
   return (
     <PageHeroVisual title="Staff travels over time" heroVisual={heroVisual}>
