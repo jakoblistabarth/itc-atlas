@@ -29,6 +29,7 @@ const AboutITC: NextPage = () => {
               Without development, you will lack experiences.
             </Paragraph>
             <Image
+              className="my-10 max-w-lg"
               src={`${process.env.NEXT_PUBLIC_SITE_URL}/images/itc-moves.png`}
               width={1600}
               height={900}
@@ -46,6 +47,7 @@ const AboutITC: NextPage = () => {
               Without development, you will lack experiences.
             </Paragraph>
             <Image
+              className="my-10 max-w-lg"
               src={`${process.env.NEXT_PUBLIC_SITE_URL}/images/organigramm.png`}
               width={1600}
               height={900}
@@ -55,7 +57,7 @@ const AboutITC: NextPage = () => {
           </Section>
 
           <Section>
-            <h2 className="mt-5">levels-of-capacity-development</h2>
+            <h2 className="mt-5">Levels of capacity development</h2>
             <Paragraph>
               A company that can incubate faithfully will (at some unspecified
               point in the future) be able to orchestrate correctly. If you
