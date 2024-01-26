@@ -57,7 +57,7 @@ const ThesisInfo: FC<Props> = ({ info, colorScale, onCloseHandler }) => {
               {showCanvas && (
                 <Canvas orthographic>
                   <Environment preset="apartment" />
-                  <Bounds fit damping={30} observe margin={1}>
+                  <Bounds fit maxDuration={0.25} observe margin={1}>
                     <Float
                       floatIntensity={0.1}
                       rotation-z={-Math.PI / 2.2}
