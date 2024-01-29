@@ -1,11 +1,12 @@
+import { Country } from "@prisma/client";
 import { union } from "d3";
 import { geoBertin1953 } from "d3-geo-projection";
 import { Feature } from "geojson";
 import { FC, useMemo, useState } from "react";
 import { HiCursorClick } from "react-icons/hi";
-import { twMerge } from "tailwind-merge";
 import { feature } from "topojson-client";
 import { BtorsGroupedByYear } from "../../lib/data/queries/btors/getBtorsGroupedByYear";
+import { fDateMonthYear } from "../../lib/utilities/formaters";
 import { BhosCountry } from "../../types/BhosCountry";
 import { DutchCabinet } from "../../types/DutchCabinet";
 import { NeCountriesTopoJson } from "../../types/NeTopoJson";
@@ -14,12 +15,11 @@ import LegendNominal from "../LegendNominal";
 import MapLayerBase from "../MapLayerBase";
 import MapLayoutFluid from "../MapLayout/MapLayoutFluid";
 import MarkGeometry from "../MarkGeometry/MarkGeometry";
+import Select from "../Select";
 import Tooltip from "../Tooltip/";
 import BhosGradientDefs from "./BhosGradientsDefs";
 import BtorsByYear from "./charts/BtorsByYear";
 import useBhosCategories from "./useBhosCategories";
-import Button from "../Button";
-import { Country } from "@prisma/client";
 
 type Props = {
   neCountries: NeCountriesTopoJson;
@@ -38,9 +38,6 @@ const BtorsAndCabinets: FC<Props> = ({
   neCountries,
   countries,
 }) => {
-  const [activeCabinet, setActiveCabinet] = useState(
-    dutchCabinets[dutchCabinets.length - 1].name,
-  );
   const [activeCountry, setActiveCountry] = useState<string | undefined>(
     undefined,
   );
@@ -48,9 +45,12 @@ const BtorsAndCabinets: FC<Props> = ({
   const cabinetsWithBhosData = Array.from(
     union(bhosCountries.map((d) => d.cabinet)),
   );
-  const filteredCabinets = dutchCabinets.filter((d) =>
-    cabinetsWithBhosData.includes(d.name),
-  );
+  const filteredCabinets = dutchCabinets
+    .filter((d) => cabinetsWithBhosData.includes(d.name))
+    .filter((d) => !d.dateEnd || new Date(d.dateEnd) > new Date("2000-01-01"));
+
+  const fallBackCabinet = filteredCabinets[filteredCabinets.length - 1].name;
+  const [activeCabinet, setActiveCabinet] = useState(fallBackCabinet);
 
   const {
     bhosCountriesWithCategories,
@@ -101,18 +101,24 @@ const BtorsAndCabinets: FC<Props> = ({
         this country was visited.
       </Callout>
       <div className="pn-2 scroll mb-2 mt-2 flex flex-nowrap gap-2 overflow-x-auto whitespace-nowrap">
-        {filteredCabinets.map((d) => (
-          <Button
-            key={d.name}
-            className={twMerge(
-              "min-w-[100px]",
-              activeCabinet === d.name ? "bg-itc-green" : "bg-itc-green-400",
-            )}
-            onClick={() => setActiveCabinet(d.name)}
-          >
-            {d.name}
-          </Button>
-        ))}
+        <Select
+          label="Cabinet"
+          options={filteredCabinets.map((d) => d.name)}
+          activeValue={activeCabinet}
+          initialValue={fallBackCabinet}
+          //@ts-expect-error TODO: Adjust props of Select
+          onChangeHandler={setActiveCabinet}
+          optionLabels={filteredCabinets.map((d) => (
+            <>
+              {d.name}{" "}
+              <span className="italic">
+                {" "}
+                {fDateMonthYear(new Date(d.dateStart))}–
+                {d.dateEnd ? fDateMonthYear(new Date(d.dateEnd)) : "present"}
+              </span>
+            </>
+          ))}
+        />
       </div>
       <svg width={"100%"} height={"50px"}>
         <LegendNominal

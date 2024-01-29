@@ -4,8 +4,7 @@ import { FC, memo, useState } from "react";
 import type { Topology } from "topojson-specification";
 import { BtorsGroupedByCountryByDepartment } from "../../lib/data/queries/btors/getBtorsGroupedByCountryByDepartment";
 import PrismMapTravelsDepartment from "../PrismMapTravelsDepartment";
-import * as Select from "@radix-ui/react-select";
-import { RxCheck, RxChevronDown, RxChevronUp } from "react-icons/rx";
+import Select from "../Select";
 
 type Props = {
   btorsByCountryByDepartment: BtorsGroupedByCountryByDepartment;
