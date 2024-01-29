@@ -2,7 +2,7 @@ import { Department } from "@prisma/client";
 import type { GetStaticProps, NextPage } from "next";
 import { Card } from "../../components/Card";
 import CardLink from "../../components/CardLink";
-import ChapterHighlights from "../../components/ChapterHighlights";
+import ChapterContents from "../../components/ChapterContents";
 import PageChapter from "../../components/PageChapter";
 import Paragraph from "../../components/Paragraph";
 import Section from "../../components/Section";
@@ -34,7 +34,7 @@ const Introduction: NextPage<Props> = ({ departments }) => {
       </Section>
 
       <Section>
-        <ChapterHighlights
+        <ChapterContents
           highlights={[
             {
               href: "/phds/theses",

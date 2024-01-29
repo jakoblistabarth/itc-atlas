@@ -1,5 +1,5 @@
 import type { NextPage } from "next";
-import ChapterHighlights from "../../components/ChapterHighlights";
+import ChapterContents from "../../components/ChapterContents";
 import PageChapter from "../../components/PageChapter";
 import Paragraph from "../../components/Paragraph";
 import Section from "../../components/Section";
@@ -25,7 +25,7 @@ const Introduction: NextPage = () => {
       </Section>
 
       <Section>
-        <ChapterHighlights
+        <ChapterContents
           highlights={[
             {
               href: "/courses",

@@ -3,7 +3,7 @@ import "ag-grid-community/styles/ag-theme-material.css";
 import type { NextPage } from "next";
 import { useRouter } from "next/router";
 import CardLink from "../../components/CardLink";
-import ChapterHighlights from "../../components/ChapterHighlights";
+import ChapterContents from "../../components/ChapterContents";
 import PageChapter from "../../components/PageChapter";
 import Paragraph from "../../components/Paragraph";
 import SecondaryNavigation from "../../components/SecondaryNavigation";
@@ -54,7 +54,7 @@ const Projects: NextPage = () => {
       </Section>
 
       <Section>
-        <ChapterHighlights
+        <ChapterContents
           highlights={[
             {
               href: "introduction/indonesia",
