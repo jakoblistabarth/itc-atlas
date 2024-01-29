@@ -16,6 +16,8 @@ import { SharedPageProps } from "../../types/Props";
 import { UnGrouping } from "../../types/UnsdCodes";
 import ProjectsByCountries from "../../components/ProjectsByCountries";
 import Teaser from "../../components/Teaser";
+import Callout from "../../components/Callout";
+import Caption from "../../components/Caption";
 
 type Props = SharedPageProps & {
   countryWithProjectCount: CountryWithProjectCount;
@@ -34,23 +36,30 @@ const Page: NextPage<Props> = ({
   return (
     <PageBase title="Projects by Country">
       <Container>
-        <main>
-          <Teaser>Teaser text goes here.</Teaser>
-          <Section>
+        <Teaser>Teaser text goes here.</Teaser>
+        <Section>
+          <Callout>
+            Hover over the spheres to retrieve the precise number of projects
+            per country.
+          </Callout>
+          <figure>
             <ProjectGlobe
               neCountriesTopoJson={neCountriesTopoJson}
               countryWithProjectCount={countryWithProjectCount}
             />
-          </Section>
-          <Section>
-            <ProjectsByCountries
-              data={data}
-              domain={domain}
-              highlightCountries={highlightCountries}
-              neCountriesTopoJson={neCountriesTopoJson}
-            />
-          </Section>
-        </main>
+            <Caption reference="Fig.1">
+              The 3D globe shows the number of projects carried out per country.
+            </Caption>
+          </figure>
+        </Section>
+        <Section>
+          <ProjectsByCountries
+            data={data}
+            domain={domain}
+            highlightCountries={highlightCountries}
+            neCountriesTopoJson={neCountriesTopoJson}
+          />
+        </Section>
       </Container>
     </PageBase>
   );
