@@ -10,6 +10,7 @@ import getCountryWithProjectCount, {
 import { SharedPageProps } from "../../types/Props";
 import Callout from "../../components/Callout";
 import Section from "../../components/Section";
+import Caption from "../../components/Caption";
 
 type Props = SharedPageProps & {
   countryWithProjectCount: CountryWithProjectCount;
@@ -24,14 +25,18 @@ const Page: NextPage<Props> = ({
       <Container>
         <Section>
           <Callout>
-            Hover individual sphere-markers to only see projects related to this
-            country and country name and number of projects for this country
-            will show in the tooltip.
+            Hover over the spheres to retrieve the precise number of projects
+            per country.
           </Callout>
-          <ProjectGlobe
-            neCountriesTopoJson={neCountriesTopoJson}
-            countryWithProjectCount={countryWithProjectCount}
-          />
+          <figure>
+            <ProjectGlobe
+              neCountriesTopoJson={neCountriesTopoJson}
+              countryWithProjectCount={countryWithProjectCount}
+            />
+            <Caption reference="Fig.1">
+              The 3D globe shows the number of projects carried out per country.
+            </Caption>
+          </figure>
         </Section>
       </Container>
     </PageBase>
