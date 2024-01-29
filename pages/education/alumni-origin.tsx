@@ -1,30 +1,28 @@
 import { geoBertin1953 } from "d3-geo-projection";
 import type { GetStaticProps, NextPage } from "next";
 import { useState } from "react";
-import PageBase from "../../components/PageBase";
+import { BiFilterAlt } from "react-icons/bi";
+import Container from "../../components/Container";
+import { getFilledSeries } from "../../components/LinePath/LinePath.helpers";
+import { LinePathDatum } from "../../components/LinePath/LinePathBase";
 import MapLayoutFluid from "../../components/MapLayout/MapLayoutFluid";
+import PageBase from "../../components/PageBase";
+import Paragraph from "../../components/Paragraph";
+import Section from "../../components/Section";
+import Select from "../../components/Select";
+import SmallMultiplesTimeSeries from "../../components/SmallMultiplesTimeseries";
 import AlumniOrigin from "../../components/visuals/maps/AlumniOrigin";
 import getCountries from "../../lib/data/getCountries";
 import getApplicationLevels, {
   ApplicationLevels,
 } from "../../lib/data/queries/application/getApplicationLevels";
+import getApplicationsByYear from "../../lib/data/queries/application/getApplicationsByYear";
 import getCountryCodes from "../../lib/data/queries/country/getCountryCodes";
 import getCountryWithApplicantCount, {
   CountryWithApplicantCount,
 } from "../../lib/data/queries/country/getCountryWithApplicantCount";
-import { SharedPageProps } from "../../types/Props";
-import getApplicationsByYear from "../../lib/data/queries/application/getApplicationsByYear";
-import SmallMultiplesTimeSeries from "../../components/SmallMultiplesTimeseries";
-import { LinePathDatum } from "../../components/LinePath/LinePathBase";
 import getCountryName from "../../lib/getCountryName";
-import { getFilledSeries } from "../../components/LinePath/LinePath.helpers";
-import Section from "../../components/Section";
-import Container from "../../components/Container";
-import Paragraph from "../../components/Paragraph";
-import * as Select from "@radix-ui/react-select";
-import { RxCheck, RxChevronDown, RxChevronUp } from "react-icons/rx";
-import { BiFilterAlt } from "react-icons/bi";
-import { RxReset } from "react-icons/rx";
+import { SharedPageProps } from "../../types/Props";
 
 type Props = {
   applicants: CountryWithApplicantCount;
@@ -49,56 +47,16 @@ const Page: NextPage<Props> = ({
         <Section>
           <div className="mb-5 flex items-center gap-5">
             <BiFilterAlt />
-            <label>
-              Course level:
-              <Select.Root
-                key={level}
-                value={level}
-                onValueChange={(value) => setLevel(value)}
-              >
-                <Select.Trigger className="ml-4 inline-flex h-[35px] items-center justify-center gap-[5px] rounded bg-white px-[15px] text-[13px] leading-none text-itc-green shadow-[0_2px_10px] shadow-black/10 outline-none hover:bg-itc-green-100 focus:shadow-[0_0_0_2px] focus:shadow-black data-[placeholder]:text-itc-green">
-                  <Select.Value placeholder="Select a level…" />
-                  <Select.Icon className="text-itc-green">
-                    <RxChevronDown />
-                  </Select.Icon>
-                </Select.Trigger>
-                <Select.Portal>
-                  <Select.Content className="overflow-hidden rounded-md bg-white shadow-[0px_10px_38px_-10px_rgba(22,_23,_24,_0.35),0px_10px_20px_-15px_rgba(22,_23,_24,_0.2)]">
-                    <Select.ScrollUpButton className="flex h-[25px] cursor-default items-center justify-center bg-white text-itc-green">
-                      <RxChevronUp />
-                    </Select.ScrollUpButton>
-                    <Select.Viewport className="p-[5px]">
-                      {levels.map(({ level }) => {
-                        return !level ? (
-                          <></>
-                        ) : (
-                          <Select.Item
-                            key={level}
-                            value={level}
-                            className="relative flex h-[25px] select-none items-center rounded-[3px] pl-[25px] pr-[35px] text-[13px] leading-none text-itc-blue data-[disabled]:pointer-events-none data-[highlighted]:bg-itc-green-100 data-[disabled]:text-white data-[highlighted]:text-itc-green data-[highlighted]:outline-none"
-                          >
-                            <Select.ItemText>{level}</Select.ItemText>
-                            <Select.ItemIndicator className="absolute right-0 inline-flex w-[25px] items-center justify-center">
-                              <RxCheck />
-                            </Select.ItemIndicator>
-                          </Select.Item>
-                        );
-                      })}
-                    </Select.Viewport>
-                    <Select.ScrollDownButton className="flex h-[25px] cursor-default items-center justify-center bg-white text-itc-green">
-                      <RxChevronDown />
-                    </Select.ScrollDownButton>
-                  </Select.Content>
-                </Select.Portal>
-              </Select.Root>
-            </label>
-            <button
-              disabled={!level}
-              onClick={() => setLevel(undefined)}
-              className="flex items-center gap-2 rounded p-1 px-2 shadow-sm transition-shadow hover:bg-itc-green-50 disabled:cursor-not-allowed disabled:hover:bg-inherit"
-            >
-              <RxReset /> Reset
-            </button>
+            <Select
+              label={"Level"}
+              activeValue={level}
+              onChangeHandler={setLevel}
+              placeholder="Select a level…"
+              options={levels
+                .filter((d) => d.level != null)
+                .map((d) => d.level as string)}
+              withReset
+            />
           </div>
         </Section>
 
