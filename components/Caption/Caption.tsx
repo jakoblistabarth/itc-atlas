@@ -6,14 +6,14 @@ type Props = PropsWithChildren<{
 
 const Caption: FC<Props> = ({ reference, children }) => {
   return (
-    <div className="my-3 max-w-2xl text-xs">
+    <figcaption className="my-3 max-w-[60ch] text-xs">
       {reference && (
         <>
           <strong>{reference}</strong>{" "}
         </>
       )}
       <span>{children}</span>
-    </div>
+    </figcaption>
   );
 };
 
