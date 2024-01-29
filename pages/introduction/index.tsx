@@ -4,8 +4,10 @@ import PageChapter from "../../components/PageChapter";
 import Paragraph from "../../components/Paragraph";
 import Section from "../../components/Section";
 import Teaser from "../../components/Teaser";
+import { useRouter } from "next/router";
 
 const Introduction: NextPage = () => {
+  const { route } = useRouter();
   return (
     <PageChapter chapterName="Introduction">
       <Section>
@@ -15,12 +17,10 @@ const Introduction: NextPage = () => {
           education and research in earth observation and geo-information
         </Teaser>
         <Paragraph>
-          The last decade the thematic focus was more consistent, but the
-          geographic focus continues to shift, reflecting political choices.
-          Development cooperation is seen as bilateral cooperation among
-          stakeholders. From the Dutch side the national government works with
-          societal partners such as NGO&apos;s, knowledge institutions, and the
-          private sector.
+          This section offers an overview of ITC&apos;s capacity building
+          objectives and the context in which it operates. ITC works with
+          (inter) national governments and societal partners such as NGOs,
+          knowledge institutions, and the private sector.
         </Paragraph>
       </Section>
 
@@ -28,18 +28,25 @@ const Introduction: NextPage = () => {
         <ChapterContents
           highlights={[
             {
-              href: "/introduction/about-itc",
+              href: `${route}/about-itc`,
               title: "About ITC",
             },
             {
-              href: "/development-policies",
+              href: `${route}/capacity-building-impact`,
               title: "Capacity building and impact",
             },
             {
-              href: "/introduction/travels",
+              href: `${route}/development-policies`,
+              title: "How development policies affect ITC",
+            },
+            {
+              href: `${route}/travels`,
               title: "Connecting to the world",
             },
-            { href: "/travels2019", title: "ITC's travels in 2019" },
+            {
+              href: `${route}/travels-2019`,
+              title: "Lookig closely – staff travels in 2019",
+            },
           ]}
         />
       </Section>

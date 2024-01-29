@@ -58,8 +58,8 @@ const BtorsByYear: FC<Props> = ({ btors, countries, neCountries }) => {
       <LegendProportionalCircle
         data={btorsByCountrySum}
         scaleRadius={scaleRadius}
-        title={"No. of travels"}
-        unitLabel={"travels"}
+        title={"No. of trips"}
+        unitLabel={"trip"}
       />
       <MapLayerBase countries={neCountries} />
       {btorsByCountry.map((d) => {

@@ -14,7 +14,6 @@ import LegendNominal from "../LegendNominal";
 import MapLayerBase from "../MapLayerBase";
 import MapLayoutFluid from "../MapLayout/MapLayoutFluid";
 import MarkGeometry from "../MarkGeometry/MarkGeometry";
-import Paragraph from "../Paragraph";
 import Tooltip from "../Tooltip/";
 import BhosGradientDefs from "./BhosGradientsDefs";
 import BtorsByYear from "./charts/BtorsByYear";
@@ -96,11 +95,10 @@ const BtorsAndCabinets: FC<Props> = ({
 
   return (
     <div>
-      <Callout Icon={HiCursorClick} title="Tipp">
-        <Paragraph>
-          Select cabinet of interest and hover over countries (or the lines in
-          the line chart) to get additional information.
-        </Paragraph>
+      <Callout Icon={HiCursorClick}>
+        Select an administration to show the focus countries of that period. You
+        can also select one of those focus countries and see in the graph when
+        this country was visited.
       </Callout>
       <div className="pn-2 scroll mb-2 mt-2 flex flex-nowrap gap-2 overflow-x-auto whitespace-nowrap">
         {filteredCabinets.map((d) => (
