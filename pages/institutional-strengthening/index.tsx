@@ -14,24 +14,8 @@ const Projects: NextPage = () => {
   const { route } = useRouter();
   const links = [
     {
-      href: `${route}/projects-timeline`,
-      children: "Timeline",
-    },
-    {
-      href: `${route}/projectcountries`,
-      children: "Projects by Country",
-    },
-    {
       href: `${route}/naivasha`,
       children: "Naivasha Region",
-    },
-    {
-      href: `${route}/globe`,
-      children: "Projects Globe",
-    },
-    {
-      href: `${route}/projects-spacetimecube`,
-      children: "Projects Space Time Cube",
     },
   ];
 
@@ -53,15 +37,15 @@ const Projects: NextPage = () => {
         <ChapterContents
           highlights={[
             {
-              href: "introduction/indonesia",
+              href: `${route}/indonesia`,
               title: "ITC's impact in Indonesia",
             },
             {
-              href: "institutional-strengthening/globe",
-              title: "The globe of projects",
+              href: `${route}/projects-by-country`,
+              title: "Projects by country",
             },
             {
-              href: "institutional-strengthening/projects-spacetimecube",
+              href: `${route}/projects-over-time`,
               title: "Projects over time",
             },
           ]}
