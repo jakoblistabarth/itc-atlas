@@ -39,17 +39,13 @@ const Projects: NextPage = () => {
     <PageChapter chapterName="Institutional strengthening">
       <Section>
         <h1>Chapter Institutional Strengthening</h1>
-        <Teaser>
-          Insights into ITC&apos;s institutional strengthening efforts and
-          projects around the globe.
-        </Teaser>
+        <Teaser>Applying our knowlegde in the real world</Teaser>
         <Paragraph>
-          The last decade the thematic focus was more consistent, but the
-          geographic focus continues to shift, reflecting political choices.
-          Development cooperation is seen as bilateral cooperation among
-          stakeholders. From the Dutch side the national government works with
-          societal partners such as NGO&apos;s, knowledge institutions, and the
-          private sector.
+          Th rough professional engagement with partners in the focus countries,
+          often via educational and/or research cooperation, ITC can support the
+          functioning of those parties, and at the same time incorporate
+          experiences gained in its knowledge base to be reapplied at a later
+          stage.
         </Paragraph>
       </Section>
 
