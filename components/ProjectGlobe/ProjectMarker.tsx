@@ -37,7 +37,7 @@ const ProjectMarkers: FC<Props> = ({
     const maxCount = max(countryWithProjectCount.map((d) => d._count.projects));
     return scaleSqrt<number, number>()
       .domain([1, maxCount ?? 1])
-      .range([0.0075, 0.03]);
+      .range([0.015, 0.06]);
   }, [countryWithProjectCount]);
 
   const { theme } = useTheme();
