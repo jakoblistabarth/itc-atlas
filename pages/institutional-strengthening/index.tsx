@@ -3,7 +3,7 @@ import "ag-grid-community/styles/ag-theme-material.css";
 import type { NextPage } from "next";
 import { useRouter } from "next/router";
 import CardLink from "../../components/CardLink";
-import ChapterHighlights from "../../components/ChapterHighlights";
+import ChapterContents from "../../components/ChapterContents";
 import PageChapter from "../../components/PageChapter";
 import Paragraph from "../../components/Paragraph";
 import SecondaryNavigation from "../../components/SecondaryNavigation";
@@ -14,24 +14,8 @@ const Projects: NextPage = () => {
   const { route } = useRouter();
   const links = [
     {
-      href: `${route}/projects-timeline`,
-      children: "Timeline",
-    },
-    {
-      href: `${route}/projectcountries`,
-      children: "Projects by Country",
-    },
-    {
       href: `${route}/naivasha`,
       children: "Naivasha Region",
-    },
-    {
-      href: `${route}/globe`,
-      children: "Projects Globe",
-    },
-    {
-      href: `${route}/projects-spacetimecube`,
-      children: "Projects Space Time Cube",
     },
   ];
 
@@ -39,33 +23,29 @@ const Projects: NextPage = () => {
     <PageChapter chapterName="Institutional strengthening">
       <Section>
         <h1>Chapter Institutional Strengthening</h1>
-        <Teaser>
-          Insights into ITC&apos;s institutional strengthening efforts and
-          projects around the globe.
-        </Teaser>
+        <Teaser>Applying our knowlegde in the real world</Teaser>
         <Paragraph>
-          The last decade the thematic focus was more consistent, but the
-          geographic focus continues to shift, reflecting political choices.
-          Development cooperation is seen as bilateral cooperation among
-          stakeholders. From the Dutch side the national government works with
-          societal partners such as NGO&apos;s, knowledge institutions, and the
-          private sector.
+          Th rough professional engagement with partners in the focus countries,
+          often via educational and/or research cooperation, ITC can support the
+          functioning of those parties, and at the same time incorporate
+          experiences gained in its knowledge base to be reapplied at a later
+          stage.
         </Paragraph>
       </Section>
 
       <Section>
-        <ChapterHighlights
+        <ChapterContents
           highlights={[
             {
-              href: "introduction/indonesia",
+              href: `${route}/indonesia`,
               title: "ITC's impact in Indonesia",
             },
             {
-              href: "institutional-strengthening/globe",
-              title: "The globe of projects",
+              href: `${route}/projects-by-country`,
+              title: "Projects by country",
             },
             {
-              href: "institutional-strengthening/projects-spacetimecube",
+              href: `${route}/projects-over-time`,
               title: "Projects over time",
             },
           ]}

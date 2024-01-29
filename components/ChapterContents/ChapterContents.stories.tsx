@@ -1,18 +1,18 @@
 import { Meta, StoryObj } from "@storybook/react";
 
-import ChapterHighlights from ".";
+import ChapterContents from ".";
 
 const meta = {
-  title: "UI/ChapterHighlights",
-  component: ChapterHighlights,
+  title: "UI/ChapterContents",
+  component: ChapterContents,
   args: {
     highlights: [
       { title: "Highlight A", href: "/highlight-a" },
       { title: "Highlight B", href: "/highlight-b" },
     ],
   },
-} satisfies Meta<typeof ChapterHighlights>;
+} satisfies Meta<typeof ChapterContents>;
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const DefaultChapterHighlights: Story = {};
+export const DefaultChapterContents: Story = {};

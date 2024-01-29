@@ -9,25 +9,31 @@ import getProjectsWithCountries, {
   ProjectsWithCountries,
 } from "../../lib/data/queries/project/getProjectsWithCountries";
 import { SharedPageProps } from "../../types/Props";
+import ProjectsTimeline from "../../components/ProjectsTimeline";
 
 type Props = SharedPageProps & {
   projects: ProjectsWithCountries;
 };
 
-const ProjectSpaceTimeCube: NextPage<Props> = ({
+const ProjectsOverTime: NextPage<Props> = ({
   neCountriesTopoJson,
   projects,
   countries,
 }) => {
   return (
-    <PageBase title="Projects Space Time Cube">
+    <PageBase title="Projects over time">
       <Container>
         <Section>
+          <h2>Space time cube</h2>
           <SpaceTimeCubeProjects
             projects={projects}
             neCountriesTopoJson={neCountriesTopoJson}
             countries={countries}
           />
+        </Section>
+        <Section>
+          <h2>Timeline</h2>
+          <ProjectsTimeline projects={projects} />
         </Section>
       </Container>
     </PageBase>
@@ -50,4 +56,4 @@ export const getStaticProps: GetStaticProps<Props> = async () => {
   };
 };
 
-export default ProjectSpaceTimeCube;
+export default ProjectsOverTime;

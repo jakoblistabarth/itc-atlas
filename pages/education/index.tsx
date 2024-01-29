@@ -1,37 +1,43 @@
 import type { NextPage } from "next";
-import ChapterHighlights from "../../components/ChapterHighlights";
+import ChapterContents from "../../components/ChapterContents";
 import PageChapter from "../../components/PageChapter";
 import Paragraph from "../../components/Paragraph";
 import Section from "../../components/Section";
 import Teaser from "../../components/Teaser";
+import { useRouter } from "next/router";
 
 const Introduction: NextPage = () => {
+  const { route } = useRouter();
   return (
     <PageChapter chapterName="Education">
       <Section>
         <h1>Chapter Education</h1>
         <Teaser>
-          Introducing one of the world leading institutions for academic
-          education and research in earth observation and geo-information
+          ITC offers a wide range of high-quality internationally oriented
+          education in the field of geo-information science and earth
+          observation
         </Teaser>
         <Paragraph>
-          The last decade the thematic focus was more consistent, but the
-          geographic focus continues to shift, reflecting political choices.
-          Development cooperation is seen as bilateral cooperation among
-          stakeholders. From the Dutch side the national government works with
-          societal partners such as NGO&apos;s, knowledge institutions, and the
-          private sector.
+          The educational programs are offered at different levels. Next to
+          several Master of Science programs, ITC provides postgraduate diploma
+          courses and, specific (tailor made) short courses. This can be at
+          location or online. For this last category our dedicated online
+          environment Geoversity is the place to be.
         </Paragraph>
       </Section>
 
       <Section>
-        <ChapterHighlights
+        <ChapterContents
           highlights={[
             {
-              href: "/courses",
-              title: "MSc courses",
+              href: `${route}/courses`,
+              title: "M.Sc. courses",
             },
-            { href: "/refresher-courses", title: "Refresher courses" },
+            {
+              href: `${route}/alumni-origin`,
+              title: "Alumni",
+            },
+            { href: `${route}/refresher-courses`, title: "Refresher courses" },
           ]}
         />
       </Section>

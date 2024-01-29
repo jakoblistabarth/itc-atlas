@@ -17,7 +17,7 @@ export const DefaultCallout: Story = {};
 
 export const CalloutWithTitle: Story = {
   args: {
-    title: "Tipp",
+    title: "Tip",
   },
 };
 export const CalloutWithCustomIcon: Story = {

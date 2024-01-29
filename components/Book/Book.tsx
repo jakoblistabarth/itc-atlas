@@ -1,9 +1,10 @@
-import React, { FC, memo, useMemo, useState } from "react";
+import { animated, config, useSpring } from "@react-spring/three";
 import { useCursor, useGLTF } from "@react-three/drei";
-import { GLTF } from "three-stdlib";
-import { MeshStandardMaterial } from "three";
-import { useSpring, animated, config } from "@react-spring/three";
 import { randomUniform } from "d3";
+import { FC, memo, useMemo, useState } from "react";
+import * as THREE from "three";
+import { MeshStandardMaterial } from "three";
+import { GLTF } from "three-stdlib";
 
 type Props = {
   color?: string;
@@ -18,6 +19,7 @@ type GLTFResult = GLTF & {
     Cover: THREE.Mesh;
     Pages: THREE.Mesh;
   };
+  materials: object;
 };
 
 const paperMaterial = new MeshStandardMaterial({
@@ -49,9 +51,7 @@ const Book: FC<Props> = ({
   }, []);
   return (
     <animated.group
-      {...rest}
       scale={scale}
-      dispose={null}
       position-x={wiggle && positionX}
       position-z={wiggle && positionZ}
       rotation-y={wiggle && rotationY}
@@ -60,6 +60,8 @@ const Book: FC<Props> = ({
       onClick={(e) => (
         e.stopPropagation(), setActiveThesis && setActiveThesis(thesisId)
       )}
+      {...rest}
+      dispose={null}
     >
       <mesh
         castShadow

@@ -72,6 +72,14 @@ const Home: NextPage = () => {
             knowledge domains of Disaster Resilience, Resource
             Security,Geohealth, and Geo-Ai.
           </Paragraph>
+          <Paragraph>
+            The atlas will contribute to the impact narrative of ITC. It will
+            demonstrate to a wide audience the impact of our capacity
+            development interventions in education, research and institutional
+            strengthening. The maps and diagrams express the geographic and
+            thematic distribution of our activities over time. Its relevance is
+            shown in context of national and international development agendas.
+          </Paragraph>
         </Section>
 
         <Section>

@@ -1,4 +1,3 @@
-import { ExtendedFeature } from "d3-geo";
 import { geoBertin1953 } from "d3-geo-projection";
 import type { GetStaticProps, NextPage } from "next";
 import Caption from "../../components/Caption";
@@ -56,13 +55,20 @@ const Page: NextPage<Props> = ({
   const projection = useMemo(() => geoBertin1953(), []);
   const heroVisual = (
     <>
-      <MapLayoutFluid projection={projection}>
-        <BtorsByYearMap
-          countries={countries}
-          neCountries={neCountriesTopoJson}
-          btors={btorsByYear}
-        />
-      </MapLayoutFluid>
+      <figure>
+        <MapLayoutFluid projection={projection}>
+          <BtorsByYearMap
+            countries={countries}
+            neCountries={neCountriesTopoJson}
+            btors={btorsByYear}
+          />
+        </MapLayoutFluid>
+        <Container>
+          <Caption reference="Fig.1">
+            Number of flights to a country over the last twenty years
+          </Caption>
+        </Container>
+      </figure>
       <Container>
         <Callout Icon={HiCursorClick}>
           Click on a symbol to retrieve additional information.
@@ -71,46 +77,40 @@ const Page: NextPage<Props> = ({
     </>
   );
 
-  const extent: ExtendedFeature = {
-    type: "Feature",
-    geometry: {
-      type: "MultiPoint",
-      coordinates: [
-        [-30, 60],
-        [48, 70],
-        [34, 36],
-        [-8, 35],
-      ],
-    },
-    properties: {},
-  };
-
   return (
-    <PageHeroVisual title="Staff travels over time" heroVisual={heroVisual}>
-      <Teaser>
-        Where does ITC staff travel and what for? To answer this question we
-        need to take a closer look on different travel destination, the
-        development over time and the purpose of these travels.
-      </Teaser>
+    <PageHeroVisual title="Connecting to the world" heroVisual={heroVisual}>
+      <Teaser>ITC&apos;s travels</Teaser>
       <Section>
         <Paragraph>
-          Two datasets are the basis for this analysis: the &ldquo;Back to
-          Office Reports&rdquo; and all flights booked by ITC&apos;s travel
-          angency for 2019. Lorem ipsum dolor, sit amet consectetur adipisicing
-          elit. Soluta maiores debitis porro totam reiciendis, inventore quas,
-          voluptatem eveniet ipsam veniam ex corporis eligendi ea doloribus.
-          Consectetur vel aliquam id minus!
+          ITC staff members have an intense travel program. First to stay in
+          touch with our target audience in the framework of development
+          cooperation and second attending ‘normal’ academic conferences and
+          workshops. However, with the climate in mind the travel behaviour has
+          been slightly restrained, and on shorter distance the airplane is no
+          longer the preferred mode of transport.
+        </Paragraph>
+        <Paragraph>
+          Where did they all go? The first map depicting all travel destination
+          by country over the last twenty is based on travel reports submitted
+          by staff members [1].
         </Paragraph>
       </Section>
       <Section>
         <div className="max-w-2xl">
           <h2>Travels in the context of Dutch development policies</h2>
           <Paragraph>
-            Dutch development policies change over time. According to the
-            cabinets in office the perspective and focus on development shifts
-            slighty, affecting ITC&apos;s work.
+            How do governmental policies influxes ITC travel behaviour? In this
+            interactive graphic the focus countries for the different
+            administrations are linked to a line graph that holds all trips made
+            from 2000 to 2002. It is the same data as mapped in [1].
           </Paragraph>
-          <div className="mt-5">
+          <Paragraph>
+            One has to realise that for each administration it take time to
+            formulate policy and decide on focus countries, but also time passed
+            before ITC can tender for projects in those countries. Travel always
+            lags behind and ITC is not active in all focus countries.
+          </Paragraph>
+          <figure className="mt-5">
             <BtorsAndCabinets
               neCountries={neCountriesTopoJson}
               countries={countries}
@@ -119,23 +119,16 @@ const Page: NextPage<Props> = ({
               dutchCabinets={dutchCabinets}
             />
             <Caption reference="Fig. 2">
-              This chart shows travels over time across the world
+              Relation between government policies and ITC travel.
             </Caption>
-          </div>
-          <Paragraph>
-            Lorem ipsum, dolor sit amet consectetur adipisicing elit. Amet
-            molestiae, sequi animi est dolor nihil qui id, aperiam assumenda
-            suscipit officia, veniam tenetur veritatis saepe! Recusandae animi
-            incidunt fuga perferendis!
-          </Paragraph>
+          </figure>
         </div>
       </Section>
       <Section>
+        <h2>Which destination?</h2>
         <Paragraph>
-          Lorem ipsum, dolor sit amet consectetur adipisicing elit. Amet
-          molestiae, sequi animi est dolor nihil qui id, aperiam assumenda
-          suscipit officia, veniam tenetur veritatis saepe! Recusandae animi
-          incidunt fuga perferendis!
+          In [3] the travel destinations are grouped by the UN statistical
+          regions and subregions spilt over ITC&apos;s scientific departments.
         </Paragraph>
         <div className="mt-5">
           <MapLayoutFluid projection={geoBertin1953()}>
@@ -145,17 +138,15 @@ const Page: NextPage<Props> = ({
               btors={btorsByDepartment}
             />
           </MapLayoutFluid>
-          <Caption reference="Fig. 4">
-            This map shows travels per department.
+          <Caption reference="Fig.3">
+            Travel destination split by department.
           </Caption>
         </div>
       </Section>
       <Section>
         <Paragraph>
-          Lorem ipsum, dolor sit amet consectetur adipisicing elit. Amet
-          molestiae, sequi animi est dolor nihil qui id, aperiam assumenda
-          suscipit officia, veniam tenetur veritatis saepe! Recusandae animi
-          incidunt fuga perferendis!
+          [4] offers an interactive 3d prism map showing the number of visits to
+          county by a department.
         </Paragraph>
         <TravelsAcrossDepartmentsPrismMap
           topology={neCountriesTopoJson}
@@ -166,8 +157,8 @@ const Page: NextPage<Props> = ({
           btorsByCountryByDepartment={btorsByCountryByDepartment}
           departments={departments}
         />
-        <Caption reference="Fig. 5">
-          This map shows travels per department for per country.
+        <Caption reference="Fig.4">
+          Travel destination by country by department.
         </Caption>
       </Section>
     </PageHeroVisual>

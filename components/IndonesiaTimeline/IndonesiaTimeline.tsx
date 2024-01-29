@@ -603,7 +603,6 @@ const IndonesiaTimeline: FC<Props> = ({
                           height={height}
                           x={xScale(e.dateStart) - barWidth / 2}
                           y={height / -2}
-                          rx={1}
                           fill={indonesiaColor}
                           cursor="pointer"
                         />

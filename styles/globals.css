@@ -29,3 +29,10 @@ details summary {
   @apply font-bold;
   @apply cursor-pointer;
 }
+
+p,
+figcaption {
+  a {
+    text-decoration: underline;
+  }
+}

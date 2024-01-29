@@ -2,7 +2,7 @@ import { Department } from "@prisma/client";
 import type { GetStaticProps, NextPage } from "next";
 import { Card } from "../../components/Card";
 import CardLink from "../../components/CardLink";
-import ChapterHighlights from "../../components/ChapterHighlights";
+import ChapterContents from "../../components/ChapterContents";
 import PageChapter from "../../components/PageChapter";
 import Paragraph from "../../components/Paragraph";
 import Section from "../../components/Section";
@@ -24,17 +24,51 @@ const Introduction: NextPage<Props> = ({ departments }) => {
           earth observation.
         </Teaser>
         <Paragraph>
-          The last decade the thematic focus was more consistent, but the
-          geographic focus continues to shift, reflecting political choices.
-          Development cooperation is seen as bilateral cooperation among
-          stakeholders. From the Dutch side the national government works with
-          societal partners such as NGO&apos;s, knowledge institutions, and the
-          private sector.
+          ITC carries out research within the framework of a coherent research
+          programme that addresses specific development-related problem fields
+          in geo-information science and earth observation.
         </Paragraph>
+        <Paragraph>
+          This yields new tools and methods for the collection, storage and
+          processing of geospatial data and pioneers new applications of
+          geospatial data to societal problems in which geo-information science
+          and earth observation play an important role.
+        </Paragraph>
+        <Paragraph>
+          Specific domain knowledge is developed by the six scientific
+          department and accumulates in the profiling themes. Phd students play
+          a prominent role. The research topic are closely linked to national
+          and international research agenda’s as well as the themes of the Dutch
+          development cooperation program.
+        </Paragraph>
+        <Paragraph>The profiling themes address problems related to:</Paragraph>
+        <ul className="max-w-2xl [&>li]:my-5">
+          <li>
+            <strong>GeoAI</strong> - Combines innovations in geospatial
+            technologies with the rapid growth of methods in AI and big data,
+            with the aim to translate complex and contextual data in useful
+            information.
+          </li>
+          <li>
+            <strong>GeoHealth</strong>- Understand the drivers behind spatial
+            patterns in health and disease via a dynamic approach.
+          </li>
+          <li>
+            <strong>Resource Security</strong> - Aims at fair and sustainable
+            use of our natural environment, and security and planning of
+            environmental resources such as food, water, biodiversity, minerals,
+            energy, and land, and their equitable availability for societies.
+          </li>
+          <li>
+            <strong>Disaster Resilience</strong> - Integrating hazard assessment
+            and disaster risk management into strategic planning and sustainable
+            development..
+          </li>
+        </ul>
       </Section>
 
       <Section>
-        <ChapterHighlights
+        <ChapterContents
           highlights={[
             {
               href: "/phds/theses",
@@ -47,10 +81,10 @@ const Introduction: NextPage<Props> = ({ departments }) => {
       <Section>
         <h2>Departments</h2>
         <Paragraph>
-          ITC&apos;s research materializes in its {departments.length}{" "}
-          scientific departments. We gathered an overview on the activities of
-          each department. Please note that many research and edcuation
-          activites are carried out accross several of these departments.
+          ITC&apos;s domain specific research is done by staff and phd students
+          in its 6 scientific departments. Below an overview activities of each
+          department. Please note that many research and education activities
+          are carried out across several of these departments.
         </Paragraph>
         <div className="mt-10 grid max-w-2xl grid-cols-[repeat(auto-fill,_minmax(240px,_1fr))] gap-3">
           {departments.map((d) => (
