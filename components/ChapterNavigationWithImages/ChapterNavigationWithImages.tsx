@@ -17,7 +17,7 @@ const ChapterNavigationWithImages: FC = () => {
   }, []);
 
   return (
-    <div className="mt-5 grid grid-cols-[repeat(auto-fill,_minmax(320px,_1fr))] gap-5">
+    <div className="mt-5 grid grid-cols-[repeat(auto-fill,_minmax(480px,_1fr))] gap-5">
       {chapters.map(({ chapter, slug }) => (
         <Card key={chapter}>
           <Image
@@ -27,7 +27,7 @@ const ChapterNavigationWithImages: FC = () => {
             alt={`Preview chapter ${chapter}`}
           />
           <Card.Body>
-            <h3 className="flex items-center gap-2">
+            <h3 className="flex items-center gap-2 text-xl">
               <ChapterIcon width={"1em"} height={"1em"} chapter={chapter} />{" "}
               {chapter}
             </h3>
