@@ -72,7 +72,7 @@ const IndonesiaTimeline: FC<Props> = ({
   const separatorHeight = 10;
   const tlHeights = {
     itcContext: [25, 110],
-    policy: [20, 60],
+    policy: [20, 20, 60],
     itc: [130, 20, 30],
   };
   const getSectionHeight = (idx: number) => {
@@ -138,6 +138,29 @@ const IndonesiaTimeline: FC<Props> = ({
     };
   });
 
+  const ministryNames = [
+    {
+      name: "Ministry of Development Aid",
+      start: new Date("1965"),
+      end: new Date("1971"),
+    },
+    {
+      start: new Date("1971"),
+      end: new Date("2012"),
+      name: "Ministry of  Development Cooperation",
+    },
+    {
+      start: new Date("2012"),
+      end: new Date(),
+      name: "Ministry of Foreign Trade and Development Cooperation.",
+    },
+  ].map((d) => ({
+    name: d.name,
+    yOffset: "",
+    dateStart: d.start,
+    dateEnd: d.end,
+  })) satisfies TimelineEvent[];
+
   const topics = policyTopics
     .map((d) => {
       const start = new Date(d.dateStart + "");
@@ -152,7 +175,7 @@ const IndonesiaTimeline: FC<Props> = ({
 
   const topicYScale = scaleBand()
     .domain(topics.map((d) => d.name))
-    .range([0, tlHeights.policy[1] - 10])
+    .range([0, tlHeights.policy[2] - 10])
     .paddingInner(0.15);
   const topicPatternScale = scaleOrdinal<string, string>()
     .domain(topics.map((d) => d.name))
@@ -452,7 +475,28 @@ const IndonesiaTimeline: FC<Props> = ({
                 })}
               </Group>
             </g>
-            <g id="topics" transform={`translate(0, ${getRowY(1, 1)})`}>
+            <Group id="ministries" top={getRowY(1, 1)}>
+              <TimelineHeader
+                color={itcBlue}
+                fontWeight={"bold"}
+                fontSize={rowHeaderHeight}
+              >
+                Name of ministries
+              </TimelineHeader>
+              {ministryNames.map((d, i) => (
+                <EventPeriod
+                  yOffset={0}
+                  height={2}
+                  key={i}
+                  dateStart={d.dateStart}
+                  dateEnd={d.dateEnd}
+                  stroke="white"
+                >
+                  <LabelPoint>{d.name}</LabelPoint>
+                </EventPeriod>
+              ))}
+            </Group>
+            <g id="topics" transform={`translate(0, ${getRowY(1, 2)})`}>
               <TimelineHeader
                 color={itcBlue}
                 fontWeight={"bold"}
