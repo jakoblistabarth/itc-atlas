@@ -11,7 +11,7 @@ const PaperCanvasPage: FC<Props> = ({ title, children }) => {
   return (
     <>
       <Seo title={title} />
-      <div className="bg-gray-100 pt-5">
+      <div className="bg-gray-100 py-5">
         <Header />
 
         <main className="min-width-full mt-5 flex items-center justify-center">
