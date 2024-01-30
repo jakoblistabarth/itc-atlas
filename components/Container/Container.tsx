@@ -1,9 +1,12 @@
-import { FC, PropsWithChildren } from "react";
+import { FC, HTMLAttributes, PropsWithChildren } from "react";
+import { twMerge } from "tailwind-merge";
 
-type Props = PropsWithChildren;
+type Props = HTMLAttributes<HTMLElement> & PropsWithChildren;
 
-const Container: FC<Props> = ({ children }) => (
-  <div className="container max-w-7xl">{children}</div>
+const Container: FC<Props> = ({ children, className, ...props }) => (
+  <div className={twMerge("container max-w-7xl", className)} {...props}>
+    {children}
+  </div>
 );
 
 export default Container;
