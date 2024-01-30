@@ -32,6 +32,7 @@ import { useMemo } from "react";
 import Container from "../../components/Container";
 import Callout from "../../components/Callout";
 import { HiCursorClick } from "react-icons/hi";
+import loadUnsdRegions, { UnRegion } from "../../lib/data/load/loadUnsdRegions";
 
 type Props = SharedPageProps & {
   btorsByCountryByDepartment: BtorsGroupedByCountryByDepartment;
@@ -40,6 +41,7 @@ type Props = SharedPageProps & {
   btorsByDepartment: BtorsGroupedByRegionByDepartment;
   dutchCabinets: DutchCabinet[];
   departments: Department[];
+  regions: UnRegion[];
 };
 
 const Page: NextPage<Props> = ({
@@ -51,6 +53,7 @@ const Page: NextPage<Props> = ({
   neCountriesTopoJson,
   countries,
   departments,
+  regions,
 }) => {
   const projection = useMemo(() => geoBertin1953(), []);
   const heroVisual = (
@@ -136,6 +139,7 @@ const Page: NextPage<Props> = ({
               neCountries={neCountriesTopoJson}
               countryCodes={countries}
               btors={btorsByDepartment}
+              regions={regions}
             />
           </MapLayoutFluid>
           <Caption reference="Fig.3">
@@ -177,6 +181,7 @@ export const getStaticProps: GetStaticProps<Props> = async () => {
     neCountriesTopoJson,
     countries,
     departments,
+    regions,
   ] = await Promise.all([
     getBtorsGroupedByCountryByDepartment(),
     getBtorsGroupedByYear(),
@@ -186,6 +191,7 @@ export const getStaticProps: GetStaticProps<Props> = async () => {
     getCountries(),
     getCountryCodes(),
     getDepartments(),
+    loadUnsdRegions(),
   ]);
 
   return {
@@ -198,6 +204,7 @@ export const getStaticProps: GetStaticProps<Props> = async () => {
       neCountriesTopoJson,
       countries,
       departments,
+      regions,
     },
   };
 };
