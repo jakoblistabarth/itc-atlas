@@ -69,8 +69,8 @@ const Home: NextPage = () => {
             facilitate the effective use of geo-information and earth
             observation knowledge and tools for tackling global wicked problems.
             Our activities in education and research are applied in our
-            knowledge domains of Disaster Resilience, Resource
-            Security,Geohealth, and Geo-Ai.
+            knowledge domains of Disaster Resilience, Resource Security,
+            Geohealth, and Geo-Ai.
           </Paragraph>
           <Paragraph>
             The atlas will contribute to the impact narrative of ITC. It will

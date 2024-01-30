@@ -104,7 +104,7 @@ const Page: NextPage<Props> = ({
   );
 
   return (
-    <PageHeroVisual title="ITC's Impact in Indonesia" heroVisual={heroVisual}>
+    <PageHeroVisual title="ITC's impact in Indonesia" heroVisual={heroVisual}>
       <Teaser>
         ITC and changing government policies illustrated by its activities in
         Indonesia.

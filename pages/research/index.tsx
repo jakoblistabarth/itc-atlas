@@ -38,8 +38,8 @@ const Introduction: NextPage<Props> = ({ departments }) => {
           Specific domain knowledge is developed by the six scientific
           department and accumulates in the profiling themes. Phd students play
           a prominent role. The research topic are closely linked to national
-          and international research agenda’s as well as the themes of the Dutch
-          development cooperation program.
+          and international research agenda&apos;s as well as the themes of the
+          Dutch development cooperation program.
         </Paragraph>
         <Paragraph>The profiling themes address problems related to:</Paragraph>
         <ul className="max-w-2xl [&>li]:my-5">
@@ -62,7 +62,7 @@ const Introduction: NextPage<Props> = ({ departments }) => {
           <li>
             <strong>Disaster Resilience</strong> - Integrating hazard assessment
             and disaster risk management into strategic planning and sustainable
-            development..
+            development.
           </li>
         </ul>
       </Section>

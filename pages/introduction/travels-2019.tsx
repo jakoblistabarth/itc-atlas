@@ -26,7 +26,7 @@ type Props = {
 const Page: NextPage<Props> = ({ odMatrix, airports, neCountriesTopoJson }) => {
   return (
     <div>
-      <PageBase title="Lookig closely – staff travels in 2019">
+      <PageBase title="Looking closely – staff travels in 2019">
         <Container>
           <Section>
             <Paragraph>

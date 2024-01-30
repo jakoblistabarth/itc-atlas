@@ -45,7 +45,7 @@ const Introduction: NextPage = () => {
             },
             {
               href: `${route}/travels-2019`,
-              title: "Lookig closely – staff travels in 2019",
+              title: "Looking closely – staff travels in 2019",
             },
           ]}
         />
