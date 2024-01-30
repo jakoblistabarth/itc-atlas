@@ -1,12 +1,13 @@
 import { scaleOrdinal } from "d3";
-import AlumniOrginByLevel from "../../../components/AlumniOriginByLevel";
 import { geoBertin1953 } from "d3-geo-projection";
 import { GetStaticPaths, GetStaticProps, InferGetStaticPropsType } from "next";
 import { ParsedUrlQuery } from "querystring";
 import { HiOutlineTag } from "react-icons/hi";
+import AlumniOrginByLevel from "../../../components/AlumniOriginByLevel";
 import { Card } from "../../../components/Card";
 import Container from "../../../components/Container";
 import CountryCodeBadge from "../../../components/CountryCodeBadge";
+import FlightsFlowMap from "../../../components/FlightsFlowMap";
 import KPIPanel from "../../../components/KPIPanel";
 import MapLayerBase from "../../../components/MapLayerBase";
 import MapLayerProportionalSymbols from "../../../components/MapLayerProportionalSymbols";
@@ -15,36 +16,32 @@ import PageBase from "../../../components/PageBase";
 import Paragraph from "../../../components/Paragraph";
 import PhdThesesBookChart from "../../../components/PhdThesesBookChart";
 import { groupThesesByYear } from "../../../components/PhdThesesBookChart/PhdThesesBookChart.helpers";
+import PrismMapTravelsDepartment from "../../../components/PrismMapTravelsDepartment";
 import Section from "../../../components/Section";
 import Teaser from "../../../components/Teaser";
 import getCentroidByIsoCode from "../../../lib/data/getCentroidByIsoCode";
 import getCountries from "../../../lib/data/getCountries";
+import getOdMatrix from "../../../lib/data/getOdMatrix";
+import getApplicationLevels, {
+  ApplicationLevels,
+} from "../../../lib/data/queries/application/getApplicationLevels";
+import getBtorsGroupedByCountryByDepartment, {
+  BtorsGroupedByCountryByDepartment,
+} from "../../../lib/data/queries/btors/getBtorsGroupedByCountryByDepartment";
 import getCountryCodes from "../../../lib/data/queries/country/getCountryCodes";
+import getCountryWithApplicantCount, {
+  CountryWithApplicantCount,
+} from "../../../lib/data/queries/country/getCountryWithApplicantCount";
 import getCountryWithProjectCount from "../../../lib/data/queries/country/getCountryWithProjectCount";
 import getDepartment from "../../../lib/data/queries/departments/getDepartment";
 import getDepartments from "../../../lib/data/queries/departments/getDepartments";
 import prisma from "../../../prisma/client";
-import { SharedPageProps } from "../../../types/Props";
-import { BtorsGroupedByCountryByDepartment } from "../../../lib/data/queries/btors/getBtorsGroupedByCountryByDepartment";
-import getBtorsGroupedByCountryByDepartment from "../../../lib/data/queries/btors/getBtorsGroupedByCountryByDepartment";
-import PrismMapTravelsDepartment from "../../../components/PrismMapTravelsDepartment";
-import getCountryWithApplicantCount, {
-  CountryWithApplicantCount,
-} from "../../../lib/data/queries/country/getCountryWithApplicantCount";
-import getApplicationLevels, {
-  ApplicationLevels,
-} from "../../../lib/data/queries/application/getApplicationLevels";
-import FlightsFlowMap from "../../../components/FlightsFlowMap";
-import getOdMatrix from "../../../lib/data/getOdMatrix";
 import type { OdMatrix } from "../../../types/OdMatrix";
-import getEmploymentExtent, {
-  EmploymentExtent,
-} from "../../../lib/data/queries/employment/employment-extent";
+import { SharedPageProps } from "../../../types/Props";
 
 const Page = ({
   department,
   employeeCount,
-  employmentExtent,
   btorCount,
   neCountriesTopoJson,
   countriesWithProjectCount,
@@ -84,7 +81,7 @@ const Page = ({
               {
                 value: employeeCount,
                 unit: "employees",
-                description: `between ${employmentExtent._min.startYear} and ${employmentExtent._max.startYear}`,
+                description: `in 2023`,
               },
               { value: btorCount, unit: "Back-to-office reports" },
               {
@@ -240,7 +237,6 @@ export const getStaticProps = (async (context) => {
   const [
     department,
     employeeCount,
-    employmentExtent,
     btorCount,
     countriesWithProjectCount,
     neCountriesTopoJson,
@@ -262,11 +258,20 @@ export const getStaticProps = (async (context) => {
                 },
               },
             },
+            AND: {
+              startYear: {
+                lte: 2023,
+              },
+              AND: {
+                endYear: {
+                  gte: 2023,
+                },
+              },
+            },
           },
         },
       },
     }),
-    getEmploymentExtent(),
     prisma.btor.count({
       where: {
         departments: {
@@ -290,7 +295,6 @@ export const getStaticProps = (async (context) => {
     props: {
       department,
       employeeCount,
-      employmentExtent,
       btorCount,
       countriesWithProjectCount,
       neCountriesTopoJson,
@@ -305,7 +309,6 @@ export const getStaticProps = (async (context) => {
   {
     department: Awaited<ReturnType<typeof getDepartment>>;
     employeeCount: number;
-    employmentExtent: EmploymentExtent;
     btorCount: number;
     countriesWithProjectCount: Awaited<
       ReturnType<typeof getCountryWithProjectCount>
