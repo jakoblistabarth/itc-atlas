@@ -9,27 +9,28 @@ import Paragraph from "../../components/Paragraph";
 import SecondaryNavigation from "../../components/SecondaryNavigation";
 import Section from "../../components/Section";
 import Teaser from "../../components/Teaser";
+import { range } from "d3";
 
 const Projects: NextPage = () => {
   const { route } = useRouter();
-  const links = [
-    {
-      href: `${route}/naivasha`,
-      children: "Naivasha Region",
-    },
-  ];
-
   return (
     <PageChapter chapterName="Institutional strengthening">
       <Section>
         <h1>Chapter Institutional Strengthening</h1>
         <Teaser>Applying our knowlegde in the real world</Teaser>
         <Paragraph>
-          Th rough professional engagement with partners in the focus countries,
+          Through professional engagement with partners in the focus countries,
           often via educational and/or research cooperation, ITC can support the
           functioning of those parties, and at the same time incorporate
           experiences gained in its knowledge base to be reapplied at a later
           stage.
+        </Paragraph>
+        <Paragraph>
+          This section starts with the activities of ITC in Indonesia to
+          demonstrate how over time the external technological, societal and
+          political context has influenced how ITC and its Indonesian partners
+          have worked together. This is followed by a global spatial and
+          temporal overview of all ITC projects executed since the 1990s.
         </Paragraph>
       </Section>
 
@@ -38,7 +39,8 @@ const Projects: NextPage = () => {
           highlights={[
             {
               href: `${route}/indonesia`,
-              title: "ITC's impact in Indonesia",
+              title:
+                "Impact of policy changes on ITC’s efforts in capacity building",
             },
             {
               href: `${route}/projects-by-country`,
@@ -55,17 +57,13 @@ const Projects: NextPage = () => {
       <Section>
         <h2>More on Institutional strengthening</h2>
         <Paragraph>
-          The last decade the thematic focus was more consistent, but the
-          geographic focus continues to shift, reflecting political choices.
-          Development cooperation is seen as bilateral cooperation among
-          stakeholders. From the Dutch side the national government works with
-          societal partners such as NGO&apos;s, knowledge institutions, and the
-          private sector.
+          The highlight of the section are ten detailed projects description
+          which show the impact of ITC institutional strengthening activities.
         </Paragraph>
         <SecondaryNavigation>
-          {links.map((l, idx) => (
-            <CardLink key={idx} href={l.href}>
-              <h3>{l.children}</h3>
+          {range(1, 11).map((i) => (
+            <CardLink key={`project-${i}`} href={""} disabled>
+              <h3>Project {i}</h3>
             </CardLink>
           ))}
         </SecondaryNavigation>

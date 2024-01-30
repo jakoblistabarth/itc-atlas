@@ -18,6 +18,7 @@ import ProjectsByCountries from "../../components/ProjectsByCountries";
 import Teaser from "../../components/Teaser";
 import Callout from "../../components/Callout";
 import Caption from "../../components/Caption";
+import Paragraph from "../../components/Paragraph";
 
 type Props = SharedPageProps & {
   countryWithProjectCount: CountryWithProjectCount;
@@ -36,7 +37,20 @@ const Page: NextPage<Props> = ({
   return (
     <PageBase title="Projects by Country">
       <Container>
-        <Teaser>Teaser text goes here.</Teaser>
+        <Teaser>Geographic distribution of ITC projects.</Teaser>
+        <Section>
+          <Paragraph>
+            Both maps below give a different perspective on in which countries
+            projects have been executed. There are obviously many projects in
+            the focus countries, but the majority of project have been done in
+            The Netherlands and other European countries. This because the
+            project portfolio not only includes projects financed by Dutch
+            development aid, but also by Dutch and European research funding
+            agencies. These often have requirements regarding (local) partners,
+            and ITC is also asked by those Dutch and European parties to be
+            partner in a project.
+          </Paragraph>
+        </Section>
         <Section>
           <Callout>
             Hover over the spheres to retrieve the precise number of projects
@@ -48,17 +62,23 @@ const Page: NextPage<Props> = ({
               countryWithProjectCount={countryWithProjectCount}
             />
             <Caption reference="Fig.1">
-              The 3D globe shows the number of projects carried out per country.
+              Different global perspectives on the number of ITC projects since
+              1990.
             </Caption>
           </figure>
         </Section>
         <Section>
-          <ProjectsByCountries
-            data={data}
-            domain={domain}
-            highlightCountries={highlightCountries}
-            neCountriesTopoJson={neCountriesTopoJson}
-          />
+          <figure>
+            <ProjectsByCountries
+              data={data}
+              domain={domain}
+              highlightCountries={highlightCountries}
+              neCountriesTopoJson={neCountriesTopoJson}
+            />
+            <Caption reference="Fig.2">
+              Number of ITC project per country since 1990.
+            </Caption>
+          </figure>
         </Section>
       </Container>
     </PageBase>
