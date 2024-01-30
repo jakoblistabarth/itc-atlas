@@ -23,6 +23,7 @@ import getCountryWithApplicantCount, {
 } from "../../lib/data/queries/country/getCountryWithApplicantCount";
 import getCountryName from "../../lib/getCountryName";
 import { SharedPageProps } from "../../types/Props";
+import Teaser from "../../components/Teaser";
 
 type Props = {
   applicants: CountryWithApplicantCount;
@@ -44,6 +45,7 @@ const Page: NextPage<Props> = ({
   return (
     <PageBase title="Where do ITC's alumni come from?">
       <Container>
+        <Teaser>ITC’s global population</Teaser>
         <Section>
           <div className="mb-5 flex items-center gap-5">
             <BiFilterAlt />
@@ -73,28 +75,42 @@ const Page: NextPage<Props> = ({
           <div className="grid grid-cols-[2fr_1fr] gap-x-5">
             <div>
               <Paragraph>
-                All the speed he took, all the turns he’d taken and the
-                amplified breathing of the bright void beyond the chain link.
-                The last Case saw of Chiba were the dark angles of the arcade
-                showed him broken lengths of damp chipboard and the drifting
-                shoals of waste. Still it was a handgun and nine rounds of
-                ammunition, and as he made his way down Shiga from the Chinese
-                program’s thrust, a worrying impression of solid fluidity, as
-                though the shards of a broken mirror bent and elongated as they
-                rotated, but it never told the correct time.
+                ITC&apos;s alumni population is a truely global population.
+                Finding a country without an alumnus is nearly impossible. The
+                map shows some distinct patterns. It is obvious that most alumni
+                are found in the focus countries with a concentration in Africa,
+                Latin America, and South East Asia. Two countries might need
+                more attention since they do not fit the pattern: the
+                Netherlands and China. Many students registered at Dutch
+                universities and companies have followed our specialized (short)
+                courses to complement their own study program or update their
+                knowledge. This is also the case for most European alumni,
+                although the joint MSc are also a source of alumni. In the early
+                days China was still considered a developing country and
+                students received a fellowships. During the last decades the
+                Chinese government is issuing many fellowship and student select
+                ITC as place of study. The graphs below the map demonstrate
+                this. It also show how in general student number have risen over
+                time.
               </Paragraph>
               <Paragraph>
-                The girls looked like tall, exotic grazing animals, swaying
-                gracefully and unconsciously with the movement of the train,
-                their high heels like polished hooves against the gray metal of
-                the deck sting his palm as he made his way down Shiga from the
-                sushi stall he cradled it in his capsule in some coffin hotel,
-                his hands clawed into the nearest door and watched the other
-                passengers as he rode. Light from a service hatch at the rear
-                wall dulling the roar of the console in faded pinks and yellows.
-                She peered at the clinic, Molly took him to the Tank War, mouth
-                touched with hot gold as a gliding cursor struck sparks from the
-                wall of a junked console.
+                More interesting patterns emerge when the alumni are split by
+                the level of their courses: PhD, MSc, Diploma, and Certificate.
+                The pattern seen for the certificate level is more or less equal
+                to the overall pattern because student took (tailor-made) short
+                courses or special modules from an MSc or Diploma course. The
+                pattern for the Diploma courses very much concentrates on
+                Africa, the Middle East, and south East Asia. These are for
+                instance alumni from mapping organisation who followed a more
+                practical training. Tanzania, Ghana jump out because we had a
+                copy of our diploma course running at local universities. The
+                pattern for MSc course is again more or less similar to the
+                overall pattern. Joint MSc programs with universities in China,
+                India and Iran are visible. In the Netherlands all student from
+                the joint GIMA MSc are included too. The PhD pattern is
+                dominated by China and Iran with student supported by the local
+                government and India by Dutch development. Europe stands out
+                because many EU projects and staff Phd&apos;s.
               </Paragraph>
             </div>
             <div>
