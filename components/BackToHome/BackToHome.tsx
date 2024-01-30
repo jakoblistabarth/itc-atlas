@@ -4,8 +4,8 @@ import { HiOutlineHome } from "react-icons/hi";
 
 const BackToHome: FC = () => {
   return (
-    <Link href="/" className="flex gap-x-2 items-center">
-      <HiOutlineHome /> back home
+    <Link href="/" className="flex items-center gap-x-2">
+      back home <HiOutlineHome />
     </Link>
   );
 };
