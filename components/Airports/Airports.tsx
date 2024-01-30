@@ -13,16 +13,19 @@ import { AirportPropertiesWithCount } from "../../lib/data/getFlightsPerAirport"
 import defaultTheme from "../../lib/styles/themes/defaultTheme";
 import { fInt } from "../../lib/utilities/formaters";
 import { NeCountriesTopoJson } from "../../types/NeTopoJson";
+import { useMapLayoutContext } from "../MapLayout/MapLayoutContext";
+
+type Airports = FeatureCollection<Point, AirportPropertiesWithCount>;
 
 type Props = {
-  airports: FeatureCollection<Point, AirportPropertiesWithCount>;
+  airports: Airports;
   neCountriesTopoJson: NeCountriesTopoJson;
 };
 
 const Airports: FC<Props> = ({ airports, neCountriesTopoJson }) => {
   const projection = geoBertin1953();
 
-  const airportsGeo: FeatureCollection<Point, AirportPropertiesWithCount> = {
+  const airportsGeo: Airports = {
     type: "FeatureCollection",
     features: airports.features.sort((a, b) =>
       d3.descending(a.properties?.value, b.properties?.value),
@@ -64,20 +67,7 @@ const Airports: FC<Props> = ({ airports, neCountriesTopoJson }) => {
           </Tooltip.Root>
         );
       })}
-      {airportsGeo.features.slice(0, 5).map((airport) => {
-        const coords = projection(airport.geometry.coordinates);
-        return (
-          <LabelPoint
-            key={airport.properties.iataCode}
-            position={new Vector2(coords[0], coords[1])}
-          >
-            <tspan fontWeight={"bold"}>
-              {airport.properties?.["iataCode"]}
-            </tspan>
-            ({airport.properties?.value})
-          </LabelPoint>
-        );
-      })}
+      <Labels airports={airportsGeo} />
       <g>
         <LegendProportionalCircle
           data={airports.features.map((feature) => feature.properties?.value)}
@@ -92,3 +82,28 @@ const Airports: FC<Props> = ({ airports, neCountriesTopoJson }) => {
 };
 
 export default Airports;
+
+const Labels: FC<{ airports: Airports }> = ({ airports }) => {
+  const { projection } = useMapLayoutContext();
+  return (
+    <g>
+      {airports.features.slice(0, 5).map((airport) => {
+        const coords = projection(
+          airport.geometry.coordinates as [number, number],
+        );
+        if (!coords) return <></>;
+        return (
+          <LabelPoint
+            key={airport.properties.iataCode}
+            position={new Vector2(coords[0], coords[1])}
+          >
+            <tspan fontWeight={"bold"}>
+              {airport.properties?.["iataCode"]}
+            </tspan>
+            ({airport.properties?.value})
+          </LabelPoint>
+        );
+      })}
+    </g>
+  );
+};
