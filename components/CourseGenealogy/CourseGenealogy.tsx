@@ -82,10 +82,10 @@ const CourseGenealogy: FC<Props> = ({ genealogy }) => {
     t: 35,
     b: 25,
   };
-  const tDomain = [new Date(1949, 0, 1), new Date(2023, 0, 1)];
+  const tDomain = [new Date("1949"), new Date("2023")];
   const tSeq = timeYear.range(tDomain[0], tDomain[1]);
   const xRange = [margin.x, width - margin.x];
-  const xScale = scaleTime().domain(tDomain).range(xRange).nice();
+  const xScale = scaleTime().domain(tDomain).range(xRange).nice(15);
   const xScale2 = scaleBand()
     .domain(tSeq.map((d) => d.toISOString()))
     .range(xRange)
