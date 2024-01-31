@@ -47,6 +47,28 @@ type Story = StoryObj<typeof meta>;
 
 export const DefaultLineChart: Story = {};
 
+export const LineChartWithCustomTicks: Story = {
+  args: {
+    ...meta.args,
+    data: [
+      ...meta.args.data,
+      {
+        id: "SUI",
+        label: "Germany",
+        data: [
+          { x: 1930, y: 2 },
+          { x: 2007, y: 2 },
+          { x: 2010, y: 3 },
+          { x: 2030, y: 5 },
+          { x: 2040, y: 7 },
+        ],
+      },
+    ],
+    xTickCount: 2,
+    yTickCount: 2,
+  },
+};
+
 export const LineChartWithXOffset: Story = {
   decorators: [
     (Story) => (

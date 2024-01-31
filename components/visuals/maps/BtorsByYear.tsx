@@ -119,6 +119,8 @@ const BtorsByYear: FC<Props> = ({ btors, countries, neCountries }) => {
                   ])}
                   mouseEnterLeaveHandler={() => undefined}
                   xLabel="year"
+                  xTickCount={Math.floor((maxTime - minTime) / 5)}
+                  yTickCount={5}
                   yLabel="No. travels"
                   yDomain={[0, maxCountPerYear]}
                 />

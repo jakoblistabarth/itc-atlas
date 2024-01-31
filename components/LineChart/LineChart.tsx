@@ -23,6 +23,8 @@ type Props = {
   yLabel?: string;
   yDomain?: [number, number];
   xDomain?: [number, number];
+  xTickCount?: number;
+  yTickCount?: number;
   colorScale: ScaleOrdinal<string, string>;
   activeRecordId?: string;
   mouseEnterLeaveHandler: (activeRecordId?: string) => void;
@@ -33,7 +35,9 @@ const LineChart: FC<Props> = ({
   xLabel,
   yLabel,
   xDomain,
+  xTickCount,
   yDomain,
+  yTickCount,
   colorScale,
   activeRecordId,
   mouseEnterLeaveHandler,
@@ -78,10 +82,12 @@ const LineChart: FC<Props> = ({
     const xScale = scaleLinear()
       .domain([xDomain?.[0] ?? minX ?? 0, xDomain?.[1] ?? maxX ?? 1])
       .range([margin.left, width - margin.right])
+      .nice(xTickCount)
       .clamp(true);
     const yScale = scaleLinear()
       .domain([yDomain?.[0] ?? 0, yDomain?.[1] ?? maxY ?? 1])
-      .range([height - margin.bottom, margin.top]);
+      .range([height - margin.bottom, margin.top])
+      .nice(yTickCount);
     const [minTime, maxTime] = xScale.domain();
     const dataFilled = data.map((d) => ({
       ...d,
@@ -95,7 +101,7 @@ const LineChart: FC<Props> = ({
     }));
     const xScaleReverse = (x: number) => Math.round(xScale.invert(x));
     return { dataFilled, xScale, yScale, xScaleReverse };
-  }, [data, margin, height, width, xDomain, yDomain]);
+  }, [data, margin, height, width, xDomain, xTickCount, yDomain, yTickCount]);
 
   return (
     <Tooltip.Root followCursor placement="top-start" offset={10}>
@@ -121,8 +127,9 @@ const LineChart: FC<Props> = ({
             top={height - margin.bottom + 5}
             tickFormat={format("4")}
             xScale={xScale}
+            tickCount={xTickCount}
           />
-          <AxisY left={margin.left} yScale={yScale} />
+          <AxisY left={margin.left} yScale={yScale} tickCount={yTickCount} />
           <g>
             {dataFilled.map((d) => {
               return (
