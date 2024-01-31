@@ -21,10 +21,11 @@ const Page: NextPage = () => {
           <Paragraph>
             Within the <em>ITC atlas</em>, the following personal data was
             processed to create the <em>ITC atlas</em>:
-            <ul className="list-disc">
-              <li>Names of PhD Candidates</li>
-            </ul>
           </Paragraph>
+          <ul className="my-2 list-disc pl-5">
+            <li>Names of PhD Candidates</li>
+            <li>Country of origin of PhD Candidates</li>
+          </ul>
         </Section>
         <Section>
           <h3>3 Collecting personal data</h3>
