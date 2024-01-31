@@ -109,7 +109,7 @@ const AlumniOrigin: FC<Props> = ({
   return (
     <>
       <MapLayerBase countries={neCountriesTopoJson} />
-      <Tooltip.Root open={!!country} followCursor={true}>
+      <Tooltip.Root open={!!country} placement="top-start" followCursor={true}>
         <Tooltip.Trigger asChild>
           <g id="alumni-countries-symbols">
             {!filteredApplicantsIsLoading &&
@@ -123,8 +123,6 @@ const AlumniOrigin: FC<Props> = ({
                     stroke={"teal"}
                     strokeWidth={0.5}
                     fillOpacity={0.1}
-                    // TODO: check whether moving state back to point symbol improves behaviour (e.g. css transition)
-                    // seems like the transition is only working once the data is fetched by SWR
                     onMouseEnter={() => {
                       setCountry(properties?.ADM0_A3_NL);
                       setProperties(properties);
