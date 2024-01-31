@@ -35,7 +35,7 @@ const CourseGenealogyPage: NextPage<Props> = ({ courseGenealogy }) => {
               These are the joint degree Cartography with Universities of
               Dresden, München, and Vienna, and Geo-information science and
               earth observation for environmental modelling and management, with
-              the universities of Louvain,Lund, and Tartu.
+              the universities of Louvain, Lund, and Tartu.
             </Paragraph>
             <figure className="my-5">
               <CourseGenealogy genealogy={courseGenealogy} />
