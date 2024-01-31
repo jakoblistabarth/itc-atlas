@@ -86,6 +86,7 @@ const LinePath: FC<Props> = ({
                   data={data.sort((a, b) => ascending(a.x, b.x))}
                   xScale={xScale}
                   yScale={yScale}
+                  fill="none"
                   stroke={color[i]}
                   strokeDasharray={`${5} ${5 * (color.length - 1)}`}
                   strokeDashoffset={i * -5}
@@ -103,6 +104,7 @@ const LinePath: FC<Props> = ({
                 data={data.sort((a, b) => ascending(a.x, b.x))}
                 xScale={xScale}
                 yScale={yScale}
+                fill="none"
                 stroke={color}
                 isFocus={isFocus}
                 isSelected={isSelected}
