@@ -114,7 +114,7 @@ const Page: NextPage<Props> = ({
                 bhosCountries={bhosCountries}
               />
             </CanvasStage>
-            <Caption reference="Fig.3">
+            <Caption reference="Fig.2">
               Number of focus countries over time (countries more then 10 times:
               Bangladesh 15, Yemen and Kenya 12, Indonesia and Uganda 12, Mali,
               Egypte, Ethiopia and Tanzania 11.
@@ -146,7 +146,7 @@ const Page: NextPage<Props> = ({
                 )}
                 dutchCabinets={dutchCabinets}
               />
-              <Caption reference="Fig.2">
+              <Caption reference="Fig.3">
                 Number of focus countries in the different administrations. Some
                 numbers are missing because the cabinet periods were too short
                 to develop policy or the data is unknown.
@@ -210,7 +210,7 @@ const Page: NextPage<Props> = ({
                     );
                   })}
               </div>
-              <Caption reference="Fig.2">
+              <Caption reference="Fig.4">
                 A geographic time series of the focus countries during the
                 different administrations. Some are missing because the cabinet
                 periods were to short to define policy or data were unknown (see
