@@ -24,6 +24,7 @@ type Props = {
 const BtorsByYear: FC<Props> = ({ btors, countries, neCountries }) => {
   const minTime = min(btors, (d) => d.year) ?? 2000;
   const maxTime = max(btors, (d) => d.year) ?? new Date().getFullYear();
+  const maxCountPerYear = max(btors, (d) => d.count) ?? 1;
 
   type BtorCountry = {
     isoAlpha3: string;
@@ -46,12 +47,15 @@ const BtorsByYear: FC<Props> = ({ btors, countries, neCountries }) => {
       data,
       centroid: getCentroidByIsoCode(isoAlpha3),
     }))
+    .filter(({ isoAlpha3 }) => isoAlpha3)
     .filter(hasCentroid);
   const btorsByCountrySum = btorsByCountry.map((d) => {
     return d.data.reduce((acc, d) => (acc += d.count), 0);
   }, 0);
-  const maxCount = max(btorsByCountrySum) ?? 1;
-  const scaleRadius = scaleSqrt().domain([0, maxCount]).range([0, 20]);
+  const maxCountPerCountry = max(btorsByCountrySum) ?? 1;
+  const scaleRadius = scaleSqrt()
+    .domain([0, maxCountPerCountry])
+    .range([0, 20]);
 
   return (
     <>
@@ -91,7 +95,7 @@ const BtorsByYear: FC<Props> = ({ btors, countries, neCountries }) => {
             <Popover.Portal>
               <Popover.Content
                 sideOffset={5}
-                className="rounded-sm bg-white p-3 shadow-lg"
+                className="max-w-sm rounded-sm bg-white p-3 shadow-lg"
               >
                 <Popover.Arrow className="fill-white" />
                 <div className="flex items-center">
@@ -116,6 +120,7 @@ const BtorsByYear: FC<Props> = ({ btors, countries, neCountries }) => {
                   mouseEnterLeaveHandler={() => undefined}
                   xLabel="year"
                   yLabel="No. travels"
+                  yDomain={[0, maxCountPerYear]}
                 />
               </Popover.Content>
             </Popover.Portal>
