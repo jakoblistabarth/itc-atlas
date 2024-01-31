@@ -90,10 +90,11 @@ const Page: NextPage = () => {
         <Section>
           <h3>7 Contact</h3>
           <Paragraph>
-            For questions about the <em>ITC atlas</em>, please contact [NAME],
-            [E-MAIL], [PHONE]. For questions regarding your personal data and
-            privacy, please contact the privacy contact person of your faculty
-            or service department (see{" "}
+            For questions about the <em>ITC atlas</em>, please contact{" "}
+            <em>[generic email address for ITC ATLAS yet to be created]</em>.
+            For questions regarding your personal data and privacy, please
+            contact the privacy contact person of your faculty or service
+            department (see{" "}
             <a href="https://www.utwente.nl/en/cyber-safety/contact/#privacy-contact-persons">
               utwente.nl/en/cyber-safety/contact/#privacy-contact-persons
             </a>
