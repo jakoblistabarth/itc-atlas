@@ -11,6 +11,11 @@ const getMscApplicationsByProgramByYear = async (
       _all: true,
     },
     where: {
+      status: {
+        label: {
+          equals: "Alumnus",
+        },
+      },
       level: "Master",
       programmId: program,
       examYear: year,
