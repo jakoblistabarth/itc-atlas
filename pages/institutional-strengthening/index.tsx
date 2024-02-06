@@ -9,7 +9,6 @@ import Paragraph from "../../components/Paragraph";
 import SecondaryNavigation from "../../components/SecondaryNavigation";
 import Section from "../../components/Section";
 import Teaser from "../../components/Teaser";
-import { range } from "d3";
 
 const Projects: NextPage = () => {
   const { route } = useRouter();
