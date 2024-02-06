@@ -87,7 +87,7 @@ const AboutITC: NextPage = () => {
               src={`${process.env.NEXT_PUBLIC_SITE_URL}/images/230411-buildings-black.svg`}
               width={1600}
               height={900}
-              alt={`ITC's home base and moves within the Netherlands`}
+              alt={`ITC's building changes in the past years`}
             />
             <Image
               className="my-10 max-w-lg"
