@@ -56,7 +56,9 @@ const Page: NextPage<Props> = ({
               placeholder="Select a level…"
               options={levels
                 .filter((d) => d.level != null)
-                .map((d) => d.level as string)}
+                .map((d) => d.level as string)
+                .sort()
+                .reverse()}
               withReset
             />
           </div>

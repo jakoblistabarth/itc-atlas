@@ -36,11 +36,15 @@ const AlumniOriginByLevel: FC<Props> = ({
               placeholder={"none selected"}
             >
               <option value={""}>All levels</option>
-              {levels.map((d) => (
-                <option value={d.level ?? ""} key={d.level}>
-                  {d.level}
-                </option>
-              ))}
+              {levels
+                .map((d) => d.level)
+                .sort()
+                .reverse()
+                .map((d) => (
+                  <option value={d ?? ""} key={d}>
+                    {d}
+                  </option>
+                ))}
             </select>
           </label>
         </div>
