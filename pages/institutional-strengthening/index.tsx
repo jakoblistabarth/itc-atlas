@@ -61,9 +61,12 @@ const Projects: NextPage = () => {
           which show the impact of ITC institutional strengthening activities.
         </Paragraph>
         <SecondaryNavigation>
-          {range(1, 11).map((i) => (
-            <CardLink key={`project-${i}`} href={""} disabled>
-              <h3>Project {i}</h3>
+          {[
+            { title: "Naivasha Region", url: "naivasha" },
+            { title: "Africa", url: "projectsafrica" },
+          ].map((d, idx) => (
+            <CardLink key={`project-${idx}`} href={`${route}/${d.url}`}>
+              <h3>{d.title}</h3>
             </CardLink>
           ))}
         </SecondaryNavigation>
