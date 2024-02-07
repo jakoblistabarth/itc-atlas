@@ -75,10 +75,9 @@ const AboutITC: NextPage = () => {
             </Paragraph>
             <Paragraph>
               However, different types of impact can be distinguished. In the
-              atlas academic impact, and societal and economic impact are used.
-              Academic impact is realised via knowledge creation and
-              dissemination. Societal and economic is realised via knowledge
-              exploitation and utilisation.
+              atlas academic impact, and societal impact are used. Academic
+              impact is realised via knowledge creation and dissemination.
+              Societal is realised via knowledge exploitation and utilisation.
             </Paragraph>
             <Paragraph>
               Academic impact is the proof that excellent research results in

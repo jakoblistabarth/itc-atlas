@@ -84,6 +84,13 @@ const AboutITC: NextPage = () => {
             </Paragraph>
             <Image
               className="my-10 max-w-lg"
+              src={`${process.env.NEXT_PUBLIC_SITE_URL}/images/230411-buildings-black.svg`}
+              width={1600}
+              height={900}
+              alt={`ITC's building changes in the past years`}
+            />
+            <Image
+              className="my-10 max-w-lg"
               src={`${process.env.NEXT_PUBLIC_SITE_URL}/images/itc-moves.png`}
               width={1600}
               height={900}

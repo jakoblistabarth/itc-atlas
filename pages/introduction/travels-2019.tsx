@@ -38,13 +38,12 @@ const Page: NextPage<Props> = ({ odMatrix, airports, neCountriesTopoJson }) => {
               to and from opposite curves have been draw, clearly visible
               between Amsterdam and Eastern Africa. The map highlights the five
               more frequented trips (the flight Nairobi-Amsterdam was used 106
-              times) [1]. The same data was mapped on an interactive 3D-globe
-              [2]
+              times). The same data was mapped on an interactive 3D-globe Fig 2.
             </Paragraph>
             <Paragraph>
-              The flow map in [1] and [2] show an interesting pattern of ITC
+              The flow map in Fig 1 and Fig 2 show an interesting pattern of ITC
               travel behaviour, but an alternative look might clarify part of
-              the pattern seen. In [3] all the arrivals and departures for
+              the pattern seen. In Fig 3 all the arrivals and departures for
               individual airports are mapped. Obviously Amsterdam is most
               frequently use since it can be considers ITC’s home base. Nairobi,
               Addis Abeba, and Kigali are in focus countries, but Dubai is

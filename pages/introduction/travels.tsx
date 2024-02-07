@@ -93,9 +93,9 @@ const Page: NextPage<Props> = ({
           longer the preferred mode of transport.
         </Paragraph>
         <Paragraph>
-          Where did they all go? The first map depicting all travel destination
+          Where did they all go? The above map depicting all travel destination
           by country over the last twenty is based on travel reports submitted
-          by staff members [1].
+          by staff members Fig 1.
         </Paragraph>
       </Section>
       <Section>
@@ -105,7 +105,7 @@ const Page: NextPage<Props> = ({
             How do governmental policies influxes ITC travel behaviour? In this
             interactive graphic the focus countries for the different
             administrations are linked to a line graph that holds all trips made
-            from 2000 to 2002. It is the same data as mapped in [1].
+            from 2000 to 2022. It is the same data as mapped in Fig 1.
           </Paragraph>
           <Paragraph>
             One has to realise that for each administration it take time to
@@ -130,7 +130,7 @@ const Page: NextPage<Props> = ({
       <Section>
         <h2>Which destination?</h2>
         <Paragraph>
-          In [3] the travel destinations are grouped by the UN statistical
+          In Fig 3 the travel destinations are grouped by the UN statistical
           regions and subregions spilt over ITC&apos;s scientific departments.
         </Paragraph>
         <div className="mt-5">
@@ -149,8 +149,8 @@ const Page: NextPage<Props> = ({
       </Section>
       <Section>
         <Paragraph>
-          [4] offers an interactive 3d prism map showing the number of visits to
-          county by a department.
+          Fig 4 offers an interactive 3d prism map showing the number of visits
+          to county by a department.
         </Paragraph>
         <TravelsAcrossDepartmentsPrismMap
           topology={neCountriesTopoJson}
