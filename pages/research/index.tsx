@@ -35,11 +35,11 @@ const Introduction: NextPage<Props> = ({ departments }) => {
           and earth observation play an important role.
         </Paragraph>
         <Paragraph>
-          Specific domain knowledge is developed by the six scientific
-          department and accumulates in the profiling themes. Phd students play
-          a prominent role. The research topic are closely linked to national
-          and international research agenda&apos;s as well as the themes of the
-          Dutch development cooperation program.
+          Specific domain knowledge is developed by the chair groups in the six
+          scientific department and accumulates in the profiling themes. PhD
+          students play a prominent role. The research topics are closely linked
+          to national and international research agenda&apos;s as well as the
+          themes of the Dutch development cooperation program.
         </Paragraph>
         <Paragraph>The profiling themes address problems related to:</Paragraph>
         <ul className="max-w-2xl [&>li]:my-5">
