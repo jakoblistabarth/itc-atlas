@@ -15,27 +15,27 @@ type Props = {
 const CourseGenealogyPage: NextPage<Props> = ({ courseGenealogy }) => {
   return (
     <>
-      <PageBase title="M.Sc. courses">
+      <PageBase title="MSc Courses">
         <Container>
           <main>
             <Teaser>ITC is involved in several MSc courses</Teaser>
             <Paragraph>
-              The of the five MSc course the MSc Geo-information Science and
-              Earth Observation is IC oldest course which has evolved since the
-              start of ITC seventy years ago. The diagram [1] gives an overview
-              of this evolution into today&apos;s program. Programs haver to
-              change regularly to keep up to date with technological development
-              and societal needs.
+              The MSc Geo-information Science and Earth Observation is the
+              Faculty&apos;s oldest course which has evolved since the start of
+              ITC seventy years ago. The diagram [Fig 1] gives an overview of
+              the evolution of this program. Programs have to change regularly
+              to keep up to date with technological development and societal
+              needs.
             </Paragraph>
             <Paragraph>
-              Another in-house MSc&apos;s is Spatial Engineering. Geographical
-              Information Management and applications is a joint degree with the
-              Dutch universities of Delft, Utrecht and Wageningen. In the
-              European context ITC is partner in two Erasmus plus MSc programs.
-              These are the joint degree Cartography with Universities of
-              Dresden, München, and Vienna, and Geo-information science and
-              earth observation for environmental modelling and management, with
-              the universities of Louvain, Lund, and Tartu.
+              Another in-house MSc is Spatial Engineering. The MSc Geographical
+              Information Management and Applications (GIMA) is a joint degree
+              with the Dutch universities of Delft, Utrecht and Wageningen. In
+              the European context ITC is partner in two Erasmus plus MSc
+              programs. These are the joint degree Cartography, with
+              Universities of Dresden, München, and Vienna, and Geo-information
+              science and earth observation for environmental modelling and
+              management, with the universities of Louvain, Lund, and Tartu.
             </Paragraph>
             <figure className="my-5">
               <CourseGenealogy genealogy={courseGenealogy} />

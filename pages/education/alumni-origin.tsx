@@ -77,23 +77,23 @@ const Page: NextPage<Props> = ({
           <div className="grid grid-cols-[2fr_1fr] gap-x-5">
             <div>
               <Paragraph>
-                ITC&apos;s alumni population is a truely global population.
+                ITC&apos;s alumni population is a truly global population.
                 Finding a country without an alumnus is nearly impossible. The
                 map shows some distinct patterns. It is obvious that most alumni
-                are found in the focus countries with a concentration in Africa,
-                Latin America, and South East Asia. Two countries might need
-                more attention since they do not fit the pattern: the
-                Netherlands and China. Many students registered at Dutch
-                universities and companies have followed our specialized (short)
-                courses to complement their own study program or update their
-                knowledge. This is also the case for most European alumni,
-                although the joint MSc are also a source of alumni. In the early
+                are found in the focus countries with concentrations in Africa,
+                Latin America, and Southeast Asia. Two countries might need an
+                explanation since they do not fit this pattern: the Netherlands
+                and China. Many students registered at Dutch universities and
+                companies have followed our specialized (short) courses to
+                complement their own study program or update their knowledge.
+                This is also the case for most European alumni, and in recent
+                years the alumni of joint MScs are also add up. In the early
                 days China was still considered a developing country and
-                students received a fellowships. During the last decades the
-                Chinese government is issuing many fellowship and student select
-                ITC as place of study. The graphs below the map demonstrate
-                this. It also show how in general student number have risen over
-                time.
+                students received a fellowship. During the last decades the
+                Chinese government is issuing many fellowships and students
+                select ITC as place of study. The graphs below the map
+                demonstrate this. It also shows how in general student number
+                have risen over time.
               </Paragraph>
               <Paragraph>
                 More interesting patterns emerge when the alumni are split by
@@ -102,17 +102,17 @@ const Page: NextPage<Props> = ({
                 to the overall pattern because student took (tailor-made) short
                 courses or special modules from an MSc or Diploma course. The
                 pattern for the Diploma courses very much concentrates on
-                Africa, the Middle East, and south East Asia. These are for
+                Africa, the Middle East, and Southeast Asia. These are for
                 instance alumni from mapping organisation who followed a more
                 practical training. Tanzania, Ghana jump out because we had a
                 copy of our diploma course running at local universities. The
                 pattern for MSc course is again more or less similar to the
                 overall pattern. Joint MSc programs with universities in China,
                 India and Iran are visible. In the Netherlands all student from
-                the joint GIMA MSc are included too. The PhD pattern is
-                dominated by China and Iran with student supported by the local
+                the joint GIMA MSc is included too. The PhD pattern is dominated
+                by China and Iran with student supported by their local
                 government and India by Dutch development. Europe stands out
-                because many EU projects and staff Phd&apos;s.
+                because many EU projects and staff PhD&apos;s.
               </Paragraph>
             </div>
             <div>
