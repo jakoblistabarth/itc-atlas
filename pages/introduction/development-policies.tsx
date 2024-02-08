@@ -26,6 +26,7 @@ import { DutchCabinet } from "../../types/DutchCabinet";
 import { SharedPageProps } from "../../types/Props";
 import BhosCountriesOverTime from "../../components/BhosCountriesOverTime";
 import { HiCursorClick } from "react-icons/hi";
+import Image from "next/image";
 
 type Props = {
   dutchCabinets: DutchCabinet[];
@@ -215,6 +216,36 @@ const Page: NextPage<Props> = ({
                 different administrations. Some are missing because the cabinet
                 periods were to short to define policy or data were unknown (see
                 also [page x; 1])
+              </Caption>
+            </figure>
+          </Section>
+          <Section>
+            <h2>Contradictions at the Ministry</h2>
+            <figure>
+              <h3>
+                Of the 22 counties with a focus on development cooperation 9 are
+                to be avoided (situation May 2023) because of a negative travel
+                advise of the same authorities
+              </h3>
+              <Image
+                className="my-10"
+                src={`${process.env.NEXT_PUBLIC_SITE_URL}/images/travel-contradiction-I.svg`}
+                width={1600}
+                height={900}
+                alt={`Dutch government travel advices I`}
+              />
+              <Caption reference="Fig.5">
+                Travel advise Dutch government (situation at 01-05-2023)
+              </Caption>
+              <Image
+                className="my-10"
+                src={`${process.env.NEXT_PUBLIC_SITE_URL}/images/travel-contradictions-II.svg`}
+                width={1600}
+                height={900}
+                alt={`Dutch government travel advices II`}
+              />
+              <Caption reference="Fig.6">
+                Tension between focus countries and travel advise
               </Caption>
             </figure>
           </Section>
