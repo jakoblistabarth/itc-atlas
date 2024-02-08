@@ -37,8 +37,8 @@ const ProjectPartnersIndonesia: FC<Props> = ({ countries }) => {
       fontSize: 10,
     },
     {
-      longitude: 106.8,
-      latitude: -6.5,
+      longitude: 107.2,
+      latitude: -6.8,
       fill: "darkred",
       labelColor: "white",
       fontSize: 10,
