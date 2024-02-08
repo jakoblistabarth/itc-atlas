@@ -1,5 +1,5 @@
 import { FC } from "react";
-import { line, bin, range, min, max, scaleLinear, ScalePower } from "d3";
+import { line, range, min, max, scaleLinear, ScalePower } from "d3";
 
 const LegendProportionalScaleFunction: FC<{
   data: number[];
@@ -22,31 +22,8 @@ const LegendProportionalScaleFunction: FC<{
     return [x, scaleRadius(maxData) - y] as [number, number];
   });
 
-  const binGenerator = bin().thresholds(10);
-  const buckets = binGenerator(data);
-  const maxBin = max(buckets, (d) => d.length);
-  const yScale = scaleLinear()
-    .domain([0, maxBin ?? 1])
-    .nice()
-    .range([diameter / 2, 0]);
-
   return (
     <g>
-      <g id="histogram-bins">
-        {buckets.map((bucket) => (
-          <rect
-            key={`${bucket.x0}-${bucket.x1}`}
-            fill="lightgrey"
-            x={xScale(bucket.x0 || 0) + 1}
-            y={yScale(bucket.length)}
-            width={Math.max(
-              0,
-              xScale(bucket.x1 || 0) - xScale(bucket.x0 || 0) - 1
-            )}
-            height={yScale(0) - yScale(bucket.length)}
-          />
-        ))}
-      </g>
       <g id="radius-function">
         <path
           strokeLinecap="round"
