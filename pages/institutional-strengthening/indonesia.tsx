@@ -30,6 +30,7 @@ import { LongTermMission } from "../../types/LongTermMission";
 import { Minister } from "../../types/Minister";
 import { NeCountriesTopoJson } from "../../types/NeTopoJson";
 import { ProjectIndonesia } from "../../types/Project";
+import Link from "next/link";
 
 type Props = {
   projects: ProjectIndonesia[];
@@ -115,7 +116,7 @@ const Page: NextPage<Props> = ({
           <div>
             <Section>
               <Paragraph>
-                The infographic on this page relates three components that has
+                The infographic on this page relates three components that have
                 shaped the context in which ITC operates. On top ITC&apos;s own
                 history. On the timeline the changes of ITC&apos;s full name
                 reflect the development of the domain in which ITC is active. It
@@ -124,27 +125,23 @@ const Page: NextPage<Props> = ({
                 replaced by Aero space Surveys, and today ITC is the Faculty of
                 Geoinformation Sciences and Earth Observation. The profile of
                 the buildings that housed ITC over time represent our geographic
-                journey [see also page 11:2].
+                journey <Link href={"/introduction/about-itc"}>[see [2]]</Link>.
               </Paragraph>
 
               <Paragraph>
                 In the centre of the infographic the different Ministers
-                responsible for development aid and her/his political signature
-                [see page xx:y for the different Administrations]. The attitude
-                to development is reflected in the name of the Ministry
-                responsible. In 1965 it starts of as Ministry of Development
-                Aid, in 1971 this changed to Development Cooperation, and since
-                2012 it is about Foreign Trade and Development Cooperation.
-                Although poverty reduction has always been a focus topic, these
-                day the topics water, food, health and climate are also in
-                focus.
+                responsible for development aid and her/his political signature{" "}
+                <Link href={"/introduction/development-policies"}>
+                  [see [3]]
+                </Link>
+                . The attitude to development is reflected in the name of the
+                Ministry responsible. In 1965 it starts of as Ministry of
+                Development Aid, in 1971 this changed to Development
+                Cooperation, and since 2012 it is about Foreign Trade and
+                Development Cooperation. Although poverty reduction has always
+                been a focus topic, these days the topics water, food, health
+                and climate are also in focus.
               </Paragraph>
-              <figure className="my-10">
-                <ProjectPartnersIndonesia countries={neCountries50m} />
-                <Caption reference="Fig.1">
-                  3 Partners are crucial for ITC in Indonesia.
-                </Caption>
-              </figure>
               <Paragraph>
                 These developments also influenced the relation between ITC and
                 the stakeholders in the target countries, from more
@@ -172,6 +169,14 @@ const Page: NextPage<Props> = ({
                 the capacity to take on leadership roles in their own
                 organization and contribute to a change in the way of working.
               </Paragraph>
+              <figure className="my-10">
+                <ProjectPartnersIndonesia countries={neCountries50m} />
+                <Caption reference="Fig.2">
+                  Long time partners a: Ministry of Forestry (Balai Latihan
+                  Kehutanan, BLK) in Jakarta, b: Geospatial Information Agency
+                  (BIG) in Bogor, c: Gadjah Mada University (UGM) in Yogyakarta.
+                </Caption>
+              </figure>
               <Paragraph>
                 Examples of these early corporations are the establishment of
                 the Faculty of Geography at Gadjah Mada University (UGM) in
@@ -199,7 +204,7 @@ const Page: NextPage<Props> = ({
                   height={1357}
                   alt={`Projects in Indonesia`}
                 />
-                <Caption reference="Fig.2">
+                <Caption reference="Fig.3">
                   The geographic distribution of projects executed by ITC in
                   Indonesia over time.
                 </Caption>
@@ -208,15 +213,16 @@ const Page: NextPage<Props> = ({
             <Section>
               <Paragraph>
                 Indonesia is one of the counties with the largest alumni
-                population [see also page; [1]). Over 1800 students have
-                participated in all kind of courses varying between a refresher
-                courses on site of two weeks to a two year MSc and four years
-                Phd program in the Netherlands. A quarter of the alumni is
-                female, and course in there applied earth science have been most
-                popular. The distribution of the alumni over Indonesia seems
-                similar to the general population distribution, but is skewed to
-                the project activities over time; Ambon is a good example of
-                this.
+                population{" "}
+                <Link href={"/education/alumni-origin"}>[see [1]]</Link>. Over
+                1800 students have participated in all kinds of courses varying
+                between two-week refresher courses on site, a two-year MSc, or a
+                four year PhD program in the Netherlands. A quarter of the
+                alumni is female, and courses in applied earth sciences have
+                been most popular. The distribution of the alumni over Indonesia
+                seems similar to the general population distribution but is
+                skewed to the location of geo-related institutes and project
+                activities over time; Ambon is a good example of this.
               </Paragraph>
               <figure className="my-10">
                 <Image
@@ -225,8 +231,8 @@ const Page: NextPage<Props> = ({
                   height={1357}
                   alt={`Projects in Indonesia`}
                 />
-                <Caption reference="Fig.2">
-                  The geographic distribution of alumni in Indonesia
+                <Caption reference="Fig.4">
+                  The geographic distribution of alumni in Indonesia.
                 </Caption>
               </figure>
             </Section>

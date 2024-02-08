@@ -96,7 +96,7 @@ const AboutITC: NextPage = () => {
               height={900}
               alt={`ITC's home base and moves within the Netherlands`}
             />
-            <Caption reference="Fig.2">ITC moves in the last 70 years</Caption>
+            <Caption reference="Fig.2">ITC moves in the last 70 years.</Caption>
           </Section>
         </Container>
       </PageBase>

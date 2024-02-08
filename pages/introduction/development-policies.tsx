@@ -215,7 +215,7 @@ const Page: NextPage<Props> = ({
                 A geographic time series of the focus countries during the
                 different administrations. Some are missing because the cabinet
                 periods were to short to define policy or data were unknown (see
-                also [page x; 1])
+                also [page x; 1]).
               </Caption>
             </figure>
           </Section>
@@ -235,7 +235,7 @@ const Page: NextPage<Props> = ({
                 alt={`Dutch government travel advices I`}
               />
               <Caption reference="Fig.5">
-                Travel advise Dutch government (situation at 01-05-2023)
+                Travel advise Dutch government (situation at 01-05-2023).
               </Caption>
               <Image
                 className="my-10"
@@ -245,7 +245,7 @@ const Page: NextPage<Props> = ({
                 alt={`Dutch government travel advices II`}
               />
               <Caption reference="Fig.6">
-                Tension between focus countries and travel advise
+                Tension between focus countries and travel advise.
               </Caption>
             </figure>
           </Section>

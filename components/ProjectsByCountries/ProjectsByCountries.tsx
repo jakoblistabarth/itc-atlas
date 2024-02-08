@@ -14,7 +14,7 @@ import { NeCountriesTopoJson } from "../../types/NeTopoJson";
 type Props = {
   data: FeatureCollection<Point>;
   domain: [number, number];
-  highlightCountries: NeCountriesGeoJson;
+  highlightCountries?: NeCountriesGeoJson;
   neCountriesTopoJson: NeCountriesTopoJson;
 };
 
@@ -40,7 +40,7 @@ const ProjectsByCountries: FC<Props> = ({
       </defs>
       <MapLayerBase countries={neCountriesTopoJson} />
       <g className="choroplethLayer">
-        {highlightCountries.features.map((feature) => (
+        {highlightCountries?.features.map((feature) => (
           <MarkGeometry
             key={feature.properties.ADM0_A3}
             feature={feature}
