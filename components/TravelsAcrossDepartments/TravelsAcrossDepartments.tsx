@@ -5,6 +5,7 @@ import type { Topology } from "topojson-specification";
 import { BtorsGroupedByCountryByDepartment } from "../../lib/data/queries/btors/getBtorsGroupedByCountryByDepartment";
 import PrismMapTravelsDepartment from "../PrismMapTravelsDepartment";
 import Select from "../Select";
+import { departmentColorScale } from "../../lib/styles/departmentColorScale";
 
 type Props = {
   btorsByCountryByDepartment: BtorsGroupedByCountryByDepartment;
@@ -55,6 +56,11 @@ const TravelsAcrossDepartmentsPrismMap: FC<Props> = ({
         width={width}
         length={length}
         department={activeDepartment}
+        defaultColor={
+          activeDepartment.id == "SUP"
+            ? "teal"
+            : departmentColorScale(activeDepartment.id)
+        }
         extrudeGeometryOptions={{
           depth: 0.01,
           bevelSize: 0.005,

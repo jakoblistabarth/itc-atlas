@@ -24,6 +24,7 @@ type Props = {
   length: number;
   extrudeGeometryOptions?: ExtrudeGeometryOptions;
   department: Department;
+  defaultColor?: string;
 };
 
 const PrismMapTravelsDepartment: FC<Props> = ({
@@ -41,6 +42,7 @@ const PrismMapTravelsDepartment: FC<Props> = ({
     bevelSegments: 12,
   },
   department,
+  defaultColor,
 }) => {
   const [hoverInfo, setHoverInfo] = useState<FeatureIdentifier | undefined>(
     undefined,
@@ -85,7 +87,7 @@ const PrismMapTravelsDepartment: FC<Props> = ({
                 projection={projection}
                 width={width}
                 length={length}
-                defaultColor="teal"
+                defaultColor={defaultColor ? defaultColor : "teal"}
                 extrusionPropertyAccessor={propertyAccessor}
                 extrusionScale={extrusionScale}
                 onFeaturePointerEnterHandler={onPointerEnterHandler}
