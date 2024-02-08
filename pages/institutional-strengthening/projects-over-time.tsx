@@ -47,7 +47,8 @@ const ProjectsOverTime: NextPage<Props> = ({
             countries={countries}
           />
           <Caption reference="Fig.1">
-            Space-time cube representation of ITC project per country since 1990
+            Space-time cube representation of ITC project per country since
+            1990.
           </Caption>
         </Section>
         <Section>
@@ -58,7 +59,7 @@ const ProjectsOverTime: NextPage<Props> = ({
           </h3>
           <ProjectsTimeline projects={projects} />
           <Caption reference="Fig.2">
-            Timeline of ITC and their duration
+            Timeline of ITC and their duration.
           </Caption>
         </Section>
       </Container>
