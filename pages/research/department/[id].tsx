@@ -162,7 +162,7 @@ const Page = ({
         <Section>
           <h2>Flights</h2>
           <Paragraph>
-            Number of flights made by members of the department in 2023.
+            Number of flights made by members of the department in 2019.
           </Paragraph>
           <div className="max-w-screen-sm">
             <MapLayoutFluid projection={geoBertin1953()}>
