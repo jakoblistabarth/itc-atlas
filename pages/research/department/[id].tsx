@@ -127,10 +127,9 @@ const Page = ({
         <Section>
           <h2>Travels</h2>
           <Paragraph>
-            Lorem ipsum, dolor sit amet consectetur adipisicing elit. Amet
-            molestiae, sequi animi est dolor nihil qui id, aperiam assumenda
-            suscipit officia, veniam tenetur veritatis saepe! Recusandae animi
-            incidunt fuga perferendis!
+            The interactive prism map shows the number of departmental trips to
+            a particular country. Hover over the country to see exact number of
+            trips.
           </Paragraph>
           <div className="max-w-screen-sm">
             <PrismMapTravelsDepartment
@@ -163,10 +162,7 @@ const Page = ({
         <Section>
           <h2>Flights</h2>
           <Paragraph>
-            Lorem ipsum, dolor sit amet consectetur adipisicing elit. Amet
-            molestiae, sequi animi est dolor nihil qui id, aperiam assumenda
-            suscipit officia, veniam tenetur veritatis saepe! Recusandae animi
-            incidunt fuga perferendis!
+            Number of flights made by members of the department in 2023.
           </Paragraph>
           <div className="max-w-screen-sm">
             <MapLayoutFluid projection={geoBertin1953()}>
@@ -180,6 +176,10 @@ const Page = ({
 
         <Section>
           <h2>Projects</h2>
+          <Paragraph>
+            Overview of the geographic distribution of projects found the ITC
+            project database executed by the department.
+          </Paragraph>
           <div className="max-w-screen-sm">
             <MapLayoutFluid projection={geoBertin1953()}>
               <MapLayerBase countries={neCountriesTopoJson} />

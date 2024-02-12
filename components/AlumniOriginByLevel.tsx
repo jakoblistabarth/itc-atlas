@@ -6,6 +6,7 @@ import MapLayoutFluid from "./MapLayout/MapLayoutFluid";
 import AlumniOrigin from "./visuals/maps/AlumniOrigin";
 import { ApplicationLevels } from "../lib/data/queries/application/getApplicationLevels";
 import { geoBertin1953 } from "d3-geo-projection";
+import Paragraph from "./Paragraph";
 
 type Props = {
   neCountriesTopoJson: NeCountriesTopoJson;
@@ -25,6 +26,10 @@ const AlumniOriginByLevel: FC<Props> = ({
     <>
       <Section>
         <h2>Alumni</h2>
+        <Paragraph>
+          Distribution of departmental alumni. Refine the selection based on
+          educational level.
+        </Paragraph>
         <div className="mb-5">
           <label>
             <br />

@@ -112,7 +112,7 @@ const Page: NextPage<Props> = ({
                 the joint GIMA MSc is included too. The PhD pattern is dominated
                 by China and Iran with student supported by their local
                 government and India by Dutch development. Europe stands out
-                because many EU projects and staff PhD&apos;s.
+                because of the many EU projects and staff PhD&apos;s.
               </Paragraph>
             </div>
             <div>
