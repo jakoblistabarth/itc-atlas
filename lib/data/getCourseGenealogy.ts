@@ -2,6 +2,7 @@ import fs from "fs";
 import { CourseGenealogy } from "../../types/CourseGenealogy";
 import getMscApplicationsByProgramByYear from "./queries/application/getMscApplicationByProgramByYear";
 import { TimelineEvent } from "../../types/TimelineEvent";
+import { CourseGenealogyItem } from "../../types/CourseGenealogy";
 
 type ProgramStem = {
   name: string;
@@ -12,6 +13,37 @@ const getCourseGenealogy = async () => {
   const filePath = "./data/compiled/courseGenealogy.json";
   const raw = fs.readFileSync(filePath);
   const genealogy: CourseGenealogy = JSON.parse(raw.toString());
+  const linksAES: CourseGenealogyItem[] = [
+    {
+      start: new Date("2019"),
+      end: new Date("2019"),
+      source: "AES",
+      target: "NHR",
+      stem: "6",
+    },
+    {
+      start: new Date("2019"),
+      end: new Date("2019"),
+      source: "AES",
+      target: "ARS",
+      stem: "6",
+    },
+    {
+      start: new Date("2020"),
+      end: new Date("2022"),
+      source: "ARS",
+      target: "ARS",
+      stem: "6",
+    },
+    {
+      start: new Date("2020"),
+      end: new Date("2022"),
+      source: "NHR",
+      target: "NHR",
+      stem: "6",
+    },
+  ];
+  linksAES.map((d) => genealogy.links.push(d));
 
   const mergeGenealogyData = async (
     programStem: ProgramStem[],
@@ -50,6 +82,8 @@ const getCourseGenealogy = async () => {
       { name: "UPM", stem: "3" },
       { name: "WREM", stem: "5" },
       { name: "AES", stem: "6" },
+      { name: "ARS", stem: "6" },
+      { name: "NHR", stem: "6" },
     ],
     [2020, 2021, 2022],
   );
