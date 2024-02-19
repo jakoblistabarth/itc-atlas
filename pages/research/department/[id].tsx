@@ -90,11 +90,6 @@ const Page = ({
                 description: "as primary department",
               },
               { value: department.phdsMain.length, unit: "PhD candidates" },
-              {
-                value: department.phdsSecondary.length,
-                unit: "PhD candidates",
-                description: "as secondary department",
-              },
             ]}
           />
         </Section>
