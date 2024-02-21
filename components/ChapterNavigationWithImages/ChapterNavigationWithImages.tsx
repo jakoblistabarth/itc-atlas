@@ -17,7 +17,7 @@ const ChapterNavigationWithImages: FC = () => {
   }, []);
 
   return (
-    <div className="mt-5 grid grid-cols-[repeat(auto-fill,_minmax(300px,_1fr))] gap-5">
+    <div className="mt-5 grid grid-cols-[repeat(2,325px)] gap-5">
       {chapters.map(({ chapter, slug }) => (
         <Card key={chapter}>
           <Image
