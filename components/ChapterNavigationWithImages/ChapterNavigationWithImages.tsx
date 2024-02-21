@@ -17,13 +17,13 @@ const ChapterNavigationWithImages: FC = () => {
   }, []);
 
   return (
-    <div className="mt-5 grid grid-cols-[repeat(auto-fill,_minmax(300px,_1fr))] gap-5">
+    <div className="mt-5 grid grid-cols-[repeat(2,325px)] gap-5">
       {chapters.map(({ chapter, slug }) => (
         <Card key={chapter}>
           <Image
             src={`${process.env.NEXT_PUBLIC_SITE_URL}/images/tile-${slug}.png`}
-            width={1600}
-            height={960}
+            width={500}
+            height={300}
             alt={`Preview chapter ${chapter}`}
           />
           <Card.Body>
