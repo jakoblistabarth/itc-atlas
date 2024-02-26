@@ -24,7 +24,7 @@ const FlightsFlowMap: FC<Props> = ({ neCountriesTopoJson, odMatrix }) => {
   const maxCount = max(flightsPerRoute);
   const scaleWidth = scaleLinear()
     .domain([minCount ?? 0, maxCount ?? 1])
-    .range([1, 15]);
+    .range((maxCount ?? 1) > 20 ? [1, 15] : [1, 5]);
 
   const flowStyle: FlowStyleProps = {
     // @ts-expect-error TODO: refactor to get rid of styleProp
