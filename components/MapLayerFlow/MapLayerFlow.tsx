@@ -30,7 +30,7 @@ const MapLayerFlow: FC<Props> = ({
     <g id="flow-Layer">
       <defs>
         <MarkerArrowHead
-          shape={flowStyle?.arrowShape ?? "tapered"}
+          shape={flowStyle?.arrowShape ?? "tip"}
           color={flowStyle?.stroke}
         />
       </defs>
