@@ -24,7 +24,7 @@ const LegendFlow: FC<Props> = ({
   const min = d3.min(data);
   const max = d3.max(data);
   if (!min || !max) return <g />;
-  const entries = [min, max / 2, max];
+  const entries = max > min ? [min, Math.ceil(max / 2), max] : [min];
 
   const line = d3
     .line()
