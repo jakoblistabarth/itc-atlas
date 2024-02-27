@@ -2,6 +2,7 @@ import { FC, SVGProps } from "react";
 import defaultTheme from "../../lib/styles/themes/defaultTheme";
 import toInt from "../../lib/utilities/toInt";
 import { useMapLayoutContext } from "../MapLayout/MapLayoutContext";
+import type { GeoJsonProperties } from "geojson";
 
 type Props = {
   latitude: number;
@@ -9,6 +10,9 @@ type Props = {
   radius?: number;
   isActive?: boolean;
   interactive?: boolean;
+  properties?: GeoJsonProperties;
+  onPointerEnterHandler?: (properties: GeoJsonProperties) => void;
+  onPointerLeaveHandler?: () => void;
 } & Omit<SVGProps<SVGCircleElement>, "cx" | "cy" | "r">;
 
 const MarkCircle: FC<Props> = ({
@@ -17,6 +21,9 @@ const MarkCircle: FC<Props> = ({
   radius = 2,
   isActive = false,
   interactive = true,
+  properties,
+  onPointerEnterHandler,
+  onPointerLeaveHandler,
   ...props
 }) => {
   const { projection } = useMapLayoutContext();
@@ -25,6 +32,10 @@ const MarkCircle: FC<Props> = ({
   const [x, y] = projection([longitude, latitude]) ?? [undefined];
   const strokeWidth =
     toInt(props.strokeWidth) ?? defaultTheme.symbol?.strokeWidth ?? 1;
+  const hoverInfo = {
+    NAME_EN: properties?.NAME_EN,
+    projectCount: properties?.projectCount,
+  };
   return (
     <circle
       {...props}
@@ -41,6 +52,10 @@ const MarkCircle: FC<Props> = ({
         ...props.style,
         transition: "stroke-width .75s",
       }}
+      onPointerEnter={() =>
+        hoverInfo && onPointerEnterHandler && onPointerEnterHandler(hoverInfo)
+      }
+      onPointerLeave={onPointerLeaveHandler}
     />
   );
 };
