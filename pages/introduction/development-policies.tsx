@@ -222,11 +222,11 @@ const Page: NextPage<Props> = ({
           <Section>
             <h2>Contradictions at the Ministry</h2>
             <figure>
-              <h3>
+              <p className="mt-5">
                 Of the 22 counties with a focus on development cooperation 9 are
                 to be avoided (situation May 2023) because of a negative travel
-                advise of the same authorities
-              </h3>
+                advise of the same authorities.
+              </p>
               <Image
                 className="my-10"
                 src={`${process.env.NEXT_PUBLIC_SITE_URL}/images/travel-contradiction-I.svg`}
