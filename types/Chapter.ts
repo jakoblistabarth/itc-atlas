@@ -1,8 +1,8 @@
 export const chapters = [
   "Introduction",
+  "Education", 
   "Research",
   "Institutional strengthening",
-  "Education",
   "Appendix",
 ] as const;
 
