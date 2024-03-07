@@ -2,11 +2,8 @@ import { scaleOrdinal } from "d3";
 import { geoBertin1953 } from "d3-geo-projection";
 import { GetStaticPaths, GetStaticProps, InferGetStaticPropsType } from "next";
 import { ParsedUrlQuery } from "querystring";
-import { HiOutlineTag } from "react-icons/hi";
 import AlumniOrginByLevel from "../../../components/AlumniOriginByLevel";
-import { Card } from "../../../components/Card";
 import Container from "../../../components/Container";
-import CountryCodeBadge from "../../../components/CountryCodeBadge";
 import FlightsFlowMap from "../../../components/FlightsFlowMap";
 import KPIPanel from "../../../components/KPIPanel";
 import MapLayerBase from "../../../components/MapLayerBase";
@@ -38,6 +35,28 @@ import getDepartments from "../../../lib/data/queries/departments/getDepartments
 import prisma from "../../../prisma/client";
 import type { OdMatrix } from "../../../types/OdMatrix";
 import { SharedPageProps } from "../../../types/Props";
+import { RiBarChartHorizontalFill } from "react-icons/ri";
+import {
+  Chart as ChartJS,
+  CategoryScale,
+  LinearScale,
+  BarElement,
+  Title,
+  Tooltip,
+  Legend,
+} from "chart.js";
+import { Bar } from "react-chartjs-2";
+import resolveConfig from "tailwindcss/resolveConfig";
+import tailwindConfig from "../../../tailwind.config";
+
+ChartJS.register(
+  CategoryScale,
+  LinearScale,
+  BarElement,
+  Title,
+  Tooltip,
+  Legend,
+);
 
 const Page = ({
   department,
@@ -65,6 +84,43 @@ const Page = ({
           },
         ];
   });
+
+  const countMap = new Map();
+  department.projectsMain.map((d) => {
+    countMap.has(d.type)
+      ? countMap.set(d.type, countMap.get(d.type) + 1)
+      : countMap.set(d.type, 1);
+  });
+
+  const itcColor = resolveConfig(tailwindConfig).theme?.colors;
+
+  const labels = Array.from(countMap.keys());
+
+  const options = {
+    indexAxis: "y" as const,
+    responsive: true,
+    plugins: {
+      legend: {
+        display: false,
+      },
+      title: {
+        display: true,
+        text: "Projects in different categories",
+      },
+    },
+  };
+
+  const barData = {
+    labels,
+    datasets: [
+      {
+        data: Array.from(countMap.values()),
+        barThickness: 10,
+        //@ts-expect-error tailwind types do not yet work well with extending themes
+        backgroundColor: itcColor ? itcColor["itc-green"].DEFAULT : "black",
+      },
+    ],
+  };
 
   return (
     <PageBase title={`${department.id} department`}>
@@ -181,28 +237,9 @@ const Page = ({
               <MapLayerProportionalSymbols data={data} maxRadius={10} />
             </MapLayoutFluid>
           </div>
-          <div className="grid grid-cols-4 gap-4">
-            {department.projectsMain.map((d) => {
-              return (
-                <Card key={d.id}>
-                  <Card.Body>
-                    <h3>{d.name}</h3>
-                    <div className="my-2 flex items-baseline gap-1 text-xs">
-                      <HiOutlineTag />
-                      <div>{d.type}</div>
-                    </div>
-                    <div className="flex flex-wrap gap-1">
-                      {d.countries.map(({ isoAlpha3 }) => (
-                        <CountryCodeBadge
-                          key={isoAlpha3}
-                          isoAlpha3Code={isoAlpha3}
-                        />
-                      ))}
-                    </div>
-                  </Card.Body>
-                </Card>
-              );
-            })}
+          <div className="max-w-screen-sm">
+            <RiBarChartHorizontalFill />
+            <Bar options={options} data={barData} />
           </div>
         </Section>
       </Container>
