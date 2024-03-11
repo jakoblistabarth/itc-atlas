@@ -94,7 +94,7 @@ const Page = ({
 
   const itcColor = resolveConfig(tailwindConfig).theme?.colors;
 
-  const labels = Array.from(countMap.keys());
+  const labels = Array.from(countMap.keys()).filter((d) => d);
 
   const options = {
     indexAxis: "y" as const,
@@ -108,14 +108,22 @@ const Page = ({
         text: "Projects in different categories",
       },
     },
+    scales: {
+      x: {
+        ticks: {
+          precision: 0,
+        },
+      },
+    },
   };
 
   const barData = {
     labels,
     datasets: [
       {
-        data: Array.from(countMap.values()),
+        data: Array.from(countMap.values()).filter((d) => d),
         barThickness: 10,
+        borderWidth: 2,
         //@ts-expect-error tailwind types do not yet work well with extending themes
         backgroundColor: itcColor ? itcColor["itc-green"].DEFAULT : "black",
       },
