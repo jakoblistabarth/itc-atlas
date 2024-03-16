@@ -5,6 +5,7 @@ import BackToHome from "../BackToHome";
 import ItcLogo from "/public/images/itc-logo.svg";
 import * as Separator from "@radix-ui/react-separator";
 import { RxExternalLink } from "react-icons/rx";
+import BackToUpper from "../BackToUpper";
 
 const Footer: FC = () => {
   return (
@@ -23,6 +24,12 @@ const Footer: FC = () => {
           Legal notice
           <RxExternalLink />
         </a>
+        <Separator.Root
+          orientation="vertical"
+          decorative={true}
+          className="w-px bg-black"
+        />
+        <BackToUpper />
         <Separator.Root
           orientation="vertical"
           decorative={true}
