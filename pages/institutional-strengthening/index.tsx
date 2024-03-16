@@ -14,7 +14,7 @@ import { range } from "d3";
 const Projects: NextPage = () => {
   const { route } = useRouter();
   return (
-    <PageChapter chapterName="Institutional strengthening">
+    <PageChapter chapterName="Institutional-strengthening">
       <Section>
         <h1>Chapter Institutional Strengthening</h1>
         <Teaser>Applying our knowlegde in the real world</Teaser>
