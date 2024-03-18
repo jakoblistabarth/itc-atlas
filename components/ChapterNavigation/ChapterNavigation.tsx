@@ -18,7 +18,7 @@ const ChapterNavigation: FC<Props> = ({ title, ...props }) => {
       })) satisfies { chapter: Chapter; slug: string; disabled?: boolean }[],
     [],
   );
-  console.log(chapters);
+
   return (
     <Section {...props}>
       {title && <h2>{title}</h2>}
