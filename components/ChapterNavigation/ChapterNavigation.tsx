@@ -18,12 +18,17 @@ const ChapterNavigation: FC<Props> = ({ title, ...props }) => {
       })) satisfies { chapter: Chapter; slug: string; disabled?: boolean }[],
     [],
   );
+  console.log(chapters);
   return (
     <Section {...props}>
       {title && <h2>{title}</h2>}
       <div className="mb-4 mt-2 grid max-w-4xl grid-cols-[repeat(auto-fill,_minmax(240px,_1fr))] gap-3">
         {chapters.map((d) => (
-          <CardLink key={d.chapter} href={`/${d.slug}`} disabled={d.disabled}>
+          <CardLink
+            key={d.chapter}
+            href={`/${d.slug.replace(/ /g, "-")}`}
+            disabled={d.disabled}
+          >
             <ChapterIcon
               chapter={d.chapter}
               width={"2em"}
