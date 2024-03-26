@@ -8,12 +8,14 @@ import Paragraph from "../../components/Paragraph";
 import Section from "../../components/Section";
 import Teaser from "../../components/Teaser";
 import getDepartments from "../../lib/data/queries/departments/getDepartments";
+import { useRouter } from "next/router";
 
 type Props = {
   departments: Department[];
 };
 
 const Introduction: NextPage<Props> = ({ departments }) => {
+  const { route } = useRouter();
   return (
     <PageChapter chapterName="Research">
       <Section>
@@ -71,8 +73,8 @@ const Introduction: NextPage<Props> = ({ departments }) => {
         <ChapterContents
           highlights={[
             {
-              href: "/phds/theses",
-              title: "ITC's PhD theses",
+              href: route + "/phds",
+              title: "ITC's PhD theses and origins",
             },
           ]}
         />
@@ -86,7 +88,7 @@ const Introduction: NextPage<Props> = ({ departments }) => {
           department. Please note that many research and education activities
           are carried out across several of these departments.
         </Paragraph>
-        <div className="mt-10 grid max-w-2xl grid-cols-[repeat(auto-fill,_minmax(240px,_1fr))] gap-3">
+        <div className="mt-10 grid max-w-2xl grid-cols-[repeat(auto-fill,_minmax(360px,_1fr))] gap-3">
           {departments.map((d) => (
             <CardLink href={`/research/department/${d.id}`} key={d.id}>
               <Card.Body>

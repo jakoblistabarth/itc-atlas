@@ -18,7 +18,8 @@ const BackToUpper: FC = () => {
     });
   return (
     <Link href={upperPath} className="flex items-center gap-x-2">
-      back upper <HiOutlineArrowSmUp />
+      one level up
+      <HiOutlineArrowSmUp />
     </Link>
   );
 };
