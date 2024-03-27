@@ -12,7 +12,6 @@ import getPhdTheses, {
 import { max, min, scaleSqrt } from "d3";
 import { geoInterruptedMollweide } from "d3-geo-projection";
 import type { GetStaticProps, NextPage } from "next";
-import { useState } from "react";
 import useSWRImmutable from "swr/immutable";
 import LegendNominal from "../../components/LegendNominal";
 import MapLayerBase from "../../components/MapLayerBase";
@@ -46,23 +45,18 @@ const Page: NextPage<Props> = ({
   const colorScale = scaleOrdinal<string, string, string>()
     .domain(departments.map((d) => d.id))
     .range([
-      "yellow",
-      "orange",
-      "red",
-      "purple",
-      "cornflowerblue",
-      "darkblue",
-      "turquoise",
-      "teal",
+      "#ff1f5b",
+      "#009ade",
+      "#ffc61e",
+      "#af58ba",
+      "#f28522",
+      "#00cd6c",
+      "grey",
+      "#000000",
     ])
     .unknown("grey");
 
-  const [isChecked, setIsChecked] = useState(false); //TODO: use more specific name "isFiltered"
-
-  const handleOnChange = () => {
-    setIsChecked(!isChecked);
-  };
-  const filter = isChecked ? "?graduated=true" : ""; //TODO: switch only true/false no separate variable?
+  const filter = "?graduated=true"; //TODO: switch only true/false no separate variable?
 
   const { data, error, isLoading } = useSWRImmutable<
     Awaited<ReturnType<typeof getPhdsByCountryByDepartment>>
@@ -106,17 +100,6 @@ const Page: NextPage<Props> = ({
         />
         <br />
         <h2>PhD origins</h2>
-        <div>
-          <input
-            type="checkbox"
-            id="filter"
-            // name="filter"
-            // value="filter"
-            checked={isChecked}
-            onChange={handleOnChange}
-          />
-          <label htmlFor="filter">Show only graduates</label>
-        </div>
         <MapLayoutFluid projection={projection}>
           <MapLayerBase countries={neCountriesTopoJson} theme={theme} />
           {!isLoading && (

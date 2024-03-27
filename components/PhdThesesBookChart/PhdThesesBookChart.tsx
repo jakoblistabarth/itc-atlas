@@ -40,8 +40,8 @@ const PhdThesesBookChart: FC<Props> = ({
   ).get(activeThesis ?? "");
   return (
     <div>
-      <CanvasStage className="h-[500px]">
-        <div className="relative h-full">
+      <CanvasStage className="h-[600px]">
+        <div className="relative h-full overflow-y-auto">
           <ThesisInfo
             info={thesisInfo}
             colorScale={colorScale}
