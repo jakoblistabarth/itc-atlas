@@ -5,7 +5,7 @@ import { HiOutlineHome } from "react-icons/hi";
 const BackToHome: FC = () => {
   return (
     <Link href="/" className="flex items-center gap-x-2">
-      back home <HiOutlineHome />
+      Back home <HiOutlineHome />
     </Link>
   );
 };
