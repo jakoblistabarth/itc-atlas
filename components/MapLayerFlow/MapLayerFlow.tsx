@@ -34,8 +34,8 @@ const MapLayerFlow: FC<Props> = ({
           color={flowStyle?.stroke}
         />
       </defs>
-      {data.points.features.map((feature) => (
-        <Tooltip.Root key={feature.id}>
+      {data.points.features.map((feature, idx) => (
+        <Tooltip.Root key={`${feature.id}-${idx}`}>
           <Tooltip.Content>
             <p>
               Airport:{" "}
@@ -55,8 +55,8 @@ const MapLayerFlow: FC<Props> = ({
           </Tooltip.Trigger>
         </Tooltip.Root>
       ))}
-      {data.flows.features.map((feature) => (
-        <Tooltip.Root key={feature.id} followCursor>
+      {data.flows.features.map((feature, idx) => (
+        <Tooltip.Root key={`${feature.id}-${idx}`} followCursor>
           <Tooltip.Content>
             <div>
               <div className="flex items-center gap-1">
