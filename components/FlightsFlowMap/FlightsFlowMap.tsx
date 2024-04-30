@@ -9,7 +9,7 @@ import MapLayerBase from "../MapLayerBase";
 import MapLayerFlow, { FlowPointStyleProps } from "../MapLayerFlow";
 import { FlowStyleProps } from "../MarkFlow/";
 
-export const twConfig = resolveConfig(tailwindConfig);
+const twConfig = resolveConfig(tailwindConfig);
 
 type Props = {
   neCountriesTopoJson: NeCountriesTopoJson;

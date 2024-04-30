@@ -1,9 +1,11 @@
 import * as d3 from "d3";
 import { FeatureCollection } from "geojson";
 import { FC, useId } from "react";
+import resolveConfig from "tailwindcss/resolveConfig";
 import * as topojson from "topojson-client";
 import getMapHeight from "../../lib/helpers/getMapHeight";
 import defaultTheme from "../../lib/styles/themes/defaultTheme";
+import tailwindConfig from "../../tailwind.config.js";
 import { MapTheme } from "../../types/MapTheme";
 import { NeCountriesTopoJson } from "../../types/NeTopoJson";
 import MapLayerBase from "../MapLayerBase";
@@ -27,6 +29,8 @@ type Props = {
     "projection"
   >[];
 };
+
+const twConfig = resolveConfig(tailwindConfig);
 
 const LocatorMap: FC<Props> = ({
   neCountriesTopoJson,
@@ -98,7 +102,13 @@ const LocatorMap: FC<Props> = ({
       <MapLayerBase countries={neCountriesTopoJson} theme={theme} />
       <g>
         {highlightCountries.features.map((feature, idx) => (
-          <MarkGeometry key={idx} feature={feature} className="fill-itc-blue" />
+          <MarkGeometry
+            key={idx}
+            feature={feature}
+            // @ts-expect-error TODO: refactor to get rid of styleProp
+            fill={twConfig.theme?.colors?.["itc-blue"].DEFAULT}
+            className="fill-itc-blue"
+          />
         ))}
       </g>
       {shaded && (
