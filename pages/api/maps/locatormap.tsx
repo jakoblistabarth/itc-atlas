@@ -2,6 +2,8 @@ import type { NextApiRequest, NextApiResponse } from "next";
 import ReactDOMServer from "react-dom/server";
 import LocatorMap from "../../../components/LocatorMap";
 import getCountries from "../../../lib/data/getCountries";
+import themes, { ThemeNames } from "../../../lib/styles/themes";
+import defaultTheme from "../../../lib/styles/themes/defaultTheme";
 
 /**
  * @swagger
@@ -32,6 +34,13 @@ import getCountries from "../../../lib/data/getCountries";
  *          schema:
  *            type: string
  *          example: "-3,60,3,50"
+ *        - in: query
+ *          name: theme
+ *          example: ETH
+ *          description: The theme of the map.
+ *          deprecated: true
+ *          schema:
+ *            type: string
  *     responses:
  *       200:
  *         description: OK
@@ -47,6 +56,7 @@ export default async function handler(
     return res.status(400).json({ error: "invalid width parameter" });
   }
   const highlightCountries = req.query.country;
+  const theme = themes.get(req.query.theme?.toString() as ThemeNames);
   const [minLng, maxLat, maxLng, minLat] =
     req.query.bounds?.toString().split(",").map(Number) ?? [];
   if (!highlightCountries) {
@@ -71,6 +81,7 @@ export default async function handler(
   const neCountriesTopoJson = getCountries("50m");
   const svg = ReactDOMServer.renderToStaticMarkup(
     <LocatorMap
+      theme={theme ?? defaultTheme}
       neCountriesTopoJson={neCountriesTopoJson}
       highlight={highlights}
       width={width}
