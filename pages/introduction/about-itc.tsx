@@ -52,7 +52,7 @@ const AboutITC: NextPage = () => {
             </Paragraph>
             <figure className="my-10 max-w-lg">
               <Image
-                src={`${process.env.NEXT_PUBLIC_SITE_URL}/images/230919-itc-organigramm.svg`}
+                src={`${process.env.NEXT_PUBLIC_SITE_URL}/images/240527-itc-organigramm.svg`}
                 width={1600}
                 height={900}
                 alt={`ITC's organigramm`}
