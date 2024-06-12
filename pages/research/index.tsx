@@ -46,25 +46,30 @@ const Introduction: NextPage<Props> = ({ departments }) => {
         <Paragraph>The profiling themes address problems related to:</Paragraph>
         <ul className="max-w-2xl [&>li]:my-5">
           <li>
-            <strong>GeoAI</strong> - Combines innovations in geospatial
-            technologies with the rapid growth of methods in AI and big data,
-            with the aim to translate complex and contextual data in useful
-            information.
+            <strong>GeoAI</strong> - Integrates innovations in geospatial
+            technologies with the rapid advancements in AI and big data. The
+            goal is to responsibly translate complex, contextual data into
+            useful information.
           </li>
           <li>
-            <strong>GeoHealth</strong>- Understand the drivers behind spatial
-            patterns in health and disease via a dynamic approach.
+            <strong>Urban Futures</strong> - Aims to understand and address
+            social, environmental, economic, and land tenure challenges in urban
+            areas. It applies innovative geospatial solutions to develop
+            people-centric and digitally-informed strategies that support the
+            transition towards safe, healthy, liveable, resilient, and just
+            urban futures.
           </li>
           <li>
-            <strong>Resource Security</strong> - Aims at fair and sustainable
-            use of our natural environment, and security and planning of
-            environmental resources such as food, water, biodiversity, minerals,
-            energy, and land, and their equitable availability for societies.
+            <strong>Resource Security</strong> - Focuses on the fair and
+            sustainable use of our natural environment. This includes the
+            planning and management of environmental resources such as food,
+            water, biodiversity, minerals, energy, and land, ensuring their
+            equitable availability for all societies.
           </li>
           <li>
-            <strong>Disaster Resilience</strong> - Integrating hazard assessment
-            and disaster risk management into strategic planning and sustainable
-            development.
+            <strong>Disaster Resilience</strong> - Incorporates hazard
+            assessment and disaster risk management into strategic planning and
+            sustainable development initiatives.
           </li>
         </ul>
       </Section>
