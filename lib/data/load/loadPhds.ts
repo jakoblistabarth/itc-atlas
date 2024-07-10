@@ -42,7 +42,7 @@ export type PhdRaw = {
 };
 
 export default async function loadPhds() {
-  const filePath = "./data/itc/ITCPHDCANDIDATES.xlsx";
+  const filePath = "./data/itc/PhD_for_ITCATLAS_20240710update.xlsx";
   const workbook = await workbookFromXlsx(filePath);
   const data = sheetToJson<PhdRaw[]>(workbook.worksheets[0]);
 

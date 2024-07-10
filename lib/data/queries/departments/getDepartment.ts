@@ -33,20 +33,15 @@ export default async function getDepartment(id: string) {
           },
         },
         where: {
-          status: {
-            label: {
-              equals: "Alumnus",
-            },
-          },
-          OR: [
+          AND: [
             {
-              graduationYear: {
-                not: null,
+              dissertationNumber: {
+                gte: 1,
               },
             },
             {
-              promotionYear: {
-                not: null,
+              dissertationNumber: {
+                lte: 452,
               },
             },
           ],

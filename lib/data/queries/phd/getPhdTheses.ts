@@ -19,20 +19,15 @@ const getPhdTheses = async () => {
       name: true,
     },
     where: {
-      status: {
-        label: {
-          equals: "Alumnus",
-        },
-      },
-      OR: [
+      AND: [
         {
-          graduationYear: {
-            not: null,
+          dissertationNumber: {
+            gte: 1,
           },
         },
         {
-          promotionYear: {
-            not: null,
+          dissertationNumber: {
+            lte: 452,
           },
         },
       ],

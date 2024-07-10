@@ -279,6 +279,7 @@ async function main() {
           startYear: phd.dateStart?.getFullYear(),
           graduationYear: phd.dateGraduation?.getFullYear(),
           promotionYear: phd.yearPromotion,
+          dissertationNumber: phd.dissertationNumber,
           countryId: country?.id,
         },
       };

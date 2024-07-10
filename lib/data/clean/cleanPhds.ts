@@ -63,6 +63,7 @@ export async function cleanPhds(data: PhdRaw[]) {
       Country: "country",
       Sponsor: "sponsor",
       NamePure: "name",
+      Dissertation_Number: "dissertationNumber",
     })
     .select(
       "itcStudentId",
@@ -74,6 +75,7 @@ export async function cleanPhds(data: PhdRaw[]) {
       "dateStart",
       "dateGraduation",
       "yearPromotion",
+      "dissertationNumber",
       "thesisTitle",
       "doi",
       "name",

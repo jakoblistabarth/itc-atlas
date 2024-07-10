@@ -124,10 +124,10 @@ export default async function loadProjects(): Promise<ProjectClean[]> {
   const filePath = "./data/itc/ITCPROJECTS (V2_20230217).xlsx";
   const workbook = await workbookFromXlsx(filePath);
   const projectsPre2019 = sheetToJson<ProjectPre2019Raw[]>(
-    workbook.worksheets[1]
+    workbook.worksheets[2],
   );
   const projectsPost2019 = sheetToJson<ProjectPost2019Raw[]>(
-    workbook.worksheets[0]
+    workbook.worksheets[0],
   );
 
   return await cleanProjects({ projectsPre2019, projectsPost2019 });
