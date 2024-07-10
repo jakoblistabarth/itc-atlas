@@ -49,6 +49,7 @@ const fakePhds = async (
       dateStart: start,
       dateGraduation: graduation,
       yearPromotion: graduation.getFullYear(),
+      dissertationNumber: 0,
       name: `${faker.person.lastName()}, ${faker.person.firstName()[0]}.`,
       doi: `${faker.internet.url()}`,
     };
