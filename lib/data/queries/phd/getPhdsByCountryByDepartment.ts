@@ -15,7 +15,7 @@ const getPhdsByCountryByDepartment = async (
   onlyGraduates?: boolean, // TODO: refactor
 ) => {
   const filter = onlyGraduates
-    ? Prisma.sql`AND "statusId" = '38'`
+    ? Prisma.sql`AND "dissertationNumber" <= '452' AND "dissertationNumber" >= '1' `
     : Prisma.empty;
   const rows = await prisma.$queryRaw<Row[]>`
   SELECT

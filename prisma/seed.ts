@@ -263,6 +263,7 @@ async function main() {
           startYear: d.dateStart?.getFullYear(),
           graduationYear: d.dateGraduation?.getFullYear(),
           promotionYear: d.yearPromotion,
+          dissertationNumber: d.dissertationNumber,
           countryId: country?.id,
         },
       };
