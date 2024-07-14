@@ -11,7 +11,7 @@ const getCountryWithApplicantCount = async (
         equals: level,
       }
     : {};
-const departmentFilter = department
+  const departmentFilter = department
     ? {
         some: {
           id: {
@@ -38,6 +38,23 @@ const departmentFilter = department
                   departments: departmentFilter,
                 },
               },
+            },
+          },
+          phds: {
+            where: {
+              departmentsMain: departmentFilter,
+              AND: [
+                {
+                  dissertationNumber: {
+                    gte: 1,
+                  },
+                },
+                {
+                  dissertationNumber: {
+                    lte: 452,
+                  },
+                },
+              ],
             },
           },
         },
