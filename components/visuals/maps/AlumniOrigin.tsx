@@ -79,8 +79,10 @@ const AlumniOrigin: FC<Props> = ({
           properties: {
             ...country.properties,
             alumniCount:
-              mapData.find((d) => d.isoAlpha3 === isoCode)?._count.applicants ??
-              0,
+              level == "PhD"
+                ? mapData.find((d) => d.isoAlpha3 === isoCode)?._count.phds ?? 0
+                : mapData.find((d) => d.isoAlpha3 === isoCode)?._count
+                    .applicants ?? 0,
           },
         };
         return feature;
