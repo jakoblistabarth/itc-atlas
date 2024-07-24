@@ -86,11 +86,13 @@ const Page = ({
   });
 
   const countMap = new Map();
-  department.projectsMain.map((d) => {
-    countMap.has(d.type)
-      ? countMap.set(d.type, countMap.get(d.type) + 1)
-      : countMap.set(d.type, 1);
-  });
+  department.projectsMain
+    .filter((d) => d.countries.length != 0)
+    .map((d) => {
+      countMap.has(d.type)
+        ? countMap.set(d.type, countMap.get(d.type) + 1)
+        : countMap.set(d.type, 1);
+    });
 
   const itcColor = resolveConfig(tailwindConfig).theme?.colors;
 

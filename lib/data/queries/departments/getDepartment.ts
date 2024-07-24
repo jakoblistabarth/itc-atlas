@@ -11,9 +11,19 @@ export default async function getDepartment(id: string) {
           countries: true,
         },
         where: {
-          status: {
-            equals: "Completed",
-          },
+          OR: [
+            {
+              status: {
+                equals: "Completed",
+              },
+            },
+            {
+              AND: {
+                status: { equals: "Ongoing" },
+                end: { lte: new Date("2024-07-24") },
+              },
+            },
+          ],
         },
       },
       phdsMain: {
