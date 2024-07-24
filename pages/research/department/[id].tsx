@@ -121,7 +121,7 @@ const Page = ({
     labels,
     datasets: [
       {
-        data: Array.from(countMap.values()).filter((d) => d),
+        data: Array.from(labels.map((d) => countMap.get(d))),
         barThickness: 10,
         borderWidth: 2,
         //@ts-expect-error tailwind types do not yet work well with extending themes
@@ -149,7 +149,9 @@ const Page = ({
               },
               { value: btorCount, unit: "Back-to-office reports" },
               {
-                value: department.projectsMain.length,
+                value: department.projectsMain.filter(
+                  (d) => d.countries.length != 0,
+                ).length,
                 unit: "projects",
                 description: "as primary department",
               },
