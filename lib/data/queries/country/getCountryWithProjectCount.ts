@@ -13,8 +13,20 @@ const getCountryWithProjectCount = async (departmentId?: string) => {
         select: {
           projects: {
             where: {
-              ...departmentFilter,
-              status: "Completed",
+              OR: [
+                { ...departmentFilter, status: "Completed" },
+                {
+                  AND: {
+                    ...departmentFilter,
+                    status: {
+                      equals: "Ongoing",
+                    },
+                    end: {
+                      lte: new Date("2024-07-24"),
+                    },
+                  },
+                },
+              ],
             },
           },
         },
@@ -22,7 +34,7 @@ const getCountryWithProjectCount = async (departmentId?: string) => {
     },
     where: {
       projects: {
-        some: { status: "Completed" },
+        some: { OR: [{ status: "Completed" }, { status: "Ongoing" }] },
       },
     },
   });
