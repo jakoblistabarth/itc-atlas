@@ -139,6 +139,8 @@ model Project {
   status               ProjectStatus?
   leadOrganization     String?
   fundingOrganization  String?
+  totalBudget          Int
+  itcBudget            Int
 }
 
 enum ProjectType {
