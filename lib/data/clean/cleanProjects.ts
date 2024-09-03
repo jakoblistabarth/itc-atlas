@@ -113,6 +113,8 @@ const cleanProjects = async ({
       projectID: "id",
       projecttype: "type",
       Status: "status",
+      ITCbudgetEUR: "totalITCBudget",
+      budgetEUR: "totalBudget",
     })
     .derive({
       departmentsSecondary: (d: ProjectPost2019Raw) =>
