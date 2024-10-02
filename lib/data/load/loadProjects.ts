@@ -121,7 +121,7 @@ export type ProjectPost2019Raw = {
 };
 
 export default async function loadProjects(): Promise<ProjectClean[]> {
-  const filePath = "./data/itc/ITCPROJECTS (V2_20230217).xlsx";
+  const filePath = "./data/itc/ITCPROJECTS (V3_20240906).xlsx";
   const workbook = await workbookFromXlsx(filePath);
   const projectsPre2019 = sheetToJson<ProjectPre2019Raw[]>(
     workbook.worksheets[2],
