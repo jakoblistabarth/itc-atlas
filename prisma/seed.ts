@@ -173,6 +173,8 @@ async function main() {
           fundingOrganization: d.fundingOrganization,
           type: d.type as ProjectType,
           status: d.status as ProjectStatus,
+          totalBudget: d.totalBudget ? d.totalBudget + 0 : 0,
+          itcBudget: d.totalITCBudget ? d.totalITCBudget + 0 : 0,
         },
       };
       return await prisma.project.create(createArgs);
