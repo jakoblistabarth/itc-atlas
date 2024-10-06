@@ -10,7 +10,7 @@ export enum ITCLocationName {
   DELFT2 = "Kanaalweg 14",
   ENSCHEDE1 = "Boulevard 1945",
   ENSCHEDE2 = "Hengelosestraat 99",
-  ENSCHEDE3 = "Langezidjs",
+  ENSCHEDE3 = "Langezijds",
 }
 
 export const ITClocations = new Map([
