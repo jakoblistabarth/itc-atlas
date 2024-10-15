@@ -6,6 +6,9 @@ type Props = React.PropsWithChildren<{
   dateEnd: Date;
   height: number;
   yOffset: number;
+  label: string;
+  onPointerEnterHandler?: (properties: string) => void;
+  onPointerLeaveHandler?: () => void;
 }> &
   Omit<SVGProps<SVGRectElement>, "width" | "x" | "y">;
 
@@ -15,6 +18,9 @@ const Event: FC<Props> = ({
   yOffset,
   children,
   height = 1,
+  label,
+  onPointerEnterHandler,
+  onPointerLeaveHandler,
   ...rest
 }) => {
   const { xScale } = useTimelineContext();
@@ -25,6 +31,10 @@ const Event: FC<Props> = ({
         transform={`translate(0 ${height / -2})`}
         width={width}
         height={height}
+        onPointerEnter={() =>
+          onPointerEnterHandler && onPointerEnterHandler(label)
+        }
+        onPointerLeave={onPointerLeaveHandler}
         {...rest}
       />
       {children}
