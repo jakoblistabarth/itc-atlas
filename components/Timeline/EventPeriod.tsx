@@ -6,7 +6,7 @@ type Props = React.PropsWithChildren<{
   dateEnd: Date;
   height: number;
   yOffset: number;
-  label: string;
+  label?: string;
   onPointerEnterHandler?: (properties: string) => void;
   onPointerLeaveHandler?: () => void;
 }> &
@@ -32,7 +32,7 @@ const Event: FC<Props> = ({
         width={width}
         height={height}
         onPointerEnter={() =>
-          onPointerEnterHandler && onPointerEnterHandler(label)
+          label && onPointerEnterHandler && onPointerEnterHandler(label)
         }
         onPointerLeave={onPointerLeaveHandler}
         {...rest}
