@@ -21,7 +21,6 @@ const Event: FC<Props> = ({
   label,
   onPointerEnterHandler,
   onPointerLeaveHandler,
-
   ...rest
 }) => {
   const { xScale } = useTimelineContext();
