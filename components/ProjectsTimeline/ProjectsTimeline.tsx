@@ -1,14 +1,13 @@
 import { Project } from "@prisma/client";
-import { FC } from "react";
+import { FC, useState, useCallback } from "react";
 import { TimelineEvent } from "../../types/TimelineEvent";
 import { ascending, max, min, scalePoint, scaleTime } from "d3";
 import Timeline from "../Timeline";
 import TimelineGrid from "../Timeline/TimelineGrid";
 import EventPeriod from "../Timeline/EventPeriod";
-import LabelPoint from "../LabelPoint";
-import { LabelPlacement } from "../../types/LabelPlacement";
 import { fInt } from "../../lib/utilities/formaters";
 import * as ScrollArea from "@radix-ui/react-scroll-area";
+import Tooltip from "../Tooltip";
 
 type Props = {
   projects: Project[];
@@ -56,6 +55,11 @@ const ProjectsTimeline: FC<Props> = ({ projects }) => {
   const yScale = scalePoint()
     .domain(events.map((d) => d.yOffset))
     .range([margin.top, bounds.height - margin.bottom]);
+  const [hoverInfo, setHoverInfo] = useState<string | undefined>(undefined);
+  const onPointerEnterHandler = useCallback((label: string) => {
+    setHoverInfo(label);
+  }, []);
+  const onPointerLeaveHandler = useCallback(() => setHoverInfo(undefined), []);
 
   return (
     <div>
@@ -63,32 +67,38 @@ const ProjectsTimeline: FC<Props> = ({ projects }) => {
       <ScrollArea.Root type="always" className="h-[500px] overflow-hidden">
         <ScrollArea.Viewport className="h-full w-full">
           <div>
-            <svg width={wrapper.width} height={wrapper.height}>
-              <Timeline left={margin.left} xScale={xScale}>
-                <TimelineGrid height={bounds.height} margin={margin.top} />
-                <g id="project-events">
-                  {events.map((e, idx) => {
-                    const labelText =
-                      e.name.length > 20 ? e.name.slice(0, 20) + "…" : e.name;
+            <Tooltip.Root open={!!hoverInfo} followCursor placement="top-start">
+              <Tooltip.Trigger asChild>
+                <svg width={wrapper.width} height={wrapper.height}>
+                  <Timeline left={margin.left} xScale={xScale}>
+                    <TimelineGrid height={bounds.height} margin={margin.top} />
+                    <g id="project-events">
+                      {events.map((e, idx) => {
+                        const labelText =
+                          e.name.length > 20
+                            ? e.name.slice(0, 20) + "…"
+                            : e.name;
 
-                    return (
-                      <EventPeriod
-                        key={`${labelText}-${e.dateStart.getMilliseconds()}-${e.dateEnd?.getMilliseconds()}-${idx}`}
-                        dateStart={e.dateStart}
-                        dateEnd={e.dateEnd ?? new Date()}
-                        yOffset={yScale(e.yOffset) ?? 0}
-                        height={2}
-                        fill={"blue"}
-                      >
-                        <LabelPoint placement={LabelPlacement.BOTTOMLEFT}>
-                          {labelText}
-                        </LabelPoint>
-                      </EventPeriod>
-                    );
-                  })}
-                </g>
-              </Timeline>
-            </svg>
+                        return (
+                          <EventPeriod
+                            key={`${labelText}-${e.dateStart.getMilliseconds()}-${e.dateEnd?.getMilliseconds()}-${idx}`}
+                            dateStart={e.dateStart}
+                            dateEnd={e.dateEnd ?? new Date()}
+                            yOffset={yScale(e.yOffset) ?? 0}
+                            height={2}
+                            fill={"teal"}
+                            label={labelText}
+                            onPointerEnterHandler={onPointerEnterHandler}
+                            onPointerLeaveHandler={onPointerLeaveHandler}
+                          ></EventPeriod>
+                        );
+                      })}
+                    </g>
+                  </Timeline>
+                </svg>
+              </Tooltip.Trigger>
+              <Tooltip.Content>{hoverInfo}</Tooltip.Content>
+            </Tooltip.Root>
           </div>
         </ScrollArea.Viewport>
         <ScrollArea.Scrollbar
