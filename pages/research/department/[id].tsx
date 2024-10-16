@@ -175,7 +175,7 @@ const Page = ({
             customer-directed?
           </Paragraph>
         </Section>
-        <Section>
+        <Section id="phd">
           <h2>PhD Theses</h2>
           <div className="max-w-screen-sm">
             <PhdThesesBookChart
@@ -187,7 +187,7 @@ const Page = ({
             />
           </div>
         </Section>
-        <Section>
+        <Section id="travel">
           <h2>Travels</h2>
           <Paragraph>
             The interactive prism map shows the number of departmental trips to
@@ -213,7 +213,7 @@ const Page = ({
           </div>
         </Section>
 
-        <Section>
+        <Section id="alumni">
           <AlumniOrginByLevel
             neCountriesTopoJson={neCountriesTopoJson}
             levels={levels}
@@ -222,7 +222,7 @@ const Page = ({
           />
         </Section>
 
-        <Section>
+        <Section id="flight">
           <h2>Flights</h2>
           <Paragraph>
             Number of flights made by members of the department in 2019.
@@ -237,7 +237,7 @@ const Page = ({
           </div>
         </Section>
 
-        <Section>
+        <Section id="project">
           <h2>Projects</h2>
           <Paragraph>
             Overview of the geographic distribution of projects found the ITC
