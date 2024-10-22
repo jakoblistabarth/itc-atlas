@@ -98,7 +98,7 @@ const Page: NextPage<Props> = ({
           by staff members Fig 1.
         </Paragraph>
       </Section>
-      <Section>
+      <Section id="cabinet">
         <div className="max-w-2xl">
           <h2>Travels in the context of Dutch development policies</h2>
           <Paragraph>
@@ -127,7 +127,7 @@ const Page: NextPage<Props> = ({
           </figure>
         </div>
       </Section>
-      <Section>
+      <Section id="department">
         <h2>Which destination?</h2>
         <Paragraph>
           In Fig 3 the travel destinations are grouped by the UN statistical

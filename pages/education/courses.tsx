@@ -37,7 +37,7 @@ const CourseGenealogyPage: NextPage<Props> = ({ courseGenealogy }) => {
               science and earth observation for environmental modelling and
               management, with the universities of Louvain, Lund, and Tartu.
             </Paragraph>
-            <figure className="my-5">
+            <figure className="my-5" id="alumni">
               <CourseGenealogy genealogy={courseGenealogy} />
               <Caption reference={"Fig.1"}>
                 Course Genealogy of the current MSc Geoinformation Science and

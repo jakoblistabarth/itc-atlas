@@ -103,7 +103,7 @@ const Page: NextPage<Props> = ({
             </Caption>
           </Section>
 
-          <Section>
+          <Section id="focus">
             <h2>Focus countries over time</h2>
             <Callout Icon={HiCursorClick}>
               Hover over a country to see in how many years it was considered to

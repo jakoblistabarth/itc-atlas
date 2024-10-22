@@ -2,7 +2,6 @@ import fs from "fs";
 import { CourseGenealogy } from "../../types/CourseGenealogy";
 import getMscApplicationsByProgramByYear from "./queries/application/getMscApplicationByProgramByYear";
 import { TimelineEvent } from "../../types/TimelineEvent";
-import { CourseGenealogyItem } from "../../types/CourseGenealogy";
 
 type ProgramStem = {
   name: string;
@@ -13,37 +12,6 @@ const getCourseGenealogy = async () => {
   const filePath = "./data/compiled/courseGenealogy.json";
   const raw = fs.readFileSync(filePath);
   const genealogy: CourseGenealogy = JSON.parse(raw.toString());
-  const linksAES: CourseGenealogyItem[] = [
-    {
-      start: new Date("2019"),
-      end: new Date("2019"),
-      source: "AES",
-      target: "NHR",
-      stem: "6",
-    },
-    {
-      start: new Date("2019"),
-      end: new Date("2019"),
-      source: "AES",
-      target: "ARS",
-      stem: "6",
-    },
-    {
-      start: new Date("2020"),
-      end: new Date("2022"),
-      source: "ARS",
-      target: "ARS",
-      stem: "6",
-    },
-    {
-      start: new Date("2020"),
-      end: new Date("2022"),
-      source: "NHR",
-      target: "NHR",
-      stem: "6",
-    },
-  ];
-  linksAES.map((d) => genealogy.links.push(d));
 
   const mergeGenealogyData = async (
     programStem: ProgramStem[],
@@ -51,10 +19,18 @@ const getCourseGenealogy = async () => {
   ) => {
     for (const programme of programStem) {
       for (const year of years) {
-        const count = await getMscApplicationsByProgramByYear(
-          programme.name,
-          year,
-        );
+        let countSize = 0;
+        if (programme.name == "AES") {
+          const count1 = await getMscApplicationsByProgramByYear("ARS", year);
+          const count2 = await getMscApplicationsByProgramByYear("NHR", year);
+          countSize = count1[0]?._count._all + count2[0]?._count._all;
+        } else {
+          const count = await getMscApplicationsByProgramByYear(
+            programme.name,
+            year,
+          );
+          countSize = count[0]?._count._all;
+        }
         const course: TimelineEvent = {
           name: programme.name,
           yOffset: programme.name,
@@ -63,10 +39,10 @@ const getCourseGenealogy = async () => {
           data: {
             code: programme.name,
             year: year,
-            value: count[0]?._count._all,
+            value: countSize,
             stem: programme.stem,
           },
-          size: count[0]?._count._all,
+          size: countSize,
         };
         genealogy.nodes.push(course);
       }
@@ -82,8 +58,6 @@ const getCourseGenealogy = async () => {
       { name: "UPM", stem: "3" },
       { name: "WREM", stem: "5" },
       { name: "AES", stem: "6" },
-      { name: "ARS", stem: "6" },
-      { name: "NHR", stem: "6" },
     ],
     [2020, 2021, 2022],
   );

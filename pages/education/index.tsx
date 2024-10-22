@@ -37,7 +37,6 @@ const Introduction: NextPage = () => {
               href: `${route}/alumni-origin`,
               title: "Alumni",
             },
-            { href: `${route}/refresher-courses`, title: "Refresher courses" },
           ]}
         />
       </Section>
