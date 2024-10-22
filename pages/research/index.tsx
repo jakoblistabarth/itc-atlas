@@ -94,14 +94,21 @@ const Introduction: NextPage<Props> = ({ departments }) => {
           are carried out across several of these departments.
         </Paragraph>
         <div className="mt-10 grid max-w-2xl grid-cols-[repeat(auto-fill,_minmax(360px,_1fr))] gap-3">
-          {departments.map((d) => (
-            <CardLink href={`/research/department/${d.id}`} key={d.id}>
-              <Card.Body>
-                <h3>{d.name}</h3>
-                <div>{d.id}</div>
-              </Card.Body>
-            </CardLink>
-          ))}
+          {departments
+            .sort((a, b) => {
+              if (a.id > b.id) {
+                return 1;
+              }
+              return -1;
+            })
+            .map((d) => (
+              <CardLink href={`/research/department/${d.id}`} key={d.id}>
+                <Card.Body>
+                  <h3>{d.name}</h3>
+                  <div>{d.id}</div>
+                </Card.Body>
+              </CardLink>
+            ))}
         </div>
       </Section>
     </PageChapter>
