@@ -34,7 +34,21 @@ const TravelsAcrossDepartmentsPrismMap: FC<Props> = ({
     <div>
       <Select
         label="Department"
-        options={departments.map(({ id }) => id)}
+        options={departments
+          .sort((a, b) => {
+            const order = [
+              "AES",
+              "EOS",
+              "GIP",
+              "NRS",
+              "PGM",
+              "WRS",
+              "SUP",
+              "Other",
+            ];
+            return order.indexOf(a.id) - order.indexOf(b.id);
+          })
+          .map(({ id }) => id)}
         onChangeHandler={(value) => {
           const newDepartment = departments.find((d) => d.id === value);
           newDepartment && setActiveDepartment(newDepartment);

@@ -62,12 +62,18 @@ const BtorsByDepartment: FC<Props> = ({
     .domain([0, maxCount ?? 1])
     .range([7, 35]);
 
-  const legendEntries = departmentColorScale.domain().map((d) => {
-    return {
-      label: d,
-      color: departmentColorScale(d),
-    };
-  });
+  const legendEntries = departmentColorScale
+    .domain()
+    .map((d) => {
+      return {
+        label: d,
+        color: departmentColorScale(d),
+      };
+    })
+    .sort((a, b) => {
+      const order = ["AES", "EOS", "GIP", "NRS", "PGM", "WRS", "Other", "NA"];
+      return order.indexOf(a.label) - order.indexOf(b.label);
+    });
 
   return (
     <>
